@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>화물 추적 | LOGILEE</title>
+  <meta name="description" content="Courier, B/L, Container, Air Cargo 공식 조회 페이지로 연결하는 LOGILEE Tracking Hub입니다.">
+  <link rel="stylesheet" href="../assets/logilee.css">
+  <script defer src="../assets/logilee-app.js"></script>
+</head>
+<body>
+<div class="shell">
+  <aside class="rail">
+    <a class="brand" href="./"><strong>LOGILEE</strong><span>Global Logistics Workspace</span></a>
+    <p class="rail-copy">실제 통합 추적 API가 없을 때는 결과를 생성하지 않고 공식 조회로 연결합니다.</p>
+  </aside>
+  <main class="main">
+    <header class="topbar">
+      <a class="mobile-logo" href="./">LOGILEE</a>
+      <nav data-mobile-nav>
+        <a href="./">Home</a><a href="tools.html">Tools</a><a aria-current="page" href="track.html">Track</a><a href="dictionary.html">Dictionary</a><a href="search.html">Search</a>
+      </nav>
+      <div class="top-actions"><a class="icon-btn" href="../en/track.html">KO / EN</a><button class="menu-btn" data-menu-toggle aria-label="메뉴">☰</button></div>
+    </header>
+    <div class="page">
+      <section class="page-title">
+        <p class="eyebrow">Tracking Hub</p>
+        <h1>Track Your Shipment</h1>
+        <p class="lead">운송장, B/L, 컨테이너, 항공화물 번호를 입력하면 지원 가능한 공식 조회 페이지로 이동합니다.</p>
+      </section>
+      <section class="track-panel">
+        <div class="panel">
+          <div class="tabs"><button class="tab is-active">Courier</button><button class="tab">B/L</button><button class="tab">Container</button><button class="tab">Air Cargo</button></div>
+          <form data-track-form>
+            <div class="form-grid tracking-form-grid">
+              <div class="field"><label>Tracking number</label><input data-track-number placeholder="Tracking Number 또는 B/L 번호"></div>
+              <div class="field"><label>Carrier</label><select data-carrier><option value="">자동 감지</option><option value="dhl">DHL</option><option value="fedex">FedEx</option><option value="ups">UPS</option><option value="usps">USPS</option><option value="maersk">Maersk</option><option value="msc">MSC</option><option value="hmm">HMM</option><option value="cma">CMA CGM</option></select></div>
+              <button class="primary-btn" type="submit">조회하기</button>
+            </div>
+          </form>
+          <p class="muted">통합 API가 연결되기 전까지 LOGILEE는 실제 위치나 배송 상태를 임의로 표시하지 않습니다.</p>
+          <div data-recent></div>
+        </div>
+        <aside class="panel">
+          <h2>Supported carriers</h2>
+          <div class="carrier-list"><span class="chip">DHL</span><span class="chip">FedEx</span><span class="chip">UPS</span><span class="chip">USPS</span><span class="chip">Maersk</span><span class="chip">MSC</span><span class="chip">HMM</span><span class="chip">CMA CGM</span></div>
+          <h3>Help</h3>
+          <p class="muted">B/L 번호는 선하증권 번호이며, 선사별 접두어가 다를 수 있습니다.</p>
+        </aside>
+      </section>
+    </div>
+  </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>💬 물류 Q&A</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      font-family: 'Segoe UI', 'Noto Sans KR', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f7fa;
+      color: #333;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .home-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.9rem;
+      padding: 8px 14px;
+      margin-bottom: 20px;
+      background-color: #005792;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      text-decoration: none;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .home-button:hover {
+      background-color: #0078b6;
+      transform: translateY(-2px);
+    }
+
+    h2, h3 {
+      color: #005792;
+    }
+
+    .qa-card {
+      background-color: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px 0;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s ease;
+    }
+
+    .qa-card:hover {
+      transform: translateY(-3px);
+    }
+
+    .question {
+      font-weight: 600;
+      color: #003B73;
+      margin-bottom: 10px;
+    }
+
+    .answer {
+      color: #444;
+      line-height: 1.7;
+      font-size: 0.95rem;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      color: #777;
+      font-size: 0.9rem;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      max-width: 500px;
+      padding: 10px 12px;
+      margin: 10px 0 25px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 0.95rem;
+    }
+
+    button {
+      background-color: #005792;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 16px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background-color 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #0078b6;
+    }
+  </style>
+</head>
+
+<body>
+  <a href="index-ko.html" class="home-button">🏠 홈</a>
+
+  <h2>💬 물류 Q&A</h2>
+  <p>운송, 통관, 무역 실무 등에서 자주 묻는 질문과 답변을 모았습니다.</p>
+
+  <input type="text" id="qaSearch" placeholder="🔍 궁금한 내용을 검색하세요..." onkeyup="filterQA()" />
+
+  <!-- Q&A Section -->
+  <div id="qaList">
+    <div class="qa-card">
+      <div class="question">📦 EXW와 FCA의 차이는 무엇인가요?</div>
+      <div class="answer">
+        <b>EXW(Ex Works)</b> 조건에서는 매수인이 판매자의 공장(또는 창고)에서부터 모든 비용과 위험을 부담합니다.<br>
+        반면 <b>FCA(Free Carrier)</b> 조건에서는 판매자가 수출 통관을 완료한 뒤, 매수인이 지정한 운송인에게 인도합니다.
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="question">🛃 HS CODE란 무엇이며 왜 중요한가요?</div>
+      <div class="answer">
+        <b>HS CODE</b>(Harmonized System Code)는 국제 무역에서 상품을 분류하는 표준 코드입니다.<br>
+        세율, 관세, 수출입 규제 적용 여부를 결정하는 기준이 되므로 정확한 코드 사용이 매우 중요합니다.
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="question">🚢 FCL과 LCL의 차이는 무엇인가요?</div>
+      <div class="answer">
+        <b>FCL(Full Container Load)</b>은 한 화주가 컨테이너 한 대를 전부 사용하는 방식이며,<br>
+        <b>LCL(Less than Container Load)</b>은 여러 화주의 화물을 한 컨테이너에 혼재하여 운송하는 방식입니다.<br>
+        LCL은 비용이 절감되지만 운송 시간이 길어질 수 있습니다.
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="question">✈️ 항공운송은 언제 선택하는 것이 좋을까요?</div>
+      <div class="answer">
+        항공운송은 납기 일정이 매우 짧거나, 고가·소량 화물일 때 적합합니다.<br>
+        반면 대량 화물이나 운송 비용 절감이 우선이라면 해상운송이 더 유리합니다.
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="question">📄 통관 시 필요한 서류에는 어떤 것이 있나요?</div>
+      <div class="answer">
+        일반적으로 다음과 같은 서류가 필요합니다.<br>
+        - 상업송장 (Commercial Invoice)<br>
+        - 포장명세서 (Packing List)<br>
+        - 선하증권(B/L) 또는 항공운송장(AWB)<br>
+        - 원산지증명서 (Certificate of Origin)<br>
+        - 기타 국가별 필수 인증서 또는 허가서
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="question">⚓ 항만 혼잡은 왜 발생하며, 어떻게 대응할 수 있나요?</div>
+      <div class="answer">
+        항만 혼잡은 선박 입항이 처리 용량을 초과할 때 발생합니다.<br>
+        사전 부킹을 조기 진행하고, 대체 항만 또는 비혼잡 시기 출항을 고려하는 것이 좋습니다.
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="question">💰 해상운임이 자주 변동되는 이유는 무엇인가요?</div>
+      <div class="answer">
+        해상운임은 연료비, 항만 정체, 계절적 수요, 선복(공급) 상황에 따라 변동됩니다.<br>
+        주요 운임 지수(Drewry, Freightos 등)를 주기적으로 모니터링하면 추세를 예측하는 데 도움이 됩니다.
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    © 2025 Logilee. 모든 권리 보유.
+  </footer>
+
+  <script>
+    function filterQA() {
+      const input = document.getElementById("qaSearch").value.toLowerCase();
+      const cards = document.getElementsByClassName("qa-card");
+      for (let card of cards) {
+        const text = card.innerText.toLowerCase();
+        card.style.display = text.includes(input) ? "block" : "none";
+      }
+    }
+  </script>
+</body>
+</html>

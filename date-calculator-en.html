@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>📅 Date Calculator</title>
+<style>
+    body {
+        font-family: 'Segoe UI', sans-serif;
+        max-width: 600px;
+        margin: 40px auto;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 12px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        text-align: center;
+    }
+    h2 {
+        color: #005792;
+    }
+    label {
+        margin-top: 10px;
+        display: block;
+        font-weight: bold;
+    }
+    input, button {
+        width: 100%;
+        padding: 12px;
+        margin-top: 8px;
+        margin-bottom: 15px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 1rem;
+    }
+    button {
+        background-color: #005792;
+        color: white;
+        cursor: pointer;
+    }
+    button:hover {
+        background-color: #0078b6;
+    }
+    .result {
+        background-color: #f8f8f8;
+        padding: 15px;
+        border-radius: 6px;
+        font-size: 1rem;
+    }
+    .home-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.9rem;
+        padding: 8px 14px;
+        background-color: #005792;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        text-decoration: none;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        z-index: 1000;
+    }
+    .home-button:hover {
+        background-color: #0078b6;
+        transform: translateY(-2px);
+    }
+</style>
+</head>
+<body>
+
+<a href="index.html" class="home-button">🏠 Home</a>
+
+<h2>📅 Date Calculator</h2>
+
+<label for="startDate">Start Date:</label>
+<input id="startDate" type="date"/>
+
+<label for="endDate">End Date:</label>
+<input id="endDate" type="date"/>
+
+<button onclick="calculateDateDifference()">📏 Calculate Date Difference</button>
+<div class="result" id="diffResult"></div>
+
+<hr/>
+
+<label for="baseDate">Base Date:</label>
+<input id="baseDate" type="date"/>
+
+<label for="daysToAdd">Days Later:</label>
+<input id="daysToAdd" type="number" min="0" placeholder="e.g. 30 (in days)"/>
+
+<button onclick="calculateFutureDate()">📆 Calculate Future Date</button>
+<div class="result" id="futureResult"></div>
+
+<script>
+    function calculateDateDifference() {
+        const start = document.getElementById('startDate').value;
+        const end = document.getElementById('endDate').value;
+        const resultEl = document.getElementById('diffResult');
+
+        if (!start || !end) {
+            resultEl.textContent = '❗ Please select both dates.';
+            return;
+        }
+
+        const startDate = new Date(start);
+        const endDate = new Date(end);
+        const diffTime = endDate - startDate;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        resultEl.textContent = diffDays < 0 
+            ? '🔁 End date is earlier than the start date.' 
+            : `📏 Difference is ${diffDays} days.`;
+    }
+
+    function calculateFutureDate() {
+        const base = document.getElementById('baseDate').value;
+        const days = parseInt(document.getElementById('daysToAdd').value);
+        const resultEl = document.getElementById('futureResult');
+
+        if (!base || isNaN(days) || days < 0) {
+            resultEl.textContent = '❗ Please enter a valid base date and number of days.';
+            return;
+        }
+
+        const baseDate = new Date(base);
+        baseDate.setDate(baseDate.getDate() + days);
+
+        const resultDate = baseDate.toISOString().split('T')[0];
+        resultEl.textContent = `📆 The date after ${days} days is ${resultDate}.`;
+    }
+</script>
+
+</body>
+</html>

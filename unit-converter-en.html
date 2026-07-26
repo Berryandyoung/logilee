@@ -1,0 +1,151 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Unit Converter | Logilee</title>
+<style>
+    body {
+        font-family: 'Segoe UI', sans-serif;
+        max-width: 600px;
+        margin: 40px auto;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 12px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        text-align: center;
+    }
+    h2, h3 {
+        text-align: center;
+        color: #005792;
+    }
+    label {
+        margin-top: 10px;
+        display: block;
+        font-weight: bold;
+    }
+    input, select, button {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        margin-bottom: 15px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+    }
+    button {
+        background-color: #005792;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+    }
+    button:hover {
+        background-color: #0078b6;
+    }
+    .result {
+        background-color: #f8f8f8;
+        padding: 15px;
+        border-radius: 6px;
+        font-size: 16px;
+    }
+    .home-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.9rem;
+        padding: 8px 14px;
+        background-color: #005792;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        text-decoration: none;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        z-index: 1000;
+    }
+    .home-button:hover {
+        background-color: #0078b6;
+        transform: translateY(-2px);
+    }
+</style>
+</head>
+<body>
+
+<a href="index.html" class="home-button">🏠 Home</a>
+
+<h2>📐 Unit Converter</h2>
+
+<h3>⚖️ Weight Converter</h3>
+<label for="weightInput">Weight:</label>
+<input id="weightInput" type="number" placeholder="Enter weight value..." />
+
+<label for="weightType">Conversion Type:</label>
+<select id="weightType">
+    <option value="lbsToKg">lbs → kg</option>
+    <option value="kgToLbs">kg → lbs</option>
+</select>
+
+<button onclick="convertWeight()">Convert Weight</button>
+<div class="result" id="weightResult"></div>
+
+<hr>
+
+<h3>📏 Length Converter</h3>
+<label for="lengthInput">Length:</label>
+<input id="lengthInput" type="number" placeholder="Enter length value..." />
+
+<label for="lengthType">Conversion Type:</label>
+<select id="lengthType">
+    <option value="inToCm">inches → cm</option>
+    <option value="cmToIn">cm → inches</option>
+</select>
+
+<button onclick="convertLength()">Convert Length</button>
+<div class="result" id="lengthResult"></div>
+
+<script>
+    function convertWeight() {
+        const value = parseFloat(document.getElementById('weightInput').value);
+        const type = document.getElementById('weightType').value;
+        let result = '';
+
+        if (isNaN(value)) {
+            document.getElementById('weightResult').innerHTML = '❗ Please enter a valid weight.';
+            return;
+        }
+
+        if (type === 'lbsToKg') {
+            result = `<strong>${value} lbs</strong> = ${(value * 0.453592).toFixed(2)} kg`;
+        } else {
+            result = `<strong>${value} kg</strong> = ${(value * 2.20462).toFixed(2)} lbs`;
+        }
+
+        document.getElementById('weightResult').innerHTML = result;
+    }
+
+    function convertLength() {
+        const value = parseFloat(document.getElementById('lengthInput').value);
+        const type = document.getElementById('lengthType').value;
+        let result = '';
+
+        if (isNaN(value)) {
+            document.getElementById('lengthResult').innerHTML = '❗ Please enter a valid length.';
+            return;
+        }
+
+        if (type === 'inToCm') {
+            result = `<strong>${value} inches</strong> = ${(value * 2.54).toFixed(2)} cm`;
+        } else {
+            result = `<strong>${value} cm</strong> = ${(value * 0.393701).toFixed(2)} inches`;
+        }
+
+        document.getElementById('lengthResult').innerHTML = result;
+    }
+</script>
+
+</body>
+</html>

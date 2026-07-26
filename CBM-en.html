@@ -1,0 +1,137 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CBM Calculator | Logilee</title>
+<style>
+    body {
+        font-family: 'Segoe UI', sans-serif;
+        max-width: 600px;
+        margin: 40px auto;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 12px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        text-align: center;
+    }
+    h2 {
+        color: #005792;
+    }
+    label {
+        margin-top: 10px;
+        display: block;
+        font-weight: bold;
+    }
+    input, select, button {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        margin-bottom: 15px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+    }
+    button {
+        background-color: #005792;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+    }
+    button:hover {
+        background-color: #0078b6;
+    }
+    .result {
+        background-color: #f8f8f8;
+        padding: 15px;
+        border-radius: 6px;
+        font-size: 16px;
+    }
+    .home-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.9rem;
+        padding: 8px 14px;
+        background-color: #005792;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        text-decoration: none;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        z-index: 1000;
+    }
+    .home-button:hover {
+        background-color: #0078b6;
+        transform: translateY(-2px);
+    }
+</style>
+</head>
+<body>
+
+<a href="index.html" class="home-button">🏠 Home</a>
+
+<h2>📦 CBM Calculator</h2>
+
+<label for="unit">Select unit:</label>
+<select id="unit">
+    <option value="cm">Centimeters (cm)</option>
+    <option value="inch">Inches (inch)</option>
+</select>
+
+<label for="length">Length:</label>
+<input id="length" min="0" placeholder="e.g. 120" type="number"/>
+
+<label for="width">Width:</label>
+<input id="width" min="0" placeholder="e.g. 80" type="number"/>
+
+<label for="height">Height:</label>
+<input id="height" min="0" placeholder="e.g. 60" type="number"/>
+
+<label for="quantity">Quantity (number of boxes):</label>
+<input id="quantity" min="1" placeholder="e.g. 10" type="number"/>
+
+<button onclick="calculateCBM()">Calculate CBM</button>
+
+<div class="result" id="result"></div>
+
+<script>
+    function calculateCBM() {
+        const unit = document.getElementById('unit').value;
+        let length = parseFloat(document.getElementById('length').value);
+        let width = parseFloat(document.getElementById('width').value);
+        let height = parseFloat(document.getElementById('height').value);
+        const quantity = parseInt(document.getElementById('quantity').value);
+
+        if (isNaN(length) || isNaN(width) || isNaN(height) || isNaN(quantity) ||
+            length < 0 || width < 0 || height < 0 || quantity < 1) {
+            document.getElementById('result').innerHTML = '❗ Please enter all values correctly.';
+            return;
+        }
+
+        if (unit === 'cm') {
+            length /= 100;
+            width /= 100;
+            height /= 100;
+        } else if (unit === 'inch') {
+            length *= 0.0254;
+            width *= 0.0254;
+            height *= 0.0254;
+        }
+
+        const cbmPerCarton = length * width * height;
+        const totalCBM = cbmPerCarton * quantity;
+
+        document.getElementById('result').innerHTML =
+            `<strong>CBM per box:</strong> ${cbmPerCarton.toFixed(4)} ㎥<br>
+             <strong>Total CBM:</strong> ${totalCBM.toFixed(4)} ㎥`;
+    }
+</script>
+
+</body>
+</html>

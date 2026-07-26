@@ -1,0 +1,467 @@
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f7fa;
+  color: #333;
+}
+
+header {
+  background-color: #005792;
+  color: white;
+  padding: 1rem 2rem;
+  text-align: center;
+}
+
+nav {
+  display: flex;
+  justify-content: center;
+  background-color: #003f66;
+}
+
+nav a {
+  color: white;
+  padding: 1rem;
+  text-decoration: none;
+}
+
+nav a:hover {
+  background-color: #0078b6;
+}
+
+.container {
+  padding: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+
+.section {
+  margin-bottom: 2rem;
+}
+
+.section h2 {
+  color: #005792;
+}
+
+footer {
+  background-color: #003f66;
+  color: white;
+  text-align: center;
+  padding: 1rem;
+  margin-top: 2rem;
+}
+
+/* 뉴스 검색/필터 영역 */
+.news-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.news-filters input[type="text"],
+.news-filters input[type="date"],
+.news-filters button {
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.news-filters button {
+  background-color: #005792;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.news-filters button:hover {
+  background-color: #0078b6;
+}
+
+/* 뉴스 리스트 */
+#news-list {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+#news-list li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #ddd;
+}
+
+#news-list a {
+  text-decoration: none;
+  color: #005792;
+}
+
+#news-list a:hover {
+  text-decoration: underline;
+}
+
+/* 더보기 버튼 */
+#load-more {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  background-color: #005792;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#load-more:hover {
+  background-color: #0078b6;
+}
+
+/* 반응형 */
+@media (max-width: 600px) {
+  .news-filters {
+    flex-direction: column;
+  }
+}
+
+/* 뉴스 검색/필터 영역 (RSS용 간단 버전) */
+.news-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  justify-content: center;
+}
+
+.news-filters input[type="text"],
+.news-filters button {
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.news-filters button {
+  background-color: #005792;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.news-filters button:hover {
+  background-color: #0078b6;
+}
+
+/* 뉴스 리스트 */
+#news-list {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+#news-list li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #ddd;
+}
+
+#news-list a {
+  text-decoration: none;
+  color: #005792;
+}
+
+#news-list a:hover {
+  text-decoration: underline;
+}
+
+/* 더보기 버튼 */
+#load-more {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  background-color: #005792;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#load-more:hover {
+  background-color: #0078b6;
+}
+
+/* 반응형 */
+@media (max-width: 600px) {
+  .news-filters {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .news-filters input,
+  .news-filters button {
+    width: 100%;
+    max-width: 300px;
+  }
+}
+
+/* 언어 선택 상단 고정 스타일 */
+#language-switcher {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #f0f0f0;
+  border-bottom: 1px solid #ccc;
+}
+
+#language-switcher button {
+  background-color: #e0e0e0;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  padding: 0.3rem 0.8rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+#language-switcher button:hover {
+  background-color: #d0d0d0;
+}
+
+/* 언어 전환 버튼 스타일 */
+.lang-btn {
+  background-color: #f5f5f5;
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  padding: 0.4rem 1rem;
+  margin: 0 0.2rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.lang-btn:hover {
+  background-color: #e0e0e0;
+  border-color: #999;
+}
+
+/* 언어 전환 레이아웃 */
+#language-switcher {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+.language-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.language-label {
+  font-weight: bold;
+}
+
+/* 언어 버튼은 기존 lang-btn 유지 */
+
+/* 다크 모드 언어 전환 스타일 */
+#language-switcher {
+  background-color: #111;
+  padding: 1rem 0;
+}
+
+.language-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.language-label {
+  font-weight: bold;
+  color: #fff;
+}
+
+.lang-btn {
+  background-color: #222;
+  color: #fff;
+  border: 1px solid #444;
+  border-radius: 20px;
+  padding: 0.4rem 1rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.lang-btn:hover {
+  background-color: #333;
+  border-color: #666;
+}
+
+/* 언어 텍스트 링크 스타일 */
+.lang-link {
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.2s ease;
+}
+
+.lang-link:hover {
+  text-decoration: underline;
+  color: #ddd;
+}
+
+/* 언어 구분자 강조 */
+.lang-divider {
+  font-weight: bold;
+  color: #fff;
+  margin: 0 0.3rem;
+}
+
+/* 언어 구분자 강조 - 더 큰 크기와 대비 */
+.lang-divider {
+  font-weight: bold;
+  color: #ffd700;
+  /* 금색 계열로 강조 */
+  margin: 0 0.4rem;
+  font-size: 1.2rem;
+}
+
+/* Sitemap Styling */
+.sitemap h3 {
+  color: #ffd700;
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+}
+
+.sitemap ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.sitemap li a {
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 1.1rem;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.sitemap li a:hover {
+  color: #ffd700;
+  text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+  .sitemap ul {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+
+
+
+
+
+
+
+#weather-exchange-widget {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(5px);
+  color: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  max-width: 600px;
+  display: flex;
+  gap: 20px;
+  text-align: left;
+  z-index: 9999;
+}
+
+#exchange-section,
+#weather-section {
+  flex: 1;
+}
+
+/* 폰트 스타일 및 사이즈 조정 */
+#weather-exchange-widget h3 {
+  margin-top: 0;
+  font-size: 1.2rem;
+  text-align: center;
+  color: #ffd700;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+#weather-exchange-widget .city-weather {
+  margin: 12px 0;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#weather-exchange-widget img {
+  vertical-align: middle;
+  width: 48px;
+  height: 48px;
+}
+
+#weather-exchange-widget strong,
+#weather-exchange-widget p {
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+
+#exchange-rates {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 12px 16px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    font-size: 0.95rem;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 200px;  /* 줄였습니다 */
+}
+
+#exchange-rates .rate-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    padding-bottom: 4px;
+}
+
+#exchange-rates .rate-item:last-child {
+    border-bottom: none;
+}
+
+#exchange-rates strong {
+    color: #ffd700;
+    font-weight: 500;
+}
+
+#exchange-rates span {
+    font-weight: bold;
+    text-align: right;
+    min-width: 100px;  /* 숫자 부분도 살짝 줄임 */
+}
+
+
+
+
+

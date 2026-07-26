@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>💬 Logistics Q&A</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f7fa;
+      color: #333;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .home-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.9rem;
+      padding: 8px 14px;
+      margin-bottom: 20px;
+      background-color: #005792;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      text-decoration: none;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .home-button:hover {
+      background-color: #0078b6;
+      transform: translateY(-2px);
+    }
+
+    h2, h3 {
+      color: #005792;
+    }
+
+    .qa-card {
+      background-color: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px 0;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s ease;
+    }
+
+    .qa-card:hover {
+      transform: translateY(-3px);
+    }
+
+    .question {
+      font-weight: 600;
+      color: #003B73;
+      margin-bottom: 10px;
+    }
+
+    .answer {
+      color: #444;
+      line-height: 1.6;
+      font-size: 0.95rem;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      color: #777;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      max-width: 500px;
+      padding: 10px 12px;
+      margin: 10px 0 25px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 0.95rem;
+    }
+
+    button {
+      background-color: #005792;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 16px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background-color 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #0078b6;
+    }
+  </style>
+</head>
+
+<body>
+  <a href="index.html" class="home-button">🏠 Home</a>
+
+  <h2>💬 Logistics Q&A</h2>
+  <p>Find answers to frequently asked questions about shipping, customs, and trade compliance.</p>
+
+  <input type="text" id="qaSearch" placeholder="🔍 Search your question..." onkeyup="filterQA()" />
+
+  <!-- Q&A Section -->
+  <div id="qaList">
+    <div class="qa-card">
+      <div class="question">📦 What’s the difference between EXW and FCA?</div>
+      <div class="answer">
+        Under <b>EXW</b>, the buyer takes full responsibility from the seller’s facility, including export procedures.  
+        Under <b>FCA</b>, the seller handles export clearance and delivers the goods to the carrier designated by the buyer.
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="question">🛃 What is an HS Code and why is it important?</div>
+      <div class="answer">
+        The <b>HS Code (Harmonized System Code)</b> is an international product classification used in customs clearance.  
+        It determines applicable duties, taxes, and import/export regulations for your goods.
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="question">🚢 What is the difference between FCL and LCL shipping?</div>
+      <div class="answer">
+        <b>FCL (Full Container Load)</b> means one shipper uses an entire container.  
+        <b>LCL (Less than Container Load)</b> combines cargo from multiple shippers in one container, which can be more cost-efficient but slower.
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="question">✈️ When should I choose air freight over sea freight?</div>
+      <div class="answer">
+        Choose <b>air freight</b> when time is critical, for small volumes, or high-value goods.  
+        Choose <b>sea freight</b> for large shipments where cost efficiency matters more than speed.
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="question">📄 What documents are needed for customs clearance?</div>
+      <div class="answer">
+        Common documents include:  
+        - Commercial Invoice (CIPL)  
+        - Packing List (PL)  
+        - Bill of Lading or Air Waybill  
+        - Certificate of Origin (if applicable)  
+        - Any country-specific permits or certificates
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="question">⚓ What causes port congestion and how can I manage it?</div>
+      <div class="answer">
+        Port congestion occurs when vessel arrivals exceed port capacity.  
+        To manage it, plan early bookings, track vessel schedules, and consider alternative ports or off-peak shipping windows.
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="question">💰 Why are freight rates fluctuating so often?</div>
+      <div class="answer">
+        Freight rates are affected by fuel costs, port congestion, seasonal demand, and capacity availability.  
+        Monitoring global indexes (like Drewry or Freightos) helps predict short-term changes.
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    © 2025 Logilee. All rights reserved.
+  </footer>
+
+  <script>
+    function filterQA() {
+      const input = document.getElementById("qaSearch").value.toLowerCase();
+      const cards = document.getElementsByClassName("qa-card");
+
+      for (let card of cards) {
+        const text = card.innerText.toLowerCase();
+        card.style.display = text.includes(input) ? "block" : "none";
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>단위 변환기 | Logilee</title>
+<style>
+    body {
+        font-family: 'Segoe UI', 'Noto Sans KR', sans-serif;
+        max-width: 600px;
+        margin: 40px auto;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 12px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        text-align: center;
+    }
+    h2, h3 {
+        text-align: center;
+        color: #005792;
+    }
+    label {
+        margin-top: 10px;
+        display: block;
+        font-weight: bold;
+    }
+    input, select, button {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        margin-bottom: 15px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+    }
+    button {
+        background-color: #005792;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+    }
+    button:hover {
+        background-color: #0078b6;
+    }
+    .result {
+        background-color: #f8f8f8;
+        padding: 15px;
+        border-radius: 6px;
+        font-size: 16px;
+    }
+    .home-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.9rem;
+        padding: 8px 14px;
+        background-color: #005792;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        text-decoration: none;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        z-index: 1000;
+    }
+    .home-button:hover {
+        background-color: #0078b6;
+        transform: translateY(-2px);
+    }
+</style>
+</head>
+<body>
+
+<a href="index-ko.html" class="home-button">🏠 홈</a>
+
+<h2>📐 단위 변환기</h2>
+
+<h3>⚖️ 무게 변환</h3>
+<label for="weightInput">무게:</label>
+<input id="weightInput" type="number" placeholder="값을 입력하세요..." />
+
+<label for="weightType">변환 방향:</label>
+<select id="weightType">
+    <option value="lbsToKg">파운드(lb) → 킬로그램(kg)</option>
+    <option value="kgToLbs">킬로그램(kg) → 파운드(lb)</option>
+</select>
+
+<button onclick="convertWeight()">무게 변환</button>
+<div class="result" id="weightResult"></div>
+
+<hr>
+
+<h3>📏 길이 변환</h3>
+<label for="lengthInput">길이:</label>
+<input id="lengthInput" type="number" placeholder="값을 입력하세요..." />
+
+<label for="lengthType">변환 방향:</label>
+<select id="lengthType">
+    <option value="inToCm">인치(in) → 센티미터(cm)</option>
+    <option value="cmToIn">센티미터(cm) → 인치(in)</option>
+</select>
+
+<button onclick="convertLength()">길이 변환</button>
+<div class="result" id="lengthResult"></div>
+
+<script>
+    function convertWeight() {
+        const value = parseFloat(document.getElementById('weightInput').value);
+        const type = document.getElementById('weightType').value;
+        let result = '';
+
+        if (isNaN(value)) {
+            document.getElementById('weightResult').innerHTML = '❗ 유효한 값을 입력해주세요.';
+            return;
+        }
+
+        if (type === 'lbsToKg') {
+            result = `<strong>${value} 파운드(lb)</strong> = ${(value * 0.453592).toFixed(2)} 킬로그램(kg)`;
+        } else {
+            result = `<strong>${value} 킬로그램(kg)</strong> = ${(value * 2.20462).toFixed(2)} 파운드(lb)`;
+        }
+
+        document.getElementById('weightResult').innerHTML = result;
+    }
+
+    function convertLength() {
+        const value = parseFloat(document.getElementById('lengthInput').value);
+        const type = document.getElementById('lengthType').value;
+        let result = '';
+
+        if (isNaN(value)) {
+            document.getElementById('lengthResult').innerHTML = '❗ 유효한 값을 입력해주세요.';
+            return;
+        }
+
+        if (type === 'inToCm') {
+            result = `<strong>${value} 인치(in)</strong> = ${(value * 2.54).toFixed(2)} 센티미터(cm)`;
+        } else {
+            result = `<strong>${value} 센티미터(cm)</strong> = ${(value * 0.393701).toFixed(2)} 인치(in)`;
+        }
+
+        document.getElementById('lengthResult').innerHTML = result;
+    }
+</script>
+
+</body>
+</html>

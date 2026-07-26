@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Global Sales Insights - LogiLee Blog">
+  <title>Global Sales | LogiLee Blog</title>
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    body {
+      font-family: 'Noto Sans KR', Arial, sans-serif;
+      background-color: #f8f9fb;
+      margin: 0;
+      color: #222;
+    }
+
+    header {
+      background: #005792;
+      color: #fff;
+      padding: 30px 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2rem;
+    }
+
+    header p {
+      margin-top: 8px;
+      font-size: 1rem;
+      opacity: 0.9;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .posts {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    .post {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      overflow: hidden;
+      display: flex;
+      transition: transform 0.2s;
+    }
+
+    .post:hover {
+      transform: translateY(-3px);
+    }
+
+    .post img {
+      width: 220px;
+      height: 160px;
+      object-fit: cover;
+    }
+
+    .post-content {
+      padding: 20px;
+      flex: 1;
+    }
+
+    .post-content h2 {
+      font-size: 1.25rem;
+      margin: 0 0 8px 0;
+      color: #005792;
+    }
+
+    .post-content p {
+      margin: 0 0 10px;
+      font-size: 0.95rem;
+      color: #444;
+      line-height: 1.6;
+    }
+
+    .post-content .meta {
+      font-size: 0.85rem;
+      color: #777;
+    }
+
+    footer {
+      background: #f1f1f1;
+      text-align: center;
+      padding: 25px;
+      font-size: 0.9rem;
+      color: #555;
+      margin-top: 40px;
+    }
+
+    @media (max-width: 900px) {
+      .post {
+        flex-direction: column;
+      }
+      .post img {
+        width: 100%;
+        height: 200px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Global Sales</h1>
+    <p>해외영업 실무자를 위한 인사이트 모음</p>
+  </header>
+
+  <main class="container">
+
+    <section class="posts">
+
+      <!-- Post 1 -->
+      <article class="post">
+        <img src="images/sales-negotiation.jpg" alt="Sales Negotiation">
+        <div class="post-content">
+          <h2><a href="#" style="text-decoration:none; color:#005792;">해외영업 가격 협상 전략 가이드</a></h2>
+          <p>단가 인상 요청, MOQ 조정, 결제 조건 협상 등 실제 미팅에서 바로 쓸 수 있는 협상 스크립트와 사례를 정리했습니다.</p>
+          <p class="meta">작성일: 2025-10-12 · 카테고리: Global Sales</p>
+        </div>
+      </article>
+
+      <!-- Post 2 -->
+      <article class="post">
+        <img src="images/account-management.jpg" alt="Account Management">
+        <div class="post-content">
+          <h2><a href="#" style="text-decoration:none; color:#005792;">글로벌 고객사 계정관리 기본기</a></h2>
+          <p>고객 만족도 관리부터 공급 리스크 대응, 분기별 리뷰 보고서 작성 팁까지 해외 Key Account 실무의 핵심을 담았습니다.</p>
+          <p class="meta">작성일: 2025-10-10 · 카테고리: Global Sales</p>
+        </div>
+      </article>
+
+      <!-- Post 3 -->
+      <article class="post">
+        <img src="images/lead-communication.jpg" alt="Client Communication">
+        <div class="post-content">
+          <h2><a href="#" style="text-decoration:none; color:#005792;">영업 이메일 템플릿 12종</a></h2>
+          <p>PO 요청, 리드타임 문의, 클레임 대응, 견적 Follow-up 등 해외영업 필수 영문 이메일을 템플릿 형태로 제공합니다.</p>
+          <p class="meta">작성일: 2025-10-07 · 카테고리: Global Sales</p>
+        </div>
+      </article>
+
+    </section>
+
+  </main>
+
+  <footer>
+    © 2025 LogiLee. All rights reserved.
+  </footer>
+</body>
+</html>
