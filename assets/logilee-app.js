@@ -71,10 +71,190 @@ function currentLang() {
   return document.documentElement.lang && document.documentElement.lang.startsWith("ko") ? "ko" : "en";
 }
 
+function refreshIcons() {
+  if (window.lucide) window.lucide.createIcons();
+}
+
+function enhanceSidebar() {
+  const rail = document.querySelector(".workspace-rail");
+  const nav = rail?.querySelector(".workspace-nav");
+  if (!rail || !nav || rail.dataset.enhanced === "true") return;
+
+  rail.dataset.enhanced = "true";
+  const brand = rail.querySelector(".compact-brand");
+  const topToggle = rail.querySelector("[data-sidebar-toggle]");
+  const upgrade = rail.querySelector(".upgrade-card");
+
+  const header = document.createElement("div");
+  header.className = "sidebar-header";
+  if (brand) header.appendChild(brand);
+  if (topToggle) header.appendChild(topToggle);
+  const drawerClose = document.createElement("button");
+  drawerClose.className = "sidebar-drawer-close";
+  drawerClose.dataset.sidebarDrawerClose = "";
+  drawerClose.type = "button";
+  drawerClose.setAttribute("aria-label", "Close menu");
+  drawerClose.innerHTML = `<i data-lucide="x"></i>`;
+  header.appendChild(drawerClose);
+  rail.insertBefore(header, rail.firstChild);
+
+  nav.classList.add("sidebar-nav");
+  nav.querySelectorAll("a").forEach((link) => {
+    const label = link.textContent.trim().replace(/\s+/g, " ");
+    link.dataset.menuLabel = label;
+    if (!link.querySelector("span")) {
+      const icon = link.querySelector("i, svg");
+      const span = document.createElement("span");
+      span.textContent = label;
+      link.textContent = "";
+      if (icon) link.appendChild(icon);
+      link.appendChild(span);
+    }
+  });
+
+  const currentFile = location.pathname.split("/").pop() || "index.html";
+  let activeGroupId = "";
+  nav.querySelectorAll("a").forEach((link) => {
+    const hrefFile = (link.getAttribute("href") || "").split("#")[0].split("?")[0].split("/").pop() || "index.html";
+    const isActive = currentFile === hrefFile || (currentFile === "index.html" && link.classList.contains("nav-home"));
+    link.classList.toggle("is-active", isActive);
+  });
+
+  nav.querySelectorAll("section").forEach((section) => {
+    const heading = section.querySelector("h2");
+    if (!heading) return;
+    const groupId = heading.textContent.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-");
+    section.classList.add("nav-group");
+    section.dataset.navGroup = groupId;
+    const links = [...section.querySelectorAll("a")];
+    if (links.some((link) => link.classList.contains("is-active"))) activeGroupId = groupId;
+
+    const trigger = document.createElement("button");
+    trigger.className = "nav-group-trigger";
+    trigger.type = "button";
+    trigger.dataset.accordionTrigger = groupId;
+    trigger.setAttribute("aria-expanded", "false");
+    trigger.innerHTML = `<span>${heading.textContent.trim()}</span><i data-lucide="chevron-right"></i>`;
+
+    const panel = document.createElement("div");
+    panel.className = "nav-group-panel";
+    const inner = document.createElement("div");
+    inner.className = "nav-group-panel-inner";
+    links.forEach((link) => inner.appendChild(link));
+    panel.appendChild(inner);
+    section.replaceChildren(trigger, panel);
+  });
+
+  const footer = document.createElement("div");
+  footer.className = "sidebar-footer";
+  const collapseText = currentLang() === "ko" ? "사이드바 접기" : "Collapse";
+  const themeText = currentLang() === "ko" ? "테마" : "Theme";
+  footer.innerHTML = `
+    <button class="sidebar-footer-action" data-sidebar-footer-toggle type="button">
+      <i data-lucide="panel-left-close"></i><span>${collapseText}</span>
+    </button>
+    <button class="theme-toggle" type="button" aria-label="${themeText}">
+      <i data-lucide="sun"></i><span>${themeText}</span>
+    </button>
+    <div class="sidebar-version">
+      <strong>LOGILEE v1.0.0</strong>
+      <span>© 2025 BerryYoung Co., Ltd.</span>
+    </div>
+  `;
+  if (upgrade) footer.insertBefore(upgrade, footer.firstChild);
+  rail.appendChild(footer);
+
+  if (!document.querySelector("[data-sidebar-overlay]")) {
+    const overlay = document.createElement("div");
+    overlay.className = "sidebar-overlay";
+    overlay.dataset.sidebarOverlay = "";
+    document.querySelector(".workspace-shell")?.appendChild(overlay);
+  }
+
+  wireSidebarAccordion(activeGroupId);
+  requestAnimationFrame(() => {
+    nav.querySelector("a.is-active")?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  });
+}
+
+function wireSidebarAccordion(activeGroupId) {
+  const groups = [...document.querySelectorAll(".nav-group")];
+  if (!groups.length) return;
+
+  const key = `logilee-sidebar-groups:${currentLang()}`;
+  let saved = null;
+  try {
+    saved = JSON.parse(localStorage.getItem(key) || "null");
+  } catch {
+    saved = null;
+  }
+
+  const state = {};
+  groups.forEach((group) => {
+    const groupId = group.dataset.navGroup;
+    state[groupId] = saved ? Boolean(saved[groupId]) : groupId === activeGroupId;
+    if (groupId === activeGroupId) state[groupId] = true;
+  });
+
+  const render = () => {
+    groups.forEach((group) => {
+      const open = Boolean(state[group.dataset.navGroup]);
+      const trigger = group.querySelector(".nav-group-trigger");
+      group.dataset.open = String(open);
+      trigger?.setAttribute("aria-expanded", String(open));
+      trigger?.querySelector("i")?.setAttribute("data-lucide", open ? "chevron-down" : "chevron-right");
+    });
+    refreshIcons();
+  };
+
+  groups.forEach((group) => {
+    group.querySelector(".nav-group-trigger")?.addEventListener("click", () => {
+      const groupId = group.dataset.navGroup;
+      state[groupId] = !state[groupId];
+      localStorage.setItem(key, JSON.stringify(state));
+      render();
+    });
+  });
+
+  render();
+}
+
 function wireMenu() {
   const button = document.querySelector("[data-menu-toggle]");
   const nav = document.querySelector("[data-mobile-nav]");
-  if (!button || !nav) return;
+  const shell = document.querySelector(".workspace-shell");
+  const overlay = document.querySelector("[data-sidebar-overlay]");
+  const drawerClose = document.querySelector("[data-sidebar-drawer-close]");
+  if (!button) return;
+
+  if (shell && !nav) {
+    const closeDrawer = () => {
+      shell.classList.remove("sidebar-drawer-open");
+      document.body.classList.remove("sidebar-drawer-active");
+      button.setAttribute("aria-expanded", "false");
+    };
+    const openDrawer = () => {
+      shell.classList.add("sidebar-drawer-open");
+      document.body.classList.add("sidebar-drawer-active");
+      button.setAttribute("aria-expanded", "true");
+    };
+    button.addEventListener("click", () => {
+      shell.classList.contains("sidebar-drawer-open") ? closeDrawer() : openDrawer();
+    });
+    overlay?.addEventListener("click", closeDrawer);
+    drawerClose?.addEventListener("click", closeDrawer);
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") closeDrawer();
+    });
+    document.querySelectorAll(".workspace-nav a").forEach((link) => {
+      link.addEventListener("click", () => {
+        if (window.matchMedia("(max-width: 1180px)").matches) closeDrawer();
+      });
+    });
+    return;
+  }
+
+  if (!nav) return;
   button.addEventListener("click", () => {
     const open = nav.classList.toggle("is-open");
     button.setAttribute("aria-expanded", String(open));
@@ -82,14 +262,29 @@ function wireMenu() {
 }
 
 function wireSidebarCollapse() {
-  const button = document.querySelector("[data-sidebar-toggle]");
+  const buttons = document.querySelectorAll("[data-sidebar-toggle], [data-sidebar-footer-toggle]");
   const shell = document.querySelector(".workspace-shell");
-  if (!button || !shell) return;
-  button.addEventListener("click", () => {
+  if (!buttons.length || !shell) return;
+  const updateButtons = () => {
+    const collapsed = shell.classList.contains("sidebar-collapsed");
+    document.querySelectorAll("[data-sidebar-toggle]").forEach((button) => {
+      button.setAttribute("aria-label", collapsed ? "Expand sidebar" : "Collapse sidebar");
+      button.innerHTML = `<i data-lucide="${collapsed ? "chevron-right" : "chevron-left"}"></i>`;
+    });
+    document.querySelectorAll("[data-sidebar-footer-toggle]").forEach((button) => {
+      button.querySelector("i")?.setAttribute("data-lucide", collapsed ? "panel-left-open" : "panel-left-close");
+      const text = button.querySelector("span");
+      if (text) text.textContent = collapsed ? (currentLang() === "ko" ? "사이드바 펼치기" : "Expand") : (currentLang() === "ko" ? "사이드바 접기" : "Collapse");
+    });
+    refreshIcons();
+  };
+  buttons.forEach((button) => button.addEventListener("click", () => {
     const collapsed = shell.classList.toggle("sidebar-collapsed");
-    button.setAttribute("aria-label", collapsed ? "사이드바 펼치기" : "사이드바 접기");
-    if (window.lucide) window.lucide.createIcons();
-  });
+    localStorage.setItem("logilee-sidebar-collapsed", String(collapsed));
+    updateButtons();
+  }));
+  if (localStorage.getItem("logilee-sidebar-collapsed") === "true") shell.classList.add("sidebar-collapsed");
+  updateButtons();
 }
 
 function setupLanguageChoice() {
@@ -332,9 +527,8 @@ function wireDictionary() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  if (window.lucide) {
-    window.lucide.createIcons();
-  }
+  enhanceSidebar();
+  refreshIcons();
   wireMenu();
   wireSidebarCollapse();
   setupLanguageChoice();
