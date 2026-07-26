@@ -1418,3 +1418,576 @@ dd {
     height: 54px;
   }
 }
+
+/* Premium SaaS refinement */
+:root {
+  --ocean-blue: #0f6bff;
+  --container-orange: #f97316;
+  --premium-navy: #06172f;
+  --premium-navy-2: #0a2347;
+  --blue-glow: 0 18px 45px rgba(15, 107, 255, 0.16);
+}
+
+.workspace-rail {
+  background:
+    radial-gradient(circle at 18% 0%, rgba(23, 107, 255, 0.22), transparent 26%),
+    linear-gradient(180deg, #06172f 0%, #071a2b 100%);
+  border-right: 1px solid rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.82);
+  scrollbar-color: rgba(255,255,255,0.24) transparent;
+  scrollbar-width: thin;
+}
+
+.workspace-rail::-webkit-scrollbar {
+  width: 8px;
+}
+
+.workspace-rail::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.22);
+  border-radius: 999px;
+}
+
+.compact-brand {
+  position: relative;
+  padding-bottom: 22px;
+  border-bottom: 1px solid rgba(255,255,255,0.10);
+}
+
+.sidebar-collapse {
+  position: absolute;
+  top: 18px;
+  right: -16px;
+  z-index: 30;
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255,255,255,0.22);
+  border-radius: 999px;
+  background: #ffffff;
+  color: var(--deep-navy);
+  box-shadow: 0 10px 28px rgba(0,0,0,0.18);
+}
+
+.sidebar-collapse svg {
+  width: 17px;
+  height: 17px;
+}
+
+.compact-brand strong {
+  color: #fff;
+  letter-spacing: 0;
+  text-shadow: 0 0 24px rgba(23,107,255,0.28);
+}
+
+.compact-brand span {
+  color: rgba(255,255,255,0.72);
+}
+
+.workspace-nav {
+  gap: 22px;
+}
+
+.workspace-nav section {
+  padding-top: 4px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+.workspace-nav h2 {
+  margin-bottom: 8px;
+  color: rgba(255,255,255,0.48);
+  letter-spacing: 0.08em;
+}
+
+.workspace-nav a {
+  position: relative;
+  min-height: 34px;
+  padding: 7px 10px 7px 12px;
+  color: rgba(255,255,255,0.82);
+  transition: background 180ms ease, color 180ms ease, transform 180ms ease;
+}
+
+.workspace-nav a::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 9px;
+  bottom: 9px;
+  width: 3px;
+  border-radius: 999px;
+  background: transparent;
+  transition: background 180ms ease;
+}
+
+.workspace-nav a:hover {
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+  transform: translateX(2px);
+}
+
+.workspace-nav a:hover::before,
+.workspace-nav a.is-active::before {
+  background: var(--ocean-blue);
+}
+
+.workspace-nav a.is-active {
+  background: linear-gradient(135deg, rgba(23,107,255,0.95), rgba(13,86,217,0.86));
+  color: #fff;
+  box-shadow: 0 10px 24px rgba(23,107,255,0.25);
+}
+
+.workspace-nav svg,
+.top-actions svg,
+.hero-search svg,
+.icon svg,
+.ai-panel h2 svg {
+  width: 18px;
+  height: 18px;
+  stroke-width: 2;
+  flex: 0 0 auto;
+}
+
+.workspace-nav svg {
+  width: 16px;
+  height: 16px;
+  color: rgba(255,255,255,0.72);
+}
+
+.workspace-nav a:hover svg,
+.workspace-nav a.is-active svg {
+  color: #fff;
+}
+
+.upgrade-card {
+  background: linear-gradient(160deg, rgba(23,107,255,0.16), rgba(255,255,255,0.06));
+  border-color: rgba(255,255,255,0.14);
+  color: #fff;
+}
+
+.upgrade-card h3 {
+  color: #fff;
+}
+
+.upgrade-card p {
+  color: rgba(255,255,255,0.68);
+}
+
+.sidebar-collapsed {
+  grid-template-columns: 86px minmax(0, 1fr);
+}
+
+.sidebar-collapsed .workspace-rail {
+  padding-inline: 14px;
+}
+
+.sidebar-collapsed .compact-brand strong {
+  font-size: 0;
+}
+
+.sidebar-collapsed .compact-brand strong::first-letter {
+  font-size: 0;
+}
+
+.sidebar-collapsed .compact-brand::after {
+  content: "L";
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--ocean-blue), #0d56d9);
+  color: #fff;
+  font-size: 24px;
+  font-weight: 900;
+}
+
+.sidebar-collapsed .compact-brand span,
+.sidebar-collapsed .workspace-nav h2,
+.sidebar-collapsed .workspace-nav a:not(.nav-home),
+.sidebar-collapsed .upgrade-card,
+.sidebar-collapsed .nav-home {
+  font-size: 0;
+}
+
+.sidebar-collapsed .workspace-nav a {
+  justify-content: center;
+  padding-inline: 0;
+}
+
+.sidebar-collapsed .workspace-nav svg {
+  width: 19px;
+  height: 19px;
+}
+
+.sidebar-collapsed .sidebar-collapse svg {
+  transform: rotate(180deg);
+}
+
+.workspace-topbar {
+  background: rgba(248, 251, 255, 0.86);
+}
+
+.topbar-spacer {
+  flex: 1;
+}
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 38px;
+  background: rgba(255,255,255,0.88);
+  transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+.icon-btn:hover {
+  border-color: rgba(23,107,255,0.35);
+  box-shadow: var(--blue-glow);
+  transform: translateY(-1px);
+}
+
+.workspace-page {
+  background:
+    radial-gradient(circle at 20% 0%, rgba(23,107,255,0.08), transparent 26%),
+    linear-gradient(180deg, #f7fbff 0%, #f8fafc 460px);
+}
+
+.trade-hero {
+  min-height: 330px;
+  padding: 44px 52px;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 0.38fr);
+  background:
+    linear-gradient(90deg, rgba(3, 15, 35, 0.92) 0%, rgba(5, 24, 50, 0.78) 46%, rgba(5, 24, 50, 0.20) 100%),
+    linear-gradient(180deg, rgba(5,24,50,0.16), rgba(5,24,50,0.38)),
+    url("trade-hero-port.jpg") center / cover no-repeat;
+}
+
+.trade-hero h1 {
+  max-width: 650px;
+  font-weight: 880;
+}
+
+.trade-hero p {
+  margin-bottom: 20px;
+  color: rgba(255,255,255,0.9);
+}
+
+.hero-search {
+  width: min(100%, 820px);
+  min-height: 64px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 22px 0 18px;
+  padding: 8px 10px 8px 18px;
+  border: 1px solid rgba(255,255,255,0.30);
+  border-radius: 12px;
+  background: rgba(255,255,255,0.94);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.22);
+}
+
+.hero-search svg {
+  color: var(--deep-navy);
+}
+
+.hero-search input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--main-text);
+  font-weight: 650;
+}
+
+.trade-hero .chip-row {
+  align-items: center;
+  margin-top: 0;
+}
+
+.trade-hero .chip {
+  min-height: 34px;
+  background: rgba(255,255,255,0.16);
+  color: #fff;
+  border-color: rgba(255,255,255,0.22);
+  backdrop-filter: blur(10px);
+}
+
+.trade-hero .chip:hover {
+  background: rgba(255,255,255,0.28);
+}
+
+.panel {
+  border-color: rgba(189, 204, 226, 0.78);
+  box-shadow: 0 10px 30px rgba(7, 26, 43, 0.045);
+}
+
+.panel h2,
+.section-head h2 {
+  position: relative;
+  font-weight: 850;
+}
+
+.panel h2::before,
+.section-head h2::before {
+  content: "";
+  display: inline-block;
+  width: 4px;
+  height: 16px;
+  margin-right: 9px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--ocean-blue), #72a8ff);
+  vertical-align: -2px;
+}
+
+.tracking-actions a,
+.quick-list a,
+.tool-icons a,
+.news-item,
+.side-card > a,
+.image-card,
+.sponsor-card {
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
+}
+
+.tracking-actions a {
+  border: 1px solid #e2ebf6;
+  background: linear-gradient(180deg, #fff, #fbfdff);
+}
+
+.tracking-actions a:hover,
+.quick-list a:hover,
+.tool-icons a:hover,
+.news-item:hover,
+.side-card > a:hover {
+  transform: translateY(-2px);
+  border-color: rgba(23,107,255,0.40);
+  box-shadow: var(--blue-glow);
+  background: #fff;
+}
+
+.tracking-actions a:hover .icon,
+.quick-list a:hover .icon,
+.tool-icons a:hover .icon {
+  color: #fff;
+  background: linear-gradient(135deg, var(--ocean-blue), #0d56d9);
+}
+
+.icon {
+  border: 1px solid #dbe8ff;
+  transition: background 180ms ease, color 180ms ease, border-color 180ms ease;
+}
+
+.icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.market-card {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.96), rgba(250,253,255,0.96)),
+    radial-gradient(circle at 92% 0%, rgba(23,107,255,0.12), transparent 28%);
+}
+
+.spark-list dd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.spark {
+  width: 48px;
+  height: 18px;
+  display: inline-block;
+  background:
+    linear-gradient(145deg, transparent 0 18%, var(--ocean-blue) 19% 24%, transparent 25% 42%, var(--ocean-blue) 43% 48%, transparent 49% 66%, var(--ocean-blue) 67% 72%, transparent 73%);
+  opacity: 0.92;
+}
+
+.spark.alt {
+  background:
+    linear-gradient(30deg, transparent 0 20%, var(--ocean-blue) 21% 26%, transparent 27% 45%, var(--ocean-blue) 46% 51%, transparent 52% 70%, var(--ocean-blue) 71% 76%, transparent 77%);
+}
+
+.spark-down {
+  background:
+    linear-gradient(35deg, transparent 0 16%, var(--danger) 17% 22%, transparent 23% 44%, var(--danger) 45% 50%, transparent 51% 70%, var(--danger) 71% 76%, transparent 77%);
+}
+
+.news-item strong {
+  color: var(--ink-navy);
+  line-height: 1.35;
+}
+
+.tool-icons a {
+  position: relative;
+  border: 1px solid transparent;
+}
+
+.tool-icons a::after {
+  content: attr(data-tip);
+  min-height: 16px;
+  margin-top: 3px;
+  color: var(--secondary-text);
+  font-size: 11px;
+  font-weight: 600;
+  opacity: 0;
+  transform: translateY(-2px);
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+
+.tool-icons a:hover::after {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.thumb.air {
+  background: linear-gradient(rgba(11,49,88,0.08), rgba(11,49,88,0.08)), url("trade-intermodal.jpg") center / cover;
+}
+
+.image-card img {
+  transition: transform 240ms ease;
+}
+
+.image-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--blue-glow);
+  border-color: rgba(23,107,255,0.38);
+}
+
+.image-card:hover img {
+  transform: scale(1.04);
+}
+
+.image-card-air img {
+  filter: none;
+}
+
+.commodity-list dt,
+.commodity-list dd {
+  padding: 9px 0;
+}
+
+.commodity {
+  width: 28px;
+  height: 28px;
+  display: inline-block;
+  margin-right: 8px;
+  border-radius: 7px;
+  vertical-align: middle;
+  border: 1px solid var(--border);
+}
+
+.commodity.oil { background: linear-gradient(135deg, #111827, #475569); }
+.commodity.copper { background: linear-gradient(135deg, #b45309, #f59e0b); }
+.commodity.steel { background: linear-gradient(135deg, #94a3b8, #e2e8f0); }
+.commodity.nickel { background: linear-gradient(135deg, #64748b, #cbd5e1); }
+
+.ai-panel h2 {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ai-panel button:hover {
+  background: #dceaff;
+  color: var(--ocean-blue);
+}
+
+.sponsor-card {
+  position: relative;
+  min-height: 176px;
+  overflow: hidden;
+  display: grid;
+  align-content: end;
+  gap: 6px;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: #fff;
+  box-shadow: 0 10px 30px rgba(7, 26, 43, 0.08);
+}
+
+.sponsor-card img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sponsor-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(7,26,43,0.90), rgba(7,26,43,0.28));
+}
+
+.sponsor-card span,
+.sponsor-card strong,
+.sponsor-card small {
+  position: relative;
+  z-index: 1;
+}
+
+.sponsor-card span {
+  color: rgba(255,255,255,0.78);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.sponsor-card strong {
+  max-width: 210px;
+  font-size: 22px;
+  line-height: 1.16;
+}
+
+.sponsor-card small {
+  max-width: 210px;
+  color: rgba(255,255,255,0.82);
+}
+
+.sponsor-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 45px rgba(7, 26, 43, 0.18);
+  border-color: rgba(23,107,255,0.38);
+}
+
+.ad-slot {
+  background: linear-gradient(180deg, rgba(255,255,255,0.94), rgba(247,250,255,0.94));
+  color: #64748b;
+}
+
+.ad-slot span {
+  color: #334155;
+  font-weight: 850;
+}
+
+.hero-ad {
+  color: rgba(15,23,42,0.8);
+}
+
+@media (max-width: 1180px) {
+  .trade-hero {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .hero-search {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 14px;
+  }
+  .hero-search svg {
+    display: none;
+  }
+  .hero-search .primary-btn {
+    width: 100%;
+  }
+  .trade-hero {
+    padding: 28px 20px;
+  }
+}

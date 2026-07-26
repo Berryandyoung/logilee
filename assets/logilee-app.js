@@ -81,6 +81,17 @@ function wireMenu() {
   });
 }
 
+function wireSidebarCollapse() {
+  const button = document.querySelector("[data-sidebar-toggle]");
+  const shell = document.querySelector(".workspace-shell");
+  if (!button || !shell) return;
+  button.addEventListener("click", () => {
+    const collapsed = shell.classList.toggle("sidebar-collapsed");
+    button.setAttribute("aria-label", collapsed ? "사이드바 펼치기" : "사이드바 접기");
+    if (window.lucide) window.lucide.createIcons();
+  });
+}
+
 function setupLanguageChoice() {
   document.querySelectorAll("[data-lang-choice]").forEach((link) => {
     link.addEventListener("click", () => localStorage.setItem("logilee-lang", link.dataset.langChoice));
@@ -321,7 +332,11 @@ function wireDictionary() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  if (window.lucide) {
+    window.lucide.createIcons();
+  }
   wireMenu();
+  wireSidebarCollapse();
   setupLanguageChoice();
   wireSearch();
   wireCbm();
