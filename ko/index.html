@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>LOGILEE | Global Trade Workspace</title>
-  <meta name="description" content="LOGILEE는 무역·물류 실무자가 검색, 조회, 계산, 뉴스, 시장 정보, 규제 정보를 한곳에서 확인하는 Global Trade Workspace입니다.">
+  <meta name="description" content="LOGILEE는 무역, 물류, 검색, 조회, 계산, 뉴스, 시장 데이터, 규제 정보를 한 곳에서 확인하는 Global Trade Workspace입니다.">
   <link rel="canonical" href="https://logilee.com/ko/">
   <link rel="alternate" hreflang="ko" href="https://logilee.com/ko/">
   <link rel="alternate" hreflang="en" href="https://logilee.com/en/">
@@ -19,106 +19,79 @@
     <button class="sidebar-collapse" data-sidebar-toggle type="button" aria-label="사이드바 접기"><i data-lucide="chevron-left"></i></button>
     <nav class="workspace-nav">
       <a class="nav-home is-active" href="./"><i data-lucide="home"></i> Home</a>
-      <section><h2>Trade</h2><a href="countries.html"><i data-lucide="globe"></i>Countries</a><a href="../hscode.html"><i data-lucide="barcode"></i>HS Code</a><a href="dashboard.html"><i data-lucide="globe-lock"></i>FTA & Tariff</a><a href="countries.html"><i data-lucide="shield-alert"></i>Import Regulation</a><a href="countries.html"><i data-lucide="send"></i>Export Regulation</a><a href="dashboard.html"><i data-lucide="chart-column"></i>Trade Statistics</a><a href="contact.html"><i data-lucide="building-2"></i>Embassy & Office</a></section>
+      <section><h2>Trade</h2><a href="countries.html"><i data-lucide="globe"></i>My Countries</a><a href="../hscode.html"><i data-lucide="barcode"></i>HS Code</a><a href="dashboard.html"><i data-lucide="globe-lock"></i>FTA & Tariff</a><a href="countries.html"><i data-lucide="shield-alert"></i>Import Regulation</a><a href="countries.html"><i data-lucide="send"></i>Export Regulation</a><a href="dashboard.html"><i data-lucide="chart-column"></i>Trade Statistics</a><a href="contact.html"><i data-lucide="building-2"></i>Embassy & Office</a></section>
       <section><h2>Logistics</h2><a href="track.html"><i data-lucide="radar"></i>Tracking</a><a href="ports.html"><i data-lucide="ship"></i>Carrier & Airline</a><a href="ports.html"><i data-lucide="anchor"></i>Ports & Airports</a><a href="tools.html"><i data-lucide="container"></i>Container</a><a href="dashboard.html"><i data-lucide="calendar-days"></i>Schedule</a><a href="cbm.html"><i data-lucide="calculator"></i>CBM Calculator</a></section>
       <section><h2>Compliance</h2><a href="dashboard.html"><i data-lucide="shield-check"></i>FDA</a><a href="dashboard.html"><i data-lucide="badge-check"></i>BIS</a><a href="dashboard.html"><i data-lucide="leaf"></i>REACH</a><a href="dashboard.html"><i data-lucide="circle-check"></i>RoHS / CE</a><a href="dashboard.html"><i data-lucide="circle-x"></i>CCC</a><a href="dashboard.html"><i data-lucide="shield"></i>KC / TSCA</a></section>
       <section><h2>Market</h2><a href="dashboard.html"><i data-lucide="chart-no-axes-combined"></i>Freight Index</a><a href="dashboard.html"><i data-lucide="gem"></i>Metals & Energy</a><a href="weather.html"><i data-lucide="badge-dollar-sign"></i>Exchange Rate</a><a href="dashboard.html"><i data-lucide="calendar-clock"></i>Economic Calendar</a></section>
       <section><h2>Resources</h2><a href="templates.html"><i data-lucide="copy"></i>Templates</a><a href="documents.html"><i data-lucide="file-text"></i>Documents</a><a href="dictionary.html"><i data-lucide="languages"></i>Dictionary</a><a href="learn.html"><i data-lucide="graduation-cap"></i>Learn</a></section>
     </nav>
-    <div class="upgrade-card"><h3>Upgrade to PRO</h3><p>더 많은 기능과 데이터로 경쟁하세요.</p><a class="primary-btn" href="dashboard.html">자세히 보기</a></div>
+    <div class="upgrade-card"><h3>Upgrade to PRO</h3><p>더 깊은 무역 데이터와 저장된 워크스페이스로 경쟁력을 높이세요.</p><a class="primary-btn" href="dashboard.html">자세히 보기</a></div>
   </aside>
+
   <main class="main">
     <header class="topbar workspace-topbar">
       <a class="mobile-logo" href="./">LOGILEE</a>
       <div class="topbar-spacer"></div>
-      <div class="top-actions"><a class="icon-btn" href="dashboard.html"><i data-lucide="star"></i> 즐겨찾기</a><a class="icon-btn" href="dashboard.html"><i data-lucide="history"></i> 최근 조회</a><a class="icon-btn" href="../en/" data-lang-choice="en"><i data-lucide="globe-2"></i> 한국어</a><a class="icon-btn" href="dashboard.html"><i data-lucide="circle-user-round"></i> 로그인</a><button class="menu-btn" data-menu-toggle aria-expanded="false" aria-label="메뉴 열기">☰</button></div>
+      <div class="top-actions"><a class="icon-btn" href="dashboard.html"><i data-lucide="star"></i> 즐겨찾기</a><a class="icon-btn" href="dashboard.html"><i data-lucide="history"></i> 최근 조회</a><a class="icon-btn" href="../en/" data-lang-choice="en"><i data-lucide="globe-2"></i> English</a><a class="icon-btn" href="dashboard.html"><i data-lucide="circle-user-round"></i> 로그인</a><button class="menu-btn" data-menu-toggle aria-expanded="false" aria-label="메뉴 열기"><i data-lucide="menu"></i></button></div>
     </header>
+
     <div class="page workspace-page">
-      <div class="workspace-layout">
+      <div class="workspace-layout home-layout">
         <div class="workspace-main">
           <section class="trade-hero">
             <div class="hero-copy">
               <h1>One Workspace for Global Trade</h1>
-              <p>무역 업무의 모든 정보와 도구를 한곳에서.</p>
-              <form class="hero-search" data-search-form role="search">
-                <i data-lucide="search"></i>
-                <input name="q" autocomplete="off" placeholder="Search anything... (Tracking, HS Code, Country, Port, Incoterms...)" aria-label="Global trade search">
-                <button class="primary-btn" type="submit">Search</button>
-              </form>
+              <p>무역 검색, 화물 조회, 계산, 시장 정보를 한 화면에서 더 빠르게 처리하세요.</p>
+              <form class="hero-search" data-search-form role="search"><i data-lucide="search"></i><input name="q" autocomplete="off" placeholder="Search anything... (Tracking, HS Code, Country, Port, Incoterms...)" aria-label="Global trade search"><button class="primary-btn" type="submit">Search</button></form>
               <div class="chip-row"><span class="kicker hero-kicker">Popular Search</span><a class="chip" href="search.html?q=Tracking">Tracking</a><a class="chip" href="search.html?q=HS%20Code">HS Code</a><a class="chip" href="search.html?q=Vietnam">Vietnam</a><a class="chip" href="search.html?q=Maersk">Maersk</a><a class="chip" href="search.html?q=Incoterms">Incoterms</a><a class="chip" href="search.html?q=Port">Port</a></div>
             </div>
-            <div class="ad-slot ad-slot--leaderboard hero-ad"><span>Sponsored</span><small>Partner insight · Leaderboard</small></div>
           </section>
 
-          <section class="workspace-grid top-workspace">
-            <article class="panel span-6">
-              <div class="section-head"><div><h2>Shipment & Tracking</h2><p>조회가 필요한 번호를 바로 시작하세요.</p></div></div>
-              <div class="tracking-actions">
-                <a href="track.html"><span class="icon"><i data-lucide="container"></i></span><strong>Container Tracking</strong><small>컨테이너 번호로 조회</small></a>
-                <a href="track.html"><span class="icon"><i data-lucide="file-text"></i></span><strong>B/L Tracking</strong><small>B/L 번호로 조회</small></a>
-                <a href="track.html"><span class="icon"><i data-lucide="clipboard-list"></i></span><strong>Booking Tracking</strong><small>Booking 번호로 조회</small></a>
-                <a href="track.html"><span class="icon"><i data-lucide="plane"></i></span><strong>Air Waybill Tracking</strong><small>AWB 번호로 조회</small></a>
-                <a href="track.html"><span class="icon"><i data-lucide="truck"></i></span><strong>Courier Tracking</strong><small>택배 / 특송 조회</small></a>
-                <a href="track.html"><span class="icon"><i data-lucide="radar"></i></span><strong>Vessel Tracking</strong><small>선박 위치 및 스케줄 조회</small></a>
-              </div>
-              <a class="link-more" href="track.html">모든 Tracking 도구 보기 →</a>
-            </article>
-
-            <article class="panel span-4 market-card">
-              <div class="section-head"><div><h2>Market Snapshot</h2><p>07.28 10:00 (KST)</p></div></div>
-              <div class="mini-chart"></div>
-              <div class="market-columns">
-                <div><h3>Exchange Rate</h3><dl class="spark-list"><dt>USD / KRW</dt><dd><span class="spark spark-up"></span>1,378.50 <b class="up">▲ 2.10</b></dd><dt>EUR / KRW</dt><dd><span class="spark spark-up alt"></span>1,502.12 <b class="up">▲ 1.80</b></dd><dt>JPY / KRW</dt><dd><span class="spark spark-down"></span>9.40 <b class="down">▼ 0.02</b></dd><dt>CNY / KRW</dt><dd><span class="spark spark-up"></span>189.65 <b class="up">▲ 0.35</b></dd><dt>VND / KRW</dt><dd><span class="spark spark-up alt"></span>5.37 <b class="up">▲ 0.01</b></dd></dl></div>
-                <div><h3>Freight Index</h3><dl class="spark-list"><dt>SCFI</dt><dd><span class="spark spark-up"></span>1,985 <b class="up">▲ 36</b></dd><dt>WCI</dt><dd><span class="spark spark-up alt"></span>2,402 <b class="up">▲ 52</b></dd><dt>BDI</dt><dd><span class="spark spark-up"></span>1,742 <b class="up">▲ 24</b></dd><dt>WTI</dt><dd><span class="spark spark-down"></span>78.45 <b class="down">▼ 0.27</b></dd><dt>LME (Cu)</dt><dd><span class="spark spark-up alt"></span>9,125 <b class="up">▲ 58</b></dd></dl></div>
-              </div>
-            </article>
-
-            <article class="panel span-2 quick-list">
-              <h2>Quick Tools</h2>
-              <a href="cbm.html"><span class="icon"><i data-lucide="calculator"></i></span><strong>CBM Calculator</strong><small>부피 계산</small></a>
-              <a href="../unit-converter.html"><span class="icon"><i data-lucide="refresh-cw"></i></span><strong>Unit Converter</strong><small>단위 변환</small></a>
-              <a href="tools.html"><span class="icon"><i data-lucide="scale"></i></span><strong>Weight Calculator</strong><small>중량 계산</small></a>
-              <a href="tools.html"><span class="icon"><i data-lucide="container"></i></span><strong>Container Load</strong><small>컨테이너 적재 계산</small></a>
-              <a href="../date-calculator.html"><span class="icon"><i data-lucide="calendar-days"></i></span><strong>Date Calculator</strong><small>날짜 / 기간 계산</small></a>
-            </article>
+          <section class="panel tracking-panel-home">
+            <div class="section-head"><div><h2>Shipment & Tracking</h2><p>조회가 필요한 번호를 바로 시작하세요.</p></div></div>
+            <div class="tracking-actions"><a href="track.html"><span class="icon"><i data-lucide="container"></i></span><strong>Container Tracking</strong><small>컨테이너 번호로 조회</small></a><a href="track.html"><span class="icon"><i data-lucide="file-text"></i></span><strong>B/L Tracking</strong><small>B/L 번호로 조회</small></a><a href="track.html"><span class="icon"><i data-lucide="clipboard-list"></i></span><strong>Booking Tracking</strong><small>Booking 번호로 조회</small></a><a href="track.html"><span class="icon"><i data-lucide="plane"></i></span><strong>Air Waybill Tracking</strong><small>AWB 번호로 조회</small></a><a href="track.html"><span class="icon"><i data-lucide="truck"></i></span><strong>Courier Tracking</strong><small>택배와 특송 조회</small></a><a href="track.html"><span class="icon"><i data-lucide="radar"></i></span><strong>Vessel Tracking</strong><small>선박 위치와 스케줄 조회</small></a></div>
+            <a class="link-more" href="track.html">모든 Tracking 도구 보기 -></a>
           </section>
 
-          <section class="workspace-grid">
-            <article class="panel span-5 news-panel">
-              <div class="section-head"><div><h2>Today's Trade News</h2></div><a class="link-more" href="news.html">더보기 →</a></div>
-              <div class="tabs"><button class="tab is-active">All</button><button class="tab">Trade</button><button class="tab">Logistics</button><button class="tab">Tariff</button><button class="tab">Customs</button><button class="tab">FTA</button><button class="tab">Market</button></div>
-              <a class="news-item" href="news.html"><span class="thumb port"></span><div><strong>미국, 중국산 철강 제품 관세 25%로 인상</strong><small>Reuters · 1시간 전</small></div></a>
-              <a class="news-item" href="news.html"><span class="thumb air"></span><div><strong>SCFI 3주 연속 상승, 아시아-유럽 노선 강세 지속</strong><small>LOGILEE · 3시간 전</small></div></a>
-              <a class="news-item" href="news.html"><span class="thumb customs"></span><div><strong>베트남, 8월부터 수입식품 라벨 규정 강화</strong><small>VnExpress · 5시간 전</small></div></a>
-            </article>
-
-            <article class="panel span-4 popular-tools">
-              <div class="section-head"><div><h2>Popular Tools</h2></div></div>
-              <div class="tool-icons">
-                <a href="../hscode.html" data-tip="제품명과 품목분류를 빠르게 확인"><span class="icon"><i data-lucide="barcode"></i></span>HS Code Search</a><a href="../incoterms-2020.html" data-tip="비용과 위험 이전 조건 비교"><span class="icon"><i data-lucide="git-compare-arrows"></i></span>Incoterms 2020</a><a href="dashboard.html" data-tip="협정과 원산지 조건 탐색"><span class="icon"><i data-lucide="globe-lock"></i></span>FTA Finder</a><a href="dashboard.html" data-tip="관세와 세금 추정 구조"><span class="icon"><i data-lucide="receipt-text"></i></span>Tariff Calculator</a><a href="ports.html" data-tip="항만과 터미널 정보"><span class="icon"><i data-lucide="anchor"></i></span>Port Information</a><a href="ports.html" data-tip="공항과 항공화물 정보"><span class="icon"><i data-lucide="plane"></i></span>Airport Information</a><a href="dashboard.html" data-tip="거래처 및 운송사 검색"><span class="icon"><i data-lucide="building-2"></i></span>Company Search</a><a href="dashboard.html" data-tip="제품 기반 검색 준비"><span class="icon"><i data-lucide="package-search"></i></span>Product Search</a>
-              </div>
-              <a class="link-more" href="tools.html">모든 도구 보기 →</a>
-            </article>
-
-            <a class="image-card span-3" href="learn.html"><img src="../assets/trade-night-port.jpg" alt="야경 항만과 컨테이너 터미널"><span><strong>Global Trade Starts Here</strong><small>더 스마트한 무역으로 더 큰 가치를 만드세요.</small><em>자세히 보기 →</em></span></a>
+          <section class="panel popular-tools">
+            <div class="section-head"><div><h2>Popular Tools</h2><p>실무에서 자주 쓰는 무역 도구입니다.</p></div></div>
+            <div class="tool-icons"><a href="../hscode.html" data-tip="제품명과 품목분류를 빠르게 확인"><span class="icon"><i data-lucide="barcode"></i></span>HS Code Search</a><a href="../incoterms-2020.html" data-tip="비용과 위험 이전 조건 비교"><span class="icon"><i data-lucide="git-compare-arrows"></i></span>Incoterms 2020</a><a href="dashboard.html" data-tip="협정과 원산지 조건 탐색"><span class="icon"><i data-lucide="globe-lock"></i></span>FTA Finder</a><a href="dashboard.html" data-tip="관세와 세금 추정"><span class="icon"><i data-lucide="receipt-text"></i></span>Tariff Calculator</a><a href="ports.html" data-tip="항만과 터미널 정보"><span class="icon"><i data-lucide="anchor"></i></span>Port Information</a><a href="ports.html" data-tip="공항과 항공화물 정보"><span class="icon"><i data-lucide="plane"></i></span>Airport Information</a><a href="dashboard.html" data-tip="거래처와 운송사 검색"><span class="icon"><i data-lucide="building-2"></i></span>Company Search</a><a href="dashboard.html" data-tip="제품 기반 검색 준비"><span class="icon"><i data-lucide="package-search"></i></span>Product Search</a></div>
+            <a class="link-more" href="tools.html">모든 도구 보기 -></a>
           </section>
 
-          <section class="workspace-grid">
-            <article class="panel span-3 freight-panel"><h2>Freight & Market Index</h2><div class="tabs"><button class="tab is-active">SCFI</button><button class="tab">WCI</button><button class="tab">BDI</button><button class="tab">LME (Cu)</button></div><div class="line-chart"></div><a class="link-more" href="dashboard.html">모든 지수 보기 →</a></article>
-            <article class="panel span-3 product-panel"><h2>Commodity Market</h2><dl class="commodity-list"><dt><span class="commodity oil"></span>WTI</dt><dd>USD 78.45 <b class="down">▼ 0.34%</b></dd><dt><span class="commodity copper"></span>Copper</dt><dd>USD 9,125 <b class="up">▲ 0.64%</b></dd><dt><span class="commodity steel"></span>Steel</dt><dd>USD 570 <b class="up">▲ 1.2%</b></dd><dt><span class="commodity nickel"></span>Nickel</dt><dd>USD 16,850 <b class="up">▲ 1.6%</b></dd></dl></article>
-            <article class="panel span-3 ai-panel"><div class="section-head"><h2><i data-lucide="bot"></i> AI Trade Assistant</h2><span class="status">Beta</span></div><input placeholder="무역 관련 질문을 입력하세요..." disabled><button>Can I export lithium batteries to India?</button><button>What is HS Code for stainless steel bolt?</button><button>What documents are required for Vietnam export?</button><a class="link-more" href="dashboard.html">모든 질문 보기 →</a></article>
-            <a class="image-card span-3 image-card-air" href="news.html"><img src="../assets/trade-intermodal.jpg" alt="항공화물과 트럭 복합 물류 이미지"><span><strong>Stay Ahead in Global Trade</strong><small>실시간 정보로 경쟁력을 높이세요.</small><em>더 알아보기 →</em></span></a>
+          <section class="panel guide-panel">
+            <div class="section-head"><div><h2>Latest Guides</h2><p>무역 조건, 문서, 국가 정보를 실무 중심으로 정리했습니다.</p></div><a class="link-more" href="learn.html">더보기 -></a></div>
+            <div class="guide-list"><a href="dictionary.html#fob"><span class="kicker">Incoterms</span><strong>FOB 조건 실무 이해</strong><small>Incoterms 2020 기준 비용과 위험 이전 시점.</small></a><a href="documents.html"><span class="kicker">Documents</span><strong>Commercial Invoice 체크리스트</strong><small>통관 전 필수 항목과 자주 발생하는 실수.</small></a><a href="countries.html"><span class="kicker">Country</span><strong>Vietnam Country Guide</strong><small>규정, 문서, 항만, 시장 신호를 한 번에 확인.</small></a></div>
           </section>
 
-          <div class="ad-slot ad-slot--leaderboard section"><span>Partner Content</span><small>Trade insight · Leaderboard</small></div>
+          <section class="panel newsletter-panel">
+            <div><span class="kicker">Newsletter</span><h2>글로벌 무역 변화를 미리 확인하세요</h2><p>시장 업데이트, 물류 지표, 실무 가이드를 LOGILEE가 정리해드립니다.</p></div>
+            <form class="newsletter"><input type="email" placeholder="work@email.com" aria-label="Email address"><button class="primary-btn" type="submit">Subscribe</button></form>
+          </section>
         </div>
 
-        <aside class="workspace-aside">
-          <section class="panel side-card"><div class="section-head"><h2>My Countries</h2><a href="countries.html">설정</a></div><div class="flag-row"><span>🇻🇳<small>Vietnam</small></span><span>🇮🇳<small>India</small></span><span>🇺🇸<small>USA</small></span><span>🇨🇳<small>China</small></span><span>🇩🇪<small>Germany</small></span></div><a class="link-more" href="countries.html">모든 국가 보기 →</a></section>
-          <a class="sponsor-card" href="learn.html"><img src="../assets/trade-intermodal.jpg" alt="항공화물과 트럭 운송"><span>Sponsored</span><strong>Global Trade, Smarter Together</strong><small>Advanced logistics solutions for modern businesses.</small></a>
-          <section class="panel side-card"><h2>Trade Calendar</h2><p class="muted">오늘의 공휴일</p><dl><dt>🇰🇷 한국 공휴일</dt><dd>없음</dd><dt>🇺🇸 미국 공휴일</dt><dd>없음</dd><dt>🇨🇳 중국 공휴일</dt><dd>없음</dd><dt>🇻🇳 베트남 공휴일</dt><dd>없음</dd></dl><a class="link-more" href="dashboard.html">모든 캘린더 보기 →</a></section>
-          <section class="panel side-card"><h2>Recent Activity</h2><a href="track.html">MSCU1234567 <small>Container Tracking</small></a><a href="../hscode.html">8471300000 <small>HS Code</small></a><a href="countries.html">Vietnam <small>Country Info</small></a><a href="dashboard.html">Maersk <small>Company</small></a><a href="cbm.html">CBM Calculation <small>계산 도구</small></a><a class="link-more" href="dashboard.html">모든 기록 보기 →</a></section>
-          <div class="ad-slot ad-slot--rectangle"><span>Partner Content</span><small>300 × 250 · Rectangle</small></div>
+        <aside class="workspace-aside dashboard-sidebar">
+          <section class="panel market-card">
+            <div class="section-head market-head"><div><h2>Market Snapshot</h2><p><span>Market Data Updated</span><strong>2026.07.28 10:00 KST</strong></p></div><span class="status">Up to date</span></div>
+            <div class="market-update-note"><span>Last Updated</span><strong>2026.07.28 10:00 KST</strong><button class="info-tip" type="button" aria-label="업데이트 기준" data-tooltip="Exchange Rate: 마지막 환율 API 수신 시각. Freight Index: 마지막 지수 데이터 수신 시각. 전체 시간: 모든 시장 데이터를 성공적으로 수집한 시각입니다."><i data-lucide="info"></i></button></div>
+            <div class="mini-chart" aria-hidden="true"></div>
+            <div class="market-columns"><div><h3>Exchange Rate</h3><dl class="spark-list"><dt>USD / KRW</dt><dd><span class="spark spark-up"></span><span>1,378.50</span><b class="up">▲ 2.10</b></dd><dt>EUR / KRW</dt><dd><span class="spark spark-up alt"></span><span>1,502.12</span><b class="up">▲ 1.80</b></dd><dt>JPY / KRW</dt><dd><span class="spark spark-down"></span><span>9.40</span><b class="down">▼ 0.02</b></dd><dt>CNY / KRW</dt><dd><span class="spark spark-up"></span><span>189.65</span><b class="up">▲ 0.35</b></dd><dt>VND / KRW</dt><dd><span class="spark spark-up alt"></span><span>5.37</span><b class="up">▲ 0.01</b></dd></dl></div><div><h3>Freight Index</h3><dl class="spark-list"><dt>SCFI</dt><dd><span class="spark spark-up"></span><span>1,985</span><b class="up">▲ 36</b></dd><dt>WCI</dt><dd><span class="spark spark-up alt"></span><span>2,402</span><b class="up">▲ 52</b></dd><dt>BDI</dt><dd><span class="spark spark-up"></span><span>1,742</span><b class="up">▲ 24</b></dd><dt>WTI</dt><dd><span class="spark spark-down"></span><span>78.45</span><b class="down">▼ 0.27</b></dd><dt>LME (Cu)</dt><dd><span class="spark spark-up alt"></span><span>9,125</span><b class="up">▲ 58</b></dd></dl></div></div>
+          </section>
+
+          <section class="panel quick-list sidebar-tools">
+            <h2>Quick Tools</h2>
+            <a href="cbm.html"><span class="icon"><i data-lucide="calculator"></i></span><strong>CBM</strong><small>부피 계산</small></a>
+            <a href="track.html"><span class="icon"><i data-lucide="radar"></i></span><strong>Shipment Tracking</strong><small>화물 조회</small></a>
+            <a href="../hscode.html"><span class="icon"><i data-lucide="barcode"></i></span><strong>HS Code</strong><small>품목분류</small></a>
+            <a href="../incoterms-2020.html"><span class="icon"><i data-lucide="git-compare-arrows"></i></span><strong>Incoterms</strong><small>비용과 위험</small></a>
+            <a href="weather.html"><span class="icon"><i data-lucide="badge-dollar-sign"></i></span><strong>Exchange Rate</strong><small>환율 확인</small></a>
+            <a href="ports.html"><span class="icon"><i data-lucide="anchor"></i></span><strong>Port & Airport</strong><small>항만과 공항</small></a>
+          </section>
+
+          <section class="panel freight-panel market-side-card"><h2>Freight Market Index</h2><div class="tabs"><button class="tab is-active">SCFI</button><button class="tab">WCI</button><button class="tab">BDI</button></div><div class="line-chart"></div><a class="link-more" href="dashboard.html">모든 지수 보기 -></a></section>
+          <section class="panel product-panel market-side-card"><h2>Commodity</h2><dl class="commodity-list"><dt><span class="commodity oil"></span>WTI</dt><dd>USD 78.45 <b class="down">▼ 0.34%</b></dd><dt><span class="commodity copper"></span>Copper</dt><dd>USD 9,125 <b class="up">▲ 0.64%</b></dd><dt><span class="commodity steel"></span>Steel</dt><dd>USD 570 <b class="up">▲ 1.2%</b></dd><dt><span class="commodity nickel"></span>Nickel</dt><dd>USD 16,850 <b class="up">▲ 1.6%</b></dd></dl></section>
+
+          <section class="panel news-panel latest-news"><div class="section-head"><div><h2>Latest News</h2></div><a class="link-more" href="news.html">더보기 -></a></div><div class="tabs"><button class="tab is-active">All</button><button class="tab">Trade</button><button class="tab">Logistics</button><button class="tab">Market</button></div><a class="news-item" href="news.html"><span class="thumb port"></span><div><strong>미국, 중국산 일부 철강 제품 관세 인상</strong><small>Reuters · 1시간 전</small></div></a><a class="news-item" href="news.html"><span class="thumb air"></span><div><strong>SCFI 3주 연속 상승, 아시아-유럽 항로 강세</strong><small>LOGILEE · 3시간 전</small></div></a><a class="news-item" href="news.html"><span class="thumb customs"></span><div><strong>베트남, 8월부터 수입식품 라벨링 규정 강화</strong><small>VnExpress · 5시간 전</small></div></a></section>
         </aside>
       </div>
     </div>
