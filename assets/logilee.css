@@ -1456,7 +1456,7 @@ dd {
 .sidebar-collapse {
   position: absolute;
   top: 18px;
-  right: -16px;
+  right: 18px;
   z-index: 30;
   width: 32px;
   height: 32px;
@@ -2167,7 +2167,7 @@ dd {
 .sidebar-collapse {
   position: absolute;
   top: 22px;
-  right: -22px;
+  right: 18px;
   z-index: 90;
   width: 40px;
   height: 40px;
@@ -2179,6 +2179,9 @@ dd {
   padding: 0;
   border-radius: 999px;
   pointer-events: auto;
+  border: 1px solid rgba(203, 213, 225, 0.55);
+  background: rgba(255, 255, 255, 0.96);
+  color: var(--deep-navy);
   box-shadow: 0 12px 28px rgba(2, 8, 23, 0.22);
 }
 
