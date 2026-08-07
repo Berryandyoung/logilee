@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>최신 포스팅 | LOGILEE</title>
+  <meta name="description" content="LOGILEE에서 직접 작성한 무역, 물류, 통관 실무 포스팅 아카이브입니다.">
+  <link rel="canonical" href="https://berryandyoung.github.io/logilee/ko/posts/">
+  <link rel="alternate" hreflang="ko" href="https://berryandyoung.github.io/logilee/ko/posts/">
+  <link rel="alternate" hreflang="en" href="https://berryandyoung.github.io/logilee/en/posts/">
+  <link rel="stylesheet" href="../../assets/logilee.css">
+  <script defer src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script defer src="../../assets/posts-data.js"></script>
+  <script defer src="../../assets/logilee-app.js"></script>
+</head>
+<body>
+<div class="shell workspace-shell posts-shell">
+  <aside class="rail workspace-rail" aria-label="LOGILEE 업무 메뉴">
+    <a class="brand compact-brand" href="../"><strong>LOGILEE</strong><span>Global Trade Workspace</span></a>
+    <nav class="workspace-nav">
+      <a class="nav-home" href="../"><i data-lucide="home"></i> Home</a>
+      <section><h2>Trade</h2><a href="../countries.html"><i data-lucide="globe"></i>My Countries</a><a href="../../hscode.html"><i data-lucide="barcode"></i>HS Code</a><a href="../dashboard.html"><i data-lucide="globe-lock"></i>FTA & Tariff</a></section>
+      <section><h2>Logistics</h2><a href="../track.html"><i data-lucide="radar"></i>Tracking</a><a href="../ports.html"><i data-lucide="anchor"></i>Ports & Airports</a><a href="../cbm.html"><i data-lucide="calculator"></i>CBM Calculator</a></section>
+      <section><h2>Resources</h2><a class="is-active" href="./"><i data-lucide="newspaper"></i>최신 포스팅</a><a href="../news.html"><i data-lucide="rss"></i>News</a><a href="../learn.html"><i data-lucide="graduation-cap"></i>Learn</a></section>
+    </nav>
+  </aside>
+  <main class="main">
+    <header class="topbar workspace-topbar">
+      <a class="mobile-logo" href="../">LOGILEE</a>
+      <form class="header-search" data-header-search role="search">
+        <i data-lucide="search"></i>
+        <input name="q" autocomplete="off" placeholder="Search LOGILEE..." aria-label="LOGILEE 검색">
+        <button type="submit" aria-label="검색"><i data-lucide="arrow-right"></i></button>
+        <div class="header-search-results" data-header-search-results></div>
+      </form>
+      <div class="top-actions">
+        <div class="language-menu" data-language-menu>
+          <button class="icon-btn language-button" type="button" aria-expanded="false"><i data-lucide="globe-2"></i> Language <i data-lucide="chevron-down"></i></button>
+          <div class="language-dropdown">
+            <span>Language</span>
+            <a class="is-active" href="./" data-lang-choice="ko">Korean</a>
+            <a href="../../en/posts/" data-lang-choice="en">English</a>
+          </div>
+        </div>
+        <button class="menu-btn" data-menu-toggle aria-expanded="false" aria-label="메뉴 열기"><i data-lucide="menu"></i></button>
+      </div>
+    </header>
+    <div class="page workspace-page posts-archive-page">
+      <section class="page-title posts-archive-hero">
+        <p class="eyebrow">최신 포스팅</p>
+        <h1>무역과 물류 실무 포스팅을 한곳에서 확인합니다.</h1>
+        <p class="lead">현재 repository에 실제로 존재하는 LOGILEE 작성 콘텐츠만 표시합니다.</p>
+      </section>
+      <section class="panel posts-archive-panel" data-posts-archive>
+        <div class="section-head">
+          <div><h2>All Posts</h2><p>현재 존재하는 카테고리 기준으로 필터링합니다.</p></div>
+        </div>
+        <div class="post-filter" data-post-filter aria-label="포스팅 카테고리 필터"></div>
+        <div class="posting-grid" data-posts-grid></div>
+      </section>
+    </div>
+  </main>
+</div>
+</body>
+</html>

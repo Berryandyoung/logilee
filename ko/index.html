@@ -10,6 +10,7 @@
   <link rel="alternate" hreflang="en" href="https://logilee.com/en/">
   <link rel="stylesheet" href="../assets/logilee.css">
   <script defer src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script defer src="../assets/posts-data.js"></script>
   <script defer src="../assets/logilee-app.js"></script>
 </head>
 <body>
@@ -64,10 +65,20 @@
             <div class="tool-icons compact-tool-grid"><a href="cbm.html"><span class="icon"><i data-lucide="calculator"></i></span>CBM Calculator</a><a href="track.html"><span class="icon"><i data-lucide="radar"></i></span>Shipment Tracking</a><a href="../hscode.html"><span class="icon"><i data-lucide="barcode"></i></span>HS Code</a><a href="../incoterms-2020.html"><span class="icon"><i data-lucide="git-compare-arrows"></i></span>Incoterms</a><a href="weather.html"><span class="icon"><i data-lucide="badge-dollar-sign"></i></span>Exchange Rate</a><a href="ports.html"><span class="icon"><i data-lucide="anchor"></i></span>Port & Airport</a></div>
           </section>
 
-          <section class="panel news-panel latest-news home-latest-news">
-            <div class="section-head"><div><h2>Latest News</h2><p>기존 RSS 수집 경로를 사용해 무역·물류 뉴스를 표시합니다.</p></div><a class="link-more" href="news.html">더보기 -></a></div>
-            <div class="news-list compact-news-list" data-home-news data-news-query="무역 물류">
-              <div class="data-empty skeleton-line">최신 뉴스를 불러오는 중입니다...</div>
+          <section class="panel home-latest-panel">
+            <div class="home-latest-grid">
+              <section class="home-latest-column news-panel latest-news home-latest-news" aria-labelledby="home-news-title-ko">
+                <div class="section-head"><div><h2 id="home-news-title-ko">Latest News</h2><p>기존 RSS 수집 경로를 사용해 무역·물류 뉴스를 표시합니다.</p></div><a class="link-more" href="news.html">더보기</a></div>
+                <div class="news-list compact-news-list" data-home-news data-news-query="무역 물류">
+                  <div class="data-empty skeleton-line">최신 뉴스를 불러오는 중입니다...</div>
+                </div>
+              </section>
+              <section class="home-latest-column latest-posting" aria-labelledby="home-posting-title-ko" data-latest-posting>
+                <div class="section-head"><div><h2 id="home-posting-title-ko">최신 포스팅</h2><p>LOGILEE가 직접 작성한 무역·물류 실무 인사이트와 가이드입니다.</p></div><a class="link-more" href="posts/">더보기</a></div>
+                <div class="posting-slider" data-posting-slider>
+                  <div class="data-empty">최신 포스팅을 불러오는 중입니다...</div>
+                </div>
+              </section>
             </div>
           </section>
 

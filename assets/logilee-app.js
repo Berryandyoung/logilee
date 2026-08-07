@@ -516,6 +516,187 @@ async function loadHomeNews() {
     }
   }
 }
+
+function getPostsForCurrentLang() {
+  const posts = Array.isArray(window.LOGILEE_POSTS) ? window.LOGILEE_POSTS : [];
+  const lang = currentLang();
+  return posts
+    .filter((post) => post.language === lang)
+    .sort((a, b) => new Date(b.date) - new Date(a.date));
+}
+
+function postUrl(post) {
+  const encodedPath = encodeURI(post.path || "");
+  const inArchive = /\/posts\/?$/i.test(location.pathname) || /\/posts\/index\.html$/i.test(location.pathname);
+  return `${inArchive ? "../../" : "../"}${encodedPath}`;
+}
+
+function formatPostDate(date, lang) {
+  const value = new Date(date);
+  if (Number.isNaN(value.getTime())) return date || "";
+  return new Intl.DateTimeFormat(lang === "ko" ? "ko-KR" : "en-US", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit"
+  }).format(value);
+}
+
+function postThumb(post, compact = false) {
+  const label = post.category || "LOGILEE";
+  if (post.image) {
+    return `
+      <div class="posting-thumb${compact ? " posting-thumb--compact" : ""}">
+        <img src="${post.image}" alt="${post.imageAlt || post.title}" loading="lazy" width="640" height="360">
+        <span>${label}</span>
+      </div>
+    `;
+  }
+  return `
+    <div class="posting-thumb posting-thumb--fallback${compact ? " posting-thumb--compact" : ""}" role="img" aria-label="${post.imageAlt || post.title}">
+      <span>${label}</span>
+      <strong>LOGILEE</strong>
+    </div>
+  `;
+}
+
+function renderPostCard(post, lang) {
+  return `
+    <article class="posting-card" data-category="${post.category}">
+      <a href="${postUrl(post)}">
+        ${postThumb(post)}
+        <div class="posting-card-body">
+          <span class="kicker">${post.category}</span>
+          <h3>${post.title}</h3>
+          <p>${post.description}</p>
+          <small>${formatPostDate(post.date, lang)}${post.readingTime ? ` · ${post.readingTime}` : ""}</small>
+        </div>
+      </a>
+    </article>
+  `;
+}
+
+function setupLatestPosting() {
+  const slider = document.querySelector("[data-posting-slider]");
+  if (!slider) return;
+  const lang = currentLang();
+  const posts = getPostsForCurrentLang().slice(0, 5);
+  const labels = lang === "ko"
+    ? { empty: "표시할 실제 포스팅이 아직 없습니다.", prev: "이전 포스팅", next: "다음 포스팅", slide: "포스팅" }
+    : { empty: "No existing posts are available yet.", prev: "Previous post", next: "Next post", slide: "Post" };
+  if (!posts.length) {
+    slider.innerHTML = `<div class="data-empty">${labels.empty}</div>`;
+    return;
+  }
+
+  let active = 0;
+  let timer = null;
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const render = () => {
+    const post = posts[active];
+    slider.innerHTML = `
+      <div class="posting-slider-card">
+        <a class="posting-slide-link" href="${postUrl(post)}">
+          ${postThumb(post, true)}
+          <div class="posting-slide-copy">
+            <span class="kicker">${post.category}</span>
+            <h3>${post.title}</h3>
+            <p>${post.description}</p>
+            <small>${formatPostDate(post.date, lang)}${post.readingTime ? ` · ${post.readingTime}` : ""}</small>
+          </div>
+        </a>
+        ${posts.length > 1 ? `
+          <div class="posting-slider-controls">
+            <button type="button" data-posting-prev aria-label="${labels.prev}"><i data-lucide="chevron-left"></i></button>
+            <div class="posting-dots" role="tablist" aria-label="Latest posting slides">
+              ${posts.map((_, index) => `<button type="button" data-posting-dot="${index}" aria-label="${labels.slide} ${index + 1}" aria-selected="${index === active}"></button>`).join("")}
+            </div>
+            <button type="button" data-posting-next aria-label="${labels.next}"><i data-lucide="chevron-right"></i></button>
+          </div>
+        ` : ""}
+      </div>
+    `;
+    refreshIcons();
+  };
+  const go = (index) => {
+    active = (index + posts.length) % posts.length;
+    render();
+  };
+  const stop = () => {
+    if (timer) window.clearInterval(timer);
+    timer = null;
+  };
+  const start = () => {
+    if (reducedMotion || posts.length < 2 || document.hidden || timer) return;
+    timer = window.setInterval(() => go(active + 1), 4000);
+  };
+
+  slider.addEventListener("click", (event) => {
+    const prev = event.target.closest("[data-posting-prev]");
+    const next = event.target.closest("[data-posting-next]");
+    const dot = event.target.closest("[data-posting-dot]");
+    if (!prev && !next && !dot) return;
+    stop();
+    if (prev) go(active - 1);
+    if (next) go(active + 1);
+    if (dot) go(Number(dot.dataset.postingDot));
+  });
+  slider.addEventListener("keydown", (event) => {
+    if (event.key === "ArrowLeft") {
+      stop();
+      go(active - 1);
+    }
+    if (event.key === "ArrowRight") {
+      stop();
+      go(active + 1);
+    }
+  });
+  slider.addEventListener("mouseenter", stop);
+  slider.addEventListener("focusin", stop);
+  slider.addEventListener("mouseleave", start);
+  slider.addEventListener("focusout", start);
+  document.addEventListener("visibilitychange", () => {
+    document.hidden ? stop() : start();
+  });
+
+  render();
+  start();
+}
+
+function setupPostsArchive() {
+  const archive = document.querySelector("[data-posts-archive]");
+  if (!archive) return;
+  const lang = currentLang();
+  const posts = getPostsForCurrentLang();
+  const filter = archive.querySelector("[data-post-filter]");
+  const grid = archive.querySelector("[data-posts-grid]");
+  const allLabel = lang === "ko" ? "전체" : "All";
+  const empty = lang === "ko" ? "표시할 실제 포스팅이 아직 없습니다." : "No existing posts are available yet.";
+  const categories = [...new Set(posts.map((post) => post.category).filter(Boolean))];
+  let active = "all";
+
+  const render = () => {
+    const visible = active === "all" ? posts : posts.filter((post) => post.category === active);
+    if (filter) {
+      filter.innerHTML = [`<button type="button" class="tab${active === "all" ? " is-active" : ""}" data-category-filter="all">${allLabel}</button>`]
+        .concat(categories.map((category) => `<button type="button" class="tab${active === category ? " is-active" : ""}" data-category-filter="${category}">${category}</button>`))
+        .join("");
+    }
+    if (grid) {
+      grid.innerHTML = visible.length
+        ? visible.map((post) => renderPostCard(post, lang)).join("")
+        : `<div class="data-empty">${empty}</div>`;
+    }
+  };
+
+  filter?.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-category-filter]");
+    if (!button) return;
+    active = button.dataset.categoryFilter;
+    render();
+  });
+
+  render();
+}
 function rowTemplate(lang) {
   const labels = lang === "ko"
     ? ["화물명", "수량", "길이", "너비", "높이", "중량"]
@@ -706,6 +887,8 @@ document.addEventListener("DOMContentLoaded", () => {
   wireSearch();
   loadHomeMarket();
   loadHomeNews();
+  setupLatestPosting();
+  setupPostsArchive();
   wireCbm();
   wireTracking();
   wireDictionary();

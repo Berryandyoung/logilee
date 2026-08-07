@@ -3877,6 +3877,332 @@ body.sidebar-drawer-active {
   }
 }
 
+/* Latest News + Posting */
+.home-latest-panel {
+  overflow: hidden;
+}
+
+.home-latest-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(16px, 1.6vw, 24px);
+}
+
+.home-latest-column {
+  min-width: 0;
+}
+
+.home-latest-column + .home-latest-column {
+  padding-left: clamp(16px, 1.6vw, 24px);
+  border-left: 1px solid var(--border);
+}
+
+.home-latest-panel .section-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.home-latest-panel .link-more {
+  margin-top: 3px;
+  white-space: nowrap;
+}
+
+.home-latest-panel .section-head p {
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.home-latest-panel .compact-news-list {
+  gap: 0;
+}
+
+.home-latest-panel .compact-news-item {
+  padding: 10px 0;
+}
+
+.home-latest-panel .compact-news-item:first-of-type {
+  display: flex;
+  grid-template-columns: none;
+  margin-bottom: 0;
+  padding: 10px 0;
+  border-color: transparent;
+  background: transparent;
+}
+
+.posting-slider {
+  min-height: 0;
+}
+
+.posting-slider-card {
+  display: grid;
+  gap: 10px;
+}
+
+.posting-slide-link {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 46%) minmax(0, 54%);
+  column-gap: clamp(16px, 1.5vw, 24px);
+  align-items: center;
+  min-height: clamp(170px, 12vw, 210px);
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.posting-thumb {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  height: clamp(112px, 9vw, 148px);
+  min-height: 0;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(23, 107, 255, 0.18), rgba(255, 255, 255, 0.02)),
+    linear-gradient(150deg, #071a2b 0%, #0d2748 62%, #123e70 100%);
+  color: #fff;
+  box-sizing: border-box;
+}
+
+.posting-thumb img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.posting-thumb::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 62%;
+  background: linear-gradient(180deg, transparent, rgba(7, 26, 43, 0.72));
+}
+
+.posting-thumb span,
+.posting-thumb strong {
+  position: absolute;
+  z-index: 1;
+}
+
+.posting-thumb span {
+  top: 12px;
+  left: 14px;
+  font-size: 11px;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.posting-thumb strong {
+  left: 14px;
+  right: 14px;
+  bottom: 12px;
+  font-size: clamp(16px, 1.3vw, 19px);
+  line-height: 1.1;
+}
+
+.posting-thumb--compact {
+  height: clamp(112px, 8.5vw, 140px);
+  min-height: 0;
+}
+
+.posting-slide-copy {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.posting-slide-copy h3,
+.posting-card h3 {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow-wrap: anywhere;
+  word-break: keep-all;
+  margin: 5px 0 7px;
+  color: var(--ink-navy);
+  font-size: clamp(17px, 1.1vw, 20px);
+  line-height: 1.28;
+}
+
+.posting-slide-copy p,
+.posting-card p {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow-wrap: anywhere;
+  word-break: keep-all;
+  margin: 0;
+  color: var(--secondary-text);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.posting-slide-copy small,
+.posting-card small {
+  display: block;
+  margin-top: 10px;
+  color: var(--secondary-text);
+  font-size: 12px;
+}
+
+.posting-slider-controls {
+  width: min(240px, 100%);
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr) 32px;
+  gap: 8px;
+  align-items: center;
+  justify-self: center;
+}
+
+.posting-slider-controls button {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--deep-navy);
+}
+
+.posting-slider-controls > button {
+  width: 32px;
+  height: 32px;
+  display: inline-grid;
+  place-items: center;
+}
+
+.posting-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.posting-dots button {
+  width: 9px;
+  height: 9px;
+  padding: 0;
+  border-radius: 999px;
+  background: #d8e1ed;
+}
+
+.posting-dots button[aria-selected="true"] {
+  width: 24px;
+  background: var(--signal-blue);
+}
+
+.posts-archive-page {
+  max-width: 1280px;
+}
+
+.posts-archive-hero {
+  padding: clamp(20px, 2vw, 28px) 0;
+}
+
+.posts-archive-hero h1 {
+  max-width: 780px;
+  font-size: clamp(30px, 3.2vw, 48px);
+}
+
+.posts-archive-panel {
+  margin-top: 10px;
+}
+
+.post-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 22px;
+}
+
+.posting-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.posting-card {
+  min-width: 0;
+}
+
+.posting-card a {
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fff;
+  transition: border-color 160ms ease, transform 160ms ease;
+}
+
+.posting-card a:hover {
+  border-color: rgba(23, 107, 255, 0.42);
+  transform: translateY(-2px);
+}
+
+.posting-card a:hover .posting-thumb img {
+  transform: scale(1.025);
+}
+
+.posting-card .posting-thumb img {
+  transition: transform 220ms ease;
+}
+
+.posting-card-body {
+  padding: 18px;
+}
+
+@media (max-width: 1180px) {
+  .home-latest-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .posting-slide-link {
+    grid-template-columns: minmax(0, 46%) minmax(0, 54%);
+  }
+
+  .posting-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .home-latest-grid,
+  .posting-slide-link,
+  .posting-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .home-latest-column + .home-latest-column {
+    padding-top: 18px;
+    padding-left: 0;
+    border-top: 1px solid var(--border);
+    border-left: 0;
+  }
+
+  .home-latest-panel .section-head {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .posting-thumb {
+    height: auto;
+    min-height: 0;
+  }
+
+  .posting-slide-link {
+    min-height: 0;
+  }
+}
+
 @media (max-width: 767px) {
   .home-layout .trade-hero {
     min-height: 300px;

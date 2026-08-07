@@ -10,6 +10,7 @@
   <link rel="alternate" hreflang="en" href="https://logilee.com/en/">
   <link rel="stylesheet" href="../assets/logilee.css">
   <script defer src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script defer src="../assets/posts-data.js"></script>
   <script defer src="../assets/logilee-app.js"></script>
 </head>
 <body>
@@ -64,10 +65,20 @@
             <div class="tool-icons compact-tool-grid"><a href="cbm.html"><span class="icon"><i data-lucide="calculator"></i></span>CBM Calculator</a><a href="track.html"><span class="icon"><i data-lucide="radar"></i></span>Shipment Tracking</a><a href="../hscode-en.html"><span class="icon"><i data-lucide="barcode"></i></span>HS Code</a><a href="../incoterms-2020-en.html"><span class="icon"><i data-lucide="git-compare-arrows"></i></span>Incoterms</a><a href="weather.html"><span class="icon"><i data-lucide="badge-dollar-sign"></i></span>Exchange Rate</a><a href="ports.html"><span class="icon"><i data-lucide="anchor"></i></span>Port & Airport</a></div>
           </section>
 
-          <section class="panel news-panel latest-news home-latest-news">
-            <div class="section-head"><div><h2>Latest News</h2><p>Trade and logistics headlines from the existing RSS collection path.</p></div><a class="link-more" href="news.html">More -></a></div>
-            <div class="news-list compact-news-list" data-home-news data-news-query="global trade logistics">
-              <div class="data-empty skeleton-line">Loading latest news...</div>
+          <section class="panel home-latest-panel">
+            <div class="home-latest-grid">
+              <section class="home-latest-column news-panel latest-news home-latest-news" aria-labelledby="home-news-title-en">
+                <div class="section-head"><div><h2 id="home-news-title-en">Latest News</h2><p>Trade and logistics headlines from the existing RSS collection path.</p></div><a class="link-more" href="news.html">More</a></div>
+                <div class="news-list compact-news-list" data-home-news data-news-query="global trade logistics">
+                  <div class="data-empty skeleton-line">Loading latest news...</div>
+                </div>
+              </section>
+              <section class="home-latest-column latest-posting" aria-labelledby="home-posting-title-en" data-latest-posting>
+                <div class="section-head"><div><h2 id="home-posting-title-en">Latest Posting</h2><p>Original trade insights, logistics guides, and practical resources from LOGILEE.</p></div><a class="link-more" href="posts/">View All</a></div>
+                <div class="posting-slider" data-posting-slider>
+                  <div class="data-empty">Loading latest posts...</div>
+                </div>
+              </section>
             </div>
           </section>
 
