@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>LOGILEE | Global Trade Workspace</title>
-  <meta name="description" content="LOGILEE는 무역, 물류, 검색, 조회, 계산, 뉴스, 시장 데이터, 규제 정보를 한 곳에서 확인하는 Global Trade Workspace입니다.">
+  <meta name="description" content="LOGILEE는 무역, 물류, 검색, 조회, 계산, 뉴스, 시장 데이터와 규제 정보를 한곳에서 확인하는 Global Trade Workspace입니다.">
   <link rel="canonical" href="https://logilee.com/ko/">
   <link rel="alternate" hreflang="ko" href="https://logilee.com/ko/">
   <link rel="alternate" hreflang="en" href="https://logilee.com/en/">
@@ -16,7 +16,6 @@
 <div class="shell workspace-shell">
   <aside class="rail workspace-rail" aria-label="LOGILEE 업무 메뉴">
     <a class="brand compact-brand" href="./"><strong>LOGILEE</strong><span>Global Trade Workspace</span></a>
-    <button class="sidebar-collapse" data-sidebar-toggle type="button" aria-label="사이드바 접기"><i data-lucide="chevron-left"></i></button>
     <nav class="workspace-nav">
       <a class="nav-home is-active" href="./"><i data-lucide="home"></i> Home</a>
       <section><h2>Trade</h2><a href="countries.html"><i data-lucide="globe"></i>My Countries</a><a href="../hscode.html"><i data-lucide="barcode"></i>HS Code</a><a href="dashboard.html"><i data-lucide="globe-lock"></i>FTA & Tariff</a><a href="countries.html"><i data-lucide="shield-alert"></i>Import Regulation</a><a href="countries.html"><i data-lucide="send"></i>Export Regulation</a><a href="dashboard.html"><i data-lucide="chart-column"></i>Trade Statistics</a><a href="contact.html"><i data-lucide="building-2"></i>Embassy & Office</a></section>
@@ -25,14 +24,28 @@
       <section><h2>Market</h2><a href="dashboard.html"><i data-lucide="chart-no-axes-combined"></i>Freight Index</a><a href="dashboard.html"><i data-lucide="gem"></i>Metals & Energy</a><a href="weather.html"><i data-lucide="badge-dollar-sign"></i>Exchange Rate</a><a href="dashboard.html"><i data-lucide="calendar-clock"></i>Economic Calendar</a></section>
       <section><h2>Resources</h2><a href="templates.html"><i data-lucide="copy"></i>Templates</a><a href="documents.html"><i data-lucide="file-text"></i>Documents</a><a href="dictionary.html"><i data-lucide="languages"></i>Dictionary</a><a href="learn.html"><i data-lucide="graduation-cap"></i>Learn</a></section>
     </nav>
-    <div class="upgrade-card"><h3>Upgrade to PRO</h3><p>더 깊은 무역 데이터와 저장된 워크스페이스로 경쟁력을 높이세요.</p><a class="primary-btn" href="dashboard.html">자세히 보기</a></div>
   </aside>
 
   <main class="main">
     <header class="topbar workspace-topbar">
       <a class="mobile-logo" href="./">LOGILEE</a>
-      <div class="topbar-spacer"></div>
-      <div class="top-actions"><a class="icon-btn" href="dashboard.html"><i data-lucide="star"></i> 즐겨찾기</a><a class="icon-btn" href="dashboard.html"><i data-lucide="history"></i> 최근 조회</a><a class="icon-btn" href="../en/" data-lang-choice="en"><i data-lucide="globe-2"></i> English</a><a class="icon-btn" href="dashboard.html"><i data-lucide="circle-user-round"></i> 로그인</a><button class="menu-btn" data-menu-toggle aria-expanded="false" aria-label="메뉴 열기"><i data-lucide="menu"></i></button></div>
+      <form class="header-search" data-header-search role="search">
+        <i data-lucide="search"></i>
+        <input name="q" autocomplete="off" placeholder="Search LOGILEE..." aria-label="LOGILEE 검색">
+        <button type="submit" aria-label="검색"><i data-lucide="arrow-right"></i></button>
+        <div class="header-search-results" data-header-search-results></div>
+      </form>
+      <div class="top-actions">
+        <div class="language-menu" data-language-menu>
+          <button class="icon-btn language-button" type="button" aria-expanded="false"><i data-lucide="globe-2"></i> Language <i data-lucide="chevron-down"></i></button>
+          <div class="language-dropdown">
+            <span>Language</span>
+            <a class="is-active" href="./" data-lang-choice="ko">Korean</a>
+            <a href="../en/" data-lang-choice="en">English</a>
+          </div>
+        </div>
+        <button class="menu-btn" data-menu-toggle aria-expanded="false" aria-label="메뉴 열기"><i data-lucide="menu"></i></button>
+      </div>
     </header>
 
     <div class="page workspace-page">
@@ -41,52 +54,58 @@
           <section class="trade-hero">
             <div class="hero-copy">
               <h1>One Workspace for Global Trade</h1>
-              <p>무역 검색, 화물 조회, 계산, 시장 정보를 한 화면에서 더 빠르게 처리하세요.</p>
-              <form class="hero-search" data-search-form role="search"><i data-lucide="search"></i><input name="q" autocomplete="off" placeholder="Search anything... (Tracking, HS Code, Country, Port, Incoterms...)" aria-label="Global trade search"><button class="primary-btn" type="submit">Search</button></form>
-              <div class="chip-row"><span class="kicker hero-kicker">Popular Search</span><a class="chip" href="search.html?q=Tracking">Tracking</a><a class="chip" href="search.html?q=HS%20Code">HS Code</a><a class="chip" href="search.html?q=Vietnam">Vietnam</a><a class="chip" href="search.html?q=Maersk">Maersk</a><a class="chip" href="search.html?q=Incoterms">Incoterms</a><a class="chip" href="search.html?q=Port">Port</a></div>
+              <p>Search trade data, track freight, calculate costs, and monitor markets all in one place.</p>
+              <form class="hero-search" data-search-form role="search"><i data-lucide="search"></i><input name="q" autocomplete="off" placeholder="Tracking, HS Code, Country, Port, Incoterms 검색..." aria-label="Global trade search"><button class="primary-btn" type="submit">Search</button></form>
             </div>
           </section>
-          <section class="panel news-panel latest-news home-latest-news"><div class="section-head"><div><h2>Latest News</h2><p>현재 홈페이지에는 자동 뉴스 수집이 연결되어 있지 않습니다.</p></div><a class="link-more" href="news.html">더보기 -></a></div><div class="empty-state data-empty">News source pending. RSS/API 수집 연결 후 검수된 요약을 표시합니다.</div></section>
+
+          <section class="panel quick-tools-home">
+            <div class="section-head"><div><h2>Quick Tools</h2><p>실무에서 자주 쓰는 도구로 빠르게 이동합니다.</p></div></div>
+            <div class="tool-icons compact-tool-grid"><a href="cbm.html"><span class="icon"><i data-lucide="calculator"></i></span>CBM Calculator</a><a href="track.html"><span class="icon"><i data-lucide="radar"></i></span>Shipment Tracking</a><a href="../hscode.html"><span class="icon"><i data-lucide="barcode"></i></span>HS Code</a><a href="../incoterms-2020.html"><span class="icon"><i data-lucide="git-compare-arrows"></i></span>Incoterms</a><a href="weather.html"><span class="icon"><i data-lucide="badge-dollar-sign"></i></span>Exchange Rate</a><a href="ports.html"><span class="icon"><i data-lucide="anchor"></i></span>Port & Airport</a></div>
+          </section>
+
+          <section class="panel news-panel latest-news home-latest-news">
+            <div class="section-head"><div><h2>Latest News</h2><p>기존 RSS 수집 경로를 사용해 무역·물류 뉴스를 표시합니다.</p></div><a class="link-more" href="news.html">더보기 -></a></div>
+            <div class="news-list compact-news-list" data-home-news data-news-query="무역 물류">
+              <div class="data-empty skeleton-line">최신 뉴스를 불러오는 중입니다...</div>
+            </div>
+          </section>
+
           <div class="ad-slot ad-slot--leaderboard home-ad"><span>Advertisement</span><small>Reserved ad placement</small></div>
 
           <section class="panel tracking-panel-home">
-            <div class="section-head"><div><h2>Shipment & Tracking</h2><p>조회가 필요한 번호를 바로 시작하세요.</p></div></div>
+            <div class="section-head"><div><h2>Shipment & Tracking</h2><p>조회가 필요한 번호로 바로 시작하세요.</p></div></div>
             <div class="tracking-actions"><a href="track.html"><span class="icon"><i data-lucide="container"></i></span><strong>Container Tracking</strong><small>컨테이너 번호로 조회</small></a><a href="track.html"><span class="icon"><i data-lucide="file-text"></i></span><strong>B/L Tracking</strong><small>B/L 번호로 조회</small></a><a href="track.html"><span class="icon"><i data-lucide="clipboard-list"></i></span><strong>Booking Tracking</strong><small>Booking 번호로 조회</small></a><a href="track.html"><span class="icon"><i data-lucide="plane"></i></span><strong>Air Waybill Tracking</strong><small>AWB 번호로 조회</small></a><a href="track.html"><span class="icon"><i data-lucide="truck"></i></span><strong>Courier Tracking</strong><small>택배와 특송 조회</small></a><a href="track.html"><span class="icon"><i data-lucide="radar"></i></span><strong>Vessel Tracking</strong><small>선박 위치와 스케줄 조회</small></a></div>
             <a class="link-more" href="track.html">모든 Tracking 도구 보기 -></a>
-          </section>
-          <div class="ad-slot ad-slot--leaderboard home-ad"><span>Advertisement</span><small>Reserved ad placement</small></div>
-
-          <section class="panel popular-tools">
-            <div class="section-head"><div><h2>Popular Tools</h2><p>실무에서 자주 쓰는 무역 도구입니다.</p></div></div>
-            <div class="tool-icons"><a href="../hscode.html" data-tip="제품명과 품목분류를 빠르게 확인"><span class="icon"><i data-lucide="barcode"></i></span>HS Code Search</a><a href="../incoterms-2020.html" data-tip="비용과 위험 이전 조건 비교"><span class="icon"><i data-lucide="git-compare-arrows"></i></span>Incoterms 2020</a><a href="dashboard.html" data-tip="협정과 원산지 조건 탐색"><span class="icon"><i data-lucide="globe-lock"></i></span>FTA Finder</a><a href="dashboard.html" data-tip="관세와 세금 추정"><span class="icon"><i data-lucide="receipt-text"></i></span>Tariff Calculator</a><a href="ports.html" data-tip="항만과 터미널 정보"><span class="icon"><i data-lucide="anchor"></i></span>Port Information</a><a href="ports.html" data-tip="공항과 항공화물 정보"><span class="icon"><i data-lucide="plane"></i></span>Airport Information</a><a href="dashboard.html" data-tip="거래처와 운송사 검색"><span class="icon"><i data-lucide="building-2"></i></span>Company Search</a><a href="dashboard.html" data-tip="제품 기반 검색 준비"><span class="icon"><i data-lucide="package-search"></i></span>Product Search</a></div>
-            <a class="link-more" href="tools.html">모든 도구 보기 -></a>
           </section>
 
           <section class="panel guide-panel">
             <div class="section-head"><div><h2>Latest Guides</h2><p>무역 조건, 문서, 국가 정보를 실무 중심으로 정리했습니다.</p></div><a class="link-more" href="learn.html">더보기 -></a></div>
             <div class="guide-list"><a href="dictionary.html#fob"><span class="kicker">Incoterms</span><strong>FOB 조건 실무 이해</strong><small>Incoterms 2020 기준 비용과 위험 이전 시점.</small></a><a href="documents.html"><span class="kicker">Documents</span><strong>Commercial Invoice 체크리스트</strong><small>통관 전 필수 항목과 자주 발생하는 실수.</small></a><a href="countries.html"><span class="kicker">Country</span><strong>Vietnam Country Guide</strong><small>규정, 문서, 항만, 시장 신호를 한 번에 확인.</small></a></div>
           </section>
-
         </div>
 
-        <aside class="workspace-aside dashboard-sidebar">
+        <aside class="workspace-aside dashboard-sidebar" aria-label="Market Intelligence">
           <section class="panel market-card">
-            <div class="section-head market-head"><div><h2>Market Snapshot</h2><p>실시간 시장 API가 아직 연결되지 않았습니다.</p></div><span class="status soon">Data pending</span></div>
-            <div class="data-status-list"><div><strong>Exchange Rate</strong><span>Data source pending</span></div><div><strong>Freight Index</strong><span>Historical data unavailable</span></div><div><strong>Commodity</strong><span>Data source pending</span></div></div>
+            <div class="section-head market-head"><div><h2>Market Snapshot</h2><p data-market-updated>시장 데이터를 불러오는 중입니다...</p></div><span class="status" data-market-status>Loading</span></div>
+            <div class="data-status-list market-data-list" data-market-snapshot>
+              <div class="market-section-label">FX Market</div>
+              <div class="skeleton-line"><strong>Exchange Rate</strong><span>Loading...</span></div>
+            </div>
           </section>
 
-          <section class="panel quick-list sidebar-tools">
-            <h2>Quick Tools</h2>
-            <a href="cbm.html"><span class="icon"><i data-lucide="calculator"></i></span><strong>CBM</strong><small>부피 계산</small></a>
-            <a href="track.html"><span class="icon"><i data-lucide="radar"></i></span><strong>Shipment Tracking</strong><small>화물 조회</small></a>
-            <a href="../hscode.html"><span class="icon"><i data-lucide="barcode"></i></span><strong>HS Code</strong><small>품목분류</small></a>
-            <a href="../incoterms-2020.html"><span class="icon"><i data-lucide="git-compare-arrows"></i></span><strong>Incoterms</strong><small>비용과 위험</small></a>
-            <a href="weather.html"><span class="icon"><i data-lucide="badge-dollar-sign"></i></span><strong>Exchange Rate</strong><small>환율 확인</small></a>
-            <a href="ports.html"><span class="icon"><i data-lucide="anchor"></i></span><strong>Port & Airport</strong><small>항만과 공항</small></a>
+          <section class="panel freight-panel market-side-card compact-data-card" data-freight-index>
+            <h2>Freight Market Index</h2>
+            <div class="data-table-shell" aria-hidden="true"><span>Index Name</span><span>Current Value</span><span>Change</span><span>Updated</span></div>
+            <div class="data-empty">Live freight index data is not configured yet.<br>Market data connection required.</div>
+            <a class="link-more" href="dashboard.html">시장 워크스페이스 보기 -></a>
           </section>
 
-          <section class="panel freight-panel market-side-card compact-data-card"><h2>Freight Market Index</h2><div class="tabs disabled-tabs" aria-label="Freight index unavailable"><button class="tab is-active" disabled>SCFI</button><button class="tab" disabled>WCI</button><button class="tab" disabled>BDI</button></div><div class="empty-state data-empty">Historical data unavailable. Data source pending.</div><a class="link-more" href="dashboard.html">시장 워크스페이스 보기 -></a></section>
-          <section class="panel product-panel market-side-card compact-data-card"><h2>Commodity</h2><div class="empty-state data-empty">Commodity API가 아직 연결되지 않았습니다. 실시간 가격을 표시하지 않습니다.</div></section>
+          <section class="panel product-panel market-side-card compact-data-card" data-commodity-panel>
+            <h2>Commodity Markets</h2>
+            <div class="data-table-shell data-table-shell--commodity" aria-hidden="true"><span>Commodity</span><span>Price</span><span>Change</span></div>
+            <div class="data-empty">Live commodity market data is not configured yet.</div>
+          </section>
 
           <div class="ad-slot ad-slot--rectangle home-ad"><span>Advertisement</span><small>Reserved ad placement</small></div>
         </aside>

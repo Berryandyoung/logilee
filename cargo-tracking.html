@@ -1,9 +1,8 @@
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <title>📦 화물 추적</title>
+  <title>화물 추적</title>
   <style>
     body {
       font-family: sans-serif;
@@ -49,34 +48,31 @@
       margin-top: 20px;
       white-space: pre-wrap;
     }
-    
-.home-button {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.9rem;
-  padding: 8px 14px;
-  margin-bottom: 20px;
-  background-color: #005792;
-  color: white;
-  border: none;
-  border-radius: 20px;
-  text-decoration: none;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.home-button:hover {
-  background-color: #0078b6;
-  transform: translateY(-2px);
-}
-
+    .home-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.9rem;
+      padding: 8px 14px;
+      margin-bottom: 20px;
+      background-color: #005792;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      text-decoration: none;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    .home-button:hover {
+      background-color: #0078b6;
+      transform: translateY(-2px);
+    }
   </style>
 </head>
 <body>
-  <a href="index-ko.html" class="home-button">🏠 홈으로</a>
+  <a href="index-ko.html" class="home-button">홈으로</a>
 
-  <h2>📦 화물 추적</h2>
+  <h2>화물 추적</h2>
 
   <label>운송사 선택</label>
   <div class="carrier-button-group" id="carrier-buttons">
@@ -90,7 +86,7 @@
   <label for="trackingNo">운송장 번호</label>
   <input id="trackingNo" placeholder="예: 1234567890" />
 
-  <button onclick="trackShipment()">🔍 조회하기</button>
+  <button onclick="trackShipment()">조회하기</button>
 
   <div class="result" id="output">화물 추적 결과가 여기에 표시됩니다.</div>
 
@@ -98,56 +94,15 @@
     function selectCarrier(slug, button) {
       document.getElementById("carrier").value = slug;
       const buttons = document.querySelectorAll("#carrier-buttons button");
-      buttons.forEach(btn => btn.style.backgroundColor = "#007bff");
+      buttons.forEach((btn) => {
+        btn.style.backgroundColor = "#007bff";
+      });
       button.style.backgroundColor = "#0056b3";
     }
 
-    async function trackShipment() {
-      const slug = document.getElementById("carrier").value.trim();
-      const trackingNo = document.getElementById("trackingNo").value.trim();
+    function trackShipment() {
       const output = document.getElementById("output");
-
-      if (!slug || !trackingNo) {
-        output.textContent = "❗ 운송사와 운송장 번호를 모두 입력해주세요.";
-        return;
-      }
-
-      output.textContent = "⏳ 추적 정보를 불러오는 중...";
-
-      try {
-        const response = await fetch(`https://api.aftership.com/v4/trackings/${slug}/${trackingNo}`, {
-          method: "GET",
-          headers: {
-            "aftership-api-key": "asat_353bf042888246b2870fc22d4b813534",
-            "Content-Type": "application/json"
-          }
-        });
-
-        const json = await response.json();
-
-        if (json.meta.code !== 200) {
-          output.textContent = `❌ 오류: ${json.meta.message}`;
-          return;
-        }
-
-        const tracking = json.data.tracking;
-
-        output.innerHTML = `
-          <strong>배송 상태:</strong> ${tracking.tag}<br/>
-          <strong>운송장 번호:</strong> ${tracking.tracking_number}<br/>
-          <strong>운송사:</strong> ${tracking.slug}<br/>
-          <strong>출발지:</strong> ${tracking.origin_country_iso3 || "N/A"}<br/>
-          <strong>도착지:</strong> ${tracking.destination_country_iso3 || "N/A"}<br/>
-          <strong>예상 배송일:</strong> ${tracking.expected_delivery || "N/A"}<br/>
-          <hr/>
-          <strong>최신 배송 이력:</strong><br/>
-          ${tracking.checkpoints && tracking.checkpoints.length > 0 
-            ? tracking.checkpoints[tracking.checkpoints.length - 1].message + " (" + tracking.checkpoints[tracking.checkpoints.length - 1].checkpoint_time + ")" 
-            : "배송 이력 정보가 없습니다."}
-        `;
-      } catch (err) {
-        output.textContent = "❌ 추적 정보를 가져오지 못했습니다.";
-      }
+      output.textContent = "Legacy AfterShip browser integration has been disabled. Use the LOGILEE tracking hub or an approved server-side tracking proxy.";
     }
   </script>
 </body>

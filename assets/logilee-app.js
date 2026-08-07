@@ -1,7 +1,7 @@
-const LOGILEE = {
+﻿const LOGILEE = {
   ko: {
     searchPlaceholder: "물류 용어, 도구, 항만, 문서를 검색하세요",
-    noResult: "검색 결과가 없습니다. FOB, CBM, B/L, 부산항 같은 키워드를 시도해 보세요.",
+    noResult: "No results found.",
     copied: "결과를 복사했습니다.",
     external: "공식 조회 페이지로 이동합니다. LOGILEE는 실제 추적 상태를 임의로 생성하지 않습니다.",
     invalid: "값을 올바르게 입력해 주세요.",
@@ -16,57 +16,49 @@ const LOGILEE = {
     recent: "Recent lookups"
   }
 };
-
 const searchIndex = {
   ko: [
-    { type: "Tracking", title: "Container Tracking", summary: "컨테이너 번호로 선사 또는 공식 조회 페이지를 확인합니다.", url: "track.html", keywords: "container tracking container number 컨테이너 번호 추적" },
+    { type: "Tracking", title: "Container Tracking", summary: "컨테이너 번호로 공식 조회 페이지를 확인합니다.", url: "track.html", keywords: "container tracking container number 컨테이너 번호 추적" },
     { type: "Tracking", title: "B/L Tracking", summary: "Bill of Lading 번호로 선적 조회를 시작합니다.", url: "track.html", keywords: "bl bill of lading 선하증권 tracking" },
-    { type: "Tracking", title: "Booking Tracking", summary: "Booking 번호 기반 조회 구조를 준비했습니다.", url: "track.html", keywords: "booking number 부킹 번호 tracking" },
-    { type: "Tracking", title: "Air Waybill Tracking", summary: "AWB 번호 기반 항공화물 조회 구조입니다.", url: "track.html", keywords: "awb air waybill 항공화물 tracking" },
-    { type: "Guide", title: "FOB란? 비용과 위험 이전 시점", summary: "Incoterms 2020 기준 FOB 조건의 핵심을 실무 관점으로 정리했습니다.", url: "dictionary.html#fob", keywords: "fob free on board 인코텀즈 선적" },
+    { type: "Tracking", title: "Air Waybill Tracking", summary: "AWB 번호 기반 항공화물 조회 페이지로 이동합니다.", url: "track.html", keywords: "awb air waybill 항공화물 tracking" },
+    { type: "Tool", title: "CBM Calculator", summary: "화물 부피, 수량, 중량을 입력해 총 CBM을 계산합니다.", url: "cbm.html", keywords: "cbm calculator 부피 계산 박스" },
+    { type: "Tool", title: "HS Code Lookup", summary: "품목분류와 HS Code 검색 페이지로 이동합니다.", url: "../hscode.html", keywords: "hs code hscode 품목분류 관세" },
+    { type: "Guide", title: "Incoterms 2020", summary: "무역 조건별 비용과 위험 이전 기준을 확인합니다.", url: "../incoterms-2020.html", keywords: "incoterms fob cif fca 인코텀즈" },
     { type: "Dictionary", title: "FOB · Free On Board", summary: "수출자가 본선 적재까지 책임지는 해상 운송 조건입니다.", url: "dictionary.html#fob", keywords: "fob free on board" },
-    { type: "Tool", title: "CBM 계산기", summary: "화물 부피, 수량, 중량을 입력해 총 CBM을 계산합니다.", url: "cbm.html", keywords: "cbm calculator 부피 계산 박스" },
-    { type: "Tool", title: "화물 추적", summary: "Courier, B/L, Container, Air Cargo 공식 조회 페이지로 연결합니다.", url: "track.html", keywords: "tracking bl container dhl fedex ups" },
-    { type: "Port", title: "부산항 KRPUS", summary: "한국의 주요 컨테이너 항만입니다. 상세 데이터 페이지 구조가 준비되어 있습니다.", url: "ports.html", keywords: "busan port krpus 부산항 항만" },
-    { type: "Country", title: "Vietnam Country Guide", summary: "베트남 수출입 규정, 서류, 항만, 시장 정보를 연결할 국가 가이드입니다.", url: "countries.html", keywords: "vietnam country 베트남 국가 수출" },
-    { type: "Company", title: "Maersk", summary: "선사와 운송사 정보를 조회할 수 있는 확장 구조입니다.", url: "ports.html", keywords: "maersk carrier company 선사 회사" },
-    { type: "Product", title: "Stainless steel bolt", summary: "제품명 기반 HS Code 및 규제 검색으로 확장할 수 있습니다.", url: "search.html?q=stainless%20steel%20bolt", keywords: "product stainless steel bolt hs code 제품" },
-    { type: "Document", title: "Commercial Invoice", summary: "상업송장의 목적, 필수 항목, 작성 실수를 정리할 문서 허브입니다.", url: "documents.html", keywords: "invoice commercial document" },
-    { type: "FAQ", title: "FOB와 FCA는 어떻게 다른가요?", summary: "운송 방식과 위험 이전 지점이 다르므로 계약 조건 확인이 필요합니다.", url: "dictionary.html#fob", keywords: "fob fca faq" }
+    { type: "Port", title: "Port of Busan", summary: "부산항 정보 페이지로 이동합니다.", url: "ports.html", keywords: "busan port krpus 부산항 항만" },
+    { type: "Country", title: "Country Guides", summary: "국가별 무역과 물류 정보 페이지로 이동합니다.", url: "countries.html", keywords: "country guide vietnam 국가 베트남 수출" },
+    { type: "Document", title: "Commercial Invoice", summary: "무역 문서 허브로 이동합니다.", url: "documents.html", keywords: "invoice commercial document" },
+    { type: "News", title: "Latest News", summary: "LOGILEE 뉴스 페이지로 이동합니다.", url: "news.html", keywords: "news rss market logistics trade 뉴스" }
   ],
   en: [
     { type: "Tracking", title: "Container Tracking", summary: "Start a carrier or official lookup by container number.", url: "track.html", keywords: "container tracking container number" },
     { type: "Tracking", title: "B/L Tracking", summary: "Start a shipment lookup by Bill of Lading number.", url: "track.html", keywords: "bl bill of lading tracking" },
-    { type: "Tracking", title: "Booking Tracking", summary: "Prepared structure for booking number lookup.", url: "track.html", keywords: "booking number tracking" },
-    { type: "Tracking", title: "Air Waybill Tracking", summary: "Prepared structure for AWB air cargo lookup.", url: "track.html", keywords: "awb air waybill air cargo tracking" },
-    { type: "Guide", title: "What FOB Means in Practice", summary: "A practical overview of cost and risk transfer under Incoterms 2020.", url: "dictionary.html#fob", keywords: "fob free on board incoterms" },
-    { type: "Dictionary", title: "FOB · Free On Board", summary: "A sea freight term where the seller is responsible until goods are loaded on board.", url: "dictionary.html#fob", keywords: "fob free on board" },
+    { type: "Tracking", title: "Air Waybill Tracking", summary: "Open the air cargo tracking workflow.", url: "track.html", keywords: "awb air waybill air cargo tracking" },
     { type: "Tool", title: "CBM Calculator", summary: "Calculate cargo volume from dimensions, quantity, and weight.", url: "cbm.html", keywords: "cbm calculator carton volume" },
+    { type: "Tool", title: "HS Code Lookup", summary: "Find HS codes and tariff classifications.", url: "../hscode-en.html", keywords: "hs code hscode tariff classification" },
+    { type: "Guide", title: "Incoterms 2020", summary: "Compare cost and risk transfer by trade term.", url: "../incoterms-2020-en.html", keywords: "incoterms fob cif fca trade terms" },
+    { type: "Dictionary", title: "FOB · Free On Board", summary: "A sea freight term where the seller is responsible until goods are loaded on board.", url: "dictionary.html#fob", keywords: "fob free on board" },
     { type: "Tool", title: "Shipment Tracking", summary: "Open official carrier tracking pages for courier, B/L, container, and air cargo.", url: "track.html", keywords: "tracking bl container dhl fedex ups" },
-    { type: "Port", title: "Port of Busan KRPUS", summary: "A core Korean container port. Detail data structure is ready for expansion.", url: "ports.html", keywords: "busan port krpus korea" },
-    { type: "Country", title: "Vietnam Country Guide", summary: "Country guide structure for regulations, documents, ports, and market signals.", url: "countries.html", keywords: "vietnam country export import" },
-    { type: "Company", title: "Maersk", summary: "Expandable carrier and company information structure.", url: "ports.html", keywords: "maersk carrier company shipping line" },
-    { type: "Product", title: "Stainless steel bolt", summary: "Prepared for product-based HS Code and compliance search.", url: "search.html?q=stainless%20steel%20bolt", keywords: "product stainless steel bolt hs code" },
-    { type: "Document", title: "Commercial Invoice", summary: "Document hub for purpose, required fields, examples, and common mistakes.", url: "documents.html", keywords: "invoice commercial document" },
-    { type: "FAQ", title: "How are FOB and FCA different?", summary: "Transport mode and risk transfer points differ. Review contract terms carefully.", url: "dictionary.html#fob", keywords: "fob fca faq" }
+    { type: "Port", title: "Port of Busan", summary: "Open the port information page.", url: "ports.html", keywords: "busan port krpus korea" },
+    { type: "Country", title: "Country Guides", summary: "Open country trade and logistics information.", url: "countries.html", keywords: "country guide vietnam export import" },
+    { type: "Document", title: "Commercial Invoice", summary: "Open the document hub for trade paperwork.", url: "documents.html", keywords: "invoice commercial document" },
+    { type: "News", title: "Latest News", summary: "Open LOGILEE news and insights.", url: "news.html", keywords: "news rss market logistics trade" }
   ]
 };
-
 const terms = {
   ko: [
     { id: "fob", term: "FOB", name: "Free On Board", category: "Trade", definition: "해상 운송에서 수출자가 화물을 본선에 적재할 때까지의 비용과 위험을 부담하는 조건입니다.", example: "부산항에서 FOB 조건으로 계약했다면 매수인은 본선 적재 이후의 해상 운임과 보험을 검토합니다.", related: ["FCA", "CFR", "CIF"] },
-    { id: "bl", term: "B/L", name: "Bill of Lading", category: "Documentation", definition: "운송인이 화물 수령 또는 선적을 증명하기 위해 발행하는 선하증권입니다.", example: "수입 통관과 화물 인도 과정에서 B/L 번호가 자주 필요합니다.", related: ["Sea Waybill", "Arrival Notice"] },
-    { id: "chargeable-weight", term: "Chargeable Weight", name: "운임중량", category: "Air", definition: "실중량과 부피중량 중 운임 산정에 적용되는 중량입니다.", example: "항공화물은 가볍지만 부피가 크면 운임중량이 실제 중량보다 커질 수 있습니다.", related: ["Dimensional Weight", "CBM"] },
+    { id: "bl", term: "B/L", name: "Bill of Lading", category: "Documentation", definition: "운송인이 화물 수령 또는 선적을 증명하기 위해 발행하는 운송 문서입니다.", example: "수입 통관과 화물 인도 과정에서 B/L 번호가 자주 필요합니다.", related: ["Sea Waybill", "Arrival Notice"] },
+    { id: "chargeable-weight", term: "Chargeable Weight", name: "운임중량", category: "Air", definition: "실중량과 부피중량 중 운임 산정에 적용하는 중량입니다.", example: "항공화물은 가볍지만 부피가 크면 운임중량이 실제 중량보다 클 수 있습니다.", related: ["Dimensional Weight", "CBM"] },
     { id: "hs-code", term: "HS Code", name: "품목분류번호", category: "Customs", definition: "국제 무역 상품 분류에 사용하는 코드로 관세와 규제 확인의 출발점입니다.", example: "같은 제품도 재질과 용도에 따라 HS Code가 달라질 수 있습니다.", related: ["Customs Clearance", "Duty"] }
   ],
   en: [
     { id: "fob", term: "FOB", name: "Free On Board", category: "Trade", definition: "A sea freight term where the seller covers cost and risk until goods are loaded on board.", example: "Under FOB Busan, the buyer usually reviews ocean freight and insurance after loading.", related: ["FCA", "CFR", "CIF"] },
     { id: "bl", term: "B/L", name: "Bill of Lading", category: "Documentation", definition: "A transport document issued by a carrier to evidence cargo receipt or shipment.", example: "The B/L number is often used during customs clearance and cargo release.", related: ["Sea Waybill", "Arrival Notice"] },
-    { id: "chargeable-weight", term: "Chargeable Weight", name: "운임중량", category: "Air", definition: "The weight used to rate freight, usually the greater of actual and dimensional weight.", example: "Light but bulky air cargo can be charged by dimensional weight.", related: ["Dimensional Weight", "CBM"] },
+    { id: "chargeable-weight", term: "Chargeable Weight", name: "Chargeable Weight", category: "Air", definition: "The weight used to rate freight, usually the greater of actual and dimensional weight.", example: "Light but bulky air cargo can be charged by dimensional weight.", related: ["Dimensional Weight", "CBM"] },
     { id: "hs-code", term: "HS Code", name: "Harmonized System Code", category: "Customs", definition: "A product classification code used as a starting point for customs duty and compliance checks.", example: "Material and use can change the HS classification for similar products.", related: ["Customs Clearance", "Duty"] }
   ]
 };
-
 function currentLang() {
   return document.documentElement.lang && document.documentElement.lang.startsWith("ko") ? "ko" : "en";
 }
@@ -147,21 +139,12 @@ function enhanceSidebar() {
 
   const footer = document.createElement("div");
   footer.className = "sidebar-footer";
-  const collapseText = currentLang() === "ko" ? "사이드바 접기" : "Collapse";
-  const themeText = currentLang() === "ko" ? "테마" : "Theme";
   footer.innerHTML = `
-    <button class="sidebar-footer-action" data-sidebar-footer-toggle type="button">
-      <i data-lucide="panel-left-close"></i><span>${collapseText}</span>
-    </button>
-    <button class="theme-toggle" type="button" aria-label="${themeText}">
-      <i data-lucide="sun"></i><span>${themeText}</span>
-    </button>
     <div class="sidebar-version">
       <strong>LOGILEE v1.0.0</strong>
-      <span>© 2025 BerryYoung Co., Ltd.</span>
+      <span>짤 2025 BerryYoung Co., Ltd.</span>
     </div>
   `;
-  if (upgrade) footer.insertBefore(upgrade, footer.firstChild);
   rail.appendChild(footer);
 
   if (!document.querySelector("[data-sidebar-overlay]")) {
@@ -274,7 +257,7 @@ function wireSidebarCollapse() {
     document.querySelectorAll("[data-sidebar-footer-toggle]").forEach((button) => {
       button.querySelector("i")?.setAttribute("data-lucide", collapsed ? "panel-left-open" : "panel-left-close");
       const text = button.querySelector("span");
-      if (text) text.textContent = collapsed ? (currentLang() === "ko" ? "사이드바 펼치기" : "Expand") : (currentLang() === "ko" ? "사이드바 접기" : "Collapse");
+      if (text) text.textContent = collapsed ? "Expand" : "Collapse";
     });
     refreshIcons();
   };
@@ -290,6 +273,29 @@ function wireSidebarCollapse() {
 function setupLanguageChoice() {
   document.querySelectorAll("[data-lang-choice]").forEach((link) => {
     link.addEventListener("click", () => localStorage.setItem("logilee-lang", link.dataset.langChoice));
+  });
+}
+
+function setupLanguageMenu() {
+  document.querySelectorAll("[data-language-menu]").forEach((menu) => {
+    const button = menu.querySelector("button");
+    if (!button) return;
+    button.addEventListener("click", () => {
+      const open = menu.classList.toggle("is-open");
+      button.setAttribute("aria-expanded", String(open));
+    });
+    document.addEventListener("click", (event) => {
+      if (!menu.contains(event.target)) {
+        menu.classList.remove("is-open");
+        button.setAttribute("aria-expanded", "false");
+      }
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        menu.classList.remove("is-open");
+        button.setAttribute("aria-expanded", "false");
+      }
+    });
   });
 }
 
@@ -315,6 +321,53 @@ function renderResults(target, results, lang) {
       <p class="muted">${item.summary}</p>
     </a>
   `).join("");
+}
+
+function resultMarkup(item) {
+  return `
+    <a class="header-result-item" href="${item.url}">
+      <span>${item.type}</span>
+      <strong>${item.title}</strong>
+      <small>${item.summary}</small>
+    </a>
+  `;
+}
+
+function wireHeaderSearch() {
+  const lang = currentLang();
+  document.querySelectorAll("[data-header-search]").forEach((form) => {
+    const input = form.querySelector("input");
+    const results = form.querySelector("[data-header-search-results]");
+    if (!input || !results) return;
+
+    const render = () => {
+      const q = input.value.trim();
+      if (!q) {
+        results.innerHTML = "";
+        form.classList.remove("has-results");
+        return;
+      }
+      const matches = runSearch(q, lang).slice(0, 5);
+      results.innerHTML = matches.length
+        ? matches.map(resultMarkup).join("")
+        : `<div class="header-result-empty">${lang === "ko" ? "No results found." : "No results found."}</div>`;
+      form.classList.add("has-results");
+    };
+
+    input.addEventListener("input", render);
+    input.addEventListener("focus", render);
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const q = input.value.trim();
+      if (q) location.href = `search.html?q=${encodeURIComponent(q)}`;
+    });
+    document.addEventListener("click", (event) => {
+      if (!form.contains(event.target)) form.classList.remove("has-results");
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") form.classList.remove("has-results");
+    });
+  });
 }
 
 function wireSearch() {
@@ -347,6 +400,122 @@ function wireSearch() {
   });
 }
 
+function formatKstTime(value) {
+  return new Intl.DateTimeFormat("en-US", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+    timeZone: "Asia/Seoul"
+  }).format(value);
+}
+
+function formatRate(value, digits = 2) {
+  return Number(value).toLocaleString(undefined, {
+    minimumFractionDigits: digits,
+    maximumFractionDigits: digits
+  });
+}
+
+async function loadHomeMarket() {
+  const snapshot = document.querySelector("[data-market-snapshot]");
+  if (!snapshot) return;
+  const status = document.querySelector("[data-market-status]");
+  const updated = document.querySelector("[data-market-updated]");
+  const unavailable = "Market data unavailable";
+
+  try {
+    const response = await fetch("https://api.frankfurter.app/latest?from=USD&to=KRW,EUR,JPY,CNY", { cache: "no-store" });
+    if (!response.ok) throw new Error(`FX API ${response.status}`);
+    const data = await response.json();
+    const rates = data.rates || {};
+    const rows = [
+      ["USD/KRW", rates.KRW, 2],
+      ["USD/CNY", rates.CNY, 4],
+      ["USD/JPY", rates.JPY, 2],
+      ["EUR/USD", Number.isFinite(rates.EUR) && rates.EUR > 0 ? 1 / rates.EUR : null, 4]
+    ].filter((row) => Number.isFinite(row[1]));
+
+    if (!rows.length) throw new Error("No FX rates returned");
+    snapshot.innerHTML = `
+      <div class="market-section-label">FX Market</div>
+      ${rows.map(([label, value, digits]) => `
+        <div>
+          <strong>${label}</strong>
+          <span>${formatRate(value, digits)}</span>
+        </div>
+      `).join("")}
+    `;
+    status?.classList.remove("soon");
+    if (status) status.textContent = "FX Market";
+    if (updated) updated.textContent = `Last updated · ${formatKstTime(new Date())} KST`;
+  } catch (error) {
+    console.warn("Market Snapshot unavailable:", error);
+    snapshot.innerHTML = `<div class="market-section-label">FX Market</div><div><strong>Exchange Rate</strong><span>${unavailable}</span></div>`;
+    status?.classList.add("soon");
+    if (status) status.textContent = "Unavailable";
+    if (updated) updated.textContent = unavailable;
+  }
+}
+
+function splitNewsTitle(title) {
+  const clean = String(title || "").trim();
+  const separator = clean.lastIndexOf(" - ");
+  if (separator <= 0) return { headline: clean, source: "" };
+  return {
+    headline: clean.slice(0, separator),
+    source: clean.slice(separator + 3)
+  };
+}
+
+function formatNewsTime(pubDate, lang) {
+  if (!pubDate) return "";
+  const date = new Date(pubDate);
+  if (Number.isNaN(date.getTime())) return "";
+  return new Intl.DateTimeFormat(lang === "ko" ? "ko-KR" : "en-US", {
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZone: "Asia/Seoul"
+  }).format(date);
+}
+
+async function loadHomeNews() {
+  const targets = document.querySelectorAll("[data-home-news]");
+  if (!targets.length) return;
+  const lang = currentLang();
+  const labels = {
+    loadingFailed: "News source unavailable.",
+    noItems: "No news items available."
+  };
+
+  for (const target of targets) {
+    const query = target.dataset.newsQuery || (lang === "ko" ? "무역 물류" : "global trade logistics");
+    const rssUrl = `https://news.google.com/rss/search?q=${encodeURIComponent(query)}&hl=${lang === "ko" ? "ko" : "en"}&gl=${lang === "ko" ? "KR" : "US"}&ceid=${lang === "ko" ? "KR:ko" : "US:en"}`;
+    const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
+    try {
+      const response = await fetch(apiUrl, { cache: "no-store" });
+      if (!response.ok) throw new Error(`News API ${response.status}`);
+      const data = await response.json();
+      const items = Array.isArray(data.items) ? data.items.slice(0, 6) : [];
+      target.innerHTML = items.length ? items.map((item) => {
+        const parsed = splitNewsTitle(item.title);
+        const time = formatNewsTime(item.pubDate, lang);
+        return `
+          <a class="news-item compact-news-item" href="${item.link}" target="_blank" rel="noopener">
+            <div>
+              <strong>${parsed.headline}</strong>
+              <small>${[parsed.source, time].filter(Boolean).join(" · ")}</small>
+            </div>
+          </a>
+        `;
+      }).join("") : `<div class="data-empty">${labels.noItems}</div>`;
+    } catch (error) {
+      console.warn("Homepage news unavailable:", error);
+      target.innerHTML = `<div class="data-empty">${labels.loadingFailed}</div>`;
+    }
+  }
+}
 function rowTemplate(lang) {
   const labels = lang === "ko"
     ? ["화물명", "수량", "길이", "너비", "높이", "중량"]
@@ -512,7 +681,7 @@ function wireDictionary() {
       <div class="notice"><strong>${lang === "ko" ? "실무 예시" : "Practical example"}</strong><br>${term.example}</div>
       <h3>${lang === "ko" ? "관련 용어" : "Related terms"}</h3>
       <div class="chip-row">${term.related.map((item) => `<span class="chip">${item}</span>`).join("")}</div>
-      <p class="muted">${lang === "ko" ? "수정일" : "Updated"}: 2026-07-26 · ${lang === "ko" ? "참고 정보이며 계약 확정 전 공식 기준을 확인하세요." : "For reference only. Confirm official standards before finalizing contracts."}</p>
+      <p class="muted">${lang === "ko" ? "Updated" : "Updated"}: 2026-07-26 · ${lang === "ko" ? "참고 정보입니다. 계약 확정 전 공식 기준을 확인하세요." : "For reference only. Confirm official standards before finalizing contracts."}</p>
     `;
     list.querySelectorAll("button").forEach((button) => button.setAttribute("aria-pressed", String(button.dataset.term === term.id)));
   };
@@ -532,7 +701,11 @@ document.addEventListener("DOMContentLoaded", () => {
   wireMenu();
   wireSidebarCollapse();
   setupLanguageChoice();
+  setupLanguageMenu();
+  wireHeaderSearch();
   wireSearch();
+  loadHomeMarket();
+  loadHomeNews();
   wireCbm();
   wireTracking();
   wireDictionary();
