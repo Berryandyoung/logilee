@@ -2,14 +2,14 @@ window.LOGILEE_POSTS = [
   {
     "slug": "logilee-publish-engine-qa-1786172710927",
     "language": "ko",
-    "title": "LOGILEE Publish Engine QA 1786172710927",
-    "description": "Temporary LOGILEE CMS publish engine QA article verifying GitHub Pages publishing, thumbnail rendering, archive listing, and SEO metadata.",
+    "title": "LOGILEE Publish Engine QA 1786172710927 Updated",
+    "description": "Updated temporary LOGILEE CMS publish engine QA article verifying republish without duplicate posts-data entries.",
     "category": "guides",
     "date": "2026-08-08",
     "readingTime": "1분 읽기",
     "path": "ko/posts/logilee-publish-engine-qa-1786172710927/index.html",
     "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_09ed2ebe-a0ac-4e62-aa81-5e2b3d64d653-logilee-publish-test-thumb.png?alt=media&token=07917784-db68-4996-8cc0-0876d94564ec",
-    "imageAlt": "LOGILEE Publish Engine QA 1786172710927 thumbnail"
+    "imageAlt": "LOGILEE Publish Engine QA 1786172710927 Updated thumbnail"
   },
   {
     "slug": "global-sales",
