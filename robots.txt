@@ -1,4 +1,4 @@
 User-agent: *
 Disallow:
 
-Sitemap: https://logilee.com/sitemap.xml
+Sitemap: https://www.logilee.com/sitemap.xml
