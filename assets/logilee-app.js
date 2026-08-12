@@ -152,7 +152,7 @@ function enhanceSidebar() {
   footer.innerHTML = `
     <div class="sidebar-version">
       <strong>LOGILEE v1.0.0</strong>
-      <span>짤 2025 BerryYoung Co., Ltd.</span>
+      <span>&copy; 2025 LOGILEE. All rights reserved.</span>
     </div>
   `;
   rail.appendChild(footer);
