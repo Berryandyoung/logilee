@@ -1530,6 +1530,49 @@ function localTimeForPort(port) {
   }
 }
 
+const PORT_SEO_COPY = {
+  busan: [
+    "Port of Busan is South Korea's primary ocean gateway and a practical starting point for Northeast Asia routing checks. It is commonly used in export, import, and transshipment planning where Korean manufacturing, distribution, and customs schedules matter.",
+    "Use this page to confirm the port identity, UN/LOCODE, country context, holidays, currency reference, and nearby Korean ports before moving into carrier booking, customs filing, or partner-specific documentation."
+  ],
+  shanghai: [
+    "Port of Shanghai sits within one of China's most important manufacturing and distribution regions. For logistics teams, it is often a reference point when comparing East China routings, supplier lead times, and inland connection assumptions.",
+    "The page connects the port record to China country indicators, holiday checks, currency conversion, and trade data tools so operational research can move from a port code to broader market context."
+  ],
+  singapore: [
+    "Port of Singapore is a major Southeast Asia logistics hub used for regional consolidation, transshipment planning, and trade lane comparisons. Its location makes it relevant when reviewing routings between Asia, Europe, the Middle East, and Oceania.",
+    "Use the related tools to pair port identity with Singapore country data, public holidays, USD/SGD planning rates, and wider trade references before confirming a carrier or forwarder schedule."
+  ],
+  rotterdam: [
+    "Port of Rotterdam is a key European gateway for ocean freight moving into the Netherlands and wider continental Europe. It is useful for comparing EU entry points, inland distribution options, and market access assumptions.",
+    "This reference links the port record with Netherlands indicators, holidays, currency planning, and EU trade statistics so the port can be reviewed alongside broader commercial context."
+  ],
+  "los-angeles": [
+    "Port of Los Angeles is a major U.S. West Coast gateway for Pacific trade lanes and North American distribution planning. It is especially relevant when comparing arrival ports, inland movement, and U.S. market lead-time assumptions.",
+    "Use the page as a quick identity check before confirming carrier details, customs documentation, public holiday timing, and USD-based cost comparisons."
+  ],
+  "ningbo-zhoushan": [
+    "Ningbo-Zhoushan Port serves an important East China coastal region and is often reviewed alongside Shanghai for supplier and routing decisions. It can be relevant for ocean freight moving through Zhejiang and nearby manufacturing areas.",
+    "The page keeps the operational basics in one place: UN/LOCODE, coordinates, country tools, holiday context, currency reference, and links into trade statistics."
+  ],
+  hamburg: [
+    "Port of Hamburg is a major North European gateway with strong relevance for German and Central European logistics planning. It is useful when checking EU market access, inland connection assumptions, and Germany-related trade context.",
+    "Review the port data together with German holidays, country indicators, and Eurostat trade values before using the information in a shipment plan or documentation workflow."
+  ],
+  "long-beach": [
+    "Port of Long Beach is an important U.S. West Coast container gateway located near Los Angeles. Logistics teams often review it together with neighboring Southern California ports for routing, drayage, and distribution planning.",
+    "This page links the port identifier to U.S. country data, holiday checks, currency planning, and related port records so users can move from a port search to operational context."
+  ],
+  "jebel-ali": [
+    "Jebel Ali Port is a major Middle East logistics hub and a common reference point for Gulf, Africa, South Asia, and Europe trade lane planning. It is useful when reviewing regional consolidation and re-export workflows.",
+    "Use the page to pair the port code with United Arab Emirates country indicators, holidays, currency context, and related tools before final booking or documentation checks."
+  ],
+  "cat-lai": [
+    "Ho Chi Minh City / Cat Lai is a practical port reference for southern Vietnam trade and manufacturing supply chains. It is often considered when reviewing Vietnam sourcing, export preparation, and regional Southeast Asia logistics options.",
+    "The page connects the port record to Vietnam country data, public holidays, currency planning, and trade exploration tools so users can keep market and port context together."
+  ]
+};
+
 function portCard(port) {
   const countryParam = port.iso;
   const currency = COUNTRY_CURRENCY[countryParam] || "USD";
@@ -1619,6 +1662,11 @@ function wirePortDetail() {
       </div>
     </section>
     <section class="panel prose-panel">
+      <h2>Logistics role</h2>
+      ${(PORT_SEO_COPY[port.slug] || [
+        `${port.name} is a ${port.type.toLowerCase()} in ${port.region}. Use it as a reference point when comparing port identity, country context, holidays, currency, and related logistics data.`,
+        "Confirm final operational details with carriers, forwarders, terminal notices, and official documentation sources before using the port in a booking or customs workflow."
+      ]).map((paragraph) => `<p>${paragraph}</p>`).join("")}
       <h2>Related Trade Data</h2>
       <div class="chip-row">
         <a class="chip" href="../country-trade-profile.html?country=${port.iso}">${port.country} Profile</a>
