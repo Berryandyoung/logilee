@@ -21,10 +21,10 @@
     <a class="brand compact-brand" href="./"><strong>LOGILEE</strong><span>Global Trade Workspace</span></a>
     <nav class="workspace-nav">
       <a class="nav-home is-active" href="./"><i data-lucide="home"></i> Home</a>
-      <section><h2>Trade</h2><a href="countries.html"><i data-lucide="globe"></i>My Countries</a><a href="../hscode.html"><i data-lucide="barcode"></i>HS Code</a><a href="dashboard.html"><i data-lucide="globe-lock"></i>FTA & Tariff</a><a href="countries.html"><i data-lucide="shield-alert"></i>Import Regulation</a><a href="countries.html"><i data-lucide="send"></i>Export Regulation</a><a href="dashboard.html"><i data-lucide="chart-column"></i>Trade Statistics</a><a href="contact.html"><i data-lucide="building-2"></i>Embassy & Office</a></section>
-      <section><h2>Logistics</h2><a href="track.html"><i data-lucide="radar"></i>Tracking</a><a href="ports.html"><i data-lucide="ship"></i>Carrier & Airline</a><a href="ports.html"><i data-lucide="anchor"></i>Ports & Airports</a><a href="tools.html"><i data-lucide="container"></i>Container</a><a href="dashboard.html"><i data-lucide="calendar-days"></i>Schedule</a><a href="cbm.html"><i data-lucide="calculator"></i>CBM Calculator</a></section>
+      <section><h2>Trade</h2><a href="country-trade-profile.html"><i data-lucide="globe"></i>국가별 무역 프로필</a><a href="holidays.html"><i data-lucide="calendar-check"></i>글로벌 무역 공휴일</a><a href="eu-trade-explorer.html"><i data-lucide="chart-column"></i>EU 무역 통계</a><a href="global-trade-explorer.html"><i data-lucide="chart-column"></i>Global Trade Explorer</a><a href="../hscode.html"><i data-lucide="barcode"></i>HS Code</a><a href="countries.html"><i data-lucide="shield-alert"></i>Import Regulation</a><a href="countries.html"><i data-lucide="send"></i>Export Regulation</a><a href="contact.html"><i data-lucide="building-2"></i>Embassy & Office</a></section>
+      <section><h2>Logistics</h2><a href="track.html"><i data-lucide="radar"></i>Tracking</a><a href="ports.html"><i data-lucide="ship"></i>Carrier & Airline</a><a href="ports.html"><i data-lucide="anchor"></i>Ports & Airports</a><a href="tools.html"><i data-lucide="container"></i>Container</a><a href="cbm.html"><i data-lucide="calculator"></i>CBM Calculator</a></section>
       <section><h2>Compliance</h2><a href="dashboard.html"><i data-lucide="shield-check"></i>FDA</a><a href="dashboard.html"><i data-lucide="badge-check"></i>BIS</a><a href="dashboard.html"><i data-lucide="leaf"></i>REACH</a><a href="dashboard.html"><i data-lucide="circle-check"></i>RoHS / CE</a><a href="dashboard.html"><i data-lucide="circle-x"></i>CCC</a><a href="dashboard.html"><i data-lucide="shield"></i>KC / TSCA</a></section>
-      <section><h2>Market</h2><a href="dashboard.html"><i data-lucide="chart-no-axes-combined"></i>Freight Index</a><a href="dashboard.html"><i data-lucide="gem"></i>Metals & Energy</a><a href="weather.html"><i data-lucide="badge-dollar-sign"></i>Exchange Rate</a><a href="dashboard.html"><i data-lucide="calendar-clock"></i>Economic Calendar</a></section>
+      <section><h2>Market</h2><a href="freight-market.html"><i data-lucide="chart-no-axes-combined"></i>Freight Market</a><a href="currency-converter.html"><i data-lucide="badge-dollar-sign"></i>환율 계산기</a><a href="business-day.html"><i data-lucide="calendar-clock"></i>영업일 계산기</a></section>
       <section><h2>Resources</h2><a href="templates.html"><i data-lucide="copy"></i>Templates</a><a href="documents.html"><i data-lucide="file-text"></i>Documents</a><a href="dictionary.html"><i data-lucide="languages"></i>Dictionary</a><a href="learn.html"><i data-lucide="graduation-cap"></i>Learn</a></section>
     </nav>
   </aside>
@@ -64,7 +64,7 @@
 
           <section class="panel quick-tools-home">
             <div class="section-head"><div><h2>Quick Tools</h2><p>실무에서 자주 쓰는 도구로 빠르게 이동합니다.</p></div></div>
-            <div class="tool-icons compact-tool-grid"><a href="cbm.html"><span class="icon"><i data-lucide="calculator"></i></span>CBM Calculator</a><a href="track.html"><span class="icon"><i data-lucide="radar"></i></span>Shipment Tracking</a><a href="../hscode.html"><span class="icon"><i data-lucide="barcode"></i></span>HS Code</a><a href="../incoterms-2020.html"><span class="icon"><i data-lucide="git-compare-arrows"></i></span>Incoterms</a><a href="weather.html"><span class="icon"><i data-lucide="badge-dollar-sign"></i></span>Exchange Rate</a><a href="ports.html"><span class="icon"><i data-lucide="anchor"></i></span>Port & Airport</a></div>
+            <div class="tool-icons compact-tool-grid"><a href="cbm.html"><span class="icon"><i data-lucide="calculator"></i></span>CBM Calculator</a><a href="track.html"><span class="icon"><i data-lucide="radar"></i></span>Shipment Tracking</a><a href="currency-converter.html"><span class="icon"><i data-lucide="badge-dollar-sign"></i></span>환율 계산기</a><a href="ports.html"><span class="icon"><i data-lucide="anchor"></i></span>항만 검색</a><a href="eu-trade-explorer.html"><span class="icon"><i data-lucide="chart-column"></i></span>EU 무역 통계</a><a href="freight-market.html"><span class="icon"><i data-lucide="chart-no-axes-combined"></i></span>Freight Market</a></div>
           </section>
 
           <section class="panel home-latest-panel">
@@ -110,14 +110,8 @@
           <section class="panel freight-panel market-side-card compact-data-card" data-freight-index>
             <h2>Freight Market Index</h2>
             <div class="data-table-shell" aria-hidden="true"><span>Index Name</span><span>Current Value</span><span>Change</span><span>Updated</span></div>
-            <div class="data-empty">Live freight index data is not configured yet.<br>Market data connection required.</div>
-            <a class="link-more" href="dashboard.html">시장 워크스페이스 보기 -></a>
-          </section>
-
-          <section class="panel product-panel market-side-card compact-data-card" data-commodity-panel>
-            <h2>Commodity Markets</h2>
-            <div class="data-table-shell data-table-shell--commodity" aria-hidden="true"><span>Commodity</span><span>Price</span><span>Change</span></div>
-            <div class="data-empty">Live commodity market data is not configured yet.</div>
+            <div class="data-empty">운송 지표를 불러오는 중입니다...</div>
+            <a class="link-more" href="freight-market.html">Freight market data -></a>
           </section>
 
           <div class="ad-slot ad-slot--rectangle home-ad"><span>Advertisement</span><small>Reserved ad placement</small></div>

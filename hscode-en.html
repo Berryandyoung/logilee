@@ -81,8 +81,21 @@
         <input type="text" id="searchInput" placeholder="Enter keyword or HS Code..." />
         <button onclick="searchUSITC()">Search on USITC</button>
     </div>
+    <p>
+        <a id="tradeDataLink" href="en/global-trade-explorer.html" style="color:#005792;font-weight:700;">View Global Trade Statistics</a>
+        <br>
+        <a id="euTradeDataLink" href="en/eu-trade-explorer.html" style="color:#005792;font-weight:700;">View EU Trade Statistics</a>
+    </p>
 
     <script>
+        const searchInput = document.getElementById("searchInput");
+        const tradeDataLink = document.getElementById("tradeDataLink");
+        const euTradeDataLink = document.getElementById("euTradeDataLink");
+        searchInput.addEventListener("input", function() {
+            const hs = searchInput.value.trim();
+            tradeDataLink.href = hs ? `en/global-trade-explorer.html?hs=${encodeURIComponent(hs)}` : "en/global-trade-explorer.html";
+            euTradeDataLink.href = hs ? `en/eu-trade-explorer.html?product=${encodeURIComponent(hs)}` : "en/eu-trade-explorer.html";
+        });
         function searchUSITC() {
             const keyword = document.getElementById("searchInput").value.trim();
             if (!keyword) return;
@@ -91,7 +104,7 @@
             window.open(searchURL, "_blank");
         }
 
-        document.getElementById("searchInput").addEventListener("keypress", function(event) {
+        searchInput.addEventListener("keypress", function(event) {
             if (event.key === "Enter") {
                 searchUSITC();
             }

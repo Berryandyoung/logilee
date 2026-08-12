@@ -666,6 +666,7 @@ h1 {
 
 .panel {
   padding: 22px;
+  overflow-x: auto;
 }
 
 .cargo-rows {
@@ -2447,6 +2448,129 @@ body.sidebar-drawer-active {
   .image-card,
   .sponsor-card {
     min-height: 210px;
+  }
+}
+
+/* API-backed trade data tools */
+.compact-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: end;
+  margin-bottom: 18px;
+}
+
+.compact-controls .field {
+  min-width: min(240px, 100%);
+}
+
+.compact-form {
+  grid-template-columns: repeat(4, minmax(150px, 1fr));
+}
+
+.compact-form .field,
+.compact-form .primary-btn,
+.calculator .panel {
+  min-width: 0;
+}
+
+.compact-form .primary-btn {
+  align-self: end;
+}
+
+.prose-panel {
+  margin-top: 18px;
+}
+
+.prose-panel h2 {
+  margin-bottom: 10px;
+  font-size: 22px;
+}
+
+.prose-panel p {
+  max-width: 920px;
+  margin: 10px 0 0;
+  color: var(--secondary-text);
+}
+
+.plain-list {
+  margin: 12px 0 0;
+  padding-left: 20px;
+  color: var(--secondary-text);
+}
+
+.related-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.related-links h3 {
+  flex-basis: 100%;
+  font-size: 17px;
+}
+
+.related-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 6px 11px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--deep-navy);
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.port-result {
+  display: grid;
+  gap: 8px;
+}
+
+.compact-port-data {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.compact-port-data div {
+  padding: 10px;
+}
+
+@media (max-width: 760px) {
+  .compact-port-data {
+    grid-template-columns: 1fr;
+  }
+}
+
+.panel > .result-table {
+  margin-top: 0;
+}
+
+@media (max-width: 920px) {
+  .compact-form {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .compact-form {
+    grid-template-columns: 1fr;
+  }
+
+  .compact-form .field,
+  .compact-form input,
+  .compact-form select,
+  .compact-form .primary-btn {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .result-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
   }
 }
 

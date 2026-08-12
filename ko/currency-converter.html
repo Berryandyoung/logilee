@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8548711851361478" crossorigin="anonymous"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>환율 계산기 | LOGILEE</title>
+  <meta name="description" content="Frankfurter 공개 환율 데이터를 사용해 주요 무역 통화를 변환하고 데이터 기준일을 확인합니다.">
+  <link rel="canonical" href="https://logilee.com/ko/currency-converter.html">
+  <link rel="stylesheet" href="../assets/logilee.css">
+  <script defer src="../assets/logilee-app.js"></script>
+</head>
+<body>
+  <div class="shell">
+    <aside class="rail">
+      <a class="brand" href="./"><strong>LOGILEE</strong><span>Global Logistics Workspace</span></a>
+      <p class="rail-copy">견적, 인보이스, 정산 검토에 쓰는 참고 환율입니다. 실제 은행 고시와 차이가 날 수 있습니다.</p>
+    </aside>
+    <main class="main">
+      <header class="topbar">
+        <a class="mobile-logo" href="./">LOGILEE</a>
+        <nav data-mobile-nav>
+          <a href="./">Home</a>
+          <a aria-current="page" href="tools.html">Tools</a>
+          <a href="holidays.html">공휴일</a>
+          <a href="country-trade-profile.html">국가 프로필</a>
+        </nav>
+        <div class="top-actions">
+          <a class="icon-btn" href="../en/currency-converter.html">KO / EN</a>
+          <button class="menu-btn" data-menu-toggle aria-label="메뉴">Menu</button>
+        </div>
+      </header>
+      <div class="page">
+        <section class="page-title">
+          <p class="eyebrow">Currency Converter</p>
+          <h1>환율 계산기</h1>
+          <p class="lead">견적, 송장, 해외 결제 검토에 자주 쓰는 주요 통화를 변환합니다.</p>
+        </section>
+        <section class="calculator">
+          <form class="panel" data-currency-converter>
+            <div class="form-grid compact-form">
+              <div class="field"><label>From Currency</label><select data-currency-select data-fx-from></select></div>
+              <div class="field"><label>To Currency</label><select data-currency-select data-fx-to></select></div>
+              <div class="field"><label>Amount</label><input type="number" min="0" step="0.01" value="1000" data-fx-amount></div>
+              <button class="primary-btn" type="submit">Convert</button>
+            </div>
+          </form>
+          <aside class="panel" data-fx-result><div class="data-empty">환율 데이터를 불러오는 중입니다...</div></aside>
+        </section>
+        <section class="panel prose-panel">
+          <h2>무역 업무에서 환율을 사용할 때</h2>
+          <p>환율 계산은 공급가 비교, 운임 견적, 관세가격 검토, 해외 결제 금액 확인에 유용합니다. 이 계산기는 공개 기준 환율을 사용하므로 실제 송금 또는 카드 결제에 적용되는 확정 환율로 보아서는 안 됩니다.</p>
+          <p>은행, 카드사, 송금사, 포워더는 매입·매도 스프레드와 자체 고시 시점을 적용할 수 있습니다. 계약이나 정산에서는 인보이스 발행일, 결제일, 통관 신고일 중 어떤 기준을 사용할지 명확히 확인해야 합니다.</p>
+          <p>환율 데이터: Frankfurter.</p>
+        </section>
+        <div class="section ad-slot">Advertisement - Reserved ad placement</div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>
