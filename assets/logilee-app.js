@@ -548,17 +548,34 @@ async function loadHomeMarket() {
   const status = document.querySelector("[data-market-status]");
   const updated = document.querySelector("[data-market-updated]");
   const lang = currentLang();
+  const labels = lang === "ko"
+    ? {
+        loading: "불러오는 중...",
+        latest: "최신 데이터",
+        available: "최신 이용 가능 데이터",
+        updated: (date) => date ? `FX 업데이트 ${date}. Freight는 공개 출처의 최신 이용 가능 기간을 표시합니다.` : "최신 이용 가능 데이터",
+        fxUnavailable: "환율 데이터 조회 불가",
+        freightUnavailable: "Freight 데이터 조회 불가"
+      }
+    : {
+        loading: "Loading...",
+        latest: "Latest Data",
+        available: "Latest available data",
+        updated: (date) => date ? `FX updated ${date}. Freight shows latest available source period.` : "Latest available data",
+        fxUnavailable: "Market data unavailable",
+        freightUnavailable: "Freight data unavailable"
+      };
   snapshot.innerHTML = `
     <div class="market-section-label">FX</div>
-    <div data-market-fx><strong>Exchange Rate</strong><span>Loading...</span></div>
+    <div data-market-fx><strong>Exchange Rate</strong><span>${labels.loading}</span></div>
     <div class="market-section-label">Freight</div>
-    <div data-market-freight><strong>Freight Market</strong><span>Loading...</span></div>
+    <div data-market-freight><strong>Freight Market</strong><span>${labels.loading}</span></div>
   `;
   const fxTarget = snapshot.querySelector("[data-market-fx]");
   const freightTarget = snapshot.querySelector("[data-market-freight]");
   status?.classList.remove("soon");
-  if (status) status.textContent = "Latest Data";
-  if (updated) updated.textContent = "Latest available data";
+  if (status) status.textContent = labels.latest;
+  if (updated) updated.textContent = labels.available;
 
   try {
     const data = await getUsdRates();
@@ -572,7 +589,7 @@ async function loadHomeMarket() {
 
     if (!rows.length) throw new Error("No FX rates returned");
     if (updated) {
-      updated.textContent = data.date ? `FX updated ${data.date}. Freight shows latest available source period.` : "Latest available data";
+      updated.textContent = labels.updated(data.date);
     }
     fxTarget.outerHTML = `
       ${rows.map(([label, value, digits]) => `
@@ -584,7 +601,7 @@ async function loadHomeMarket() {
     `;
   } catch (error) {
     console.warn("Market Snapshot unavailable:", error);
-    fxTarget.innerHTML = `<strong>Exchange Rate</strong><span>Market data unavailable</span>`;
+    fxTarget.innerHTML = `<strong>Exchange Rate</strong><span>${labels.fxUnavailable}</span>`;
   }
 
   try {
@@ -593,7 +610,7 @@ async function loadHomeMarket() {
     freightTarget.outerHTML = compact.map((item) => freightRowMarkup(item, true)).join("");
   } catch (error) {
     console.warn("Freight Snapshot unavailable:", error);
-    freightTarget.innerHTML = `<strong>Freight Market</strong><span>Freight data unavailable</span>`;
+    freightTarget.innerHTML = `<strong>Freight Market</strong><span>${labels.freightUnavailable}</span>`;
   }
 }
 
