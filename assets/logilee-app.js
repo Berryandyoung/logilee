@@ -58,14 +58,40 @@ const searchIndex = {
 const terms = {
   ko: [
     { id: "fob", term: "FOB", name: "Free On Board", category: "Trade", definition: "해상 운송에서 수출자가 화물을 본선에 적재할 때까지의 비용과 위험을 부담하는 조건입니다.", example: "부산항에서 FOB 조건으로 계약했다면 매수인은 본선 적재 이후의 해상 운임과 보험을 검토합니다.", related: ["FCA", "CFR", "CIF"] },
+    { id: "cif", term: "CIF", name: "Cost, Insurance and Freight", category: "Trade", definition: "매도인이 목적항까지의 운임과 보험을 부담하지만 위험은 선적항에서 본선 적재 시 이전되는 해상 운송 조건입니다.", example: "CIF 인천 조건이라도 화물 손상 위험 이전 시점과 보험 보상 범위를 별도로 확인해야 합니다.", related: ["FOB", "CFR", "Incoterms"] },
+    { id: "cfr", term: "CFR", name: "Cost and Freight", category: "Trade", definition: "매도인이 목적항까지의 운임을 부담하지만 보험은 포함하지 않는 해상 운송 조건입니다.", example: "CFR 조건에서는 매수인이 해상 보험 필요 여부를 직접 검토합니다.", related: ["FOB", "CIF"] },
+    { id: "fca", term: "FCA", name: "Free Carrier", category: "Trade", definition: "매도인이 지정 장소에서 운송인에게 화물을 인도하고 수출 통관을 완료하는 조건입니다.", example: "항공 운송이나 컨테이너 운송에서는 FOB보다 FCA가 더 적합한 경우가 많습니다.", related: ["EXW", "FOB"] },
+    { id: "exw", term: "EXW", name: "Ex Works", category: "Trade", definition: "매도인은 자신의 사업장에서 화물을 준비하고 이후 비용과 위험은 대부분 매수인이 부담하는 조건입니다.", example: "EXW 견적은 저렴해 보일 수 있지만 픽업, 수출통관, 내륙운송 비용을 별도로 계산해야 합니다.", related: ["FCA", "DDP"] },
+    { id: "ddp", term: "DDP", name: "Delivered Duty Paid", category: "Trade", definition: "매도인이 목적지까지 운송과 수입 관세·세금 부담까지 책임지는 조건입니다.", example: "DDP 조건은 판매자 부담이 크므로 현지 통관 가능성과 세무 리스크를 확인해야 합니다.", related: ["DAP", "Incoterms"] },
     { id: "bl", term: "B/L", name: "Bill of Lading", category: "Documentation", definition: "운송인이 화물 수령 또는 선적을 증명하기 위해 발행하는 운송 문서입니다.", example: "수입 통관과 화물 인도 과정에서 B/L 번호가 자주 필요합니다.", related: ["Sea Waybill", "Arrival Notice"] },
+    { id: "awb", term: "AWB", name: "Air Waybill", category: "Air", definition: "항공사가 항공화물 운송을 위해 발행하는 운송장 번호와 문서입니다.", example: "AWB 번호는 항공화물 추적과 도착 통지 확인에 사용됩니다.", related: ["Chargeable Weight", "Air Cargo"] },
+    { id: "fcl", term: "FCL", name: "Full Container Load", category: "Ocean", definition: "한 화주의 화물로 컨테이너 한 대를 사용하는 해상 운송 방식입니다.", example: "물량이 충분하거나 혼재 리스크를 줄이고 싶다면 FCL을 검토합니다.", related: ["LCL", "Container"] },
+    { id: "lcl", term: "LCL", name: "Less than Container Load", category: "Ocean", definition: "여러 화주의 화물을 한 컨테이너에 혼재하여 운송하는 방식입니다.", example: "소량 화물은 LCL이 유리할 수 있지만 콘솔 작업과 리드타임을 확인해야 합니다.", related: ["FCL", "CBM"] },
+    { id: "eta", term: "ETA", name: "Estimated Time of Arrival", category: "Logistics", definition: "선박, 항공기, 차량 또는 화물의 예상 도착 시점입니다.", example: "ETA는 운항 상황에 따라 변경될 수 있으므로 최신 스케줄을 확인합니다.", related: ["ETD", "Tracking"] },
+    { id: "etd", term: "ETD", name: "Estimated Time of Departure", category: "Logistics", definition: "운송 수단 또는 화물의 예상 출발 시점입니다.", example: "ETD 변경은 서류 마감과 창고 반입 일정에 영향을 줄 수 있습니다.", related: ["ETA", "Cutoff"] },
+    { id: "demurrage", term: "Demurrage", name: "체선료", category: "Ocean", definition: "컨테이너가 터미널 무료 장치 기간을 초과했을 때 발생하는 비용입니다.", example: "수입 통관 지연은 demurrage 비용으로 이어질 수 있습니다.", related: ["Detention", "Free Time"] },
+    { id: "detention", term: "Detention", name: "지체료", category: "Ocean", definition: "컨테이너를 터미널 밖으로 반출한 뒤 무료 사용 기간을 초과했을 때 발생하는 비용입니다.", example: "수입자가 빈 컨테이너 반납을 지연하면 detention이 발생할 수 있습니다.", related: ["Demurrage", "Free Time"] },
     { id: "chargeable-weight", term: "Chargeable Weight", name: "운임중량", category: "Air", definition: "실중량과 부피중량 중 운임 산정에 적용하는 중량입니다.", example: "항공화물은 가볍지만 부피가 크면 운임중량이 실제 중량보다 클 수 있습니다.", related: ["Dimensional Weight", "CBM"] },
+    { id: "coo", term: "COO", name: "Certificate of Origin", category: "Documentation", definition: "상품의 원산지를 증명하기 위해 발급되는 문서입니다.", example: "FTA 적용이나 수입 규제 확인 시 원산지증명서가 필요할 수 있습니다.", related: ["Origin", "Customs"] },
     { id: "hs-code", term: "HS Code", name: "품목분류번호", category: "Customs", definition: "국제 무역 상품 분류에 사용하는 코드로 관세와 규제 확인의 출발점입니다.", example: "같은 제품도 재질과 용도에 따라 HS Code가 달라질 수 있습니다.", related: ["Customs Clearance", "Duty"] }
   ],
   en: [
     { id: "fob", term: "FOB", name: "Free On Board", category: "Trade", definition: "A sea freight term where the seller covers cost and risk until goods are loaded on board.", example: "Under FOB Busan, the buyer usually reviews ocean freight and insurance after loading.", related: ["FCA", "CFR", "CIF"] },
+    { id: "cif", term: "CIF", name: "Cost, Insurance and Freight", category: "Trade", definition: "A sea freight term where the seller pays freight and insurance to the destination port, while risk transfers at loading.", example: "Under CIF Incheon, confirm both the risk transfer point and the insurance coverage.", related: ["FOB", "CFR", "Incoterms"] },
+    { id: "cfr", term: "CFR", name: "Cost and Freight", category: "Trade", definition: "A sea freight term where the seller pays freight to the destination port, but insurance is not included.", example: "Under CFR, the buyer should decide whether separate marine insurance is needed.", related: ["FOB", "CIF"] },
+    { id: "fca", term: "FCA", name: "Free Carrier", category: "Trade", definition: "A term where the seller delivers goods to the carrier at the named place and handles export clearance.", example: "FCA is often more practical than FOB for air freight and containerized shipments.", related: ["EXW", "FOB"] },
+    { id: "exw", term: "EXW", name: "Ex Works", category: "Trade", definition: "A term where the seller makes goods available at its premises and the buyer carries most cost and risk afterward.", example: "An EXW quote may look low, but pickup, export clearance, and inland freight need separate review.", related: ["FCA", "DDP"] },
+    { id: "ddp", term: "DDP", name: "Delivered Duty Paid", category: "Trade", definition: "A term where the seller is responsible for delivery to destination including import duties and taxes.", example: "Before accepting DDP, confirm local import compliance and tax responsibilities.", related: ["DAP", "Incoterms"] },
     { id: "bl", term: "B/L", name: "Bill of Lading", category: "Documentation", definition: "A transport document issued by a carrier to evidence cargo receipt or shipment.", example: "The B/L number is often used during customs clearance and cargo release.", related: ["Sea Waybill", "Arrival Notice"] },
+    { id: "awb", term: "AWB", name: "Air Waybill", category: "Air", definition: "A transport document and number issued for air cargo shipments.", example: "The AWB number is used for air cargo status and arrival notice checks.", related: ["Chargeable Weight", "Air Cargo"] },
+    { id: "fcl", term: "FCL", name: "Full Container Load", category: "Ocean", definition: "Ocean freight where one shipper uses a full container.", example: "FCL may be preferred when cargo volume is large enough or mixing risk should be reduced.", related: ["LCL", "Container"] },
+    { id: "lcl", term: "LCL", name: "Less than Container Load", category: "Ocean", definition: "Ocean freight where cargo from multiple shippers is consolidated in one container.", example: "LCL can suit smaller shipments, but consolidation handling and lead time should be checked.", related: ["FCL", "CBM"] },
+    { id: "eta", term: "ETA", name: "Estimated Time of Arrival", category: "Logistics", definition: "The expected arrival time of a vessel, aircraft, truck, or shipment.", example: "ETA can change with congestion, weather, and schedule updates.", related: ["ETD", "Tracking"] },
+    { id: "etd", term: "ETD", name: "Estimated Time of Departure", category: "Logistics", definition: "The expected departure time of a transport mode or shipment.", example: "An ETD change may affect document cutoff and warehouse delivery timing.", related: ["ETA", "Cutoff"] },
+    { id: "demurrage", term: "Demurrage", name: "Demurrage", category: "Ocean", definition: "A charge that can apply when a container stays at the terminal beyond free time.", example: "Customs delays can create demurrage exposure for import shipments.", related: ["Detention", "Free Time"] },
+    { id: "detention", term: "Detention", name: "Detention", category: "Ocean", definition: "A charge that can apply when a container is kept outside the terminal beyond free time.", example: "Late empty-container return can lead to detention charges.", related: ["Demurrage", "Free Time"] },
     { id: "chargeable-weight", term: "Chargeable Weight", name: "Chargeable Weight", category: "Air", definition: "The weight used to rate freight, usually the greater of actual and dimensional weight.", example: "Light but bulky air cargo can be charged by dimensional weight.", related: ["Dimensional Weight", "CBM"] },
+    { id: "coo", term: "COO", name: "Certificate of Origin", category: "Documentation", definition: "A document used to certify the origin of goods.", example: "A COO may be needed for FTA treatment or import compliance checks.", related: ["Origin", "Customs"] },
     { id: "hs-code", term: "HS Code", name: "Harmonized System Code", category: "Customs", definition: "A product classification code used as a starting point for customs duty and compliance checks.", example: "Material and use can change the HS classification for similar products.", related: ["Customs Clearance", "Duty"] }
   ]
 };
@@ -392,6 +418,13 @@ function wireSearch() {
       location.href = `search.html?q=${encodeURIComponent(q)}`;
     });
   });
+  document.querySelectorAll("[data-search-chip]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const q = button.dataset.searchChip || button.textContent.trim();
+      localStorage.setItem("logilee-last-search", q);
+      location.href = `search.html?q=${encodeURIComponent(q)}`;
+    });
+  });
   const results = document.querySelector("[data-search-results]");
   if (results) {
     const input = document.querySelector("[data-search-input]");
@@ -454,6 +487,39 @@ function dataError(target, message) {
   target.innerHTML = `<div class="data-empty">${message}</div>`;
 }
 
+function setupAdSlots() {
+  document.querySelectorAll(".ad-slot").forEach((slot) => {
+    const ad = slot.querySelector(".adsbygoogle");
+    if (!ad) {
+      slot.textContent = "";
+      slot.hidden = true;
+      slot.setAttribute("aria-hidden", "true");
+      return;
+    }
+    Array.from(slot.childNodes).forEach((node) => {
+      if (node.nodeType === Node.TEXT_NODE) node.textContent = "";
+    });
+    slot.querySelectorAll("span").forEach((label) => label.setAttribute("aria-hidden", "true"));
+    slot.dataset.adSlot = slot.dataset.adSlot || "adsense";
+    const revealIfFilled = () => {
+      const filled = ad.getAttribute("data-ad-status") === "filled" || Boolean(ad.querySelector("iframe"));
+      if (filled) slot.classList.remove("is-collapsed");
+    };
+    const collapseIfUnfilled = () => {
+      const filled = ad.getAttribute("data-ad-status") === "filled" || Boolean(ad.querySelector("iframe"));
+      slot.classList.toggle("is-collapsed", !filled);
+    };
+    try {
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    } catch (error) {
+      console.warn("AdSense slot unavailable:", error);
+    }
+    revealIfFilled();
+    window.setTimeout(collapseIfUnfilled, 1800);
+    new MutationObserver(revealIfFilled).observe(ad, { attributes: true, attributeFilter: ["data-ad-status", "style"] });
+  });
+}
+
 const TRADE_CURRENCIES = ["USD", "KRW", "EUR", "CNY", "JPY", "GBP", "AUD", "CAD", "SGD", "HKD", "CHF", "INR", "MXN", "THB", "MYR"];
 
 async function getUsdRates() {
@@ -505,6 +571,9 @@ async function loadHomeMarket() {
     ].filter((row) => Number.isFinite(row[1]));
 
     if (!rows.length) throw new Error("No FX rates returned");
+    if (updated) {
+      updated.textContent = data.date ? `FX updated ${data.date}. Freight shows latest available source period.` : "Latest available data";
+    }
     fxTarget.outerHTML = `
       ${rows.map(([label, value, digits]) => `
         <div>
@@ -534,16 +603,34 @@ async function wireFreightMarket() {
   target.innerHTML = `<div class="data-empty">Loading latest available freight data...</div>`;
   try {
     const rows = await getFreightData();
+    const summary = rows.filter((item) => ["tsi_freight", "truck_d11", "rail_frt_intermodal"].includes(item.key));
     target.innerHTML = `
-      <table class="result-table">
-        <thead><tr><th>Indicator</th><th>Latest Value</th><th>Previous Value</th><th>Change %</th><th>Unit</th><th>Data Period</th><th>Source</th></tr></thead>
-        <tbody>${rows.map((item) => freightRowMarkup(item)).join("")}</tbody>
-      </table>
-      <p class="muted">Source: U.S. Bureau of Transportation Statistics. Dataset: Transportation Services Index and Seasonally-Adjusted Transportation Data. These are latest available indicators, not real-time market quotes.</p>
+      <div class="data-summary-head">
+        <div>
+          <span class="kicker">Latest Freight Snapshot</span>
+          <h2>Latest available public transportation indicators</h2>
+          <p class="muted">These are BTS statistical indicators, not real-time freight quotes.</p>
+        </div>
+      </div>
+      <div class="stat-grid freight-summary-grid">
+        ${summary.map((item) => {
+          const digits = item.latest > 1000 ? 0 : 1;
+          const change = Number.isFinite(item.change) ? `${item.change >= 0 ? "↑ +" : "↓ "}${formatRate(item.change, 1)}%` : "";
+          const cls = Number.isFinite(item.change) ? `trend-${item.change >= 0 ? "up" : "down"}` : "";
+          return `<div class="stat-block"><span>${item.label}</span><strong>${Number.isFinite(item.latest) ? formatRate(item.latest, digits) : "N/A"}</strong>${change ? `<em class="${cls}">${change}</em>` : ""}<small>${formatPeriod(item.period)}</small></div>`;
+        }).join("")}
+      </div>
+      <div class="responsive-table">
+        <table class="result-table">
+          <thead><tr><th>Indicator</th><th>Latest Value</th><th>Previous Value</th><th>Change %</th><th>Unit</th><th>Data Period</th><th>Source</th></tr></thead>
+          <tbody>${rows.map((item) => freightRowMarkup(item)).join("")}</tbody>
+        </table>
+      </div>
+      <p class="muted">Source: U.S. Bureau of Transportation Statistics. Dataset: Transportation Services Index and Seasonally-Adjusted Transportation Data. Update cycles vary by series and may be revised.</p>
     `;
   } catch (error) {
     console.warn("Freight Market unavailable:", error);
-    dataError(target, "Freight market data is temporarily unavailable.");
+    dataError(target, "Freight market data is temporarily unavailable. Please retry later.");
   }
 }
 
@@ -667,87 +754,25 @@ function setupLatestPosting() {
   const slider = document.querySelector("[data-posting-slider]");
   if (!slider) return;
   const lang = currentLang();
-  const posts = getPostsForCurrentLang().slice(0, 5);
+  const posts = getPostsForCurrentLang().slice(0, 3);
   const labels = lang === "ko"
-    ? { empty: "표시할 실제 포스팅이 아직 없습니다.", prev: "이전 포스팅", next: "다음 포스팅", slide: "포스팅" }
-    : { empty: "No existing posts are available yet.", prev: "Previous post", next: "Next post", slide: "Post" };
+    ? { empty: "표시할 실제 포스팅이 아직 없습니다." }
+    : { empty: "No existing posts are available yet." };
   if (!posts.length) {
     slider.innerHTML = `<div class="data-empty">${labels.empty}</div>`;
     return;
   }
 
-  let active = 0;
-  let timer = null;
-  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const render = () => {
-    const post = posts[active];
-    slider.innerHTML = `
-      <div class="posting-slider-card">
-        <a class="posting-slide-link" href="${postUrl(post)}">
-          ${postThumb(post, true)}
-          <div class="posting-slide-copy">
-            <span class="kicker">${post.category}</span>
-            <h3>${post.title}</h3>
-            <p>${post.description}</p>
-            <small>${formatPostDate(post.date, lang)}${post.readingTime ? ` · ${post.readingTime}` : ""}</small>
-          </div>
-        </a>
-        ${posts.length > 1 ? `
-          <div class="posting-slider-controls">
-            <button type="button" data-posting-prev aria-label="${labels.prev}"><i data-lucide="chevron-left"></i></button>
-            <div class="posting-dots" role="tablist" aria-label="Latest posting slides">
-              ${posts.map((_, index) => `<button type="button" data-posting-dot="${index}" aria-label="${labels.slide} ${index + 1}" aria-selected="${index === active}"></button>`).join("")}
-            </div>
-            <button type="button" data-posting-next aria-label="${labels.next}"><i data-lucide="chevron-right"></i></button>
-          </div>
-        ` : ""}
+  slider.innerHTML = posts.map((post) => `
+    <a class="posting-list-item" href="${postUrl(post)}">
+      <div>
+        <span class="kicker">${post.category}</span>
+        <h3>${post.title}</h3>
+        <p>${post.description}</p>
+        <small>${formatPostDate(post.date, lang)}${post.readingTime ? ` · ${post.readingTime}` : ""}</small>
       </div>
-    `;
-    refreshIcons();
-  };
-  const go = (index) => {
-    active = (index + posts.length) % posts.length;
-    render();
-  };
-  const stop = () => {
-    if (timer) window.clearInterval(timer);
-    timer = null;
-  };
-  const start = () => {
-    if (reducedMotion || posts.length < 2 || document.hidden || timer) return;
-    timer = window.setInterval(() => go(active + 1), 4000);
-  };
-
-  slider.addEventListener("click", (event) => {
-    const prev = event.target.closest("[data-posting-prev]");
-    const next = event.target.closest("[data-posting-next]");
-    const dot = event.target.closest("[data-posting-dot]");
-    if (!prev && !next && !dot) return;
-    stop();
-    if (prev) go(active - 1);
-    if (next) go(active + 1);
-    if (dot) go(Number(dot.dataset.postingDot));
-  });
-  slider.addEventListener("keydown", (event) => {
-    if (event.key === "ArrowLeft") {
-      stop();
-      go(active - 1);
-    }
-    if (event.key === "ArrowRight") {
-      stop();
-      go(active + 1);
-    }
-  });
-  slider.addEventListener("mouseenter", stop);
-  slider.addEventListener("focusin", stop);
-  slider.addEventListener("mouseleave", start);
-  slider.addEventListener("focusout", start);
-  document.addEventListener("visibilitychange", () => {
-    document.hidden ? stop() : start();
-  });
-
-  render();
-  start();
+    </a>
+  `).join("");
 }
 
 function setupPostsArchive() {
@@ -941,7 +966,17 @@ function wireDictionary() {
   const detail = document.querySelector("[data-term-detail]");
   if (!list || !detail) return;
   const lang = currentLang();
-  const render = (term) => {
+  const termCount = document.querySelector("[data-term-count]");
+  if (termCount) termCount.textContent = `${terms[lang].length} ${lang === "ko" ? "terms" : "terms"}`;
+  const findTerm = (value) => {
+    const normalized = (value || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+    return terms[lang].find((term) => {
+      const id = term.id.toLowerCase().replace(/[^a-z0-9]/g, "");
+      const label = term.term.toLowerCase().replace(/[^a-z0-9]/g, "");
+      return id === normalized || label === normalized;
+    });
+  };
+  const render = (term, updateUrl = false) => {
     detail.innerHTML = `
       <span class="kicker">${term.category}</span>
       <h2 id="${term.id}">${term.term}</h2>
@@ -953,15 +988,34 @@ function wireDictionary() {
       <p class="muted">${lang === "ko" ? "Updated" : "Updated"}: 2026-07-26 · ${lang === "ko" ? "참고 정보입니다. 계약 확정 전 공식 기준을 확인하세요." : "For reference only. Confirm official standards before finalizing contracts."}</p>
     `;
     list.querySelectorAll("button").forEach((button) => button.setAttribute("aria-pressed", String(button.dataset.term === term.id)));
+    if (updateUrl) {
+      const url = new URL(location.href);
+      url.searchParams.set("term", term.id);
+      history.replaceState(null, "", `${url.pathname}?${url.searchParams.toString()}`);
+    }
   };
   list.innerHTML = terms[lang].map((term) => `<button class="term-button" data-term="${term.id}" aria-pressed="false">${term.term} <span class="muted">${term.name}</span></button>`).join("");
+  document.querySelector("[data-dictionary-form]")?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const query = event.currentTarget.querySelector("input")?.value || "";
+    const normalized = query.toLowerCase().trim();
+    const match = findTerm(query) || terms[lang].find((term) => {
+      return [term.term, term.name, term.definition, term.category].some((value) => value.toLowerCase().includes(normalized));
+    });
+    if (match) {
+      render(match, true);
+      return;
+    }
+    detail.innerHTML = `<h2>${lang === "ko" ? "검색 결과가 없습니다" : "No matching term"}</h2><p class="muted">${lang === "ko" ? "다른 무역·물류 용어로 다시 검색해 보세요." : "Try another trade or logistics term."}</p>`;
+  });
   list.addEventListener("click", (event) => {
     const button = event.target.closest("button");
     if (!button) return;
-    render(terms[lang].find((term) => term.id === button.dataset.term));
+    render(terms[lang].find((term) => term.id === button.dataset.term), true);
   });
+  const params = new URLSearchParams(location.search);
   const hash = location.hash.replace("#", "");
-  render(terms[lang].find((term) => term.id === hash) || terms[lang][0]);
+  render(findTerm(params.get("term")) || findTerm(hash) || terms[lang][0]);
 }
 
 function populateCurrencyOptions() {
@@ -1029,18 +1083,20 @@ async function getFreightData() {
 
 function freightRowMarkup(item, compact = false) {
   const digits = item.latest > 1000 ? 0 : 1;
-  const changeText = Number.isFinite(item.change) ? `${item.change >= 0 ? "+" : ""}${formatRate(item.change, 1)}%` : "N/A";
+  const hasChange = Number.isFinite(item.change);
+  const changeText = hasChange ? `${item.change >= 0 ? "↑ +" : "↓ "}${formatRate(item.change, 1)}%` : "";
+  const changeClass = hasChange ? ` trend-${item.change >= 0 ? "up" : "down"}` : "";
   return compact ? `
     <div>
       <strong>${item.label}</strong>
-      <span>${Number.isFinite(item.latest) ? formatRate(item.latest, digits) : "N/A"} · ${changeText}</span>
+      <span>${Number.isFinite(item.latest) ? formatRate(item.latest, digits) : "N/A"}${changeText ? ` · <em class="${changeClass.trim()}">${changeText}</em>` : ""}</span>
     </div>
   ` : `
     <tr>
       <td>${item.label}</td>
       <td>${Number.isFinite(item.latest) ? formatRate(item.latest, digits) : "N/A"}</td>
       <td>${Number.isFinite(item.previous) ? formatRate(item.previous, digits) : "N/A"}</td>
-      <td>${changeText}</td>
+      <td>${changeText ? `<span class="${changeClass.trim()}">${changeText}</span>` : ""}</td>
       <td>${item.unit}</td>
       <td>${formatPeriod(item.period)}</td>
       <td>${item.source}</td>
@@ -1072,21 +1128,30 @@ async function loadExchangePage() {
 }
 
 function renderFxResult(data) {
+  const lang = currentLang();
   const amount = Number(document.querySelector("[data-fx-amount]")?.value);
   const from = document.querySelector("[data-fx-from]")?.value;
   const to = document.querySelector("[data-fx-to]")?.value;
   const result = document.querySelector("[data-fx-result]");
   if (!result || !Number.isFinite(amount) || amount < 0 || !from || !to) return;
   const rate = data.rates[to] / data.rates[from];
+  const inverse = data.rates[from] / data.rates[to];
   if (!Number.isFinite(rate)) {
     dataError(result, "Exchange rate data is temporarily unavailable.");
     return;
   }
+  const resultDigits = to === "KRW" || to === "JPY" || to === "VND" || to === "IDR" ? 0 : 2;
   result.innerHTML = `
-    <span class="summary-number">${formatRate(amount * rate, to === "KRW" || to === "JPY" ? 0 : 2)}</span>
+    <span class="kicker">${lang === "ko" ? "환산 결과" : "Converted Amount"}</span>
+    <span class="summary-number">${formatRate(amount * rate, resultDigits)}</span>
     <strong>${to}</strong>
-    <p class="muted">Exchange Rate: 1 ${from} = ${formatRate(rate, 6)} ${to}</p>
-    <p class="muted">Data Date: ${data.date || "N/A"} · Exchange rate data: Frankfurter</p>
+    <div class="data-status-list compact-fx-meta">
+      <div><strong>${lang === "ko" ? "기준 환율" : "Exchange Rate"}</strong><span>1 ${from} = ${formatRate(rate, 6)} ${to}</span></div>
+      <div><strong>${lang === "ko" ? "반대 환율" : "Inverse Rate"}</strong><span>1 ${to} = ${formatRate(inverse, 6)} ${from}</span></div>
+      <div><strong>${lang === "ko" ? "데이터 날짜" : "Data Date"}</strong><span>${data.date || "N/A"}</span></div>
+      <div><strong>Source</strong><span>Frankfurter</span></div>
+    </div>
+    <p class="muted">${lang === "ko" ? "공개 기준 환율이며 은행, 카드, 송금, 정산 환율과 다를 수 있습니다." : "Public reference rates can differ from bank, card, remittance, and settlement rates."}</p>
   `;
 }
 
@@ -1097,6 +1162,15 @@ async function wireCurrencyConverter() {
   try {
     const data = await getUsdRates();
     renderFxResult(data);
+    document.querySelector("[data-fx-swap]")?.addEventListener("click", () => {
+      const from = document.querySelector("[data-fx-from]");
+      const to = document.querySelector("[data-fx-to]");
+      if (!from || !to) return;
+      const previous = from.value;
+      from.value = to.value;
+      to.value = previous;
+      renderFxResult(data);
+    });
     form.addEventListener("submit", (event) => {
       event.preventDefault();
       renderFxResult(data);
@@ -1155,7 +1229,7 @@ const TRADE_COUNTRIES = [
   ["PH", "Philippines", "필리핀"]
 ];
 
-const COUNTRY_CURRENCY = { KR: "KRW", CN: "CNY", US: "USD", JP: "JPY", DE: "EUR", VN: "USD", IN: "INR", MX: "MXN", SG: "SGD", GB: "GBP", NL: "EUR", AE: "USD", HK: "HKD", TH: "THB", MY: "MYR", LK: "USD", BE: "EUR", TW: "USD", FR: "EUR", ES: "EUR", IT: "EUR", GR: "EUR", RO: "EUR", PL: "USD", CA: "CAD", BR: "USD", AR: "USD", PE: "USD", CO: "USD", PA: "USD", ZA: "USD", MA: "USD", EG: "USD", KE: "USD", TZ: "USD", NG: "USD", GH: "USD", SA: "USD", OM: "USD", QA: "USD", PK: "USD", BD: "USD", ID: "USD", PH: "USD" };
+const COUNTRY_CURRENCY = { KR: "KRW", CN: "CNY", US: "USD", JP: "JPY", DE: "EUR", VN: "VND", IN: "INR", MX: "MXN", SG: "SGD", GB: "GBP", NL: "EUR", AE: "AED", HK: "HKD", TH: "THB", MY: "MYR", LK: "LKR", BE: "EUR", TW: "TWD", FR: "EUR", ES: "EUR", IT: "EUR", GR: "EUR", RO: "RON", PL: "PLN", CA: "CAD", BR: "BRL", AR: "ARS", PE: "PEN", CO: "COP", PA: "PAB", ZA: "ZAR", MA: "MAD", EG: "EGP", KE: "KES", TZ: "TZS", NG: "NGN", GH: "GHS", SA: "SAR", OM: "OMR", QA: "QAR", PK: "PKR", BD: "BDT", ID: "IDR", PH: "PHP" };
 
 const PORTS = [
   { slug: "busan", name: "Port of Busan", country: "South Korea", iso: "KR", locode: "KRPUS", lat: 35.10, lon: 129.04, timezone: "Asia/Seoul", region: "Northeast Asia", type: "Seaport" },
@@ -1278,6 +1352,12 @@ function dayName(date, lang) {
   return new Intl.DateTimeFormat(lang === "ko" ? "ko-KR" : "en-US", { weekday: "long", timeZone: "UTC" }).format(new Date(`${date}T00:00:00Z`));
 }
 
+function localDateLabel(date, lang = currentLang()) {
+  const value = typeof date === "string" ? new Date(`${date}T00:00:00Z`) : date;
+  if (Number.isNaN(value.getTime())) return "";
+  return new Intl.DateTimeFormat(lang === "ko" ? "ko-KR" : "en-US", { year: "numeric", month: "short", day: "numeric", timeZone: "UTC" }).format(value);
+}
+
 async function getHolidays(country, year) {
   return fetchJson(`https://date.nager.at/api/v3/PublicHolidays/${year}/${country}`, {
     cacheKey: `logilee:holidays:${country}:${year}`,
@@ -1298,9 +1378,21 @@ async function wireHolidayCalendar() {
       const country = form.querySelector("[data-country-select]").value;
       const valueYear = year.value;
       const holidays = await getHolidays(country, valueYear);
+      const today = new Date();
+      const todayIso = isoDate(today);
+      const nextHoliday = holidays.find((item) => item.date >= todayIso);
+      const weekdayCount = holidays.filter((item) => {
+        const day = new Date(`${item.date}T00:00:00Z`).getUTCDay();
+        return day !== 0 && day !== 6;
+      }).length;
       output.innerHTML = `
-        <table class="result-table"><thead><tr><th>Date</th><th>Holiday Name</th><th>Local Name</th><th>Day of Week</th></tr></thead>
-        <tbody>${holidays.map((item) => `<tr><td>${item.date}</td><td>${item.name}</td><td>${item.localName}</td><td>${dayName(item.date, currentLang())}</td></tr>`).join("")}</tbody></table>
+        <div class="stat-grid compact-stat-grid">
+          <div class="stat-block"><span>Total Holidays</span><strong>${holidays.length}</strong></div>
+          <div class="stat-block"><span>Weekday Holidays</span><strong>${weekdayCount}</strong></div>
+          <div class="stat-block"><span>Next Holiday</span><strong>${nextHoliday ? localDateLabel(nextHoliday.date) : "N/A"}</strong><small>${nextHoliday ? nextHoliday.localName || nextHoliday.name : ""}</small></div>
+        </div>
+        <div class="responsive-table"><table class="result-table"><thead><tr><th>Date</th><th>Holiday</th><th>Local Name</th><th>Day</th></tr></thead>
+        <tbody>${holidays.map((item) => `<tr class="${nextHoliday && item.date === nextHoliday.date ? "is-next-row" : ""}"><td>${item.date}</td><td>${item.name}</td><td>${item.localName}</td><td>${dayName(item.date, currentLang())}</td></tr>`).join("")}</tbody></table></div>
         <p class="muted">Holiday data: Nager.Date</p>
       `;
     } catch (error) {
@@ -1343,12 +1435,16 @@ async function wireBusinessDay() {
       const holidays = (await Promise.all([...years].map((year) => getHolidays(country, year)))).flat();
       const holidayMap = new Map(holidays.map((item) => [item.date, item]));
       const excluded = [];
+      let weekendDays = 0;
       let counted = 0;
       while (counted < amount) {
         cursor = addDaysUtc(cursor, direction);
         const weekday = cursor.getUTCDay();
         const date = isoDate(cursor);
-        if (weekday === 0 || weekday === 6) continue;
+        if (weekday === 0 || weekday === 6) {
+          weekendDays += 1;
+          continue;
+        }
         const holiday = holidayMap.get(date);
         if (holiday) {
           excluded.push(holiday);
@@ -1359,6 +1455,11 @@ async function wireBusinessDay() {
       output.innerHTML = `
         <span class="summary-number">${isoDate(cursor)}</span>
         <strong>Estimated Business Date</strong>
+        <div class="stat-grid compact-stat-grid">
+          <div class="stat-block"><span>Business days</span><strong>${amount}</strong></div>
+          <div class="stat-block"><span>Weekend days excluded</span><strong>${weekendDays}</strong></div>
+          <div class="stat-block"><span>Holidays excluded</span><strong>${excluded.length}</strong></div>
+        </div>
         ${excluded.length ? `<h3>Excluded Holidays</h3><ul class="plain-list">${excluded.map((item) => `<li>${item.date} ${item.localName || item.name}</li>`).join("")}</ul>` : `<p class="muted">No public holidays were excluded in this calculation.</p>`}
         <p class="muted">Holiday data: Nager.Date</p>
       `;
@@ -1447,11 +1548,19 @@ async function wireCountryProfile() {
     try {
       const country = form.querySelector("[data-country-select]").value;
       const records = await getWorldBankRecords(country);
+      const priority = ["Population", "GDP", "GDP Growth", "Inflation", "Trade (% of GDP)", "Exports of goods and services", "Imports of goods and services"];
+      const byLabel = new Map(records.map((row) => [row.label, row]));
       output.innerHTML = `
         <h2>${countryNameFromCode(country)}</h2>
         <p class="muted">ISO Code: ${country}</p>
-        <table class="result-table"><thead><tr><th>Indicator</th><th>Value</th><th>Latest available year</th></tr></thead>
-        <tbody>${records.map((row) => `<tr><td>${row.label}</td><td>${row.value === undefined || row.value === null ? "N/A" : formatRate(row.value, row.digits)}</td><td>${row.year}</td></tr>`).join("")}</tbody></table>
+        <div class="stat-grid country-kpi-grid">
+          ${priority.map((label) => {
+            const row = byLabel.get(label);
+            return `<div class="stat-block"><span>${label}</span><strong>${row?.value === undefined || row?.value === null ? "N/A" : formatRate(row.value, row.digits)}</strong><small>${row?.year || "N/A"}</small></div>`;
+          }).join("")}
+        </div>
+        <div class="responsive-table"><table class="result-table"><thead><tr><th>Indicator</th><th>Value</th><th>Latest available year</th></tr></thead>
+        <tbody>${records.map((row) => `<tr><td>${row.label}</td><td>${row.value === undefined || row.value === null ? "N/A" : formatRate(row.value, row.digits)}</td><td>${row.year}</td></tr>`).join("")}</tbody></table></div>
         <p class="muted">Economic data: World Bank</p>
         ${countryRelatedMarkup(country)}
       `;
@@ -1577,21 +1686,21 @@ function portCard(port) {
   const countryParam = port.iso;
   const currency = COUNTRY_CURRENCY[countryParam] || "USD";
   return `
-    <article class="result-item port-result">
-      <span class="kicker">${port.region} · ${port.type}</span>
-      <h3><a href="${portDetailUrl(port)}">${port.name}</a></h3>
-      <p class="muted">${port.country}</p>
-      <div class="data-status-list compact-port-data">
-        <div><strong>UN/LOCODE</strong><span>${port.locode}</span></div>
-        <div><strong>Coordinates</strong><span>${port.lat.toFixed(2)}, ${port.lon.toFixed(2)}</span></div>
-        <div><strong>Time Zone</strong><span>${port.timezone}</span></div>
-      </div>
-      <div class="chip-row">
-        <a class="chip" href="country-trade-profile.html?country=${countryParam}">${port.country} Profile</a>
-        <a class="chip" href="holidays.html?country=${countryParam}">Holidays</a>
-        <a class="chip" href="currency-converter.html?from=USD&to=${currency}">USD/${currency}</a>
-        <a class="chip" href="eu-trade-explorer.html?reporter=${port.iso}">EU Trade</a>
-      </div>
+    <article class="port-row">
+      <div><strong><a href="${portDetailUrl(port)}">${port.name}</a></strong><small>${port.region} · ${port.type}</small></div>
+      <span>${port.country}</span>
+      <span>${port.locode}</span>
+      <span>${port.timezone}</span>
+      <details>
+        <summary>View</summary>
+        <div class="port-row-detail">
+          <span>Coordinates: ${port.lat.toFixed(2)}, ${port.lon.toFixed(2)}</span>
+          <a href="country-trade-profile.html?country=${countryParam}">${port.country} Profile</a>
+          <a href="holidays.html?country=${countryParam}">Holidays</a>
+          <a href="currency-converter.html?from=USD&to=${currency}">USD/${currency}</a>
+          <a href="eu-trade-explorer.html?reporter=${port.iso}">EU Trade</a>
+        </div>
+      </details>
     </article>
   `;
 }
@@ -1615,23 +1724,40 @@ function wirePortFinder() {
   const country = form.querySelector("[data-country-select]");
   if (input && params.get("q")) input.value = params.get("q");
   if (country && params.get("country")) country.value = params.get("country");
+  let visibleCount = 24;
   const render = () => {
     const results = filterPorts(input?.value || "", country?.value || "");
+    const visibleResults = results.slice(0, visibleCount);
     output.innerHTML = results.length
-      ? results.map(portCard).join("")
+      ? `
+        <div class="port-table" role="table" aria-label="Port results">
+          <div class="port-row port-row-head" role="row"><span>Port</span><span>Country</span><span>UN/LOCODE</span><span>Time Zone</span><span>Actions</span></div>
+          ${visibleResults.map(portCard).join("")}
+        </div>
+        ${results.length > visibleCount ? `<button class="secondary-btn port-load-more" type="button" data-port-load-more>Load more</button>` : ""}
+      `
       : `<div class="data-empty">No matching ports found.</div>`;
     const count = document.querySelector("[data-port-count]");
     if (count) count.textContent = `${results.length} ports`;
   };
   form.addEventListener("submit", (event) => {
     event.preventDefault();
+    visibleCount = 24;
     const url = new URL(location.href);
     if (input?.value) url.searchParams.set("q", input.value); else url.searchParams.delete("q");
     if (country?.value) url.searchParams.set("country", country.value); else url.searchParams.delete("country");
     history.replaceState(null, "", url);
     render();
   });
-  form.addEventListener("input", render);
+  form.addEventListener("input", () => {
+    visibleCount = 24;
+    render();
+  });
+  output.addEventListener("click", (event) => {
+    if (!event.target.closest("[data-port-load-more]")) return;
+    visibleCount += 24;
+    render();
+  });
   render();
 }
 
@@ -1819,7 +1945,16 @@ function wireEuTradeExplorer() {
         flow: flow.value
       });
       output.innerHTML = `
-        <table class="result-table">
+        <div class="eu-result-summary">
+          <span class="kicker">${result.dataset}</span>
+          <h2>${result.reporter} → ${result.partner}</h2>
+          <div class="stat-grid compact-stat-grid">
+            <div class="stat-block"><span>${result.flow}</span><strong>${formatEurostatMillionEur(result.value)}</strong><small>${result.year}</small></div>
+            <div class="stat-block"><span>Product Group</span><strong>${result.product}</strong><small>SITC aggregate</small></div>
+            <div class="stat-block"><span>Updated</span><strong>${result.updated || "Latest available"}</strong><small>Eurostat metadata</small></div>
+          </div>
+        </div>
+        <div class="responsive-table"><table class="result-table">
           <thead><tr><th>Reporter</th><th>Partner</th><th>Product</th><th>Year</th><th>Flow</th><th>Trade Value</th><th>Source</th></tr></thead>
           <tbody><tr>
             <td>${result.reporter}</td>
@@ -1830,7 +1965,7 @@ function wireEuTradeExplorer() {
             <td>${formatEurostatMillionEur(result.value)}</td>
             <td>Eurostat</td>
           </tr></tbody>
-        </table>
+        </table></div>
         <p class="muted">Dataset: ${result.dataset}. Updated: ${result.updated || "latest available"}. Product groups use SITC categories, not HS/CN line codes.</p>
       `;
     } catch (error) {
@@ -1867,7 +2002,7 @@ function wireTradeExplorerParams() {
       if (field.value) url.searchParams.set(field.name, field.value); else url.searchParams.delete(field.name);
     });
     history.replaceState(null, "", url);
-    if (output) output.innerHTML = `<div class="data-empty">${currentLang() === "ko" ? "글로벌 무역 통계 기능을 준비 중입니다." : "Global trade statistics integration is being prepared."}</div>`;
+    if (output) output.innerHTML = `<div class="data-empty">${currentLang() === "ko" ? "쿼리가 준비되었습니다. 현재 이 페이지는 실시간 UN Comtrade 데이터를 제공하지 않으며, 데이터 연결을 준비 중입니다." : "Query prepared. This page does not provide live UN Comtrade data yet; the data connection is in preparation."}</div>`;
   });
 }
 
@@ -1904,6 +2039,7 @@ document.addEventListener("DOMContentLoaded", () => {
   wireSidebarCollapse();
   setupLanguageChoice();
   setupLanguageMenu();
+  setupAdSlots();
   wireHeaderSearch();
   wireSearch();
   loadHomeMarket();

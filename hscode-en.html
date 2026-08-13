@@ -1,102 +1,14 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8548711851361478" crossorigin="anonymous"></script>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HS Code Search | LOGILEE</title>
-  <meta name="description" content="Search HS codes through the official USITC lookup and connect classification checks with LOGILEE trade data tools.">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HS Code Lookup | LOGILEE</title>
+  <meta name="description" content="Enter an HS Code or product keyword and continue to official USITC classification information with related LOGILEE trade tools.">
   <link rel="canonical" href="https://www.logilee.com/hscode-en.html">
   <link rel="alternate" hreflang="ko" href="https://www.logilee.com/hscode.html">
   <link rel="alternate" hreflang="en" href="https://www.logilee.com/hscode-en.html">
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f4f7fa;
-      color: #333;
-      margin: 0;
-      padding: 20px;
-      text-align: center;
-    }
-    .home-button {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.9rem;
-      padding: 8px 14px;
-      margin-bottom: 20px;
-      background-color: #005792;
-      color: white;
-      border: none;
-      border-radius: 20px;
-      text-decoration: none;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      transition: background-color 0.3s ease, transform 0.2s ease;
-      position: absolute;
-      top: 20px;
-      left: 20px;
-    }
-    .home-button:hover {
-      background-color: #0078b6;
-      transform: translateY(-2px);
-    }
-    .search-box {
-      max-width: 400px;
-      margin: 100px auto 40px;
-    }
-    input[type="text"] {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 1rem;
-    }
-    button {
-      margin-top: 15px;
-      padding: 10px 20px;
-      background-color: #005792;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-    button:hover {
-      background-color: #0078b6;
-    }
-  </style>
+  <link rel="stylesheet" href="assets/logilee.css">
 </head>
-<body>
-  <a href="en/" class="home-button">Home</a>
-  <h1>HS Code Search</h1>
-  <p>Enter a keyword or HS Code and search directly on the official USITC website.</p>
-  <div class="search-box">
-    <input type="text" id="searchInput" placeholder="Enter keyword or HS Code...">
-    <button onclick="searchUSITC()">Search on USITC</button>
-  </div>
-  <p>
-    <a id="tradeDataLink" href="en/global-trade-explorer.html" style="color:#005792;font-weight:700;">View Global Trade Statistics</a>
-    <br>
-    <a id="euTradeDataLink" href="en/eu-trade-explorer.html" style="color:#005792;font-weight:700;">View EU Trade Statistics</a>
-  </p>
-  <script>
-    const searchInput = document.getElementById("searchInput");
-    const tradeDataLink = document.getElementById("tradeDataLink");
-    const euTradeDataLink = document.getElementById("euTradeDataLink");
-    searchInput.addEventListener("input", function() {
-      const hs = searchInput.value.trim();
-      tradeDataLink.href = hs ? `en/global-trade-explorer.html?hs=${encodeURIComponent(hs)}` : "en/global-trade-explorer.html";
-      euTradeDataLink.href = hs ? `en/eu-trade-explorer.html?product=${encodeURIComponent(hs)}` : "en/eu-trade-explorer.html";
-    });
-    function searchUSITC() {
-      const keyword = document.getElementById("searchInput").value.trim();
-      if (!keyword) return;
-      window.open(`https://hts.usitc.gov/?query=${encodeURIComponent(keyword)}`, "_blank");
-    }
-    searchInput.addEventListener("keypress", function(event) {
-      if (event.key === "Enter") searchUSITC();
-    });
-  </script>
-</body>
-</html>
+<body><div class="shell"><aside class="rail"><a class="brand" href="en/"><strong>LOGILEE</strong><span>Global Logistics Workspace</span></a><p class="rail-copy">LOGILEE helps launch official classification research. It is not an internal HS database.</p></aside><main class="main"><header class="topbar"><a class="mobile-logo" href="en/">LOGILEE</a><nav data-mobile-nav><a href="en/">Home</a><a href="en/tools.html">Tools</a><a href="en/global-trade-explorer.html">Global Trade</a><a href="en/eu-trade-explorer.html">EU Trade</a><a href="en/dictionary.html">Dictionary</a></nav><div class="top-actions"><a class="icon-btn" href="hscode.html">KO / EN</a><button class="menu-btn" data-menu-toggle aria-label="Menu">Menu</button></div></header><div class="page"><section class="page-title"><p class="eyebrow">Customs Reference</p><h1>HS Code Lookup</h1><p class="lead">Enter an HS Code or product keyword to continue research on the official USITC lookup.</p></section><section class="calculator"><form class="panel" data-hs-launcher><div class="form-grid compact-form"><div class="field"><label for="hs-query">HS Code or product keyword</label><input id="hs-query" name="q" placeholder="battery, 8507, cotton shirt"></div><button class="primary-btn" type="submit">Search on USITC -&gt;</button></div></form><aside class="panel"><h2>HS structure</h2><div class="data-status-list"><div><strong>2-digit</strong><span>Chapter</span></div><div><strong>4-digit</strong><span>Heading</span></div><div><strong>6-digit</strong><span>Subheading</span></div></div></aside></section><section class="panel prose-panel"><h2>Before classification decisions</h2><p>HS classification depends on material, function, use, composition, and jurisdiction-specific tariff schedules. Use official sources or customs specialists before filing.</p><div class="related-row"><a href="en/global-trade-explorer.html">Global Trade Explorer</a><a href="en/eu-trade-explorer.html">EU Trade Explorer</a><a href="en/dictionary.html?term=hs-code">Dictionary: HS Code</a></div></section><div class="section ad-slot">Advertisement - Reserved ad placement</div></div></main></div><script>document.querySelector("[data-hs-launcher]")?.addEventListener("submit",(event)=>{event.preventDefault();const q=new FormData(event.currentTarget).get("q").trim();if(q) window.open(`https://hts.usitc.gov/?query=${encodeURIComponent(q)}`,"_blank","noopener");});</script><script src="assets/logilee-app.js" defer></script></body></html>

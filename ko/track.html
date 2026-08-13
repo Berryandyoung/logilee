@@ -4,54 +4,62 @@
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8548711851361478" crossorigin="anonymous"></script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>화물 추적 | LOGILEE</title>
-  <meta name="description" content="Courier, B/L, Container, Air Cargo 공식 조회 페이지로 연결하는 LOGILEE Tracking Hub입니다.">
-  <link rel="canonical" href="https://www.logilee.com/ko/track">
+  <title>Shipment Tracking Launcher | LOGILEE</title>
+  <meta name="description" content="Courier, B/L, Container, Air Cargo 공식 조회 페이지로 연결하는 LOGILEE tracking launcher입니다.">
+  <link rel="canonical" href="https://www.logilee.com/ko/track.html">
+  <link rel="alternate" hreflang="ko" href="https://www.logilee.com/ko/track.html">
+  <link rel="alternate" hreflang="en" href="https://www.logilee.com/en/track.html">
+  <link rel="alternate" hreflang="x-default" href="https://www.logilee.com/en/track.html">
   <link rel="stylesheet" href="../assets/logilee.css">
-  <script defer src="../assets/logilee-app.js"></script>
 </head>
 <body>
+  <a class="skip-link" href="#main">본문으로 이동</a>
   <div class="shell">
     <aside class="rail">
       <a class="brand" href="./"><strong>LOGILEE</strong><span>Global Logistics Workspace</span></a>
-      <p class="rail-copy">실시간 통합 추적 API가 없을 때는 상태를 생성하지 않고 공식 조회로 연결합니다.</p>
+      <nav aria-label="주요 메뉴">
+        <section><h2>Logistics</h2><a href="ports.html">Port Search</a><a href="cbm.html">CBM Calculator</a><a href="freight-market.html">Freight Market</a></section>
+        <section><h2>Resources</h2><a href="learn.html">Learn</a><a href="dictionary.html">Dictionary</a></section>
+      </nav>
     </aside>
-    <main class="main">
+    <div class="content">
       <header class="topbar">
-        <a class="mobile-logo" href="./">LOGILEE</a>
-        <nav data-mobile-nav>
-          <a href="./">Home</a><a href="tools.html">Tools</a><a aria-current="page" href="track.html">Track</a><a href="dictionary.html">Dictionary</a><a href="search.html">Search</a>
-        </nav>
-        <div class="top-actions"><a class="icon-btn" href="../en/track.html">KO / EN</a><button class="menu-btn" data-menu-toggle aria-label="메뉴">Menu</button></div>
+        <div><a href="./">Home</a><a href="tools.html">Tools</a><a aria-current="page" href="track.html">Track</a><a href="search.html">Search</a></div>
+        <div><a href="../en/track.html">English</a></div>
       </header>
-      <div class="page">
+      <main id="main" class="page">
         <section class="page-title">
-          <p class="eyebrow">Tracking Hub</p>
-          <h1>화물 추적</h1>
-          <p class="lead">Courier, B/L, Container, Air Cargo 번호를 입력해 지원되는 공식 조회 페이지로 이동합니다.</p>
+          <span class="eyebrow">Tracking Launcher</span>
+          <h1>Shipment Tracking Launcher</h1>
+          <p class="lead">Courier, B/L, Container 번호를 입력해 지원되는 공식 carrier 조회 페이지를 엽니다. LOGILEE는 실시간 shipment status를 생성하지 않습니다.</p>
         </section>
-        <section class="track-panel">
-          <div class="panel">
-            <div class="tabs"><button class="tab is-active">Courier</button><button class="tab">B/L</button><button class="tab">Container</button><button class="tab">Air Cargo</button></div>
-            <form data-track-form>
-              <div class="form-grid tracking-form-grid">
-                <div class="field"><label>Tracking number</label><input data-track-number placeholder="Tracking Number 또는 B/L 번호"></div>
-                <div class="field"><label>Carrier</label><select data-carrier><option value="">자동 감지</option><option value="dhl">DHL</option><option value="fedex">FedEx</option><option value="ups">UPS</option><option value="usps">USPS</option><option value="maersk">Maersk</option><option value="msc">MSC</option><option value="hmm">HMM</option><option value="cma">CMA CGM</option></select></div>
-                <button class="primary-btn" type="submit">조회하기</button>
-              </div>
-            </form>
-            <p class="muted">통합 API가 연결되기 전까지 LOGILEE는 실제 위치나 배송 상태를 임의로 표시하지 않습니다.</p>
-            <div data-recent></div>
+
+        <section class="panel">
+          <div class="tabs"><button class="tab is-active" type="button">Courier</button><button class="tab" type="button">B/L</button><button class="tab" type="button">Container</button><button class="tab" type="button">Air Cargo</button></div>
+          <form data-track-form>
+            <div class="form-grid tracking-form-grid">
+              <div class="field"><label for="track-number">Tracking number</label><input id="track-number" data-track-number placeholder="Tracking number 또는 B/L 번호"></div>
+              <div class="field"><label for="track-carrier">Carrier</label><select id="track-carrier" data-carrier><option value="">자동 감지</option><option value="dhl">DHL</option><option value="fedex">FedEx</option><option value="ups">UPS</option><option value="usps">USPS</option><option value="maersk">Maersk</option><option value="msc">MSC</option><option value="hmm">HMM</option><option value="cma">CMA CGM</option></select></div>
+              <button class="primary-btn" type="submit">공식 조회 열기</button>
+            </div>
+          </form>
+          <p class="muted">Courier는 parcel number, B/L은 해상 선하증권 번호, Container는 컨테이너 번호를 사용합니다. Air Cargo는 보통 11자리 AWB가 필요하며 항공사 cargo portal에서 직접 조회해야 할 수 있습니다.</p>
+          <div data-recent></div>
+        </section>
+
+        <section class="page-section">
+          <div class="section-heading"><span class="eyebrow">Providers</span><h2>지원 공식 페이지</h2></div>
+          <div class="resource-list">
+            <article class="resource-row"><div><strong>Courier</strong><p>DHL, FedEx, UPS, USPS 공식 parcel tracking 페이지로 연결합니다.</p></div><div class="carrier-list"><span class="chip">DHL</span><span class="chip">FedEx</span><span class="chip">UPS</span><span class="chip">USPS</span></div></article>
+            <article class="resource-row"><div><strong>Ocean</strong><p>Maersk, MSC, HMM, CMA CGM 공식 ocean carrier tracking 페이지로 연결합니다.</p></div><div class="carrier-list"><span class="chip">Maersk</span><span class="chip">MSC</span><span class="chip">HMM</span><span class="chip">CMA CGM</span></div></article>
+            <article class="resource-row"><div><strong>Air Cargo</strong><p>항공화물 portal은 항공사별로 URL prefill 지원 여부가 다릅니다. AWB 번호를 준비해 항공사 cargo portal에서 확인하세요.</p></div><div class="related-row"><a href="https://www.lufthansa-cargo.com/en/eservices/etracking" target="_blank" rel="noopener">Lufthansa Cargo</a><a href="https://scekprd.emirates.com/skychain/app?initial=y&service=page%2Fnwp%3ATrackshipmt" target="_blank" rel="noopener">Emirates SkyCargo</a></div></article>
           </div>
-          <aside class="panel">
-            <h2>Supported carriers</h2>
-            <div class="carrier-list"><span class="chip">DHL</span><span class="chip">FedEx</span><span class="chip">UPS</span><span class="chip">USPS</span><span class="chip">Maersk</span><span class="chip">MSC</span><span class="chip">HMM</span><span class="chip">CMA CGM</span></div>
-            <h3>Help</h3>
-            <p class="muted">B/L 번호는 선하증권 번호이며, 선사별 접두사와 조회 방식이 다를 수 있습니다.</p>
-          </aside>
         </section>
-      </div>
-    </main>
+
+        <section class="ad-slot" aria-label="광고"><span>Advertisement</span><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8548711851361478" data-ad-slot="1234567890" data-ad-format="auto" data-full-width-responsive="true"></ins></section>
+      </main>
+    </div>
   </div>
+  <script defer src="../assets/logilee-app.js"></script>
 </body>
 </html>

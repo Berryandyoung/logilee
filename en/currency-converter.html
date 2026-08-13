@@ -11,51 +11,22 @@
   <script defer src="../assets/logilee-app.js"></script>
 </head>
 <body>
-  <div class="shell">
-    <aside class="rail">
-      <a class="brand" href="./"><strong>LOGILEE</strong><span>Global Logistics Workspace</span></a>
-      <p class="rail-copy">Use reference FX data carefully. Bank spreads, card rates, and settlement timing can differ.</p>
-    </aside>
-    <main class="main">
-      <header class="topbar">
-        <a class="mobile-logo" href="./">LOGILEE</a>
-        <nav data-mobile-nav>
-          <a href="./">Home</a>
-          <a aria-current="page" href="tools.html">Tools</a>
-          <a href="holidays.html">Holidays</a>
-          <a href="country-trade-profile.html">Country Profile</a>
-        </nav>
-        <div class="top-actions">
-          <a class="icon-btn" href="../ko/currency-converter.html">KO / EN</a>
-          <button class="menu-btn" data-menu-toggle aria-label="Menu">Menu</button>
-        </div>
-      </header>
-      <div class="page">
-        <section class="page-title">
-          <p class="eyebrow">Currency Converter</p>
-          <h1>Currency Converter</h1>
-          <p class="lead">Convert major currencies used in quotations, invoices, and international settlement checks.</p>
-        </section>
-        <section class="calculator">
-          <form class="panel" data-currency-converter>
-            <div class="form-grid compact-form">
-              <div class="field"><label>From Currency</label><select data-currency-select data-fx-from></select></div>
-              <div class="field"><label>To Currency</label><select data-currency-select data-fx-to></select></div>
-              <div class="field"><label>Amount</label><input type="number" min="0" step="0.01" value="1000" data-fx-amount></div>
-              <button class="primary-btn" type="submit">Convert</button>
-            </div>
-          </form>
-          <aside class="panel" data-fx-result><div class="data-empty">Loading exchange rate data...</div></aside>
-        </section>
-        <section class="panel prose-panel">
-          <h2>How to use exchange rates in trade work</h2>
-          <p>Currency conversion is useful when comparing supplier quotations, freight charges, customs values, and overseas payments. The calculator uses a public reference rate, so it should be treated as a planning number rather than a guaranteed settlement rate.</p>
-          <p>Actual buying and selling rates can differ because banks, card processors, remittance providers, and freight forwarders apply spreads or update their rate tables at different times. For contracts, confirm whether the agreed rate is based on invoice date, payment date, customs declaration date, or another stated benchmark.</p>
-          <p>Data source: Frankfurter. LOGILEE displays only the fields needed for the tool and shows the data date with each result.</p>
-        </section>
-        <div class="section ad-slot">Advertisement - Reserved ad placement</div>
+<div class="shell"><aside class="rail"><a class="brand" href="./"><strong>LOGILEE</strong><span>Global Logistics Workspace</span></a><p class="rail-copy">Reference FX for quotations, invoices, customs value checks, and settlement planning.</p></aside><main class="main"><header class="topbar"><a class="mobile-logo" href="./">LOGILEE</a><nav data-mobile-nav><a href="./">Home</a><a href="tools.html">Tools</a><a href="business-day.html">Business Day</a><a href="holidays.html">Holidays</a><a href="country-trade-profile.html">Country Profile</a></nav><div class="top-actions"><a class="icon-btn" href="../ko/currency-converter.html">KO / EN</a><button class="menu-btn" data-menu-toggle aria-label="Menu">Menu</button></div></header><div class="page">
+  <section class="page-title"><p class="eyebrow">Currency Converter</p><h1>Currency Converter</h1><p class="lead">Convert major currencies used in quotations, invoices, customs values, and overseas payment checks.</p></section>
+  <section class="calculator">
+    <form class="panel" data-currency-converter>
+      <div class="form-grid compact-form">
+        <div class="field"><label>From Currency</label><select data-currency-select data-fx-from></select></div>
+        <button class="secondary-btn" type="button" data-fx-swap aria-label="Swap currencies">Swap</button>
+        <div class="field"><label>To Currency</label><select data-currency-select data-fx-to></select></div>
+        <div class="field"><label>Amount</label><input type="number" min="0" step="0.01" value="1000" data-fx-amount></div>
+        <button class="primary-btn" type="submit">Convert</button>
       </div>
-    </main>
-  </div>
+    </form>
+    <aside class="panel" data-fx-result><div class="data-empty">Loading exchange rate data...</div></aside>
+  </section>
+  <section class="panel prose-panel"><h2>Using exchange rates in trade work</h2><p>Frankfurter provides public reference exchange rates. Actual buying, selling, card, bank, and remittance rates can differ because providers apply spreads and update at different times.</p><p>For contracts, clarify whether the benchmark is invoice date, payment date, customs declaration date, or another agreed rate date.</p><p>Data source: Frankfurter.</p></section>
+  <div class="section ad-slot">Advertisement - Reserved ad placement</div>
+</div></main></div>
 </body>
 </html>

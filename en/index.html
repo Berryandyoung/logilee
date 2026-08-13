@@ -22,8 +22,8 @@
     <nav class="workspace-nav">
       <a class="nav-home is-active" href="./"><i data-lucide="home"></i> Home</a>
       <section><h2>Trade</h2><a href="country-trade-profile.html"><i data-lucide="globe"></i>Country Trade Profile</a><a href="holidays.html"><i data-lucide="calendar-check"></i>Holiday Calendar</a><a href="eu-trade-explorer.html"><i data-lucide="chart-column"></i>EU Trade Explorer</a><a href="global-trade-explorer.html"><i data-lucide="chart-column"></i>Global Trade Explorer</a><a href="../hscode-en.html"><i data-lucide="barcode"></i>HS Code</a><a href="countries.html"><i data-lucide="shield-alert"></i>Import Regulation</a><a href="countries.html"><i data-lucide="send"></i>Export Regulation</a><a href="contact.html"><i data-lucide="building-2"></i>Embassy & Office</a></section>
-      <section><h2>Logistics</h2><a href="track.html"><i data-lucide="radar"></i>Tracking</a><a href="ports.html"><i data-lucide="ship"></i>Carrier & Airline</a><a href="ports.html"><i data-lucide="anchor"></i>Ports & Airports</a><a href="tools.html"><i data-lucide="container"></i>Container</a><a href="cbm.html"><i data-lucide="calculator"></i>CBM Calculator</a></section>
-      <section><h2>Compliance</h2><a href="dashboard.html"><i data-lucide="shield-check"></i>FDA</a><a href="dashboard.html"><i data-lucide="badge-check"></i>BIS</a><a href="dashboard.html"><i data-lucide="leaf"></i>REACH</a><a href="dashboard.html"><i data-lucide="circle-check"></i>RoHS / CE</a><a href="dashboard.html"><i data-lucide="circle-x"></i>CCC</a><a href="dashboard.html"><i data-lucide="shield"></i>KC / TSCA</a></section>
+      <section><h2>Logistics</h2><a href="track.html"><i data-lucide="radar"></i>Tracking Launcher</a><a href="ports.html"><i data-lucide="anchor"></i>Port Search</a><a href="cbm.html"><i data-lucide="calculator"></i>CBM Calculator</a><a href="freight-market.html"><i data-lucide="activity"></i>Freight Market</a></section>
+      <section><h2>Compliance</h2><a href="dashboard.html"><i data-lucide="shield-check"></i>Compliance Hub</a></section>
       <section><h2>Market</h2><a href="freight-market.html"><i data-lucide="chart-no-axes-combined"></i>Freight Market</a><a href="currency-converter.html"><i data-lucide="badge-dollar-sign"></i>Currency Converter</a><a href="business-day.html"><i data-lucide="calendar-clock"></i>Business Day</a></section>
       <section><h2>Resources</h2><a href="templates.html"><i data-lucide="copy"></i>Templates</a><a href="documents.html"><i data-lucide="file-text"></i>Documents</a><a href="dictionary.html"><i data-lucide="languages"></i>Dictionary</a><a href="learn.html"><i data-lucide="graduation-cap"></i>Learn</a></section>
     </nav>
@@ -59,70 +59,85 @@
               <h1>One Workspace for Global Trade</h1>
               <p>Search trade data, track freight, calculate costs, and monitor markets all in one place.</p>
               <form class="hero-search" data-search-form role="search"><i data-lucide="search"></i><input name="q" autocomplete="off" placeholder="Search Tracking, HS Code, Country, Port, Incoterms..." aria-label="Global trade search"><button class="primary-btn" type="submit">Search</button></form>
+              <div class="popular-searches" aria-label="Popular searches">
+                <span>Popular:</span>
+                <button type="button" data-search-chip="HS Code">HS Code</button>
+                <button type="button" data-search-chip="Vietnam">Vietnam</button>
+                <button type="button" data-search-chip="FOB">FOB</button>
+                <button type="button" data-search-chip="Busan Port">Busan Port</button>
+                <button type="button" data-search-chip="USD/KRW">USD/KRW</button>
+              </div>
             </div>
           </section>
 
-          <section class="panel quick-tools-home">
-            <div class="section-head"><div><h2>Quick Tools</h2><p>Fast access to the tools used most often in daily trade work.</p></div></div>
-            <div class="tool-icons compact-tool-grid"><a href="cbm.html"><span class="icon"><i data-lucide="calculator"></i></span>CBM Calculator</a><a href="track.html"><span class="icon"><i data-lucide="radar"></i></span>Shipment Tracking</a><a href="currency-converter.html"><span class="icon"><i data-lucide="badge-dollar-sign"></i></span>Currency Converter</a><a href="ports.html"><span class="icon"><i data-lucide="anchor"></i></span>Port Finder</a><a href="eu-trade-explorer.html"><span class="icon"><i data-lucide="chart-column"></i></span>EU Trade</a><a href="freight-market.html"><span class="icon"><i data-lucide="chart-no-axes-combined"></i></span>Freight Market</a></div>
+          <section class="panel quick-tools-home quick-tools-mobile">
+            <div class="section-head"><div><h2>Quick Tools</h2><p>Fast access to daily trade work.</p></div></div>
+            <div class="tool-icons compact-tool-grid"><a href="cbm.html"><span class="icon"><i data-lucide="calculator"></i></span><strong>CBM Calculator</strong><small>Calculate shipment volume</small></a><a href="track.html"><span class="icon"><i data-lucide="radar"></i></span><strong>Shipment Tracking</strong><small>Open all tracking tools</small></a><a href="currency-converter.html"><span class="icon"><i data-lucide="badge-dollar-sign"></i></span><strong>Exchange Rate</strong><small>Check global FX rates</small></a><a href="ports.html"><span class="icon"><i data-lucide="anchor"></i></span><strong>Port Search</strong><small>Find ports worldwide</small></a><a href="eu-trade-explorer.html"><span class="icon"><i data-lucide="chart-column"></i></span><strong>EU Trade</strong><small>Review Eurostat data</small></a><a href="freight-market.html"><span class="icon"><i data-lucide="chart-no-axes-combined"></i></span><strong>Freight Market</strong><small>View transport indicators</small></a></div>
+          </section>
+
+          <section class="panel tracking-panel-home">
+            <div class="section-head"><div><h2>Shipment & Tracking</h2><p>Start with the number you need to check.</p></div></div>
+            <div class="tracking-actions"><a href="track.html"><span class="icon"><i data-lucide="container"></i></span><strong>Container Tracking</strong><small>Lookup by container number</small></a><a href="track.html"><span class="icon"><i data-lucide="file-text"></i></span><strong>B/L Tracking</strong><small>Lookup by B/L number</small></a><a href="track.html"><span class="icon"><i data-lucide="clipboard-list"></i></span><strong>Booking Tracking</strong><small>Lookup by booking number</small></a><a href="track.html"><span class="icon"><i data-lucide="plane"></i></span><strong>AWB Tracking</strong><small>Lookup by air waybill number</small></a><a href="track.html"><span class="icon"><i data-lucide="truck"></i></span><strong>Courier Tracking</strong><small>Courier and parcel lookup</small></a><a href="track.html"><span class="icon"><i data-lucide="radar"></i></span><strong>Vessel Tracking</strong><small>Vessel position and schedule</small></a></div>
+            <a class="link-more" href="track.html">View all tracking tools -></a>
           </section>
 
           <section class="panel home-latest-panel">
             <div class="home-latest-grid">
               <section class="home-latest-column news-panel latest-news home-latest-news" aria-labelledby="home-news-title-en">
-                <div class="section-head"><div><h2 id="home-news-title-en">Latest News</h2><p>Trade and logistics headlines from the existing RSS collection path.</p></div><a class="link-more" href="news.html">More</a></div>
+                <div class="section-head"><div><h2 id="home-news-title-en">Latest News</h2><p>Quickly review key trade and logistics market headlines.</p></div><a class="link-more" href="news.html">More</a></div>
                 <div class="news-list compact-news-list" data-home-news data-news-query="global trade logistics">
                   <div class="data-empty skeleton-line">Loading latest news...</div>
                 </div>
               </section>
               <section class="home-latest-column latest-posting" aria-labelledby="home-posting-title-en" data-latest-posting>
-                <div class="section-head"><div><h2 id="home-posting-title-en">Latest Posting</h2><p>Original trade insights, logistics guides, and practical resources from LOGILEE.</p></div><a class="link-more" href="posts/">View All</a></div>
-                <div class="posting-slider" data-posting-slider>
+                <div class="section-head"><div><h2 id="home-posting-title-en">Latest Posts</h2><p>Original trade insights, logistics guides, and practical resources from LOGILEE.</p></div><a class="link-more" href="posts/">View All</a></div>
+                <div class="posting-list" data-posting-slider>
                   <div class="data-empty">Loading latest posts...</div>
                 </div>
               </section>
             </div>
           </section>
 
-          <div class="ad-slot ad-slot--leaderboard home-ad"><span>Advertisement</span><small>Reserved ad placement</small></div>
+          <div class="ad-slot ad-slot--leaderboard home-ad" data-ad-slot>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8548711851361478" data-ad-format="auto" data-full-width-responsive="true"></ins>
+          </div>
 
-          <section class="panel tracking-panel-home">
-            <div class="section-head"><div><h2>Shipment & Tracking</h2><p>Start with the number you need to check.</p></div></div>
-            <div class="tracking-actions"><a href="track.html"><span class="icon"><i data-lucide="container"></i></span><strong>Container Tracking</strong><small>Lookup by container number</small></a><a href="track.html"><span class="icon"><i data-lucide="file-text"></i></span><strong>B/L Tracking</strong><small>Lookup by B/L number</small></a><a href="track.html"><span class="icon"><i data-lucide="clipboard-list"></i></span><strong>Booking Tracking</strong><small>Lookup by booking number</small></a><a href="track.html"><span class="icon"><i data-lucide="plane"></i></span><strong>Air Waybill Tracking</strong><small>Lookup by AWB number</small></a><a href="track.html"><span class="icon"><i data-lucide="truck"></i></span><strong>Courier Tracking</strong><small>Courier and parcel lookup</small></a><a href="track.html"><span class="icon"><i data-lucide="radar"></i></span><strong>Vessel Tracking</strong><small>Vessel position and schedule</small></a></div>
-            <a class="link-more" href="track.html">View all tracking tools -></a>
+          <section class="panel market-card home-market-dashboard">
+            <div class="section-head market-head"><div><h2>Market Snapshot</h2><p data-market-updated>Latest available market data</p></div><a class="link-more" href="freight-market.html">Market Details -></a></div>
+            <div class="market-dashboard-grid" data-market-snapshot>
+              <div class="market-section-label">FX</div>
+              <div class="skeleton-line"><strong>Exchange Rate</strong><span>Loading...</span></div>
+              <div class="market-section-label">Freight</div>
+              <div class="skeleton-line"><strong>Freight Market</strong><span>Loading...</span></div>
+            </div>
+            <span class="status market-status-inline" data-market-status>Latest Data</span>
           </section>
 
           <section class="panel guide-panel">
             <div class="section-head"><div><h2>Latest Guides</h2><p>Practical references for trade, documents, and compliance.</p></div><a class="link-more" href="learn.html">More -></a></div>
             <div class="guide-list"><a href="dictionary.html#fob"><span class="kicker">Incoterms</span><strong>What FOB Means in Practice</strong><small>Cost and risk transfer under Incoterms 2020.</small></a><a href="documents.html"><span class="kicker">Documents</span><strong>Commercial Invoice Checklist</strong><small>Required fields and common mistakes before customs.</small></a><a href="countries.html"><span class="kicker">Country</span><strong>Vietnam Country Guide</strong><small>Regulations, documents, ports, and market signals.</small></a></div>
           </section>
+
+          <section class="panel explore-global-trade">
+            <div class="section-head"><div><h2>Explore Global Trade</h2><p>Move quickly into LOGILEE's core reference areas.</p></div></div>
+            <div class="explore-grid"><a href="countries.html"><i data-lucide="globe-2"></i><strong>Countries</strong><span>Explore</span></a><a href="ports.html"><i data-lucide="anchor"></i><strong>Ports</strong><span>Explore</span></a><a href="../hscode-en.html"><i data-lucide="barcode"></i><strong>HS Codes</strong><span>Search</span></a><a href="../incoterms-2020-en.html"><i data-lucide="book-open"></i><strong>Incoterms</strong><span>Learn</span></a></div>
+          </section>
         </div>
 
-        <aside class="workspace-aside dashboard-sidebar" aria-label="Market Intelligence">
-          <section class="panel market-card">
-            <div class="section-head market-head"><div><h2>Market Snapshot</h2><p data-market-updated>Loading market data...</p></div><span class="status" data-market-status>Loading</span></div>
-            <div class="data-status-list market-data-list" data-market-snapshot>
-              <div class="market-section-label">FX Market</div>
-              <div class="skeleton-line"><strong>Exchange Rate</strong><span>Loading...</span></div>
-            </div>
+        <aside class="workspace-aside dashboard-sidebar quick-tools-column" aria-label="Quick Tools">
+          <section class="panel quick-tools-home">
+            <div class="section-head"><div><h2>Quick Tools</h2><p>Fast access to daily trade work.</p></div></div>
+            <div class="tool-icons compact-tool-grid"><a href="cbm.html"><span class="icon"><i data-lucide="calculator"></i></span><strong>CBM Calculator</strong><small>Calculate shipment volume</small></a><a href="track.html"><span class="icon"><i data-lucide="radar"></i></span><strong>Shipment Tracking</strong><small>Open all tracking tools</small></a><a href="currency-converter.html"><span class="icon"><i data-lucide="badge-dollar-sign"></i></span><strong>Exchange Rate</strong><small>Check global FX rates</small></a><a href="ports.html"><span class="icon"><i data-lucide="anchor"></i></span><strong>Port Search</strong><small>Find ports worldwide</small></a><a href="eu-trade-explorer.html"><span class="icon"><i data-lucide="chart-column"></i></span><strong>EU Trade</strong><small>Review Eurostat data</small></a><a href="freight-market.html"><span class="icon"><i data-lucide="chart-no-axes-combined"></i></span><strong>Freight Market</strong><small>View transport indicators</small></a></div>
           </section>
-
-          <section class="panel freight-panel market-side-card compact-data-card" data-freight-index>
-            <h2>Freight Market Index</h2>
-            <div class="data-table-shell" aria-hidden="true"><span>Index Name</span><span>Current Value</span><span>Change</span><span>Updated</span></div>
-            <div class="data-empty">Loading latest freight indicators...</div>
-            <a class="link-more" href="freight-market.html">View freight market data -></a>
-          </section>
-
-          <div class="ad-slot ad-slot--rectangle home-ad"><span>Advertisement</span><small>Reserved ad placement</small></div>
         </aside>
       </div>
-      <nav class="panel trust-links" aria-label="Site information">
-        <a href="../about.html">About</a>
-        <a href="../privacy-policy-en.html">Privacy Policy</a>
-        <a href="../terms-en.html">Terms of Use</a>
-        <a href="contact.html">Contact</a>
-      </nav>
+      <footer class="site-footer home-footer" aria-label="Footer">
+        <div class="footer-brand"><strong>LOGILEE</strong><p>Global trade data, logistics tools, and practical guides in one workspace.</p></div>
+        <nav><h2>Tools</h2><a href="track.html">Tracking</a><a href="global-trade-explorer.html">Trade Data</a><a href="freight-market.html">Freight Market</a><a href="learn.html">Guides</a></nav>
+        <nav><h2>Company</h2><a href="../about.html">About</a><a href="contact.html">Contact</a></nav>
+        <nav><h2>Legal</h2><a href="../privacy-policy-en.html">Privacy Policy</a><a href="../terms-en.html">Terms of Use</a></nav>
+        <p class="footer-copy">&copy; 2026 LOGILEE. All rights reserved.</p>
+      </footer>
     </div>
   </main>
 </div>
