@@ -5767,6 +5767,10 @@ body.sidebar-drawer-active {
   margin-top: 0;
 }
 
+.home-page .home-market-dashboard .market-dashboard-grid .market-data-row--fx + .market-section-label {
+  margin-top: 20px;
+}
+
 .home-page .home-market-dashboard .market-dashboard-grid .market-data-row--fx,
 .home-page .home-market-dashboard .market-dashboard-grid .market-data-row--freight,
 .home-page .home-market-dashboard .market-dashboard-grid div:not(.market-section-label) {

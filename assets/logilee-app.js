@@ -1007,7 +1007,8 @@ function setupLatestPosting() {
   const slider = document.querySelector("[data-posting-slider]");
   if (!slider) return;
   const lang = currentLang();
-  const posts = getPostsForCurrentLang().slice(0, 3);
+  const MAX_HOME_POSTS = 5;
+  const posts = getPostsForCurrentLang().slice(0, MAX_HOME_POSTS);
   const labels = lang === "ko"
     ? { empty: "표시할 실제 포스팅이 아직 없습니다." }
     : { empty: "No existing posts are available yet." };
