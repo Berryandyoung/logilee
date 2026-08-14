@@ -1,4 +1,4 @@
-window.LOGILEE_POSTS = [
+﻿window.LOGILEE_POSTS = [
   {
     "slug": "commercial-invoice-common-mistakes",
     "language": "en",
@@ -18,14 +18,14 @@ window.LOGILEE_POSTS = [
     "language": "ko",
     "status": "published",
     "title": "Commercial Invoice 작성 시 자주 발생하는 7가지 오류",
-    "description": "상업송장과 Packing List, B/L, AWB, HS Code, Incoterms의 일치 여부를 확인하는 실무 체크리스트입니다.",
-    "category": "Documents",
+    "description": "Commercial Invoice에서 자주 발견되는 7가지 오류를 실무 관점에서 정리했습니다. 거래 당사자, HS Code, Incoterms, 금액과 Packing List·B/L 불일치까지 확인해보세요.",
+    "category": "trade",
     "date": "2026-08-14",
-    "publishedAt": "2026-08-14T03:14:29.000Z",
+    "publishedAt": "2026-08-14T03:00:54.001Z",
     "readingTime": "6분 읽기",
     "path": "ko/posts/commercial-invoice-common-mistakes/",
-    "image": "assets/trade-hero-port.jpg",
-    "imageAlt": "무역 서류와 선적 흐름을 상징하는 항만 이미지"
+    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_607b078e-c84e-4281-9e60-62ccbb80a361-ChatGPT%20Image%202026%EB%85%84%208%EC%9B%94%2014%EC%9D%BC%20%EC%98%A4%ED%9B%84%2012_16_48.png?alt=media&token=172d5a97-4bca-4e96-acd2-7be9ad354cbb",
+    "imageAlt": "Commercial Invoice 작성 시 자주 발생하는 7가지 오류 thumbnail"
   },
   {
     "slug": "fob-vs-cif",
@@ -45,15 +45,15 @@ window.LOGILEE_POSTS = [
     "slug": "fob-vs-cif",
     "language": "ko",
     "status": "published",
-    "title": "FOB vs CIF, 수입자에게 어떤 조건이 유리할까?",
-    "description": "FOB와 CIF 조건의 비용, 위험 이전, 보험, 견적 비교 방식을 수입 실무 관점에서 정리합니다.",
-    "category": "Guides",
+    "title": "FOB vs CIF, 수입자에게 어떤 조건이 더 유리할까?",
+    "description": "FOB와 CIF 중 어떤 조건이 수입자에게 유리할까요? 해상운임, 보험, 목적항 비용, 위험 이전과 리드타임을 실제 견적 사례와 Landed Cost 기준으로 비교합니다.",
+    "category": "guides",
     "date": "2026-08-14",
-    "publishedAt": "2026-08-14T03:06:58.000Z",
-    "readingTime": "7분 읽기",
+    "publishedAt": "2026-08-14T02:45:29.216Z",
+    "readingTime": "5분 읽기",
     "path": "ko/posts/fob-vs-cif/",
-    "image": "assets/trade-hero-port.jpg",
-    "imageAlt": "항만 크레인과 컨테이너선 야간 작업"
+    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_129ddf37-6985-4e99-96bf-692b376d03f0-ChatGPT%20Image%202026%EB%85%84%208%EC%9B%94%2014%EC%9D%BC%20%EC%98%A4%EC%A0%84%2011_52_45.png?alt=media&token=aa3822ae-aa76-41e2-b756-57f713d2d6d9",
+    "imageAlt": "FOB와 CIF 수입 조건 비교를 설명하는 컨테이너선과 국제 무역항"
   },
   {
     "slug": "global-sales",
