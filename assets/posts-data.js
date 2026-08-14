@@ -1,5 +1,17 @@
 window.LOGILEE_POSTS = [
   {
+    "slug": "commercial-invoice-common-mistakes",
+    "language": "ko",
+    "title": "Commercial Invoice 작성 시 자주 발생하는 7가지 오류",
+    "description": "Commercial Invoice에서 자주 발견되는 7가지 오류를 실무 관점에서 정리했습니다. 거래 당사자, HS Code, Incoterms, 금액과 Packing List·B/L 불일치까지 확인해보세요.",
+    "category": "trade",
+    "date": "2026-08-14",
+    "readingTime": "6분 읽기",
+    "path": "ko/posts/commercial-invoice-common-mistakes/index.html",
+    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_607b078e-c84e-4281-9e60-62ccbb80a361-ChatGPT%20Image%202026%EB%85%84%208%EC%9B%94%2014%EC%9D%BC%20%EC%98%A4%ED%9B%84%2012_16_48.png?alt=media&token=172d5a97-4bca-4e96-acd2-7be9ad354cbb",
+    "imageAlt": "Commercial Invoice 작성 시 자주 발생하는 7가지 오류 thumbnail"
+  },
+  {
     "slug": "fob-vs-cif",
     "language": "ko",
     "title": "FOB vs CIF, 수입자에게 어떤 조건이 더 유리할까?",
