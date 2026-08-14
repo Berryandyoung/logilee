@@ -1,5 +1,17 @@
 window.LOGILEE_POSTS = [
   {
+    "slug": "fob-vs-cif",
+    "language": "ko",
+    "title": "FOB vs CIF, 수입자에게 어떤 조건이 더 유리할까?",
+    "description": "FOB와 CIF 중 어떤 조건이 수입자에게 유리할까요? 해상운임, 보험, 목적항 비용, 위험 이전과 리드타임을 실제 견적 사례와 Landed Cost 기준으로 비교합니다.",
+    "category": "guides",
+    "date": "2026-08-14",
+    "readingTime": "5분 읽기",
+    "path": "ko/posts/fob-vs-cif/index.html",
+    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_129ddf37-6985-4e99-96bf-692b376d03f0-ChatGPT%20Image%202026%EB%85%84%208%EC%9B%94%2014%EC%9D%BC%20%EC%98%A4%EC%A0%84%2011_52_45.png?alt=media&token=aa3822ae-aa76-41e2-b756-57f713d2d6d9",
+    "imageAlt": "FOB와 CIF 수입 조건 비교를 설명하는 컨테이너선과 국제 무역항"
+  },
+  {
     "slug": "global-sales",
     "language": "en",
     "title": "Global Sales",
