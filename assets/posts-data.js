@@ -1,5 +1,19 @@
 window.LOGILEE_POSTS = [
   {
+    "slug": "rhine-low-water-logistics-impact",
+    "language": "ko",
+    "status": "published",
+    "title": "라인강 수위가 낮아지면 왜 유럽 물류비가 오를까?",
+    "description": "독일 라인강의 기록적인 저수위가 화물 적재량과 운임, 철도·트럭 운송, 유럽 공급망에 어떤 영향을 주는지 수입자 관점에서 정리합니다.",
+    "category": "market",
+    "date": "2026-08-14",
+    "publishedAt": "2026-08-14T07:45:13.610Z",
+    "readingTime": "5분 읽기",
+    "path": "ko/posts/rhine-low-water-logistics-impact/",
+    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_a7a45aa1-96ed-492e-8c46-2c03d6347023-ChatGPT%20Image%202026%EB%85%84%208%EC%9B%94%2014%EC%9D%BC%20%EC%98%A4%ED%9B%84%2004_42_32.png?alt=media&token=d5517725-39ee-4897-8793-208c89c0d656",
+    "imageAlt": "저수위로 수면이 낮아진 라인강을 운항하는 내륙 화물선"
+  },
+  {
     "slug": "lcl-vs-fcl",
     "language": "ko",
     "status": "published",
