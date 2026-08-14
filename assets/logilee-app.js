@@ -63,8 +63,8 @@ const terms = {
     { id: "fca", term: "FCA", name: "Free Carrier", category: "Trade", definition: "매도인이 지정 장소에서 운송인에게 화물을 인도하고 수출 통관을 완료하는 조건입니다.", example: "항공 운송이나 컨테이너 운송에서는 FOB보다 FCA가 더 적합한 경우가 많습니다.", related: ["EXW", "FOB"] },
     { id: "exw", term: "EXW", name: "Ex Works", category: "Trade", definition: "매도인은 자신의 사업장에서 화물을 준비하고 이후 비용과 위험은 대부분 매수인이 부담하는 조건입니다.", example: "EXW 견적은 저렴해 보일 수 있지만 픽업, 수출통관, 내륙운송 비용을 별도로 계산해야 합니다.", related: ["FCA", "DDP"] },
     { id: "ddp", term: "DDP", name: "Delivered Duty Paid", category: "Trade", definition: "매도인이 목적지까지 운송과 수입 관세·세금 부담까지 책임지는 조건입니다.", example: "DDP 조건은 판매자 부담이 크므로 현지 통관 가능성과 세무 리스크를 확인해야 합니다.", related: ["DAP", "Incoterms"] },
-    { id: "bl", term: "B/L", name: "Bill of Lading", category: "Documentation", definition: "운송인이 화물 수령 또는 선적을 증명하기 위해 발행하는 운송 문서입니다.", example: "수입 통관과 화물 인도 과정에서 B/L 번호가 자주 필요합니다.", related: ["Sea Waybill", "Arrival Notice"] },
-    { id: "awb", term: "AWB", name: "Air Waybill", category: "Air", definition: "항공사가 항공화물 운송을 위해 발행하는 운송장 번호와 문서입니다.", example: "AWB 번호는 항공화물 추적과 도착 통지 확인에 사용됩니다.", related: ["Chargeable Weight", "Air Cargo"] },
+    { id: "bl", term: "B/L", name: "Bill of Lading", korean: "선하증권", category: "Documentation", definition: "운송인이 화물 수령 또는 선적을 증명하기 위해 발행하는 운송 문서입니다.", example: "수입 통관과 화물 인도 과정에서 B/L 번호가 자주 필요합니다.", related: ["Sea Waybill", "Arrival Notice", "Commercial Invoice"], aliases: ["Bill of Lading", "BL", "선하증권"], relatedResource: { label: "Commercial Invoice 작성 시 자주 발생하는 7가지 오류", url: "posts/commercial-invoice-common-mistakes/" } },
+    { id: "awb", term: "AWB", name: "Air Waybill", korean: "항공화물운송장", category: "Air", definition: "항공사가 항공화물 운송을 위해 발행하는 운송장 번호와 문서입니다.", example: "AWB 번호는 항공화물 추적과 도착 통지 확인에 사용됩니다.", related: ["Chargeable Weight", "Air Cargo", "Commercial Invoice"], aliases: ["Air Waybill", "항공운송장", "항공화물운송장"], relatedResource: { label: "Commercial Invoice 작성 시 자주 발생하는 7가지 오류", url: "posts/commercial-invoice-common-mistakes/" } },
     { id: "fcl", term: "FCL", name: "Full Container Load", category: "Ocean", definition: "한 화주의 화물로 컨테이너 한 대를 사용하는 해상 운송 방식입니다.", example: "물량이 충분하거나 혼재 리스크를 줄이고 싶다면 FCL을 검토합니다.", related: ["LCL", "Container"] },
     { id: "lcl", term: "LCL", name: "Less than Container Load", category: "Ocean", definition: "여러 화주의 화물을 한 컨테이너에 혼재하여 운송하는 방식입니다.", example: "소량 화물은 LCL이 유리할 수 있지만 콘솔 작업과 리드타임을 확인해야 합니다.", related: ["FCL", "CBM"] },
     { id: "eta", term: "ETA", name: "Estimated Time of Arrival", category: "Logistics", definition: "선박, 항공기, 차량 또는 화물의 예상 도착 시점입니다.", example: "ETA는 운항 상황에 따라 변경될 수 있으므로 최신 스케줄을 확인합니다.", related: ["ETD", "Tracking"] },
@@ -73,7 +73,10 @@ const terms = {
     { id: "detention", term: "Detention", name: "지체료", category: "Ocean", definition: "컨테이너를 터미널 밖으로 반출한 뒤 무료 사용 기간을 초과했을 때 발생하는 비용입니다.", example: "수입자가 빈 컨테이너 반납을 지연하면 detention이 발생할 수 있습니다.", related: ["Demurrage", "Free Time"] },
     { id: "chargeable-weight", term: "Chargeable Weight", name: "운임중량", category: "Air", definition: "실중량과 부피중량 중 운임 산정에 적용하는 중량입니다.", example: "항공화물은 가볍지만 부피가 크면 운임중량이 실제 중량보다 클 수 있습니다.", related: ["Dimensional Weight", "CBM"] },
     { id: "coo", term: "COO", name: "Certificate of Origin", category: "Documentation", definition: "상품의 원산지를 증명하기 위해 발급되는 문서입니다.", example: "FTA 적용이나 수입 규제 확인 시 원산지증명서가 필요할 수 있습니다.", related: ["Origin", "Customs"] },
-    { id: "hs-code", term: "HS Code", name: "품목분류번호", category: "Customs", definition: "국제 무역 상품 분류에 사용하는 코드로 관세와 규제 확인의 출발점입니다.", example: "같은 제품도 재질과 용도에 따라 HS Code가 달라질 수 있습니다.", related: ["Customs Clearance", "Duty"] }
+    { id: "commercial-invoice", term: "Commercial Invoice", name: "Commercial Invoice", korean: "상업송장", category: "Documentation", definition: "판매자가 발행하며 품목, 수량, 가격, 통화, 거래 당사자와 거래 조건을 기록하는 국제무역 문서입니다.", example: "실무에서는 PO/계약서, Packing List, B/L 또는 AWB와 금액·수량·품목 정보가 일치하는지 확인해야 합니다.", related: ["Packing List", "B/L", "AWB", "HS Code", "Incoterms"], aliases: ["Invoice", "CI", "상업송장", "커머셜 인보이스"], relatedResource: { label: "Commercial Invoice 작성 시 자주 발생하는 7가지 오류", url: "posts/commercial-invoice-common-mistakes/" } },
+    { id: "packing-list", term: "Packing List", name: "Packing List", korean: "포장명세서", category: "Documentation", definition: "포장 단위, 수량, 중량, 치수, 포장 번호와 마크를 정리해 실제 화물 구성을 확인하는 문서입니다.", example: "Commercial Invoice의 품목·수량과 Packing List의 포장 수량·중량이 맞지 않으면 통관, 창고 검수, 클레임 처리에서 문제가 생길 수 있습니다.", related: ["Commercial Invoice", "B/L", "CBM", "HS Code"], aliases: ["PL", "포장명세서", "패킹리스트"], relatedResource: { label: "Commercial Invoice 작성 시 자주 발생하는 7가지 오류", url: "posts/commercial-invoice-common-mistakes/" } },
+    { id: "incoterms", term: "Incoterms", name: "International Commercial Terms", korean: "인코텀즈", category: "Trade", definition: "국제 거래에서 매도인과 매수인의 비용 부담, 위험 이전, 운송 관련 책임을 정리한 무역 조건 규칙입니다.", example: "Invoice에 적힌 FOB, CIF, FCA 같은 조건은 운임 포함 범위와 위험 이전 시점을 판단하는 기준이 됩니다.", related: ["FOB", "CIF", "FCA", "Commercial Invoice"], aliases: ["Incoterms 2020", "인코텀즈"], relatedResource: { label: "FOB vs CIF, 수입자에게 어떤 조건이 유리할까?", url: "posts/fob-vs-cif/" } },
+    { id: "hs-code", term: "HS Code", name: "품목분류번호", korean: "품목분류번호", category: "Customs", definition: "국제 무역 상품 분류에 사용하는 코드로 관세와 규제 확인의 출발점입니다.", example: "같은 제품도 재질과 용도에 따라 HS Code가 달라질 수 있습니다.", related: ["Customs Clearance", "Duty", "Commercial Invoice"], aliases: ["Harmonized System Code", "HS", "품목분류번호"], relatedResource: { label: "Commercial Invoice 작성 시 자주 발생하는 7가지 오류", url: "posts/commercial-invoice-common-mistakes/" } }
   ],
   en: [
     { id: "fob", term: "FOB", name: "Free On Board", category: "Trade", definition: "A sea freight term where the seller covers cost and risk until goods are loaded on board.", example: "Under FOB Busan, the buyer usually reviews ocean freight and insurance after loading.", related: ["FCA", "CFR", "CIF"] },
@@ -82,8 +85,8 @@ const terms = {
     { id: "fca", term: "FCA", name: "Free Carrier", category: "Trade", definition: "A term where the seller delivers goods to the carrier at the named place and handles export clearance.", example: "FCA is often more practical than FOB for air freight and containerized shipments.", related: ["EXW", "FOB"] },
     { id: "exw", term: "EXW", name: "Ex Works", category: "Trade", definition: "A term where the seller makes goods available at its premises and the buyer carries most cost and risk afterward.", example: "An EXW quote may look low, but pickup, export clearance, and inland freight need separate review.", related: ["FCA", "DDP"] },
     { id: "ddp", term: "DDP", name: "Delivered Duty Paid", category: "Trade", definition: "A term where the seller is responsible for delivery to destination including import duties and taxes.", example: "Before accepting DDP, confirm local import compliance and tax responsibilities.", related: ["DAP", "Incoterms"] },
-    { id: "bl", term: "B/L", name: "Bill of Lading", category: "Documentation", definition: "A transport document issued by a carrier to evidence cargo receipt or shipment.", example: "The B/L number is often used during customs clearance and cargo release.", related: ["Sea Waybill", "Arrival Notice"] },
-    { id: "awb", term: "AWB", name: "Air Waybill", category: "Air", definition: "A transport document and number issued for air cargo shipments.", example: "The AWB number is used for air cargo status and arrival notice checks.", related: ["Chargeable Weight", "Air Cargo"] },
+    { id: "bl", term: "B/L", name: "Bill of Lading", korean: "선하증권", category: "Documentation", definition: "A transport document issued by a carrier to evidence cargo receipt or shipment.", example: "The B/L number is often used during customs clearance and cargo release.", related: ["Sea Waybill", "Arrival Notice", "Commercial Invoice"], aliases: ["Bill of Lading", "BL"], relatedResource: { label: "Commercial Invoice common mistakes", url: "posts/commercial-invoice-common-mistakes/" } },
+    { id: "awb", term: "AWB", name: "Air Waybill", korean: "항공화물운송장", category: "Air", definition: "A transport document and number issued for air cargo shipments.", example: "The AWB number is used for air cargo status and arrival notice checks.", related: ["Chargeable Weight", "Air Cargo", "Commercial Invoice"], aliases: ["Air Waybill"], relatedResource: { label: "Commercial Invoice common mistakes", url: "posts/commercial-invoice-common-mistakes/" } },
     { id: "fcl", term: "FCL", name: "Full Container Load", category: "Ocean", definition: "Ocean freight where one shipper uses a full container.", example: "FCL may be preferred when cargo volume is large enough or mixing risk should be reduced.", related: ["LCL", "Container"] },
     { id: "lcl", term: "LCL", name: "Less than Container Load", category: "Ocean", definition: "Ocean freight where cargo from multiple shippers is consolidated in one container.", example: "LCL can suit smaller shipments, but consolidation handling and lead time should be checked.", related: ["FCL", "CBM"] },
     { id: "eta", term: "ETA", name: "Estimated Time of Arrival", category: "Logistics", definition: "The expected arrival time of a vessel, aircraft, truck, or shipment.", example: "ETA can change with congestion, weather, and schedule updates.", related: ["ETD", "Tracking"] },
@@ -92,7 +95,10 @@ const terms = {
     { id: "detention", term: "Detention", name: "Detention", category: "Ocean", definition: "A charge that can apply when a container is kept outside the terminal beyond free time.", example: "Late empty-container return can lead to detention charges.", related: ["Demurrage", "Free Time"] },
     { id: "chargeable-weight", term: "Chargeable Weight", name: "Chargeable Weight", category: "Air", definition: "The weight used to rate freight, usually the greater of actual and dimensional weight.", example: "Light but bulky air cargo can be charged by dimensional weight.", related: ["Dimensional Weight", "CBM"] },
     { id: "coo", term: "COO", name: "Certificate of Origin", category: "Documentation", definition: "A document used to certify the origin of goods.", example: "A COO may be needed for FTA treatment or import compliance checks.", related: ["Origin", "Customs"] },
-    { id: "hs-code", term: "HS Code", name: "Harmonized System Code", category: "Customs", definition: "A product classification code used as a starting point for customs duty and compliance checks.", example: "Material and use can change the HS classification for similar products.", related: ["Customs Clearance", "Duty"] }
+    { id: "commercial-invoice", term: "Commercial Invoice", name: "Commercial Invoice", korean: "상업송장", category: "Documentation", definition: "A commercial document issued by the seller that records the goods, quantity, price, currency, buyer/seller information, and other transaction details used in international trade.", example: "In practice, it should be checked against the PO or contract, Packing List, and shipping documents for consistency.", related: ["Packing List", "B/L", "AWB", "HS Code", "Incoterms"], aliases: ["Invoice", "CI"], relatedResource: { label: "Commercial Invoice common mistakes", url: "posts/commercial-invoice-common-mistakes/" } },
+    { id: "packing-list", term: "Packing List", name: "Packing List", korean: "포장명세서", category: "Documentation", definition: "A shipment document that lists package count, quantity, weight, dimensions, marks, and packing details for the physical cargo.", example: "Mismatch between the Commercial Invoice and Packing List can create customs, warehouse, or claims issues.", related: ["Commercial Invoice", "B/L", "CBM", "HS Code"], aliases: ["PL"], relatedResource: { label: "Commercial Invoice common mistakes", url: "posts/commercial-invoice-common-mistakes/" } },
+    { id: "incoterms", term: "Incoterms", name: "International Commercial Terms", korean: "인코텀즈", category: "Trade", definition: "Rules used in international trade to define buyer and seller responsibilities for cost, risk transfer, delivery, and transport-related obligations.", example: "Terms such as FOB, CIF, and FCA on an invoice help determine freight scope and risk transfer points.", related: ["FOB", "CIF", "FCA", "Commercial Invoice"], aliases: ["Incoterms 2020"], relatedResource: { label: "FOB vs CIF: Which Term Works Better for Importers?", url: "posts/fob-vs-cif/" } },
+    { id: "hs-code", term: "HS Code", name: "Harmonized System Code", korean: "품목분류번호", category: "Customs", definition: "A product classification code used as a starting point for customs duty and compliance checks.", example: "Material and use can change the HS classification for similar products.", related: ["Customs Clearance", "Duty", "Commercial Invoice"], aliases: ["Harmonized System Code", "HS"], relatedResource: { label: "Commercial Invoice common mistakes", url: "posts/commercial-invoice-common-mistakes/" } }
   ]
 };
 function currentLang() {
@@ -669,6 +675,116 @@ function plainText(value, fallback = "") {
   return (div.textContent || div.innerText || fallback).replace(/\s+/g, " ").trim();
 }
 
+function escapeAttribute(value) {
+  return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
+function escapeHtml(value) {
+  return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
+function firstImageUrlFromHtml(value) {
+  if (!value || !/<img/i.test(String(value))) return "";
+  const div = document.createElement("div");
+  div.innerHTML = String(value);
+  const img = div.querySelector("img[src], img[data-src], img[data-original]");
+  return img?.getAttribute("src") || img?.getAttribute("data-src") || img?.getAttribute("data-original") || "";
+}
+
+function newsImageCandidate(value) {
+  if (!value) return "";
+  if (typeof value === "string") return value;
+  if (Array.isArray(value)) {
+    for (const entry of value) {
+      const candidate = newsImageCandidate(entry);
+      if (candidate) return candidate;
+    }
+    return "";
+  }
+  if (typeof value === "object") {
+    return value.url || value.link || value.href || value.thumbnail || value["@url"] || "";
+  }
+  return "";
+}
+
+function validNewsImageUrl(value) {
+  const src = String(value || "").trim();
+  if (!/^https?:\/\//i.test(src)) return "";
+  if (/news\.google\.com\/rss|\/articles\//i.test(src)) return "";
+  return src;
+}
+
+function resolveNewsImage(item) {
+  const candidates = [
+    item.thumbnail,
+    item["media:content"],
+    item["media:thumbnail"],
+    item.enclosure,
+    firstImageUrlFromHtml(item.content),
+    firstImageUrlFromHtml(item.description)
+  ];
+  for (const value of candidates) {
+    const src = validNewsImageUrl(newsImageCandidate(value));
+    if (src) return src;
+  }
+  return "";
+}
+
+function newsCategory(item, parsed, lang) {
+  const text = [
+    item.title,
+    parsed?.headline,
+    parsed?.source,
+    Array.isArray(item.categories) ? item.categories.join(" ") : ""
+  ].join(" ").toLowerCase();
+  const labels = {
+    trade: lang === "ko" ? "무역" : "Trade",
+    shipping: lang === "ko" ? "해운" : "Shipping",
+    supply: lang === "ko" ? "공급망" : "Supply Chain",
+    regulation: lang === "ko" ? "규제" : "Regulation",
+    market: lang === "ko" ? "시장" : "Market",
+    air: lang === "ko" ? "항공화물" : "Air Cargo"
+  };
+  if (/air|aviation|cargo|항공|항공화물/.test(text)) return { key: "air", label: labels.air };
+  if (/ship|shipping|ocean|vessel|port|container|해운|선박|항만|컨테이너|물류 관문/.test(text)) return { key: "shipping", label: labels.shipping };
+  if (/customs|compliance|regulation|policy|tariff|duty|통관|관세|규제|정책/.test(text)) return { key: "regulation", label: labels.regulation };
+  if (/market|price|freight|rate|commodity|index|시장|운임|가격|원자재/.test(text)) return { key: "market", label: labels.market };
+  if (/supply chain|logistics|warehouse|route|공급망|물류/.test(text)) return { key: "supply", label: labels.supply };
+  return { key: "trade", label: labels.trade };
+}
+
+function newsVisualIcon(category) {
+  const icons = {
+    shipping: '<path d="M6 14h12l-2 4H8l-2-4Z"/><path d="M8 14V8h7v6"/><path d="M10 8V5h3v3"/><path d="M5 19c1.2 0 1.2-.7 2.4-.7s1.2.7 2.4.7 1.2-.7 2.4-.7 1.2.7 2.4.7 1.2-.7 2.4-.7 1.2.7 2.4.7"/>',
+    supply: '<path d="M7 7h4v4H7z"/><path d="M13 13h4v4h-4z"/><path d="M15 7h2v2"/><path d="M17 7l-4 4"/><path d="M9 13v4h2"/>',
+    regulation: '<path d="M8 5h6l3 3v11H8z"/><path d="M14 5v4h4"/><path d="M10 13h6"/><path d="M10 16h4"/>',
+    market: '<path d="M6 18V9"/><path d="M11 18V6"/><path d="M16 18v-5"/><path d="M5 19h14"/><path d="M7 9l4-3 5 7"/>',
+    air: '<path d="M5 13l14-7-4 14-3-6-7-1Z"/><path d="M12 14l-3 4"/>',
+    trade: '<circle cx="12" cy="12" r="7"/><path d="M5 12h14"/><path d="M12 5c2 2 3 4.3 3 7s-1 5-3 7"/><path d="M12 5c-2 2-3 4.3-3 7s1 5 3 7"/>'
+  };
+  return `<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${icons[category.key] || icons.trade}</svg>`;
+}
+
+function wireNewsImageFallbacks(root = document) {
+  root.querySelectorAll("img[data-news-image]").forEach((img) => {
+    if (img.dataset.fallbackWired === "true") return;
+    img.dataset.fallbackWired = "true";
+    img.addEventListener("error", () => {
+      const media = img.closest(".news-media");
+      if (media) media.classList.add("is-fallback");
+      img.removeAttribute("src");
+      img.hidden = true;
+    }, { once: true });
+  });
+}
+
 function renderHomeCarousel(target, items, renderItem, options = {}) {
   if (!target || !items.length) return;
   let index = 0;
@@ -706,6 +822,7 @@ function renderHomeCarousel(target, items, renderItem, options = {}) {
         }).join("")}
       </div>
     `;
+    wireNewsImageFallbacks(target);
   };
 
   target.addEventListener("click", (event) => {
@@ -727,20 +844,29 @@ function renderHomeCarousel(target, items, renderItem, options = {}) {
   render();
 }
 
-function newsThumb(item, parsed) {
-  const src = item.thumbnail || item.enclosure?.link || item.enclosure?.url || "";
+function newsThumb(item, parsed, options = {}) {
+  const lang = options.lang || currentLang();
+  const category = options.category || newsCategory(item, parsed, lang);
+  const src = resolveNewsImage(item);
+  const source = escapeHtml(parsed.source || "News");
+  const label = options.fallbackLabel || "LOGILEE";
   if (src) {
     return `
-      <div class="posting-thumb posting-thumb--compact">
-        <img src="${src}" alt="${parsed.headline}" loading="lazy" width="640" height="360">
-        <span>${parsed.source || "News"}</span>
+      <div class="posting-thumb posting-thumb--compact news-media news-media--${category.key}">
+        <img src="${escapeAttribute(src)}" alt="${escapeAttribute(parsed.headline)}" loading="lazy" decoding="async" width="640" height="360" data-news-image>
+        <span>${source}</span>
+        <strong class="news-fallback-mark">${label}</strong>
+        <em class="news-fallback-category">${escapeHtml(category.label)}</em>
+        <i class="news-fallback-icon">${newsVisualIcon(category)}</i>
       </div>
     `;
   }
   return `
-    <div class="posting-thumb posting-thumb--fallback posting-thumb--compact" role="img" aria-label="${parsed.headline}">
-      <span>${parsed.source || "News"}</span>
-      <strong>LOGILEE</strong>
+    <div class="posting-thumb posting-thumb--fallback posting-thumb--compact news-media news-media--${category.key} is-fallback" role="img" aria-label="${escapeAttribute(parsed.headline)}">
+      <span>${source}</span>
+      <strong class="news-fallback-mark">${label}</strong>
+      <em class="news-fallback-category">${escapeHtml(category.label)}</em>
+      <i class="news-fallback-icon">${newsVisualIcon(category)}</i>
     </div>
   `;
 }
@@ -781,14 +907,15 @@ async function loadHomeNews() {
         const parsed = splitNewsTitle(item.title);
         const time = formatNewsTime(item.pubDate, lang);
         const summary = plainText(item.description).replace(parsed.headline, "").slice(0, 130);
+        const category = newsCategory(item, parsed, lang);
         return `
           <a class="home-slider-card" href="${item.link}" target="_blank" rel="noopener">
-            ${newsThumb(item, parsed)}
+            ${newsThumb(item, parsed, { lang, category, fallbackLabel: "LOGILEE NEWS" })}
             <div class="home-slider-copy">
-              <span class="kicker">${parsed.source || "News"}</span>
-              <h3>${parsed.headline}</h3>
-              ${summary ? `<p>${summary}</p>` : ""}
-              <small>${[time, parsed.source].filter(Boolean).join(" · ")}</small>
+              <span class="kicker">${escapeHtml(parsed.source || "News")}</span>
+              <h3>${escapeHtml(parsed.headline)}</h3>
+              ${summary ? `<p>${escapeHtml(summary)}</p>` : ""}
+              <small>${escapeHtml([time, parsed.source].filter(Boolean).join(" · "))}</small>
             </div>
           </a>
         `;
@@ -808,13 +935,26 @@ async function loadHomeNews() {
 function getPostsForCurrentLang() {
   const posts = Array.isArray(window.LOGILEE_POSTS) ? window.LOGILEE_POSTS : [];
   const lang = currentLang();
+  const isPublished = (post) => String(post.status || "published").toLowerCase() === "published";
+  const postTime = (post) => {
+    const value = new Date(post.publishedAt || post.date || 0).getTime();
+    return Number.isFinite(value) ? value : 0;
+  };
   return posts
-    .filter((post) => post.language === lang)
-    .sort((a, b) => new Date(b.date) - new Date(a.date));
+    .filter((post) => post.language === lang && isPublished(post) && post.path && post.title)
+    .sort((a, b) => postTime(b) - postTime(a) || String(a.title).localeCompare(String(b.title)));
 }
 
 function postUrl(post) {
   const encodedPath = encodeURI(post.path || "");
+  const inArchive = /\/posts\/?$/i.test(location.pathname) || /\/posts\/index\.html$/i.test(location.pathname);
+  return `${inArchive ? "../../" : "../"}${encodedPath}`;
+}
+
+function postAssetUrl(assetPath) {
+  if (!assetPath) return "";
+  if (/^(?:https?:)?\/\//i.test(assetPath) || assetPath.startsWith("/")) return assetPath;
+  const encodedPath = encodeURI(assetPath);
   const inArchive = /\/posts\/?$/i.test(location.pathname) || /\/posts\/index\.html$/i.test(location.pathname);
   return `${inArchive ? "../../" : "../"}${encodedPath}`;
 }
@@ -834,7 +974,7 @@ function postThumb(post, compact = false) {
   if (post.image) {
     return `
       <div class="posting-thumb${compact ? " posting-thumb--compact" : ""}">
-        <img src="${post.image}" alt="${post.imageAlt || post.title}" loading="lazy" width="640" height="360">
+        <img src="${postAssetUrl(post.image)}" alt="${post.imageAlt || post.title}" loading="lazy" width="640" height="360">
         <span>${label}</span>
       </div>
     `;
@@ -1086,12 +1226,12 @@ function wireDictionary() {
   const lang = currentLang();
   const termCount = document.querySelector("[data-term-count]");
   if (termCount) termCount.textContent = `${terms[lang].length} ${lang === "ko" ? "terms" : "terms"}`;
+  const normalizeTerm = (value) => (value || "").toLowerCase().replace(/[^a-z0-9가-힣]/g, "");
   const findTerm = (value) => {
-    const normalized = (value || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+    const normalized = normalizeTerm(value);
     return terms[lang].find((term) => {
-      const id = term.id.toLowerCase().replace(/[^a-z0-9]/g, "");
-      const label = term.term.toLowerCase().replace(/[^a-z0-9]/g, "");
-      return id === normalized || label === normalized;
+      const candidates = [term.id, term.term, term.name, term.korean, ...(term.aliases || [])];
+      return candidates.some((candidate) => normalizeTerm(candidate) === normalized);
     });
   };
   const render = (term, updateUrl = false) => {
@@ -1099,10 +1239,12 @@ function wireDictionary() {
       <span class="kicker">${term.category}</span>
       <h2 id="${term.id}">${term.term}</h2>
       <p class="lead">${term.name}</p>
+      ${term.korean ? `<p class="muted"><strong>${lang === "ko" ? "한국어" : "Korean"}:</strong> ${term.korean}</p>` : ""}
       <p>${term.definition}</p>
-      <div class="notice"><strong>${lang === "ko" ? "실무 예시" : "Practical example"}</strong><br>${term.example}</div>
+      <div class="notice"><strong>${lang === "ko" ? "실무 참고" : "Practical note"}</strong><br>${term.example}</div>
       <h3>${lang === "ko" ? "관련 용어" : "Related terms"}</h3>
       <div class="chip-row">${term.related.map((item) => `<span class="chip">${item}</span>`).join("")}</div>
+      ${term.relatedResource ? `<p class="dictionary-resource-link"><strong>${lang === "ko" ? "관련 자료" : "Related resource"}:</strong> <a href="${term.relatedResource.url}">${term.relatedResource.label} →</a></p>` : ""}
       <p class="muted">${lang === "ko" ? "Updated" : "Updated"}: 2026-07-26 · ${lang === "ko" ? "참고 정보입니다. 계약 확정 전 공식 기준을 확인하세요." : "For reference only. Confirm official standards before finalizing contracts."}</p>
     `;
     list.querySelectorAll("button").forEach((button) => button.setAttribute("aria-pressed", String(button.dataset.term === term.id)));
@@ -1118,7 +1260,9 @@ function wireDictionary() {
     const query = event.currentTarget.querySelector("input")?.value || "";
     const normalized = query.toLowerCase().trim();
     const match = findTerm(query) || terms[lang].find((term) => {
-      return [term.term, term.name, term.definition, term.category].some((value) => value.toLowerCase().includes(normalized));
+      return [term.term, term.name, term.korean, term.definition, term.category, ...(term.aliases || [])]
+        .filter(Boolean)
+        .some((value) => value.toLowerCase().includes(normalized));
     });
     if (match) {
       render(match, true);
@@ -2136,14 +2280,22 @@ async function wireNewsPage() {
     const items = Array.isArray(data.items) ? data.items.slice(0, 12) : [];
     target.innerHTML = items.length ? items.map((item) => {
       const parsed = splitNewsTitle(item.title);
+      const time = formatNewsTime(item.pubDate, lang);
+      const category = newsCategory(item, parsed, lang);
+      const originalLabel = lang === "ko" ? "원문 기사 보기" : "Original Article";
       return `
-        <a class="result-item" href="${item.link}" target="_blank" rel="noopener">
-          <span class="kicker">${parsed.source || "News"} · ${formatNewsTime(item.pubDate, lang)}</span>
-          <h3>${parsed.headline}</h3>
-          <p class="muted">Category: Trade / Supply Chain · Original Article Link</p>
+        <a class="result-item news-result-card" href="${escapeAttribute(item.link)}" target="_blank" rel="noopener">
+          ${newsThumb(item, parsed, { lang, category, fallbackLabel: "LOGILEE NEWS" })}
+          <div class="news-result-copy">
+            <span class="kicker">${escapeHtml([parsed.source || "News", time].filter(Boolean).join(" · "))}</span>
+            <h3>${escapeHtml(parsed.headline)}</h3>
+            <p class="muted">${escapeHtml(category.label)} · ${escapeHtml(originalLabel)}</p>
+            <span class="news-original-link">${escapeHtml(originalLabel)} →</span>
+          </div>
         </a>
       `;
     }).join("") : `<div class="data-empty">No news items available.</div>`;
+    wireNewsImageFallbacks(target);
   } catch (error) {
     console.warn("News page unavailable:", error);
     dataError(target, "News source unavailable.");
