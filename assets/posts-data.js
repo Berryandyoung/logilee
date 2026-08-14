@@ -1,5 +1,19 @@
 window.LOGILEE_POSTS = [
   {
+    "slug": "china-typhoon-port-delay-shipment-impact",
+    "language": "ko",
+    "status": "published",
+    "title": "중국 항만이 태풍으로 멈추면 내 화물에는 어떤 일이 생길까?",
+    "description": "중국 항만의 태풍 운영 중단이 선박 대기, Port Omission, Rollover와 ETA에 어떻게 이어지는지 실제 수입자가 확인해야 할 항목을 중심으로 설명합니다.",
+    "category": "market",
+    "date": "2026-08-14",
+    "publishedAt": "2026-08-14T07:51:20.040Z",
+    "readingTime": "7분 읽기",
+    "path": "ko/posts/china-typhoon-port-delay-shipment-impact/",
+    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_34da3b8f-7d59-4526-8381-7ac3e0298577-ChatGPT%20Image%202026%EB%85%84%208%EC%9B%94%2014%EC%9D%BC%20%EC%98%A4%ED%9B%84%2004_50_55.png?alt=media&token=31ad7c7c-ba4b-42f2-a3b0-3e11ba56f202",
+    "imageAlt": "태풍과 악천후의 영향을 받는 중국 컨테이너 항만과 화물선"
+  },
+  {
     "slug": "rhine-low-water-logistics-impact",
     "language": "ko",
     "status": "published",
