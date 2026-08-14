@@ -14,7 +14,7 @@
   <script defer src="../assets/posts-data.js"></script>
   <script defer src="../assets/logilee-app.js"></script>
 </head>
-<body>
+<body class="home-page">
 <div class="shell workspace-shell">
   <aside class="rail workspace-rail" aria-label="LOGILEE 업무 메뉴">
     <a class="brand compact-brand" href="./"><strong>LOGILEE</strong><span>Global Trade Workspace</span></a>
@@ -73,56 +73,57 @@
             <div class="section-head"><div><h2>빠른 도구</h2><p>실무에서 자주 쓰는 기능으로 바로 이동합니다.</p></div></div>
             <div class="tool-icons compact-tool-grid"><a href="cbm.html"><span class="icon"><i data-lucide="calculator"></i></span><strong>CBM Calculator</strong></a><a href="track.html"><span class="icon"><i data-lucide="radar"></i></span><strong>Shipment Tracking</strong></a><a href="currency-converter.html"><span class="icon"><i data-lucide="badge-dollar-sign"></i></span><strong>환율 계산기</strong></a><a href="ports.html"><span class="icon"><i data-lucide="anchor"></i></span><strong>Port Search</strong></a><a href="eu-trade-explorer.html"><span class="icon"><i data-lucide="chart-column"></i></span><strong>EU Trade</strong></a><a href="freight-market.html"><span class="icon"><i data-lucide="chart-no-axes-combined"></i></span><strong>Freight Market</strong></a></div>
           </section>
-
-          <section class="panel market-card home-market-dashboard">
-            <div class="section-head market-head"><div><h2>Market Snapshot</h2><p data-market-updated>최신 이용 가능 시장 데이터</p></div><a class="link-more" href="freight-market.html">자세히 보기 -></a></div>
-            <div class="market-dashboard-grid" data-market-snapshot>
-              <div class="market-section-label">FX</div>
-              <div class="skeleton-line"><strong>Exchange Rate</strong><span>Loading...</span></div>
-              <div class="market-section-label">Freight</div>
-              <div class="skeleton-line"><strong>Freight Market</strong><span>Loading...</span></div>
-            </div>
-            <span class="status market-status-inline" data-market-status>Latest Data</span>
-          </section>
         </aside>
 
-        <div class="workspace-main home-content-flow">
-          <section class="panel tracking-panel-home">
-            <div class="section-head"><div><h2>화물 조회 및 Tracking</h2><p>확인이 필요한 번호에 맞는 공식 carrier 조회 페이지를 엽니다.</p></div></div>
-            <div class="tracking-actions"><a href="track.html"><span class="icon"><i data-lucide="container"></i></span><strong>Container 조회</strong><small>공식 carrier 조회 열기</small></a><a href="track.html"><span class="icon"><i data-lucide="file-text"></i></span><strong>B/L 조회</strong><small>선하증권 번호 조회</small></a><a href="track.html"><span class="icon"><i data-lucide="clipboard-list"></i></span><strong>Booking 조회</strong><small>부킹 번호 조회</small></a><a href="track.html"><span class="icon"><i data-lucide="plane"></i></span><strong>AWB 조회</strong><small>항공화물 포털 열기</small></a><a href="track.html"><span class="icon"><i data-lucide="truck"></i></span><strong>Courier 조회</strong><small>택배 carrier 페이지 열기</small></a><a href="track.html"><span class="icon"><i data-lucide="radar"></i></span><strong>Ocean Carrier 조회</strong><small>지원 carrier 페이지 열기</small></a></div>
-            <a class="link-more" href="track.html">전체 Tracking 도구 보기 -></a>
-          </section>
+        <section class="panel market-card home-market-dashboard">
+          <div class="section-head market-head"><div><h2>Market Snapshot</h2><p data-market-updated>최신 이용 가능 시장 데이터</p></div><a class="link-more" href="freight-market.html">더보기 →</a></div>
+          <div class="market-dashboard-grid" data-market-snapshot>
+            <div class="market-section-label">FX</div>
+            <div class="skeleton-line"><strong>Exchange Rate</strong><span>Loading...</span></div>
+            <div class="market-section-label">Freight</div>
+            <div class="skeleton-line"><strong>Freight Market</strong><span>Loading...</span></div>
+          </div>
+          <span class="status market-status-inline" data-market-status>Latest Data</span>
+        </section>
 
+        <div class="workspace-main home-content-flow">
           <section class="panel home-latest-panel">
             <div class="home-latest-grid">
-              <section class="home-latest-column news-panel latest-news home-latest-news" aria-labelledby="home-news-title-ko">
-                <div class="section-head"><div><h2 id="home-news-title-ko">최신 뉴스</h2><p>무역 및 물류 시장의 주요 헤드라인을 빠르게 확인하세요.</p></div><a class="link-more" href="news.html">더보기</a></div>
-                <div class="news-list compact-news-list" data-home-news data-news-query="무역 물류">
-                  <div class="data-empty skeleton-line">최신 뉴스를 불러오는 중입니다...</div>
-                </div>
-              </section>
               <section class="home-latest-column latest-posting" aria-labelledby="home-posting-title-ko" data-latest-posting>
-                <div class="section-head"><div><h2 id="home-posting-title-ko">최신 포스트</h2><p>LOGILEE가 정리한 무역, 물류, 실무 가이드입니다.</p></div><a class="link-more" href="posts/">전체 보기</a></div>
+                <div class="section-head"><div><h2 id="home-posting-title-ko">최신 포스트</h2><p>LOGILEE가 정리한 무역, 물류, 실무 가이드입니다.</p></div><a class="link-more" href="posts/">더보기 →</a></div>
                 <div class="posting-list" data-posting-slider>
                   <div class="data-empty">최신 포스트를 불러오는 중입니다...</div>
                 </div>
               </section>
+              <section class="home-latest-column news-panel latest-news home-latest-news" aria-labelledby="home-news-title-ko">
+                <div class="section-head"><div><h2 id="home-news-title-ko">최신 뉴스</h2><p>무역 및 물류 시장의 주요 헤드라인을 빠르게 확인하세요.</p></div><a class="link-more" href="news.html">더보기 →</a></div>
+                <div class="news-list compact-news-list" data-home-news data-news-query="무역 물류">
+                  <div class="data-empty skeleton-line">최신 뉴스를 불러오는 중입니다...</div>
+                </div>
+              </section>
             </div>
           </section>
 
-          <div class="ad-slot ad-slot--leaderboard home-ad" data-ad-slot>
+          <section class="panel tracking-panel-home">
+            <div class="section-head"><div><h2>화물 조회 및 Tracking</h2><p>확인이 필요한 번호에 맞는 공식 carrier 조회 페이지를 엽니다.</p></div><a class="link-more" href="track.html">전체 Tracking 도구 보기 →</a></div>
+            <div class="tracking-actions"><a href="track.html"><span class="icon"><i data-lucide="container"></i></span><strong>Container 조회</strong><small>공식 carrier 조회 열기</small></a><a href="track.html"><span class="icon"><i data-lucide="file-text"></i></span><strong>B/L 조회</strong><small>선하증권 번호 조회</small></a><a href="track.html"><span class="icon"><i data-lucide="clipboard-list"></i></span><strong>Booking 조회</strong><small>부킹 번호 조회</small></a><a href="track.html"><span class="icon"><i data-lucide="plane"></i></span><strong>AWB 조회</strong><small>항공화물 포털 열기</small></a><a href="track.html"><span class="icon"><i data-lucide="truck"></i></span><strong>Courier 조회</strong><small>택배 carrier 페이지 열기</small></a><a href="track.html"><span class="icon"><i data-lucide="radar"></i></span><strong>Ocean Carrier 조회</strong><small>지원 carrier 페이지 열기</small></a></div>
+          </section>
+
+          <div class="ad-slot ad-slot--leaderboard home-ad is-collapsed" data-ad-slot>
             <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8548711851361478" data-ad-format="auto" data-full-width-responsive="true"></ins>
           </div>
 
-          <section class="panel guide-panel">
-            <div class="section-head"><div><h2>최신 실무 가이드</h2><p>무역 조건, 문서, 규제 확인을 실무 중심으로 정리했습니다.</p></div><a class="link-more" href="learn.html">더보기 -></a></div>
-            <div class="guide-list"><a href="dictionary.html?term=fob"><span class="kicker">Incoterms</span><strong>FOB 조건 실무 이해</strong><small>Incoterms 2020 기준 비용과 위험 이전 시점.</small></a><a href="documents.html"><span class="kicker">Documents</span><strong>Commercial Invoice 체크리스트</strong><small>통관 전 필수 항목과 자주 발생하는 실수.</small></a><a href="dashboard.html"><span class="kicker">Compliance</span><strong>수출입 규제 확인 흐름</strong><small>Compliance Hub에서 공식 기관 참고 링크를 확인합니다.</small></a></div>
-          </section>
+          <div class="home-resource-grid">
+            <section class="panel guide-panel">
+              <div class="section-head"><div><h2>최신 실무 가이드</h2><p>무역 조건, 문서, 규제 확인을 실무 중심으로 정리했습니다.</p></div><a class="link-more" href="learn.html">더보기 →</a></div>
+              <div class="guide-list"><a href="dictionary.html?term=fob"><span class="kicker">Incoterms</span><strong>FOB 조건 실무 이해</strong><small>Incoterms 2020 기준 비용과 위험 이전 시점.</small></a><a href="documents.html"><span class="kicker">Documents</span><strong>Commercial Invoice 체크리스트</strong><small>통관 전 필수 항목과 자주 발생하는 실수.</small></a></div>
+            </section>
 
-          <section class="panel explore-global-trade">
-            <div class="section-head"><div><h2>Explore Global Trade</h2><p>LOGILEE의 주요 업무 영역으로 빠르게 이동하세요.</p></div></div>
-            <div class="explore-grid"><a href="country-trade-profile.html"><i data-lucide="globe-2"></i><strong>Country Profiles</strong><span>Explore</span></a><a href="ports.html"><i data-lucide="anchor"></i><strong>Ports</strong><span>Explore</span></a><a href="../hscode.html"><i data-lucide="barcode"></i><strong>HS Codes</strong><span>Search</span></a><a href="../incoterms-2020.html"><i data-lucide="book-open"></i><strong>Incoterms</strong><span>Learn</span></a></div>
-          </section>
+            <section class="panel explore-global-trade">
+              <div class="section-head"><div><h2>Explore Global Trade</h2><p>LOGILEE의 주요 업무 영역으로 빠르게 이동하세요.</p></div></div>
+              <div class="explore-grid"><a href="country-trade-profile.html"><i data-lucide="globe-2"></i><strong>Country Profiles</strong><span>Explore</span></a><a href="ports.html"><i data-lucide="anchor"></i><strong>Ports</strong><span>Explore</span></a><a href="../hscode.html"><i data-lucide="barcode"></i><strong>HS Codes</strong><span>Search</span></a><a href="../incoterms-2020.html"><i data-lucide="book-open"></i><strong>Incoterms</strong><span>Learn</span></a></div>
+            </section>
+          </div>
         </div>
       </div>
       <footer class="site-footer home-footer" aria-label="Footer">

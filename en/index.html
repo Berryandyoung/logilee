@@ -15,7 +15,7 @@
   <script defer src="../assets/posts-data.js"></script>
   <script defer src="../assets/logilee-app.js"></script>
 </head>
-<body>
+<body class="home-page">
 <div class="shell workspace-shell">
   <aside class="rail workspace-rail" aria-label="LOGILEE workflow menu">
     <a class="brand compact-brand" href="./"><strong>LOGILEE</strong><span>Global Trade Workspace</span></a>
@@ -74,56 +74,57 @@
             <div class="section-head"><div><h2>Quick Tools</h2><p>Fast access to daily trade work.</p></div></div>
             <div class="tool-icons compact-tool-grid"><a href="cbm.html"><span class="icon"><i data-lucide="calculator"></i></span><strong>CBM Calculator</strong></a><a href="track.html"><span class="icon"><i data-lucide="radar"></i></span><strong>Shipment Tracking</strong></a><a href="currency-converter.html"><span class="icon"><i data-lucide="badge-dollar-sign"></i></span><strong>Currency Converter</strong></a><a href="ports.html"><span class="icon"><i data-lucide="anchor"></i></span><strong>Port Search</strong></a><a href="eu-trade-explorer.html"><span class="icon"><i data-lucide="chart-column"></i></span><strong>EU Trade</strong></a><a href="freight-market.html"><span class="icon"><i data-lucide="chart-no-axes-combined"></i></span><strong>Freight Market</strong></a></div>
           </section>
-
-          <section class="panel market-card home-market-dashboard">
-            <div class="section-head market-head"><div><h2>Market Snapshot</h2><p data-market-updated>Latest available market data</p></div><a class="link-more" href="freight-market.html">Market Details -></a></div>
-            <div class="market-dashboard-grid" data-market-snapshot>
-              <div class="market-section-label">FX</div>
-              <div class="skeleton-line"><strong>Exchange Rate</strong><span>Loading...</span></div>
-              <div class="market-section-label">Freight</div>
-              <div class="skeleton-line"><strong>Freight Market</strong><span>Loading...</span></div>
-            </div>
-            <span class="status market-status-inline" data-market-status>Latest Data</span>
-          </section>
         </aside>
 
-        <div class="workspace-main home-content-flow">
-          <section class="panel tracking-panel-home">
-            <div class="section-head"><div><h2>Shipment & Tracking</h2><p>Open supported official tracking pages for the number you need to check.</p></div></div>
-            <div class="tracking-actions"><a href="track.html"><span class="icon"><i data-lucide="container"></i></span><strong>Container Lookup</strong><small>Open official carrier lookup</small></a><a href="track.html"><span class="icon"><i data-lucide="file-text"></i></span><strong>B/L Lookup</strong><small>Open bill of lading lookup</small></a><a href="track.html"><span class="icon"><i data-lucide="clipboard-list"></i></span><strong>Booking Lookup</strong><small>Open booking reference lookup</small></a><a href="track.html"><span class="icon"><i data-lucide="plane"></i></span><strong>AWB Lookup</strong><small>Open airline cargo portals</small></a><a href="track.html"><span class="icon"><i data-lucide="truck"></i></span><strong>Courier Lookup</strong><small>Open parcel carrier pages</small></a><a href="track.html"><span class="icon"><i data-lucide="radar"></i></span><strong>Ocean Carrier Lookup</strong><small>Open supported carrier pages</small></a></div>
-            <a class="link-more" href="track.html">View all tracking tools -></a>
-          </section>
+        <section class="panel market-card home-market-dashboard">
+          <div class="section-head market-head"><div><h2>Market Snapshot</h2><p data-market-updated>Latest available market data</p></div><a class="link-more" href="freight-market.html">More →</a></div>
+          <div class="market-dashboard-grid" data-market-snapshot>
+            <div class="market-section-label">FX</div>
+            <div class="skeleton-line"><strong>Exchange Rate</strong><span>Loading...</span></div>
+            <div class="market-section-label">Freight</div>
+            <div class="skeleton-line"><strong>Freight Market</strong><span>Loading...</span></div>
+          </div>
+          <span class="status market-status-inline" data-market-status>Latest Data</span>
+        </section>
 
+        <div class="workspace-main home-content-flow">
           <section class="panel home-latest-panel">
             <div class="home-latest-grid">
-              <section class="home-latest-column news-panel latest-news home-latest-news" aria-labelledby="home-news-title-en">
-                <div class="section-head"><div><h2 id="home-news-title-en">Latest News</h2><p>Quickly review key trade and logistics market headlines.</p></div><a class="link-more" href="news.html">More</a></div>
-                <div class="news-list compact-news-list" data-home-news data-news-query="global trade logistics">
-                  <div class="data-empty skeleton-line">Loading latest news...</div>
-                </div>
-              </section>
               <section class="home-latest-column latest-posting" aria-labelledby="home-posting-title-en" data-latest-posting>
-                <div class="section-head"><div><h2 id="home-posting-title-en">Latest Posts</h2><p>Original trade insights, logistics guides, and practical resources from LOGILEE.</p></div><a class="link-more" href="posts/">View All</a></div>
+                <div class="section-head"><div><h2 id="home-posting-title-en">Latest Posts</h2><p>Original trade insights, logistics guides, and practical resources from LOGILEE.</p></div><a class="link-more" href="posts/">More →</a></div>
                 <div class="posting-list" data-posting-slider>
                   <div class="data-empty">Loading latest posts...</div>
                 </div>
               </section>
+              <section class="home-latest-column news-panel latest-news home-latest-news" aria-labelledby="home-news-title-en">
+                <div class="section-head"><div><h2 id="home-news-title-en">Latest News</h2><p>Quickly review key trade and logistics market headlines.</p></div><a class="link-more" href="news.html">More →</a></div>
+                <div class="news-list compact-news-list" data-home-news data-news-query="global trade logistics">
+                  <div class="data-empty skeleton-line">Loading latest news...</div>
+                </div>
+              </section>
             </div>
           </section>
 
-          <div class="ad-slot ad-slot--leaderboard home-ad" data-ad-slot>
+          <section class="panel tracking-panel-home">
+            <div class="section-head"><div><h2>Shipment & Tracking</h2><p>Open supported official tracking pages for the number you need to check.</p></div><a class="link-more" href="track.html">View all tracking tools →</a></div>
+            <div class="tracking-actions"><a href="track.html"><span class="icon"><i data-lucide="container"></i></span><strong>Container Lookup</strong><small>Open official carrier lookup</small></a><a href="track.html"><span class="icon"><i data-lucide="file-text"></i></span><strong>B/L Lookup</strong><small>Open bill of lading lookup</small></a><a href="track.html"><span class="icon"><i data-lucide="clipboard-list"></i></span><strong>Booking Lookup</strong><small>Open booking reference lookup</small></a><a href="track.html"><span class="icon"><i data-lucide="plane"></i></span><strong>AWB Lookup</strong><small>Open airline cargo portals</small></a><a href="track.html"><span class="icon"><i data-lucide="truck"></i></span><strong>Courier Lookup</strong><small>Open parcel carrier pages</small></a><a href="track.html"><span class="icon"><i data-lucide="radar"></i></span><strong>Ocean Carrier Lookup</strong><small>Open supported carrier pages</small></a></div>
+          </section>
+
+          <div class="ad-slot ad-slot--leaderboard home-ad is-collapsed" data-ad-slot>
             <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8548711851361478" data-ad-format="auto" data-full-width-responsive="true"></ins>
           </div>
 
-          <section class="panel guide-panel">
-            <div class="section-head"><div><h2>Latest Guides</h2><p>Practical references for trade, documents, and compliance.</p></div><a class="link-more" href="learn.html">More -></a></div>
-            <div class="guide-list"><a href="dictionary.html?term=fob"><span class="kicker">Incoterms</span><strong>What FOB Means in Practice</strong><small>Cost and risk transfer under Incoterms 2020.</small></a><a href="documents.html"><span class="kicker">Documents</span><strong>Commercial Invoice Checklist</strong><small>Required fields and common mistakes before customs.</small></a><a href="dashboard.html"><span class="kicker">Compliance</span><strong>Import / Export Regulation Checks</strong><small>Use the Compliance Hub as a starting point for official references.</small></a></div>
-          </section>
+          <div class="home-resource-grid">
+            <section class="panel guide-panel">
+              <div class="section-head"><div><h2>Latest Guides</h2><p>Practical references for trade, documents, and compliance.</p></div><a class="link-more" href="learn.html">More →</a></div>
+              <div class="guide-list"><a href="dictionary.html?term=fob"><span class="kicker">Incoterms</span><strong>What FOB Means in Practice</strong><small>Cost and risk transfer under Incoterms 2020.</small></a><a href="documents.html"><span class="kicker">Documents</span><strong>Commercial Invoice Checklist</strong><small>Required fields and common mistakes before customs.</small></a></div>
+            </section>
 
-          <section class="panel explore-global-trade">
-            <div class="section-head"><div><h2>Explore Global Trade</h2><p>Move quickly into LOGILEE's core reference areas.</p></div></div>
-            <div class="explore-grid"><a href="country-trade-profile.html"><i data-lucide="globe-2"></i><strong>Country Profiles</strong><span>Explore</span></a><a href="ports.html"><i data-lucide="anchor"></i><strong>Ports</strong><span>Explore</span></a><a href="../hscode-en.html"><i data-lucide="barcode"></i><strong>HS Codes</strong><span>Search</span></a><a href="../incoterms-2020-en.html"><i data-lucide="book-open"></i><strong>Incoterms</strong><span>Learn</span></a></div>
-          </section>
+            <section class="panel explore-global-trade">
+              <div class="section-head"><div><h2>Explore Global Trade</h2><p>Move quickly into LOGILEE's core reference areas.</p></div></div>
+              <div class="explore-grid"><a href="country-trade-profile.html"><i data-lucide="globe-2"></i><strong>Country Profiles</strong><span>Explore</span></a><a href="ports.html"><i data-lucide="anchor"></i><strong>Ports</strong><span>Explore</span></a><a href="../hscode-en.html"><i data-lucide="barcode"></i><strong>HS Codes</strong><span>Search</span></a><a href="../incoterms-2020-en.html"><i data-lucide="book-open"></i><strong>Incoterms</strong><span>Learn</span></a></div>
+            </section>
+          </div>
         </div>
       </div>
       <footer class="site-footer home-footer" aria-label="Footer">

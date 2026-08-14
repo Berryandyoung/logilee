@@ -111,8 +111,6 @@ function enhanceSidebar() {
   rail.dataset.enhanced = "true";
   const brand = rail.querySelector(".compact-brand");
   const topToggle = rail.querySelector("[data-sidebar-toggle]");
-  const upgrade = rail.querySelector(".upgrade-card");
-
   const header = document.createElement("div");
   header.className = "sidebar-header";
   if (brand) header.appendChild(brand);
@@ -172,16 +170,6 @@ function enhanceSidebar() {
     panel.appendChild(inner);
     section.replaceChildren(trigger, panel);
   });
-
-  const footer = document.createElement("div");
-  footer.className = "sidebar-footer";
-  footer.innerHTML = `
-    <div class="sidebar-version">
-      <strong>LOGILEE v1.0.0</strong>
-      <span>&copy; 2025 LOGILEE. All rights reserved.</span>
-    </div>
-  `;
-  rail.appendChild(footer);
 
   if (!document.querySelector("[data-sidebar-overlay]")) {
     const overlay = document.createElement("div");
@@ -496,6 +484,7 @@ function setupAdSlots() {
       slot.setAttribute("aria-hidden", "true");
       return;
     }
+    slot.classList.add("is-collapsed");
     Array.from(slot.childNodes).forEach((node) => {
       if (node.nodeType === Node.TEXT_NODE) node.textContent = "";
     });
@@ -593,7 +582,7 @@ async function loadHomeMarket() {
     }
     fxTarget.outerHTML = `
       ${rows.map(([label, value, digits]) => `
-        <div>
+        <div class="market-data-row market-data-row--fx">
           <strong>${label}</strong>
           <span>${formatRate(value, digits)}</span>
         </div>
@@ -674,6 +663,88 @@ function formatNewsTime(pubDate, lang) {
   }).format(date);
 }
 
+function plainText(value, fallback = "") {
+  const div = document.createElement("div");
+  div.innerHTML = String(value || "");
+  return (div.textContent || div.innerText || fallback).replace(/\s+/g, " ").trim();
+}
+
+function renderHomeCarousel(target, items, renderItem, options = {}) {
+  if (!target || !items.length) return;
+  let index = 0;
+  const dotCount = Math.min(items.length, 5);
+  const slideIndexForDot = (dotIndex) => {
+    if (dotCount < 2 || items.length < 2) return 0;
+    return Math.round((dotIndex * (items.length - 1)) / (dotCount - 1));
+  };
+  const activeDotIndex = () => {
+    if (dotCount < 2 || items.length < 2) return 0;
+    return Math.round((index * (dotCount - 1)) / (items.length - 1));
+  };
+  const labels = {
+    previous: options.previous || "Previous",
+    next: options.next || "Next"
+  };
+  target.classList.add("home-card-carousel", "carousel-panel");
+
+  const render = () => {
+    target.innerHTML = `
+      <div class="home-carousel-viewport carousel-viewport">
+        <button class="home-carousel-btn home-carousel-btn--prev carousel-prev" type="button" aria-label="${labels.previous}" ${items.length < 2 ? "disabled" : ""}>←</button>
+        <div class="home-carousel-stage">
+          ${renderItem(items[index], index)}
+        </div>
+        <button class="home-carousel-btn home-carousel-btn--next carousel-next" type="button" aria-label="${labels.next}" ${items.length < 2 ? "disabled" : ""}>→</button>
+      </div>
+      <div class="home-carousel-dots carousel-pagination" role="tablist" aria-label="${options.dotsLabel || "Slides"}">
+        ${Array.from({ length: 5 }, (_, dotIndex) => {
+          if (dotIndex >= dotCount) {
+            return `<span class="home-carousel-dot-placeholder" aria-hidden="true"></span>`;
+          }
+          const slideIndex = slideIndexForDot(dotIndex);
+          return `<button type="button" aria-label="${dotIndex + 1}" aria-selected="${String(dotIndex === activeDotIndex())}" data-slide-index="${slideIndex}"></button>`;
+        }).join("")}
+      </div>
+    `;
+  };
+
+  target.addEventListener("click", (event) => {
+    const previous = event.target.closest(".home-carousel-btn--prev");
+    const next = event.target.closest(".home-carousel-btn--next");
+    const dot = event.target.closest("[data-slide-index]");
+    if (previous && items.length > 1) {
+      index = (index - 1 + items.length) % items.length;
+      render();
+    } else if (next && items.length > 1) {
+      index = (index + 1) % items.length;
+      render();
+    } else if (dot) {
+      index = Number(dot.dataset.slideIndex);
+      render();
+    }
+  });
+
+  render();
+}
+
+function newsThumb(item, parsed) {
+  const src = item.thumbnail || item.enclosure?.link || item.enclosure?.url || "";
+  if (src) {
+    return `
+      <div class="posting-thumb posting-thumb--compact">
+        <img src="${src}" alt="${parsed.headline}" loading="lazy" width="640" height="360">
+        <span>${parsed.source || "News"}</span>
+      </div>
+    `;
+  }
+  return `
+    <div class="posting-thumb posting-thumb--fallback posting-thumb--compact" role="img" aria-label="${parsed.headline}">
+      <span>${parsed.source || "News"}</span>
+      <strong>LOGILEE</strong>
+    </div>
+  `;
+}
+
 async function loadHomeNews() {
   const targets = document.querySelectorAll("[data-home-news]");
   if (!targets.length) return;
@@ -685,23 +756,48 @@ async function loadHomeNews() {
 
   for (const target of targets) {
     const query = target.dataset.newsQuery || (lang === "ko" ? "무역 물류" : "global trade logistics");
-    const rssUrl = `https://news.google.com/rss/search?q=${encodeURIComponent(query)}&hl=${lang === "ko" ? "ko" : "en"}&gl=${lang === "ko" ? "KR" : "US"}&ceid=${lang === "ko" ? "KR:ko" : "US:en"}`;
-    const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
+    const queries = [query, lang === "ko" ? "국제 무역 물류" : "international trade logistics"];
     try {
-      const data = await fetchJson(apiUrl, { cacheKey: `logilee:news:${lang}:${query}`, ttl: 20 * 60 * 1000 });
+      let data = null;
+      let usedQuery = "";
+      for (const candidate of queries) {
+        try {
+          const rssUrl = `https://news.google.com/rss/search?q=${encodeURIComponent(candidate)}&hl=${lang === "ko" ? "ko" : "en"}&gl=${lang === "ko" ? "KR" : "US"}&ceid=${lang === "ko" ? "KR:ko" : "US:en"}`;
+          const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
+          data = await fetchJson(apiUrl, { cacheKey: `logilee:news:${lang}:${candidate}`, ttl: 20 * 60 * 1000 });
+          usedQuery = candidate;
+          break;
+        } catch (error) {
+          console.warn("Homepage news query unavailable:", candidate, error);
+        }
+      }
+      if (!data) throw new Error("All homepage news queries failed");
       const items = Array.isArray(data.items) ? data.items.slice(0, 6) : [];
-      target.innerHTML = items.length ? items.map((item) => {
+      if (!items.length) {
+        target.innerHTML = `<div class="data-empty">${labels.noItems}</div>`;
+        continue;
+      }
+      renderHomeCarousel(target, items, (item) => {
         const parsed = splitNewsTitle(item.title);
         const time = formatNewsTime(item.pubDate, lang);
+        const summary = plainText(item.description).replace(parsed.headline, "").slice(0, 130);
         return `
-          <a class="news-item compact-news-item" href="${item.link}" target="_blank" rel="noopener">
-            <div>
-              <strong>${parsed.headline}</strong>
-              <small>${[parsed.source, time].filter(Boolean).join(" · ")}</small>
+          <a class="home-slider-card" href="${item.link}" target="_blank" rel="noopener">
+            ${newsThumb(item, parsed)}
+            <div class="home-slider-copy">
+              <span class="kicker">${parsed.source || "News"}</span>
+              <h3>${parsed.headline}</h3>
+              ${summary ? `<p>${summary}</p>` : ""}
+              <small>${[time, parsed.source].filter(Boolean).join(" · ")}</small>
             </div>
           </a>
         `;
-      }).join("") : `<div class="data-empty">${labels.noItems}</div>`;
+      }, {
+        previous: lang === "ko" ? "이전 뉴스" : "Previous news",
+        next: lang === "ko" ? "다음 뉴스" : "Next news",
+        dotsLabel: lang === "ko" ? "뉴스 슬라이드" : "News slides",
+        sourceQuery: usedQuery
+      });
     } catch (error) {
       console.warn("Homepage news unavailable:", error);
       target.innerHTML = `<div class="data-empty">${labels.loadingFailed}</div>`;
@@ -780,16 +876,21 @@ function setupLatestPosting() {
     return;
   }
 
-  slider.innerHTML = posts.map((post) => `
-    <a class="posting-list-item" href="${postUrl(post)}">
-      <div>
+  renderHomeCarousel(slider, posts, (post) => `
+    <a class="home-slider-card" href="${postUrl(post)}">
+      ${postThumb(post, true)}
+      <div class="home-slider-copy">
         <span class="kicker">${post.category}</span>
         <h3>${post.title}</h3>
         <p>${post.description}</p>
         <small>${formatPostDate(post.date, lang)}${post.readingTime ? ` · ${post.readingTime}` : ""}</small>
       </div>
     </a>
-  `).join("");
+  `, {
+    previous: lang === "ko" ? "이전 포스트" : "Previous post",
+    next: lang === "ko" ? "다음 포스트" : "Next post",
+    dotsLabel: lang === "ko" ? "포스트 슬라이드" : "Post slides"
+  });
 }
 
 function setupPostsArchive() {
@@ -1104,7 +1205,7 @@ function freightRowMarkup(item, compact = false) {
   const changeText = hasChange ? `${item.change >= 0 ? "↑ +" : "↓ "}${formatRate(item.change, 1)}%` : "";
   const changeClass = hasChange ? ` trend-${item.change >= 0 ? "up" : "down"}` : "";
   return compact ? `
-    <div>
+    <div class="market-data-row market-data-row--freight">
       <strong>${item.label}</strong>
       <span>${Number.isFinite(item.latest) ? formatRate(item.latest, digits) : "N/A"}${changeText ? ` · <em class="${changeClass.trim()}">${changeText}</em>` : ""}</span>
     </div>
