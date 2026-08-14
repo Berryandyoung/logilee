@@ -1,4 +1,18 @@
-﻿window.LOGILEE_POSTS = [
+window.LOGILEE_POSTS = [
+  {
+    "slug": "lcl-vs-fcl",
+    "language": "ko",
+    "status": "published",
+    "title": "LCL과 FCL, 어느 시점부터 FCL이 유리할까?",
+    "description": "LCL과 FCL 중 어떤 운송 방식이 유리할까요? CBM, 해상운임, 목적지 비용, 화물 특성, 리드타임을 기준으로 실무에서 확인할 선택 기준을 정리합니다.",
+    "category": "guides",
+    "date": "2026-08-14",
+    "publishedAt": "2026-08-14T07:28:22.554Z",
+    "readingTime": "5분 읽기",
+    "path": "ko/posts/lcl-vs-fcl/",
+    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_871871bb-1a1a-4190-b340-829322f30f24-ChatGPT%20Image%202026%EB%85%84%208%EC%9B%94%2014%EC%9D%BC%20%EC%98%A4%ED%9B%84%2004_30_45.png?alt=media&token=1db5c262-68fd-46d5-a2ba-3279ceb6cc04",
+    "imageAlt": "LCL과 FCL 해상운송 방식을 비교하는 컨테이너 화물 이미지"
+  },
   {
     "slug": "commercial-invoice-common-mistakes",
     "language": "en",
@@ -14,20 +28,6 @@
     "imageAlt": "Port image representing trade documents and shipment workflow"
   },
   {
-    "slug": "commercial-invoice-common-mistakes",
-    "language": "ko",
-    "status": "published",
-    "title": "Commercial Invoice 작성 시 자주 발생하는 7가지 오류",
-    "description": "Commercial Invoice에서 자주 발견되는 7가지 오류를 실무 관점에서 정리했습니다. 거래 당사자, HS Code, Incoterms, 금액과 Packing List·B/L 불일치까지 확인해보세요.",
-    "category": "trade",
-    "date": "2026-08-14",
-    "publishedAt": "2026-08-14T03:00:54.001Z",
-    "readingTime": "6분 읽기",
-    "path": "ko/posts/commercial-invoice-common-mistakes/",
-    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_607b078e-c84e-4281-9e60-62ccbb80a361-ChatGPT%20Image%202026%EB%85%84%208%EC%9B%94%2014%EC%9D%BC%20%EC%98%A4%ED%9B%84%2012_16_48.png?alt=media&token=172d5a97-4bca-4e96-acd2-7be9ad354cbb",
-    "imageAlt": "Commercial Invoice 작성 시 자주 발생하는 7가지 오류 thumbnail"
-  },
-  {
     "slug": "fob-vs-cif",
     "language": "en",
     "status": "published",
@@ -40,6 +40,20 @@
     "path": "en/posts/fob-vs-cif/",
     "image": "assets/trade-hero-port.jpg",
     "imageAlt": "Container cranes and vessel operations at night"
+  },
+  {
+    "slug": "commercial-invoice-common-mistakes",
+    "language": "ko",
+    "status": "published",
+    "title": "Commercial Invoice 작성 시 자주 발생하는 7가지 오류",
+    "description": "Commercial Invoice에서 자주 발견되는 7가지 오류를 실무 관점에서 정리했습니다. 거래 당사자, HS Code, Incoterms, 금액과 Packing List·B/L 불일치까지 확인해보세요.",
+    "category": "trade",
+    "date": "2026-08-14",
+    "publishedAt": "2026-08-14T03:00:54.001Z",
+    "readingTime": "6분 읽기",
+    "path": "ko/posts/commercial-invoice-common-mistakes/",
+    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_607b078e-c84e-4281-9e60-62ccbb80a361-ChatGPT%20Image%202026%EB%85%84%208%EC%9B%94%2014%EC%9D%BC%20%EC%98%A4%ED%9B%84%2012_16_48.png?alt=media&token=172d5a97-4bca-4e96-acd2-7be9ad354cbb",
+    "imageAlt": "Commercial Invoice 작성 시 자주 발생하는 7가지 오류 thumbnail"
   },
   {
     "slug": "fob-vs-cif",
