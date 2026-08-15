@@ -20,25 +20,185 @@
     <meta name="twitter:card" content="summary_large_image">
     <link rel="alternate" hreflang="ko" href="https://www.logilee.com/ko/posts/china-typhoon-port-delay-shipment-impact/">
     <link rel="stylesheet" href="../../../assets/logilee.css">
+    <script defer src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script defer src="../../../assets/posts-data.js"></script>
+    <script defer src="../../../assets/logilee-app.js"></script>
+    <style>
+      body[data-page="post-detail"] { background: #f5f7fa; overflow-x: hidden; }
+      .article-page { width: min(100%, 1240px); padding: 28px clamp(20px, 2.4vw, 32px) 48px; }
+      .article-breadcrumb { display: flex; align-items: center; gap: 8px; margin: 0 0 16px; color: #64748b; font-size: 13px; font-weight: 750; }
+      .article-breadcrumb a:hover { color: var(--signal-blue); }
+      .article-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, 290px); gap: clamp(32px, 3.6vw, 48px); align-items: start; }
+      .article-detail { min-width: 0; overflow: hidden; padding: clamp(26px, 3vw, 44px); border: 1px solid #dbe3ec; border-radius: 16px; background: #fff; box-shadow: 0 16px 38px rgba(15, 23, 42, 0.06); }
+      .article-header { display: grid; gap: 16px; margin-bottom: clamp(28px, 3vw, 42px); }
+      .article-header .eyebrow { width: fit-content; margin: 0; padding: 6px 10px; border: 1px solid rgba(23, 107, 255, 0.18); border-radius: 999px; background: #eef5ff; color: var(--signal-blue); font-size: 12px; letter-spacing: 0; }
+      .article-header h1 { max-width: 820px; font-size: clamp(32px, 3.2vw, 43px); line-height: 1.24; }
+      .article-summary { max-width: 760px; margin: 0; color: #475569; font-size: clamp(18px, 1.5vw, 20px); line-height: 1.62; }
+      .article-meta { display: flex; flex-wrap: wrap; gap: 8px 14px; color: #64748b; font-size: 13px; font-weight: 750; }
+      .article-meta span + span::before, .article-meta a::before { content: "·"; margin-right: 14px; color: #94a3b8; }
+      .article-meta a { color: var(--signal-blue); }
+      .article-hero-figure { min-width: 0; margin: 8px 0 0; }
+      .article-hero { display: block; width: 100%; max-width: 100%; max-height: 460px; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 14px; }
+      .image-attribution { margin: 8px 2px 0; color: #667085; font-size: 12px; line-height: 1.45; overflow-wrap: anywhere; }
+      .image-attribution a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+      .post-content, .article-body { min-width: 0; color: #1f2937; font-size: 17px; line-height: 1.82; overflow-wrap: anywhere; }
+      .article-body > *:first-child { margin-top: 0; } .article-body > *:last-child { margin-bottom: 0; }
+      .article-body p { margin: 0 0 18px; }
+      .article-body h2, .article-body h3, .article-body h4 { color: var(--ink-navy); letter-spacing: 0; }
+      .article-body h2 { margin: 42px 0 14px; padding-top: 4px; font-size: clamp(25px, 2.1vw, 30px); line-height: 1.3; }
+      .article-body h3 { margin: 30px 0 10px; font-size: clamp(20px, 1.7vw, 23px); line-height: 1.34; }
+      .article-body h4 { margin: 24px 0 8px; font-size: 18px; line-height: 1.38; }
+      .article-body strong, .article-body b { color: #0f2742; font-weight: 750; }
+      .article-body a { color: var(--signal-blue); text-decoration: underline; text-underline-offset: 3px; }
+      .article-body ul, .article-body ol { margin: 0 0 20px; padding-left: 1.35em; }
+      .article-body li + li { margin-top: 7px; }
+      .article-body blockquote { margin: 26px 0; padding: 18px 20px; border-left: 4px solid var(--signal-blue); border-radius: 0 12px 12px 0; background: #eef5ff; color: #23364d; }
+      .article-body hr { height: 1px; margin: 34px 0; border: 0; background: #dbe3ec; }
+      .article-body figure { margin: 26px 0; } .article-body figcaption { margin-top: 8px; color: #64748b; font-size: 13px; }
+      .article-body img { display: block; max-width: 100%; height: auto; border-radius: 12px; }
+      .article-table-wrap { max-width: 100%; margin: 24px 0; overflow-x: auto; border: 1px solid #dbe3ec; border-radius: 12px; }
+      .article-table-wrap table { width: 100%; min-width: 560px; border-collapse: collapse; background: #fff; }
+      .article-table-wrap th, .article-table-wrap td { padding: 12px 14px; border-bottom: 1px solid #e5ebf1; text-align: left; vertical-align: top; font-size: 14px; line-height: 1.55; }
+      .article-table-wrap th { background: #f5f8fc; color: #0f2742; font-weight: 800; }
+      .article-aside { min-width: 0; display: grid; gap: 16px; position: sticky; top: 96px; }
+      .article-aside-card { padding: 18px; border: 1px solid #dbe3ec; border-radius: 14px; background: #fff; box-shadow: 0 12px 30px rgba(15, 23, 42, 0.05); }
+      .article-aside-card h2 { margin: 0 0 14px; color: var(--ink-navy); font-size: 15px; line-height: 1.35; }
+      .article-resource-list, .article-related-list { display: grid; gap: 10px; }
+      .article-resource-list a { min-width: 0; display: flex; align-items: center; gap: 9px; padding: 9px 10px; border-radius: 10px; color: #1f3651; font-size: 14px; font-weight: 750; }
+      .article-resource-list a:hover { background: #eef5ff; color: var(--signal-blue); }
+      .article-resource-list svg { width: 16px; height: 16px; flex: 0 0 auto; }
+      .article-related-post { min-width: 0; display: grid; grid-template-columns: 58px minmax(0, 1fr); gap: 10px; align-items: center; }
+      .article-related-post img, .article-related-fallback { width: 58px; height: 48px; border-radius: 10px; object-fit: cover; background: #eef5ff; }
+      .article-related-fallback { display: grid; place-items: center; color: var(--signal-blue); font-size: 10px; font-weight: 850; text-align: center; }
+      .article-related-post strong { display: -webkit-box; overflow: hidden; color: #1f3651; font-size: 13px; line-height: 1.35; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+      .article-related-post small, .article-aside-empty { color: #64748b; font-size: 12px; }
+      .article-ad { min-height: 250px; }
+      @media (max-width: 1180px) { .article-layout { grid-template-columns: 1fr; } .article-aside { position: static; grid-template-columns: repeat(2, minmax(0, 1fr)); } .article-ad { grid-column: 1 / -1; } }
+      @media (max-width: 760px) { .article-page { padding: 18px 14px 32px; } .article-detail { padding: 22px 18px; border-radius: 14px; } .article-header h1 { font-size: 30px; } .post-content, .article-body { font-size: 16px; line-height: 1.78; } .article-aside { grid-template-columns: 1fr; } .article-meta span + span::before, .article-meta a::before { margin-right: 8px; } }
+    </style>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "중국 항만이 태풍으로 멈추면 내 화물에는 어떤 일이 생길까?",
+  "description": "중국 항만의 태풍 운영 중단이 선박 대기, Port Omission, Rollover와 ETA에 어떻게 이어지는지 실제 수입자가 확인해야 할 항목을 중심으로 설명합니다.",
+  "datePublished": "2026-08-14",
+  "dateModified": "2026-08-14",
+  "inLanguage": "ko",
+  "author": {
+    "@type": "Organization",
+    "name": "LOGILEE"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "LOGILEE"
+  },
+  "mainEntityOfPage": "https://www.logilee.com/ko/posts/china-typhoon-port-delay-shipment-impact/",
+  "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_34da3b8f-7d59-4526-8381-7ac3e0298577-ChatGPT%20Image%202026%EB%85%84%208%EC%9B%94%2014%EC%9D%BC%20%EC%98%A4%ED%9B%84%2004_50_55.png?alt=media&token=31ad7c7c-ba4b-42f2-a3b0-3e11ba56f202"
+}
+    </script>
   </head>
   <body data-page="post-detail" data-lang="ko">
-    <header class="site-header">
-      <a class="brand" href="../../"><span>LOGILEE</span></a>
-      <nav class="site-nav" aria-label="Primary">
-        <a href="../../">홈</a>
-        <a href="../">목록으로</a>
+    <div class="shell workspace-shell article-workspace-shell">
+
+    <aside class="rail workspace-rail" aria-label="LOGILEE workspace menu">
+      <a class="brand compact-brand" href="../../"><strong>LOGILEE</strong><span>Global Trade Workspace</span></a>
+      <nav class="workspace-nav">
+        <a class="nav-home" href="../../"><i data-lucide="home"></i> Home</a>
+        <section><h2>Trade</h2><a href="../../countries.html"><i data-lucide="globe"></i>My Countries</a><a href="../../../hscode.html"><i data-lucide="barcode"></i>HS Code</a><a href="../../dashboard.html"><i data-lucide="globe-lock"></i>FTA & Tariff</a><a href="../../countries.html"><i data-lucide="shield-alert"></i>Import Regulation</a><a href="../../countries.html"><i data-lucide="send"></i>Export Regulation</a><a href="../../dashboard.html"><i data-lucide="chart-column"></i>Trade Statistics</a><a href="../../contact.html"><i data-lucide="building-2"></i>Embassy & Office</a></section>
+        <section><h2>Logistics</h2><a href="../../track.html"><i data-lucide="radar"></i>Tracking</a><a href="../../ports.html"><i data-lucide="ship"></i>Carrier & Airline</a><a href="../../ports.html"><i data-lucide="anchor"></i>Ports & Airports</a><a href="../../tools.html"><i data-lucide="container"></i>Container</a><a href="../../dashboard.html"><i data-lucide="calendar-days"></i>Schedule</a><a href="../../cbm.html"><i data-lucide="calculator"></i>CBM Calculator</a></section>
+        <section><h2>Compliance</h2><a href="../../dashboard.html"><i data-lucide="shield-check"></i>FDA</a><a href="../../dashboard.html"><i data-lucide="badge-check"></i>BIS</a><a href="../../dashboard.html"><i data-lucide="leaf"></i>REACH</a><a href="../../dashboard.html"><i data-lucide="circle-check"></i>RoHS / CE</a><a href="../../dashboard.html"><i data-lucide="circle-x"></i>CCC</a><a href="../../dashboard.html"><i data-lucide="shield"></i>KC / TSCA</a></section>
+        <section><h2>Market</h2><a href="../../dashboard.html"><i data-lucide="chart-no-axes-combined"></i>Freight Index</a><a href="../../dashboard.html"><i data-lucide="gem"></i>Metals & Energy</a><a href="../../weather.html"><i data-lucide="badge-dollar-sign"></i>Exchange Rate</a><a href="../../dashboard.html"><i data-lucide="calendar-clock"></i>Economic Calendar</a></section>
+        <section><h2>Resources</h2><a href="../../templates.html"><i data-lucide="copy"></i>Templates</a><a href="../../documents.html"><i data-lucide="file-text"></i>Documents</a><a href="../../dictionary.html"><i data-lucide="languages"></i>Dictionary</a><a href="../../learn.html"><i data-lucide="graduation-cap"></i>Learn</a><a class="is-active" href="../"><i data-lucide="newspaper"></i>Latest Posts</a></section>
       </nav>
-    </header>
-    <main class="article-shell">
-      <article class="article-detail">
-        <p class="eyebrow">market · Korean · 2026-08-14</p>
-        <h1>중국 항만이 태풍으로 멈추면 내 화물에는 어떤 일이 생길까?</h1>
-        <p class="article-summary">중국 항만의 태풍 운영 중단이 선박 대기, Port Omission, Rollover와 ETA에 어떻게 이어지는지 실제 수입자가 확인해야 할 항목을 중심으로 설명합니다.</p>
-        <img class="article-hero" src="https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_34da3b8f-7d59-4526-8381-7ac3e0298577-ChatGPT%20Image%202026%EB%85%84%208%EC%9B%94%2014%EC%9D%BC%20%EC%98%A4%ED%9B%84%2004_50_55.png?alt=media&amp;token=31ad7c7c-ba4b-42f2-a3b0-3e11ba56f202" alt="태풍과 악천후의 영향을 받는 중국 컨테이너 항만과 화물선">
-        <div class="article-body">
-          <div>&lt;h2&gt;항만이 다시 열렸는데, 왜 내 화물은 아직 움직이지 않을까요?&lt;/h2&gt;</div><div><br></div><div>&lt;p&gt;중국에서 화물을 수입하다 보면 여름철에 신경 쓰게 되는 변수가 하나 있습니다.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;태풍입니다.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;2026년 8월 9일 태풍 Dolphin이 중국 동부 저장성에 상륙했습니다. 태풍 접근을 앞두고 중국 동부에서는 항만과 공항, 페리 등 일부 교통·물류 운영이 중단됐고 상하이와 저장성을 중심으로 큰 영향을 받았습니다.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;화주 입장에서는 여기서 이런 생각을 하기 쉽습니다.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;&lt;strong&gt;“태풍이 지나갔고 항만도 다시 열렸으니 이제 정상 아닌가?”&lt;/strong&gt;&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;하지만 실제 해상운송에서는 항만 운영 재개와 내 화물의 정상화가 같은 시점에 일어나지 않을 수 있습니다.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;항만이 몇 시간 또는 하루 멈춘 사이에도 입항하려던 선박은 계속 쌓이고, 예정됐던 작업 순서는 밀리고, 이후 도착하는 선박까지 영향을 받기 때문입니다.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;그래서 태풍 뉴스를 볼 때는 단순히 Port Closed / Port Open만 확인하기보다 그 뒤에 어떤 일이 이어지는지를 보는 것이 중요합니다.&lt;/p&gt;</div><div><br></div><div>&lt;hr&gt;</div><div><br></div><div>&lt;h2&gt;1. 태풍이 접근하면 가장 먼저 선박과 항만 작업이 멈춥니다&lt;/h2&gt;</div><div><br></div><div>&lt;p&gt;강풍과 높은 파도가 예상되는 상황에서 컨테이너 크레인을 계속 가동하거나 선박을 그대로 접안시키는 것은 위험할 수 있습니다.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;따라서 태풍이 접근하면 상황에 따라 터미널 작업이 제한되거나 중단되고, 선박은 안전한 해역으로 이동하거나 입항을 기다리게 됩니다.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;컨테이너 야드, 바지선, 창고 등의 운영도 영향을 받을 수 있습니다.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;여기까지는 비교적 이해하기 쉽습니다.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;문제는 태풍이 지나간 다음부터입니다.&lt;/p&gt;</div><div><br></div><div>&lt;hr&gt;</div><div><br></div><div>&lt;h2&gt;2. 항만이 다시 열려도 대기하던 선박은 사라지지 않습니다&lt;/h2&gt;</div><div><br></div><div>&lt;p&gt;태풍 때문에 24시간 동안 항만 작업이 중단됐다고 가정해보겠습니다.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;그 시간 동안 원래 입항하기로 했던 선박들이 모두 없어지는 것은 아닙니다.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;항만 밖에서 기다리거나 운항속도를 조정하고, 일부 선박은 다른 항만 일정까지 변경하면서 상황을 기다립니다.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;항만이 다시 운영을 시작하면 기존에 기다리고 있던 선박과 새롭게 도착하는 선박을 차례로 처리해야 합니다.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;이때 흔히 나타날 수 있는 현상이 &lt;strong&gt;Vessel Bunching&lt;/strong&gt;입니다.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;원래 서로 다른 시간에 도착해야 할 선박들이 항만 운영 중단으로 비슷한 시점에 몰리는 것입니다.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;결과적으로 항만은 다시 열렸지만 Berth를 기다리는 시간이 길어질 수 있습니다.&lt;/p&gt;</div><div><br></div><div>&lt;hr&gt;</div><div><br></div><div>&lt;h2&gt;3. 선박 스케줄은 한 항구에서 끝나지 않습니다&lt;/h2&gt;</div><div><br></div><div>&lt;p&gt;컨테이너선은 Shanghai 한 곳만 들렀다가 운항을 끝내는 것이 아닙니다.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;하나의 서비스가 여러 항만을 순서대로 기항하는 경우가 많습니다.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;예를 들어 단순화하면 다음과 같은 일정이 있을 수 있습니다.&lt;/p&gt;</div><div><br></div><div>&lt;blockquote&gt;</div><div>&lt;p&gt;Qingdao → Shanghai → Ningbo → Busan → 다음 기항지&lt;/p&gt;</div><div>&lt;/blockquote&gt;</div><div><br></div><div>&lt;p&gt;Shanghai에서 일정이 밀리면 Ningbo 도착도 늦어질 수 있고, 그 뒤 Busan 일정까지 영향을 받을 수 있습니다.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;반대로 선사는 전체 서비스 스케줄을 회복하기 위해 특정 항만 기항을 조정하는 선택을 할 수도 있습니다.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;그래서 내가 이용하는 출발항에 직접적인 태풍 피해가 없었다고 해서 무조건 영향이 없다고 판단하기는 어렵습니다.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;&lt;strong&gt;내 선박이 그 전에 어느 항만을 거쳐오는지도 봐야 합니다.&lt;/strong&gt;&lt;/p&gt;</div><div><br></div><div>&lt;hr&gt;</div><div><br></div><div>&lt;h2&gt;4. Port Omission이 발생할 수도 있습니다&lt;/h2&gt;</div><div><br></div><div>&lt;p&gt;지연이 커지면 선사가 전체 서비스 일정을 회복하기 위해 예정됐던 항만을 건너뛰는 경우가 있습니다.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;이를 Port Omission이라고 합니다.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;실제로 2026년 7월 태풍 Bavi로 Shanghai와 Ningbo에 항만 폐쇄와 장시간 대기가 예상되자 일부 서비스에서는 Shanghai 또는 Ningbo 기항을 생략하는 조정이 이루어졌습니다.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;이 경우 해당 항만에서 선적하거나 하역할 예정이던 화물은 다른 선박으로 옮겨지거나 다른 항만을 경유해 최종 목적지로 이동할 수 있습니다.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;화주 입장에서는 단순한 하루 이틀의 ETA 변경보다 더 복잡한 상황이 됩니다.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;Booking했던 Vessel과 실제 운송하는 Vessel이 달라질 수도 있고, Transshipment 일정이 추가될 수도 있기 때문입니다.&lt;/p&gt;</div><div><br></div><div>&lt;hr&gt;</div><div><br></div><div>&lt;h2&gt;5. 내 컨테이너가 이미 항만에 있다고 반드시 실리는 것도 아닙니다&lt;/h2&gt;</div><div><br></div><div>&lt;p&gt;여기서 또 하나 확인할 것이 있습니다.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;컨테이너가 이미 터미널에 반입됐다고 해서 예정된 선박에 반드시 적재되는 것은 아닙니다.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;태풍 이후 스케줄이 크게 흐트러지거나 선박 공간 운영에 변화가 생기면 일부 화물이 다음 선박으로 넘어갈 가능성도 있습니다.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;실무에서는 이런 상황을 넓은 의미에서 Rollover라고 부르는 경우가 있습니다.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;그래서 태풍 직후에는 단순히 컨테이너가 Gate-in 됐다는 사실만 확인하기보다 &lt;strong&gt;실제로 예정된 Vessel에 Load됐는지&lt;/strong&gt;까지 확인하는 것이 중요합니다.&lt;/p&gt;</div><div><br></div><div>&lt;hr&gt;</div><div><br></div><div>&lt;h2&gt;6. ETD가 바뀌면 ETA만 하루 더하면 될까요?&lt;/h2&gt;</div><div><br></div><div>&lt;p&gt;예를 들어 원래 일정이 다음과 같았다고 가정해보겠습니다.&lt;/p&gt;</div><div><br></div><div>&lt;blockquote&gt;</div><div>&lt;p&gt;ETD Shanghai: August 10&lt;br&gt;</div><div>ETA Busan: August 12&lt;/p&gt;</div><div>&lt;/blockquote&gt;</div><div><br></div><div>&lt;p&gt;태풍 때문에 ETD가 August 12로 변경됐다고 해서 ETA도 단순히 August 14가 된다고 생각하기 쉽습니다.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;하지만 실제 일정은 그렇게 단순하지 않을 수 있습니다.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;항만 혼잡, 선박 기항 순서 변경, 운항속도 조정, Port Omission이나 추가적인 Berth Waiting 등에 따라 전체 스케줄이 다시 계산될 수 있기 때문입니다.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;따라서 태풍 이후에는 기존 Booking Confirmation에 적힌 ETA만 계속 보고 있기보다 선사에서 업데이트한 최신 Vessel Schedule을 다시 확인하는 편이 좋습니다.&lt;/p&gt;</div><div><br></div><div>&lt;hr&gt;</div><div><br></div><div>&lt;h2&gt;7. 중국에서 한국으로 오는 짧은 항로일수록 체감이 클 수도 있습니다&lt;/h2&gt;</div><div><br></div><div>&lt;p&gt;Shanghai나 Ningbo에서 Busan까지의 해상운송 자체는 비교적 짧습니다.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;그래서 오히려 항만에서 하루나 이틀 기다리는 시간이 전체 리드타임에서 차지하는 비중이 크게 느껴질 수 있습니다.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;해상에서 이동하는 시간보다 중국 항만에서 Berth를 기다리거나 출항 일정이 변경되면서 발생하는 시간이 더 길어지는 상황도 생각할 수 있습니다.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;특히 생산에 바로 투입해야 하는 원재료나 재고가 부족한 제품이라면 “배가 언제 출항하느냐”가 단순한 물류 문제가 아니라 생산계획의 문제가 될 수 있습니다.&lt;/p&gt;</div><div><br></div><div>&lt;hr&gt;</div><div><br></div><div>&lt;h2&gt;태풍 뉴스가 나오면 저는 이 순서로 확인합니다&lt;/h2&gt;</div><div><br></div><div>&lt;p&gt;중국 공급자의 화물이 이미 Booking되어 있다면 막연히 태풍 경로만 계속 볼 필요는 없습니다.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;현재 내 화물과 관련된 정보를 순서대로 확인하는 편이 빠릅니다.&lt;/p&gt;</div><div><br></div><div>&lt;h3&gt;1. Port Status&lt;/h3&gt;</div><div><br></div><div>&lt;p&gt;출발항 터미널이 정상 운영 중인지, Gate-in이나 컨테이너 작업에 제한이 있는지 확인합니다.&lt;/p&gt;</div><div><br></div><div>&lt;h3&gt;2. Cargo Cut-off&lt;/h3&gt;</div><div><br></div><div>&lt;p&gt;기존 Cut-off가 그대로인지 변경됐는지 확인합니다.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;공급자가 아직 컨테이너를 반입하지 않았다면 이 부분이 특히 중요합니다.&lt;/p&gt;</div><div><br></div><div>&lt;h3&gt;3. Vessel Schedule&lt;/h3&gt;</div><div><br></div><div>&lt;p&gt;기존 Booking에 있는 ETD가 아니라 현재 선사가 제공하는 최신 일정을 확인합니다.&lt;/p&gt;</div><div><br></div><div>&lt;h3&gt;4. Actual Loading&lt;/h3&gt;</div><div><br></div><div>&lt;p&gt;컨테이너가 실제 예정된 Vessel에 적재됐는지 확인합니다.&lt;/p&gt;</div><div><br></div><div>&lt;h3&gt;5. Actual Departure&lt;/h3&gt;</div><div><br></div><div>&lt;p&gt;예정 출항시간보다 실제 출항 여부가 중요합니다.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;선박이 항만을 떠난 뒤에는 Tracking으로 실제 이동을 확인하기가 훨씬 쉬워집니다.&lt;/p&gt;</div><div><br></div><div>&lt;h3&gt;6. Port Omission / Vessel Change&lt;/h3&gt;</div><div><br></div><div>&lt;p&gt;선사에서 항만 생략이나 Vessel 변경 공지를 냈는지도 확인합니다.&lt;/p&gt;</div><div><br></div><div>&lt;h3&gt;7. Updated ETA&lt;/h3&gt;</div><div><br></div><div>&lt;p&gt;마지막으로 변경된 도착예정일을 확인하고 필요한 경우 내부 입고·생산 일정을 조정합니다.&lt;/p&gt;</div><div><br></div><div>&lt;hr&gt;</div><div><br></div><div>&lt;h2&gt;Tracking 화면의 숫자 하나만 보지 않는 것이 좋습니다&lt;/h2&gt;</div><div><br></div><div>&lt;p&gt;태풍처럼 스케줄 변화가 큰 상황에서는 Tracking 화면에 표시되는 ETA 하나만 보는 것보다 상태가 어떻게 변하고 있는지를 같이 보는 편이 좋습니다.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;예를 들어 다음 정보는 서로 의미가 다릅니다.&lt;/p&gt;</div><div><br></div><div>&lt;ul&gt;</div><div>&nbsp; &lt;li&gt;Booking confirmed&lt;/li&gt;</div><div>&nbsp; &lt;li&gt;Container gate-in&lt;/li&gt;</div><div>&nbsp; &lt;li&gt;Loaded on vessel&lt;/li&gt;</div><div>&nbsp; &lt;li&gt;Vessel departed&lt;/li&gt;</div><div>&nbsp; &lt;li&gt;Transshipment&lt;/li&gt;</div><div>&nbsp; &lt;li&gt;Vessel arrived&lt;/li&gt;</div><div>&nbsp; &lt;li&gt;Container discharged&lt;/li&gt;</div><div>&lt;/ul&gt;</div><div><br></div><div>&lt;p&gt;컨테이너가 Gate-in 상태에서 며칠 동안 움직이지 않는 것과 이미 Vessel에 적재되어 출항한 것은 전혀 다른 상황입니다.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;그래서 일정에 문제가 생겼을 때는 “ETA가 며칠이야?”보다 &lt;strong&gt;“지금 화물이 어느 단계까지 진행됐어?”&lt;/strong&gt;라고 확인하는 것이 더 유용할 때가 많습니다.&lt;/p&gt;</div><div><br></div><div>&lt;hr&gt;</div><div><br></div><div>&lt;h2&gt;이미 지연됐다면 무엇을 해야 할까요?&lt;/h2&gt;</div><div><br></div><div>&lt;p&gt;먼저 모든 지연에 즉시 대응할 필요는 없습니다.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;재고가 충분하고 납기에 여유가 있다면 변경된 스케줄을 확인하면서 기다리는 것이 가장 합리적일 수 있습니다.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;반대로 생산라인 투입 예정인 원재료처럼 하루의 차이가 중요한 화물이라면 대체안을 검토해야 할 수 있습니다.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;예를 들어 공급자에게 다음 출고분을 앞당길 수 있는지 확인하거나, 일부 긴급 물량만 항공으로 전환하는 방법도 상황에 따라 검토할 수 있습니다.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;중요한 것은 태풍이 왔다는 사실 자체가 아니라 &lt;strong&gt;지연이 현재 재고와 생산 일정에 어느 시점부터 영향을 주는지&lt;/strong&gt;를 파악하는 것입니다.&lt;/p&gt;</div><div><br></div><div>&lt;hr&gt;</div><div><br></div><div>&lt;h2&gt;항만이 Open됐다는 뉴스가 끝은 아닙니다&lt;/h2&gt;</div><div><br></div><div>&lt;p&gt;태풍이 지나가고 항만 운영이 재개됐다는 소식이 나오면 문제가 해결된 것처럼 느껴질 수 있습니다.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;하지만 물류에서는 그때부터 밀려 있던 작업을 처리하는 과정이 시작됩니다.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;대기 선박이 한꺼번에 몰리고, Berth 순서가 조정되고, 선사가 스케줄을 회복하기 위해 기항지를 변경하면 그 영향은 며칠 더 이어질 수 있습니다.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;지난 7월 중국 동부 항만이 태풍 Bavi의 영향을 받았을 때도 Shanghai와 Ningbo가 운영을 재개한 이후 선박 적체와 스케줄 조정이 이어졌습니다.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;그래서 태풍 이후 화주가 확인해야 할 것은 단순히:&lt;/p&gt;</div><div><br></div><div>&lt;blockquote&gt;</div><div>&lt;p&gt;“항만이 열렸는가?”&lt;/p&gt;</div><div>&lt;/blockquote&gt;</div><div><br></div><div>&lt;p&gt;에서 끝나지 않습니다.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;오히려 다음 질문이 더 중요합니다.&lt;/p&gt;</div><div><br></div><div>&lt;blockquote&gt;</div><div>&lt;p&gt;&lt;strong&gt;“내 컨테이너는 실제로 어느 선박에 실렸고, 그 선박은 지금 어디에 있는가?”&lt;/strong&gt;&lt;/p&gt;</div><div>&lt;/blockquote&gt;</div><div><br></div><div>&lt;hr&gt;</div><div><br></div><div>&lt;h2&gt;이번 중국 태풍 뉴스에서 실무자가 볼 포인트&lt;/h2&gt;</div><div><br></div><div>&lt;p&gt;이번 태풍 Dolphin은 중국 동부의 항만과 교통망이 기상 상황에 따라 얼마나 빠르게 영향을 받을 수 있는지를 다시 보여줬습니다.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;중국에서 정기적으로 제품이나 원자재를 수입한다면 태풍 시즌마다 모든 화물을 걱정하기보다 확인할 항목을 정해두는 것이 훨씬 효율적입니다.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;&lt;strong&gt;Port Status → Cut-off → Vessel Schedule → Actual Loading → Actual Departure → Updated ETA&lt;/strong&gt;&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;이 순서만 익혀두어도 “태풍 때문에 늦는대요”라는 말을 들었을 때 실제로 어디에서 문제가 발생했는지 파악하기가 훨씬 쉬워집니다.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;그리고 운송 이슈가 발생했을 때 가장 중요한 것은 뉴스 자체보다 &lt;strong&gt;내 화물의 현재 상태&lt;/strong&gt;입니다.&lt;/p&gt;</div><div><br></div><div>&lt;hr&gt;</div><div><br></div><div>&lt;h2&gt;LOGILEE에서 함께 확인하기&lt;/h2&gt;</div><div><br></div><div>&lt;p&gt;중국 항만의 위치와 기본 정보는 LOGILEE의 &lt;strong&gt;Ports &amp;amp; Airports&lt;/strong&gt;에서 확인할 수 있습니다.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;Booking 이후 실제 화물 상태를 확인해야 한다면 &lt;strong&gt;Shipment Tracking&lt;/strong&gt;에서 해당 선사 또는 운송사의 공식 Tracking 서비스로 이동할 수 있습니다.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;현재 물류시장 흐름과 운송 관련 지표는 &lt;strong&gt;Freight Market&lt;/strong&gt;, Port Omission, Rollover, Transshipment 등 생소한 용어는 &lt;strong&gt;Dictionary&lt;/strong&gt;에서 함께 확인하세요.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;태풍 같은 돌발 상황에서는 각각의 정보를 따로 보는 것보다 &lt;strong&gt;항만 → 선박 → 컨테이너 → ETA&lt;/strong&gt; 순서로 연결해서 확인하는 것이 실제 업무에 더 도움이 됩니다.&lt;/p&gt;</div><div><br></div><div>&lt;hr&gt;</div><div><br></div><div>&lt;h3&gt;참고 및 유의사항&lt;/h3&gt;</div><div><br></div><div>&lt;p&gt;본 글은 2026년 8월 공개된 태풍 Dolphin 관련 보도와 최근 중국 동부 항만의 기상 영향 사례를 바탕으로 항만 운영 중단이 컨테이너 화물에 미치는 영향을 설명한 콘텐츠입니다.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;항만 운영 상태, 선박 일정과 화물 ETA는 기상 및 터미널 상황에 따라 빠르게 변경될 수 있습니다. 실제 운송 건은 해당 선사, 포워더, 터미널 및 관계기관이 제공하는 최신 정보를 확인하세요.&lt;/p&gt;</div><div><br></div><div>&lt;p&gt;본 콘텐츠는 일반적인 무역·물류 정보 제공을 목적으로 하며 특정 화물에 대한 운송계약, 운임 또는 통관 자문을 의미하지 않습니다.&lt;/p&gt;<br><br>&lt;Br&gt;<br><div>&lt;h3&gt;Sources&lt;/h3&gt;</div><div><br></div><div>&lt;ul&gt;</div><div>&nbsp; &lt;li&gt;Reuters, “Typhoon Dolphin hits Japan's Okinawa, China shuts ports ahead of landfall”, August 8, 2026&lt;/li&gt;</div><div>&nbsp; &lt;li&gt;Reuters, “Typhoon Dolphin hits China's east coast, over 1 million evacuated”, August 9, 2026&lt;/li&gt;</div><div>&nbsp; &lt;li&gt;Maersk, “Typhoon Bavi Service Update”, July 10, 2026&lt;/li&gt;</div><div>&nbsp; &lt;li&gt;Kuehne+Nagel, East China port operational updates, July 2026&lt;/li&gt;</div><div>&lt;/ul&gt;</div></div>
+    </aside>
+    <main class="main">
+      <header class="topbar workspace-topbar">
+        <a class="mobile-logo" href="../../">LOGILEE</a>
+        <form class="header-search" action="../../search.html" method="get" role="search">
+          <i data-lucide="search"></i>
+          <input name="q" autocomplete="off" placeholder="Search LOGILEE..." aria-label="Search LOGILEE">
+          <button type="submit" aria-label="Search"><i data-lucide="arrow-right"></i></button>
+        </form>
+        <div class="top-actions">
+          <div class="language-menu" data-language-menu>
+            <button class="icon-btn language-button" type="button" aria-expanded="false"><i data-lucide="globe-2"></i> Language <i data-lucide="chevron-down"></i></button>
+            <div class="language-dropdown">
+              <span>Language</span>
+              <a class="is-active" href="../../" data-lang-choice="ko">Korean</a>
+              <a class="" href="../../../en/" data-lang-choice="en">English</a>
+            </div>
+          </div>
+          <button class="menu-btn" data-menu-toggle aria-expanded="false" aria-label="Open menu"><i data-lucide="menu"></i></button>
         </div>
-      </article>
-    </main>
+      </header>
+        <div class="page workspace-page article-page">
+          <nav class="article-breadcrumb" aria-label="Breadcrumb">
+            <a href="../../">Home</a>
+            <span>/</span>
+            <a href="../">Latest Posts</a>
+          </nav>
+          <div class="article-layout">
+            <article class="article-detail">
+              <header class="article-header">
+                <p class="eyebrow">market</p>
+                <h1>중국 항만이 태풍으로 멈추면 내 화물에는 어떤 일이 생길까?</h1>
+                <p class="article-summary">중국 항만의 태풍 운영 중단이 선박 대기, Port Omission, Rollover와 ETA에 어떻게 이어지는지 실제 수입자가 확인해야 할 항목을 중심으로 설명합니다.</p>
+                <div class="article-meta">
+                  <span>2026-08-14</span>
+                  <span>7분 읽기</span>
+                  <a href="https://berryandyoung.github.io/logilee/ko/posts/china-typhoon-port-delay-shipment-impact/">Share</a>
+                </div>
+                <figure class="article-hero-figure"><img class="article-hero" src="https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_34da3b8f-7d59-4526-8381-7ac3e0298577-ChatGPT%20Image%202026%EB%85%84%208%EC%9B%94%2014%EC%9D%BC%20%EC%98%A4%ED%9B%84%2004_50_55.png?alt=media&amp;token=31ad7c7c-ba4b-42f2-a3b0-3e11ba56f202" alt="태풍과 악천후의 영향을 받는 중국 컨테이너 항만과 화물선" loading="eager"></figure>
+              </header>
+              <article class="post-content article-body">
+                <h2>항만이 다시 열렸는데, 왜 내 화물은 아직 움직이지 않을까요?</h2><br><p>중국에서 화물을 수입하다 보면 여름철에 신경 쓰게 되는 변수가 하나 있습니다.</p><br><p>태풍입니다.</p><br><p>2026년 8월 9일 태풍 Dolphin이 중국 동부 저장성에 상륙했습니다. 태풍 접근을 앞두고 중국 동부에서는 항만과 공항, 페리 등 일부 교통·물류 운영이 중단됐고 상하이와 저장성을 중심으로 큰 영향을 받았습니다.</p><br><p>화주 입장에서는 여기서 이런 생각을 하기 쉽습니다.</p><br><p><strong>“태풍이 지나갔고 항만도 다시 열렸으니 이제 정상 아닌가?”</strong></p><br><p>하지만 실제 해상운송에서는 항만 운영 재개와 내 화물의 정상화가 같은 시점에 일어나지 않을 수 있습니다.</p><br><p>항만이 몇 시간 또는 하루 멈춘 사이에도 입항하려던 선박은 계속 쌓이고, 예정됐던 작업 순서는 밀리고, 이후 도착하는 선박까지 영향을 받기 때문입니다.</p><br><p>그래서 태풍 뉴스를 볼 때는 단순히 Port Closed / Port Open만 확인하기보다 그 뒤에 어떤 일이 이어지는지를 보는 것이 중요합니다.</p><br><hr><br><h2>1. 태풍이 접근하면 가장 먼저 선박과 항만 작업이 멈춥니다</h2><br><p>강풍과 높은 파도가 예상되는 상황에서 컨테이너 크레인을 계속 가동하거나 선박을 그대로 접안시키는 것은 위험할 수 있습니다.</p><br><p>따라서 태풍이 접근하면 상황에 따라 터미널 작업이 제한되거나 중단되고, 선박은 안전한 해역으로 이동하거나 입항을 기다리게 됩니다.</p><br><p>컨테이너 야드, 바지선, 창고 등의 운영도 영향을 받을 수 있습니다.</p><br><p>여기까지는 비교적 이해하기 쉽습니다.</p><br><p>문제는 태풍이 지나간 다음부터입니다.</p><br><hr><br><h2>2. 항만이 다시 열려도 대기하던 선박은 사라지지 않습니다</h2><br><p>태풍 때문에 24시간 동안 항만 작업이 중단됐다고 가정해보겠습니다.</p><br><p>그 시간 동안 원래 입항하기로 했던 선박들이 모두 없어지는 것은 아닙니다.</p><br><p>항만 밖에서 기다리거나 운항속도를 조정하고, 일부 선박은 다른 항만 일정까지 변경하면서 상황을 기다립니다.</p><br><p>항만이 다시 운영을 시작하면 기존에 기다리고 있던 선박과 새롭게 도착하는 선박을 차례로 처리해야 합니다.</p><br><p>이때 흔히 나타날 수 있는 현상이 <strong>Vessel Bunching</strong>입니다.</p><br><p>원래 서로 다른 시간에 도착해야 할 선박들이 항만 운영 중단으로 비슷한 시점에 몰리는 것입니다.</p><br><p>결과적으로 항만은 다시 열렸지만 Berth를 기다리는 시간이 길어질 수 있습니다.</p><br><hr><br><h2>3. 선박 스케줄은 한 항구에서 끝나지 않습니다</h2><br><p>컨테이너선은 Shanghai 한 곳만 들렀다가 운항을 끝내는 것이 아닙니다.</p><br><p>하나의 서비스가 여러 항만을 순서대로 기항하는 경우가 많습니다.</p><br><p>예를 들어 단순화하면 다음과 같은 일정이 있을 수 있습니다.</p><br><blockquote><p>Qingdao → Shanghai → Ningbo → Busan → 다음 기항지</p></blockquote><br><p>Shanghai에서 일정이 밀리면 Ningbo 도착도 늦어질 수 있고, 그 뒤 Busan 일정까지 영향을 받을 수 있습니다.</p><br><p>반대로 선사는 전체 서비스 스케줄을 회복하기 위해 특정 항만 기항을 조정하는 선택을 할 수도 있습니다.</p><br><p>그래서 내가 이용하는 출발항에 직접적인 태풍 피해가 없었다고 해서 무조건 영향이 없다고 판단하기는 어렵습니다.</p><br><p><strong>내 선박이 그 전에 어느 항만을 거쳐오는지도 봐야 합니다.</strong></p><br><hr><br><h2>4. Port Omission이 발생할 수도 있습니다</h2><br><p>지연이 커지면 선사가 전체 서비스 일정을 회복하기 위해 예정됐던 항만을 건너뛰는 경우가 있습니다.</p><br><p>이를 Port Omission이라고 합니다.</p><br><p>실제로 2026년 7월 태풍 Bavi로 Shanghai와 Ningbo에 항만 폐쇄와 장시간 대기가 예상되자 일부 서비스에서는 Shanghai 또는 Ningbo 기항을 생략하는 조정이 이루어졌습니다.</p><br><p>이 경우 해당 항만에서 선적하거나 하역할 예정이던 화물은 다른 선박으로 옮겨지거나 다른 항만을 경유해 최종 목적지로 이동할 수 있습니다.</p><br><p>화주 입장에서는 단순한 하루 이틀의 ETA 변경보다 더 복잡한 상황이 됩니다.</p><br><p>Booking했던 Vessel과 실제 운송하는 Vessel이 달라질 수도 있고, Transshipment 일정이 추가될 수도 있기 때문입니다.</p><br><hr><br><h2>5. 내 컨테이너가 이미 항만에 있다고 반드시 실리는 것도 아닙니다</h2><br><p>여기서 또 하나 확인할 것이 있습니다.</p><br><p>컨테이너가 이미 터미널에 반입됐다고 해서 예정된 선박에 반드시 적재되는 것은 아닙니다.</p><br><p>태풍 이후 스케줄이 크게 흐트러지거나 선박 공간 운영에 변화가 생기면 일부 화물이 다음 선박으로 넘어갈 가능성도 있습니다.</p><br><p>실무에서는 이런 상황을 넓은 의미에서 Rollover라고 부르는 경우가 있습니다.</p><br><p>그래서 태풍 직후에는 단순히 컨테이너가 Gate-in 됐다는 사실만 확인하기보다 <strong>실제로 예정된 Vessel에 Load됐는지</strong>까지 확인하는 것이 중요합니다.</p><br><hr><br><h2>6. ETD가 바뀌면 ETA만 하루 더하면 될까요?</h2><br><p>예를 들어 원래 일정이 다음과 같았다고 가정해보겠습니다.</p><br><blockquote><p>ETD Shanghai: August 10<br>ETA Busan: August 12</p></blockquote><br><p>태풍 때문에 ETD가 August 12로 변경됐다고 해서 ETA도 단순히 August 14가 된다고 생각하기 쉽습니다.</p><br><p>하지만 실제 일정은 그렇게 단순하지 않을 수 있습니다.</p><br><p>항만 혼잡, 선박 기항 순서 변경, 운항속도 조정, Port Omission이나 추가적인 Berth Waiting 등에 따라 전체 스케줄이 다시 계산될 수 있기 때문입니다.</p><br><p>따라서 태풍 이후에는 기존 Booking Confirmation에 적힌 ETA만 계속 보고 있기보다 선사에서 업데이트한 최신 Vessel Schedule을 다시 확인하는 편이 좋습니다.</p><br><hr><br><h2>7. 중국에서 한국으로 오는 짧은 항로일수록 체감이 클 수도 있습니다</h2><br><p>Shanghai나 Ningbo에서 Busan까지의 해상운송 자체는 비교적 짧습니다.</p><br><p>그래서 오히려 항만에서 하루나 이틀 기다리는 시간이 전체 리드타임에서 차지하는 비중이 크게 느껴질 수 있습니다.</p><br><p>해상에서 이동하는 시간보다 중국 항만에서 Berth를 기다리거나 출항 일정이 변경되면서 발생하는 시간이 더 길어지는 상황도 생각할 수 있습니다.</p><br><p>특히 생산에 바로 투입해야 하는 원재료나 재고가 부족한 제품이라면 “배가 언제 출항하느냐”가 단순한 물류 문제가 아니라 생산계획의 문제가 될 수 있습니다.</p><br><hr><br><h2>태풍 뉴스가 나오면 저는 이 순서로 확인합니다</h2><br><p>중국 공급자의 화물이 이미 Booking되어 있다면 막연히 태풍 경로만 계속 볼 필요는 없습니다.</p><br><p>현재 내 화물과 관련된 정보를 순서대로 확인하는 편이 빠릅니다.</p><br><h3>1. Port Status</h3><br><p>출발항 터미널이 정상 운영 중인지, Gate-in이나 컨테이너 작업에 제한이 있는지 확인합니다.</p><br><h3>2. Cargo Cut-off</h3><br><p>기존 Cut-off가 그대로인지 변경됐는지 확인합니다.</p><br><p>공급자가 아직 컨테이너를 반입하지 않았다면 이 부분이 특히 중요합니다.</p><br><h3>3. Vessel Schedule</h3><br><p>기존 Booking에 있는 ETD가 아니라 현재 선사가 제공하는 최신 일정을 확인합니다.</p><br><h3>4. Actual Loading</h3><br><p>컨테이너가 실제 예정된 Vessel에 적재됐는지 확인합니다.</p><br><h3>5. Actual Departure</h3><br><p>예정 출항시간보다 실제 출항 여부가 중요합니다.</p><br><p>선박이 항만을 떠난 뒤에는 Tracking으로 실제 이동을 확인하기가 훨씬 쉬워집니다.</p><br><h3>6. Port Omission / Vessel Change</h3><br><p>선사에서 항만 생략이나 Vessel 변경 공지를 냈는지도 확인합니다.</p><br><h3>7. Updated ETA</h3><br><p>마지막으로 변경된 도착예정일을 확인하고 필요한 경우 내부 입고·생산 일정을 조정합니다.</p><br><hr><br><h2>Tracking 화면의 숫자 하나만 보지 않는 것이 좋습니다</h2><br><p>태풍처럼 스케줄 변화가 큰 상황에서는 Tracking 화면에 표시되는 ETA 하나만 보는 것보다 상태가 어떻게 변하고 있는지를 같이 보는 편이 좋습니다.</p><br><p>예를 들어 다음 정보는 서로 의미가 다릅니다.</p><br><ul>&nbsp; <li>Booking confirmed</li>&nbsp; <li>Container gate-in</li>&nbsp; <li>Loaded on vessel</li>&nbsp; <li>Vessel departed</li>&nbsp; <li>Transshipment</li>&nbsp; <li>Vessel arrived</li>&nbsp; <li>Container discharged</li></ul><br><p>컨테이너가 Gate-in 상태에서 며칠 동안 움직이지 않는 것과 이미 Vessel에 적재되어 출항한 것은 전혀 다른 상황입니다.</p><br><p>그래서 일정에 문제가 생겼을 때는 “ETA가 며칠이야?”보다 <strong>“지금 화물이 어느 단계까지 진행됐어?”</strong>라고 확인하는 것이 더 유용할 때가 많습니다.</p><br><hr><br><h2>이미 지연됐다면 무엇을 해야 할까요?</h2><br><p>먼저 모든 지연에 즉시 대응할 필요는 없습니다.</p><br><p>재고가 충분하고 납기에 여유가 있다면 변경된 스케줄을 확인하면서 기다리는 것이 가장 합리적일 수 있습니다.</p><br><p>반대로 생산라인 투입 예정인 원재료처럼 하루의 차이가 중요한 화물이라면 대체안을 검토해야 할 수 있습니다.</p><br><p>예를 들어 공급자에게 다음 출고분을 앞당길 수 있는지 확인하거나, 일부 긴급 물량만 항공으로 전환하는 방법도 상황에 따라 검토할 수 있습니다.</p><br><p>중요한 것은 태풍이 왔다는 사실 자체가 아니라 <strong>지연이 현재 재고와 생산 일정에 어느 시점부터 영향을 주는지</strong>를 파악하는 것입니다.</p><br><hr><br><h2>항만이 Open됐다는 뉴스가 끝은 아닙니다</h2><br><p>태풍이 지나가고 항만 운영이 재개됐다는 소식이 나오면 문제가 해결된 것처럼 느껴질 수 있습니다.</p><br><p>하지만 물류에서는 그때부터 밀려 있던 작업을 처리하는 과정이 시작됩니다.</p><br><p>대기 선박이 한꺼번에 몰리고, Berth 순서가 조정되고, 선사가 스케줄을 회복하기 위해 기항지를 변경하면 그 영향은 며칠 더 이어질 수 있습니다.</p><br><p>지난 7월 중국 동부 항만이 태풍 Bavi의 영향을 받았을 때도 Shanghai와 Ningbo가 운영을 재개한 이후 선박 적체와 스케줄 조정이 이어졌습니다.</p><br><p>그래서 태풍 이후 화주가 확인해야 할 것은 단순히:</p><br><blockquote><p>“항만이 열렸는가?”</p></blockquote><br><p>에서 끝나지 않습니다.</p><br><p>오히려 다음 질문이 더 중요합니다.</p><br><blockquote><p><strong>“내 컨테이너는 실제로 어느 선박에 실렸고, 그 선박은 지금 어디에 있는가?”</strong></p></blockquote><br><hr><br><h2>이번 중국 태풍 뉴스에서 실무자가 볼 포인트</h2><br><p>이번 태풍 Dolphin은 중국 동부의 항만과 교통망이 기상 상황에 따라 얼마나 빠르게 영향을 받을 수 있는지를 다시 보여줬습니다.</p><br><p>중국에서 정기적으로 제품이나 원자재를 수입한다면 태풍 시즌마다 모든 화물을 걱정하기보다 확인할 항목을 정해두는 것이 훨씬 효율적입니다.</p><br><p><strong>Port Status → Cut-off → Vessel Schedule → Actual Loading → Actual Departure → Updated ETA</strong></p><br><p>이 순서만 익혀두어도 “태풍 때문에 늦는대요”라는 말을 들었을 때 실제로 어디에서 문제가 발생했는지 파악하기가 훨씬 쉬워집니다.</p><br><p>그리고 운송 이슈가 발생했을 때 가장 중요한 것은 뉴스 자체보다 <strong>내 화물의 현재 상태</strong>입니다.</p><br><hr><br><h2>LOGILEE에서 함께 확인하기</h2><br><p>중국 항만의 위치와 기본 정보는 LOGILEE의 <strong>Ports &amp; Airports</strong>에서 확인할 수 있습니다.</p><br><p>Booking 이후 실제 화물 상태를 확인해야 한다면 <strong>Shipment Tracking</strong>에서 해당 선사 또는 운송사의 공식 Tracking 서비스로 이동할 수 있습니다.</p><br><p>현재 물류시장 흐름과 운송 관련 지표는 <strong>Freight Market</strong>, Port Omission, Rollover, Transshipment 등 생소한 용어는 <strong>Dictionary</strong>에서 함께 확인하세요.</p><br><p>태풍 같은 돌발 상황에서는 각각의 정보를 따로 보는 것보다 <strong>항만 → 선박 → 컨테이너 → ETA</strong> 순서로 연결해서 확인하는 것이 실제 업무에 더 도움이 됩니다.</p><br><hr><br><h3>참고 및 유의사항</h3><br><p>본 글은 2026년 8월 공개된 태풍 Dolphin 관련 보도와 최근 중국 동부 항만의 기상 영향 사례를 바탕으로 항만 운영 중단이 컨테이너 화물에 미치는 영향을 설명한 콘텐츠입니다.</p><br><p>항만 운영 상태, 선박 일정과 화물 ETA는 기상 및 터미널 상황에 따라 빠르게 변경될 수 있습니다. 실제 운송 건은 해당 선사, 포워더, 터미널 및 관계기관이 제공하는 최신 정보를 확인하세요.</p><br><p>본 콘텐츠는 일반적인 무역·물류 정보 제공을 목적으로 하며 특정 화물에 대한 운송계약, 운임 또는 통관 자문을 의미하지 않습니다.</p><br><br><br><br><h3>Sources</h3><br><ul>&nbsp; <li>Reuters, “Typhoon Dolphin hits Japan's Okinawa, China shuts ports ahead of landfall”, August 8, 2026</li>&nbsp; <li>Reuters, “Typhoon Dolphin hits China's east coast, over 1 million evacuated”, August 9, 2026</li>&nbsp; <li>Maersk, “Typhoon Bavi Service Update”, July 10, 2026</li>&nbsp; <li>Kuehne+Nagel, East China port operational updates, July 2026</li></ul>
+              </article>
+            </article>
+
+    <aside class="article-aside" aria-label="Article resources">
+      <section class="article-aside-card">
+        <h2>Related Resources</h2>
+        <div class="article-resource-list">
+    <a href="../../ports.html"><i data-lucide="anchor"></i><span>Ports &amp; Airports</span></a>
+
+    <a href="../../track.html"><i data-lucide="radar"></i><span>Shipment Tracking</span></a>
+
+    <a href="../../../hscode.html"><i data-lucide="barcode"></i><span>HS Code</span></a>
+
+    <a href="../../documents.html"><i data-lucide="file-text"></i><span>Documents</span></a>
+
+    <a href="../../dictionary.html"><i data-lucide="languages"></i><span>Dictionary</span></a>
+
+    <a href="../../cbm.html"><i data-lucide="calculator"></i><span>CBM Calculator</span></a>
+
+    <a href="../../../incoterms-2020.html"><i data-lucide="git-compare-arrows"></i><span>Incoterms</span></a>
+  </div>
+      </section>
+      <section class="article-aside-card">
+        <h2>Related Posts</h2>
+        <div class="article-related-list">
+      <a class="article-related-post" href="../../../ko/posts/rhine-low-water-logistics-impact/">
+        <img src="https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_a7a45aa1-96ed-492e-8c46-2c03d6347023-ChatGPT%20Image%202026%EB%85%84%208%EC%9B%94%2014%EC%9D%BC%20%EC%98%A4%ED%9B%84%2004_42_32.png?alt=media&amp;token=d5517725-39ee-4897-8793-208c89c0d656" alt="저수위로 수면이 낮아진 라인강을 운항하는 내륙 화물선" loading="lazy">
+        <span><strong>라인강 수위가 낮아지면 왜 유럽 물류비가 오를까?</strong><small>2026-08-14</small></span>
+      </a>
+
+      <a class="article-related-post" href="../../../ko/posts/lcl-vs-fcl/">
+        <img src="https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_871871bb-1a1a-4190-b340-829322f30f24-ChatGPT%20Image%202026%EB%85%84%208%EC%9B%94%2014%EC%9D%BC%20%EC%98%A4%ED%9B%84%2004_30_45.png?alt=media&amp;token=1db5c262-68fd-46d5-a2ba-3279ceb6cc04" alt="LCL과 FCL 해상운송 방식을 비교하는 컨테이너 화물 이미지" loading="lazy">
+        <span><strong>LCL과 FCL, 어느 시점부터 FCL이 유리할까?</strong><small>2026-08-14</small></span>
+      </a>
+
+      <a class="article-related-post" href="../../../ko/posts/commercial-invoice-common-mistakes/">
+        <img src="https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_607b078e-c84e-4281-9e60-62ccbb80a361-ChatGPT%20Image%202026%EB%85%84%208%EC%9B%94%2014%EC%9D%BC%20%EC%98%A4%ED%9B%84%2012_16_48.png?alt=media&amp;token=172d5a97-4bca-4e96-acd2-7be9ad354cbb" alt="Commercial Invoice 작성 시 자주 발생하는 7가지 오류 thumbnail" loading="lazy">
+        <span><strong>Commercial Invoice 작성 시 자주 발생하는 7가지 오류</strong><small>2026-08-14</small></span>
+      </a>
+    </div>
+      </section>
+      <div class="ad-slot ad-slot--rectangle article-ad"><span>Advertisement</span><small>Reserved ad placement</small></div>
+    </aside>
+          </div>
+        </div>
+      </main>
+    </div>
   </body>
 </html>

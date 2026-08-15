@@ -1,10 +1,10 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="ko">
   <head>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8548711851361478" crossorigin="anonymous"></script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Commercial Invoice 작성 시 자주 발생하는 7가지 오류 | LOGILEE</title>
+    <title>Commercial Invoice 작성 시 자주 발생하는 7가지 오류 | LOGILEE | LOGILEE</title>
     <meta name="description" content="Commercial Invoice에서 자주 발견되는 7가지 오류를 실무 관점에서 정리했습니다. 거래 당사자, HS Code, Incoterms, 금액과 Packing List·B/L 불일치까지 확인해보세요.">
     <meta name="logilee:status" content="published">
     <meta name="logilee:published-at" content="2026-08-14T03:00:54.001Z">
@@ -24,38 +24,136 @@
     <script defer src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
     <script defer src="../../../assets/posts-data.js"></script>
     <script defer src="../../../assets/logilee-app.js"></script>
+    <style>
+      body[data-page="post-detail"] { background: #f5f7fa; overflow-x: hidden; }
+      .article-page { width: min(100%, 1240px); padding: 28px clamp(20px, 2.4vw, 32px) 48px; }
+      .article-breadcrumb { display: flex; align-items: center; gap: 8px; margin: 0 0 16px; color: #64748b; font-size: 13px; font-weight: 750; }
+      .article-breadcrumb a:hover { color: var(--signal-blue); }
+      .article-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, 290px); gap: clamp(32px, 3.6vw, 48px); align-items: start; }
+      .article-detail { min-width: 0; overflow: hidden; padding: clamp(26px, 3vw, 44px); border: 1px solid #dbe3ec; border-radius: 16px; background: #fff; box-shadow: 0 16px 38px rgba(15, 23, 42, 0.06); }
+      .article-header { display: grid; gap: 16px; margin-bottom: clamp(28px, 3vw, 42px); }
+      .article-header .eyebrow { width: fit-content; margin: 0; padding: 6px 10px; border: 1px solid rgba(23, 107, 255, 0.18); border-radius: 999px; background: #eef5ff; color: var(--signal-blue); font-size: 12px; letter-spacing: 0; }
+      .article-header h1 { max-width: 820px; font-size: clamp(32px, 3.2vw, 43px); line-height: 1.24; }
+      .article-summary { max-width: 760px; margin: 0; color: #475569; font-size: clamp(18px, 1.5vw, 20px); line-height: 1.62; }
+      .article-meta { display: flex; flex-wrap: wrap; gap: 8px 14px; color: #64748b; font-size: 13px; font-weight: 750; }
+      .article-meta span + span::before, .article-meta a::before { content: "·"; margin-right: 14px; color: #94a3b8; }
+      .article-meta a { color: var(--signal-blue); }
+      .article-hero-figure { min-width: 0; margin: 8px 0 0; }
+      .article-hero { display: block; width: 100%; max-width: 100%; max-height: 460px; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 14px; }
+      .image-attribution { margin: 8px 2px 0; color: #667085; font-size: 12px; line-height: 1.45; overflow-wrap: anywhere; }
+      .image-attribution a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+      .post-content, .article-body { min-width: 0; color: #1f2937; font-size: 17px; line-height: 1.82; overflow-wrap: anywhere; }
+      .article-body > *:first-child { margin-top: 0; } .article-body > *:last-child { margin-bottom: 0; }
+      .article-body p { margin: 0 0 18px; }
+      .article-body h2, .article-body h3, .article-body h4 { color: var(--ink-navy); letter-spacing: 0; }
+      .article-body h2 { margin: 42px 0 14px; padding-top: 4px; font-size: clamp(25px, 2.1vw, 30px); line-height: 1.3; }
+      .article-body h3 { margin: 30px 0 10px; font-size: clamp(20px, 1.7vw, 23px); line-height: 1.34; }
+      .article-body h4 { margin: 24px 0 8px; font-size: 18px; line-height: 1.38; }
+      .article-body strong, .article-body b { color: #0f2742; font-weight: 750; }
+      .article-body a { color: var(--signal-blue); text-decoration: underline; text-underline-offset: 3px; }
+      .article-body ul, .article-body ol { margin: 0 0 20px; padding-left: 1.35em; }
+      .article-body li + li { margin-top: 7px; }
+      .article-body blockquote { margin: 26px 0; padding: 18px 20px; border-left: 4px solid var(--signal-blue); border-radius: 0 12px 12px 0; background: #eef5ff; color: #23364d; }
+      .article-body hr { height: 1px; margin: 34px 0; border: 0; background: #dbe3ec; }
+      .article-body figure { margin: 26px 0; } .article-body figcaption { margin-top: 8px; color: #64748b; font-size: 13px; }
+      .article-body img { display: block; max-width: 100%; height: auto; border-radius: 12px; }
+      .article-table-wrap { max-width: 100%; margin: 24px 0; overflow-x: auto; border: 1px solid #dbe3ec; border-radius: 12px; }
+      .article-table-wrap table { width: 100%; min-width: 560px; border-collapse: collapse; background: #fff; }
+      .article-table-wrap th, .article-table-wrap td { padding: 12px 14px; border-bottom: 1px solid #e5ebf1; text-align: left; vertical-align: top; font-size: 14px; line-height: 1.55; }
+      .article-table-wrap th { background: #f5f8fc; color: #0f2742; font-weight: 800; }
+      .article-aside { min-width: 0; display: grid; gap: 16px; position: sticky; top: 96px; }
+      .article-aside-card { padding: 18px; border: 1px solid #dbe3ec; border-radius: 14px; background: #fff; box-shadow: 0 12px 30px rgba(15, 23, 42, 0.05); }
+      .article-aside-card h2 { margin: 0 0 14px; color: var(--ink-navy); font-size: 15px; line-height: 1.35; }
+      .article-resource-list, .article-related-list { display: grid; gap: 10px; }
+      .article-resource-list a { min-width: 0; display: flex; align-items: center; gap: 9px; padding: 9px 10px; border-radius: 10px; color: #1f3651; font-size: 14px; font-weight: 750; }
+      .article-resource-list a:hover { background: #eef5ff; color: var(--signal-blue); }
+      .article-resource-list svg { width: 16px; height: 16px; flex: 0 0 auto; }
+      .article-related-post { min-width: 0; display: grid; grid-template-columns: 58px minmax(0, 1fr); gap: 10px; align-items: center; }
+      .article-related-post img, .article-related-fallback { width: 58px; height: 48px; border-radius: 10px; object-fit: cover; background: #eef5ff; }
+      .article-related-fallback { display: grid; place-items: center; color: var(--signal-blue); font-size: 10px; font-weight: 850; text-align: center; }
+      .article-related-post strong { display: -webkit-box; overflow: hidden; color: #1f3651; font-size: 13px; line-height: 1.35; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+      .article-related-post small, .article-aside-empty { color: #64748b; font-size: 12px; }
+      .article-ad { min-height: 250px; }
+      @media (max-width: 1180px) { .article-layout { grid-template-columns: 1fr; } .article-aside { position: static; grid-template-columns: repeat(2, minmax(0, 1fr)); } .article-ad { grid-column: 1 / -1; } }
+      @media (max-width: 760px) { .article-page { padding: 18px 14px 32px; } .article-detail { padding: 22px 18px; border-radius: 14px; } .article-header h1 { font-size: 30px; } .post-content, .article-body { font-size: 16px; line-height: 1.78; } .article-aside { grid-template-columns: 1fr; } .article-meta span + span::before, .article-meta a::before { margin-right: 8px; } }
+    </style>
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Article",
-      "headline": "Commercial Invoice 작성 시 자주 발생하는 7가지 오류",
-      "description": "Commercial Invoice에서 자주 발견되는 7가지 오류를 실무 관점에서 정리했습니다. 거래 당사자, HS Code, Incoterms, 금액과 Packing List·B/L 불일치까지 확인해보세요.",
-      "datePublished": "2026-08-14",
-      "dateModified": "2026-08-14",
-      "inLanguage": "ko",
-      "author": { "@type": "Organization", "name": "LOGILEE" },
-      "publisher": { "@type": "Organization", "name": "LOGILEE" },
-      "mainEntityOfPage": "https://www.logilee.com/ko/posts/commercial-invoice-common-mistakes/",
-      "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_607b078e-c84e-4281-9e60-62ccbb80a361-ChatGPT%20Image%202026%EB%85%84%208%EC%9B%94%2014%EC%9D%BC%20%EC%98%A4%ED%9B%84%2012_16_48.png?alt=media&token=172d5a97-4bca-4e96-acd2-7be9ad354cbb"
-    }
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Commercial Invoice 작성 시 자주 발생하는 7가지 오류",
+  "description": "Commercial Invoice에서 자주 발견되는 7가지 오류를 실무 관점에서 정리했습니다. 거래 당사자, HS Code, Incoterms, 금액과 Packing List·B/L 불일치까지 확인해보세요.",
+  "datePublished": "2026-08-14",
+  "dateModified": "2026-08-14",
+  "inLanguage": "ko",
+  "author": {
+    "@type": "Organization",
+    "name": "LOGILEE"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "LOGILEE"
+  },
+  "mainEntityOfPage": "https://www.logilee.com/ko/posts/commercial-invoice-common-mistakes/",
+  "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_607b078e-c84e-4281-9e60-62ccbb80a361-ChatGPT%20Image%202026%EB%85%84%208%EC%9B%94%2014%EC%9D%BC%20%EC%98%A4%ED%9B%84%2012_16_48.png?alt=media&token=172d5a97-4bca-4e96-acd2-7be9ad354cbb"
+}
     </script>
   </head>
   <body data-page="post-detail" data-lang="ko">
-    <header class="site-header">
-      <a class="brand" href="../../"><span>LOGILEE</span></a>
-      <nav class="site-nav" aria-label="Primary">
-        <a href="../../">홈</a>
-        <a href="../">목록으로</a>
+    <div class="shell workspace-shell article-workspace-shell">
+
+    <aside class="rail workspace-rail" aria-label="LOGILEE workspace menu">
+      <a class="brand compact-brand" href="../../"><strong>LOGILEE</strong><span>Global Trade Workspace</span></a>
+      <nav class="workspace-nav">
+        <a class="nav-home" href="../../"><i data-lucide="home"></i> Home</a>
+        <section><h2>Trade</h2><a href="../../countries.html"><i data-lucide="globe"></i>My Countries</a><a href="../../../hscode.html"><i data-lucide="barcode"></i>HS Code</a><a href="../../dashboard.html"><i data-lucide="globe-lock"></i>FTA & Tariff</a><a href="../../countries.html"><i data-lucide="shield-alert"></i>Import Regulation</a><a href="../../countries.html"><i data-lucide="send"></i>Export Regulation</a><a href="../../dashboard.html"><i data-lucide="chart-column"></i>Trade Statistics</a><a href="../../contact.html"><i data-lucide="building-2"></i>Embassy & Office</a></section>
+        <section><h2>Logistics</h2><a href="../../track.html"><i data-lucide="radar"></i>Tracking</a><a href="../../ports.html"><i data-lucide="ship"></i>Carrier & Airline</a><a href="../../ports.html"><i data-lucide="anchor"></i>Ports & Airports</a><a href="../../tools.html"><i data-lucide="container"></i>Container</a><a href="../../dashboard.html"><i data-lucide="calendar-days"></i>Schedule</a><a href="../../cbm.html"><i data-lucide="calculator"></i>CBM Calculator</a></section>
+        <section><h2>Compliance</h2><a href="../../dashboard.html"><i data-lucide="shield-check"></i>FDA</a><a href="../../dashboard.html"><i data-lucide="badge-check"></i>BIS</a><a href="../../dashboard.html"><i data-lucide="leaf"></i>REACH</a><a href="../../dashboard.html"><i data-lucide="circle-check"></i>RoHS / CE</a><a href="../../dashboard.html"><i data-lucide="circle-x"></i>CCC</a><a href="../../dashboard.html"><i data-lucide="shield"></i>KC / TSCA</a></section>
+        <section><h2>Market</h2><a href="../../dashboard.html"><i data-lucide="chart-no-axes-combined"></i>Freight Index</a><a href="../../dashboard.html"><i data-lucide="gem"></i>Metals & Energy</a><a href="../../weather.html"><i data-lucide="badge-dollar-sign"></i>Exchange Rate</a><a href="../../dashboard.html"><i data-lucide="calendar-clock"></i>Economic Calendar</a></section>
+        <section><h2>Resources</h2><a href="../../templates.html"><i data-lucide="copy"></i>Templates</a><a href="../../documents.html"><i data-lucide="file-text"></i>Documents</a><a href="../../dictionary.html"><i data-lucide="languages"></i>Dictionary</a><a href="../../learn.html"><i data-lucide="graduation-cap"></i>Learn</a><a class="is-active" href="../"><i data-lucide="newspaper"></i>Latest Posts</a></section>
       </nav>
-    </header>
-    <main class="article-shell">
-      <article class="article-detail">
-        <p class="eyebrow">trade · Korean · 2026-08-14</p>
-        <h1>Commercial Invoice 작성 시 자주 발생하는 7가지 오류</h1>
-        <p class="article-summary">Commercial Invoice에서 자주 발견되는 7가지 오류를 실무 관점에서 정리했습니다. 거래 당사자, HS Code, Incoterms, 금액과 Packing List·B/L 불일치까지 확인해보세요.</p>
-        <img class="article-hero" src="https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_607b078e-c84e-4281-9e60-62ccbb80a361-ChatGPT%20Image%202026%EB%85%84%208%EC%9B%94%2014%EC%9D%BC%20%EC%98%A4%ED%9B%84%2012_16_48.png?alt=media&amp;token=172d5a97-4bca-4e96-acd2-7be9ad354cbb" alt="Commercial Invoice 작성 시 자주 발생하는 7가지 오류">
-        <div class="article-body">
-          <h2>Commercial Invoice, 금액만 맞으면 되는 서류가 아닙니다</h2>
+    </aside>
+    <main class="main">
+      <header class="topbar workspace-topbar">
+        <a class="mobile-logo" href="../../">LOGILEE</a>
+        <form class="header-search" action="../../search.html" method="get" role="search">
+          <i data-lucide="search"></i>
+          <input name="q" autocomplete="off" placeholder="Search LOGILEE..." aria-label="Search LOGILEE">
+          <button type="submit" aria-label="Search"><i data-lucide="arrow-right"></i></button>
+        </form>
+        <div class="top-actions">
+          <div class="language-menu" data-language-menu>
+            <button class="icon-btn language-button" type="button" aria-expanded="false"><i data-lucide="globe-2"></i> Language <i data-lucide="chevron-down"></i></button>
+            <div class="language-dropdown">
+              <span>Language</span>
+              <a class="is-active" href="../../" data-lang-choice="ko">Korean</a>
+              <a class="" href="../../../en/" data-lang-choice="en">English</a>
+            </div>
+          </div>
+          <button class="menu-btn" data-menu-toggle aria-expanded="false" aria-label="Open menu"><i data-lucide="menu"></i></button>
+        </div>
+      </header>
+        <div class="page workspace-page article-page">
+          <nav class="article-breadcrumb" aria-label="Breadcrumb">
+            <a href="../../">Home</a>
+            <span>/</span>
+            <a href="../">Latest Posts</a>
+          </nav>
+          <div class="article-layout">
+            <article class="article-detail">
+              <header class="article-header">
+                <p class="eyebrow">trade</p>
+                <h1>Commercial Invoice 작성 시 자주 발생하는 7가지 오류</h1>
+                <p class="article-summary">Commercial Invoice에서 자주 발견되는 7가지 오류를 실무 관점에서 정리했습니다. 거래 당사자, HS Code, Incoterms, 금액과 Packing List·B/L 불일치까지 확인해보세요.</p>
+                <div class="article-meta">
+                  <span>2026-08-14</span>
+                  <span>6분 읽기</span>
+                  <a href="https://berryandyoung.github.io/logilee/ko/posts/commercial-invoice-common-mistakes/">Share</a>
+                </div>
+                <figure class="article-hero-figure"><img class="article-hero" src="https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_607b078e-c84e-4281-9e60-62ccbb80a361-ChatGPT%20Image%202026%EB%85%84%208%EC%9B%94%2014%EC%9D%BC%20%EC%98%A4%ED%9B%84%2012_16_48.png?alt=media&amp;token=172d5a97-4bca-4e96-acd2-7be9ad354cbb" alt="Commercial Invoice 작성 시 자주 발생하는 7가지 오류" loading="eager"></figure>
+              </header>
+              <article class="post-content article-body">
+                <h2>Commercial Invoice, 금액만 맞으면 되는 서류가 아닙니다</h2>
 
 <p>수출입 업무에서 Commercial Invoice를 받으면 가장 먼저 무엇을 확인하시나요?</p>
 
@@ -301,13 +399,13 @@ B/L: 102 packages</p>
 
 <p>Commercial Invoice를 검토하다 보면 Invoice 한 장만으로 끝나지 않고 무역용어, 품목분류, 선적서류와 국가별 수입규제까지 함께 확인해야 하는 경우가 많습니다.</p>
 
-<p>Commercial Invoice와 함께 사용되는 Packing List, B/L, AWB 등 주요 무역서류의 역할은 <a href="https://www.logilee.com/ko/documents.html">LOGILEE Documents</a>에서 살펴볼 수 있습니다.</p>
+<p>Commercial Invoice와 함께 사용되는 Packing List, B/L, AWB 등 주요 무역서류의 역할은 <a href="https://www.logilee.com/ko/documents.html" rel="noopener noreferrer">LOGILEE Documents</a>에서 살펴볼 수 있습니다.</p>
 
-<p>Invoice에 기재된 품목분류를 검토해야 한다면 <a href="https://www.logilee.com/hscode.html">HS Code Lookup</a>을 활용할 수 있습니다. 공급자가 기재한 코드를 그대로 사용하기보다 실제 물품의 재질·기능·용도와 수입국의 분류체계를 기준으로 확인하는 것이 좋습니다.</p>
+<p>Invoice에 기재된 품목분류를 검토해야 한다면 <a href="https://www.logilee.com/hscode.html" rel="noopener noreferrer">HS Code Lookup</a>을 활용할 수 있습니다. 공급자가 기재한 코드를 그대로 사용하기보다 실제 물품의 재질·기능·용도와 수입국의 분류체계를 기준으로 확인하는 것이 좋습니다.</p>
 
-<p>품목에 따라 별도의 인증이나 수입요건을 확인해야 한다면 <a href="https://www.logilee.com/ko/dashboard.html">Compliance Hub</a>에서 주요 국가·지역의 공식 규제기관 자료를 찾아볼 수 있습니다.</p>
+<p>품목에 따라 별도의 인증이나 수입요건을 확인해야 한다면 <a href="https://www.logilee.com/ko/dashboard.html" rel="noopener noreferrer">Compliance Hub</a>에서 주요 국가·지역의 공식 규제기관 자료를 찾아볼 수 있습니다.</p>
 
-<p>생소한 무역·물류 용어는 <a href="https://www.logilee.com/ko/dictionary.html">LOGILEE Dictionary</a>에서 확인할 수 있습니다.</p>
+<p>생소한 무역·물류 용어는 <a href="https://www.logilee.com/ko/dictionary.html" rel="noopener noreferrer">LOGILEE Dictionary</a>에서 확인할 수 있습니다.</p>
 
 <p>결국 Commercial Invoice 검토는 Invoice 한 장의 오탈자를 찾는 작업이라기보다 다음 정보가 서로 같은 거래를 설명하고 있는지 확인하는 과정에 가깝습니다.</p>
 
@@ -318,10 +416,10 @@ B/L: 102 packages</p>
 <h3>관련 LOGILEE 자료</h3>
 
 <ul>
-  <li><a href="https://www.logilee.com/ko/documents.html">Documents</a> — Commercial Invoice, Packing List, B/L 등 주요 무역서류</li>
-  <li><a href="https://www.logilee.com/hscode.html">HS Code Lookup</a> — 품목분류 관련 정보</li>
-  <li><a href="https://www.logilee.com/ko/dashboard.html">Compliance Hub</a> — 국가·지역별 수출입 규제 및 공식기관</li>
-  <li><a href="https://www.logilee.com/ko/dictionary.html">Dictionary</a> — 무역·물류 용어</li>
+  <li><a href="https://www.logilee.com/ko/documents.html" rel="noopener noreferrer">Documents</a> — Commercial Invoice, Packing List, B/L 등 주요 무역서류</li>
+  <li><a href="https://www.logilee.com/hscode.html" rel="noopener noreferrer">HS Code Lookup</a> — 품목분류 관련 정보</li>
+  <li><a href="https://www.logilee.com/ko/dashboard.html" rel="noopener noreferrer">Compliance Hub</a> — 국가·지역별 수출입 규제 및 공식기관</li>
+  <li><a href="https://www.logilee.com/ko/dictionary.html" rel="noopener noreferrer">Dictionary</a> — 무역·물류 용어</li>
 </ul>
 
 <hr>
@@ -331,8 +429,52 @@ B/L: 102 packages</p>
 <p>Commercial Invoice의 요구사항은 거래 형태, 결제 방식, 수출입 국가 및 세관 요구사항 등에 따라 달라질 수 있습니다. 특정 국가로 수출입할 때는 해당 국가 세관과 관계기관의 최신 요구사항을 별도로 확인하세요.</p>
 
 <p>본 콘텐츠는 일반적인 무역 실무 정보 제공을 목적으로 하며 특정 거래에 대한 세관 신고, 법률, 세무 또는 계약 자문을 의미하지 않습니다.</p>
+              </article>
+            </article>
+
+    <aside class="article-aside" aria-label="Article resources">
+      <section class="article-aside-card">
+        <h2>Related Resources</h2>
+        <div class="article-resource-list">
+    <a href="../../ports.html"><i data-lucide="anchor"></i><span>Ports &amp; Airports</span></a>
+
+    <a href="../../track.html"><i data-lucide="radar"></i><span>Shipment Tracking</span></a>
+
+    <a href="../../../hscode.html"><i data-lucide="barcode"></i><span>HS Code</span></a>
+
+    <a href="../../documents.html"><i data-lucide="file-text"></i><span>Documents</span></a>
+
+    <a href="../../dictionary.html"><i data-lucide="languages"></i><span>Dictionary</span></a>
+
+    <a href="../../cbm.html"><i data-lucide="calculator"></i><span>CBM Calculator</span></a>
+
+    <a href="../../../incoterms-2020.html"><i data-lucide="git-compare-arrows"></i><span>Incoterms</span></a>
+  </div>
+      </section>
+      <section class="article-aside-card">
+        <h2>Related Posts</h2>
+        <div class="article-related-list">
+      <a class="article-related-post" href="../../../ko/posts/china-typhoon-port-delay-shipment-impact/">
+        <img src="https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_34da3b8f-7d59-4526-8381-7ac3e0298577-ChatGPT%20Image%202026%EB%85%84%208%EC%9B%94%2014%EC%9D%BC%20%EC%98%A4%ED%9B%84%2004_50_55.png?alt=media&amp;token=31ad7c7c-ba4b-42f2-a3b0-3e11ba56f202" alt="태풍과 악천후의 영향을 받는 중국 컨테이너 항만과 화물선" loading="lazy">
+        <span><strong>중국 항만이 태풍으로 멈추면 내 화물에는 어떤 일이 생길까?</strong><small>2026-08-14</small></span>
+      </a>
+
+      <a class="article-related-post" href="../../../ko/posts/rhine-low-water-logistics-impact/">
+        <img src="https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_a7a45aa1-96ed-492e-8c46-2c03d6347023-ChatGPT%20Image%202026%EB%85%84%208%EC%9B%94%2014%EC%9D%BC%20%EC%98%A4%ED%9B%84%2004_42_32.png?alt=media&amp;token=d5517725-39ee-4897-8793-208c89c0d656" alt="저수위로 수면이 낮아진 라인강을 운항하는 내륙 화물선" loading="lazy">
+        <span><strong>라인강 수위가 낮아지면 왜 유럽 물류비가 오를까?</strong><small>2026-08-14</small></span>
+      </a>
+
+      <a class="article-related-post" href="../../../ko/posts/lcl-vs-fcl/">
+        <img src="https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_871871bb-1a1a-4190-b340-829322f30f24-ChatGPT%20Image%202026%EB%85%84%208%EC%9B%94%2014%EC%9D%BC%20%EC%98%A4%ED%9B%84%2004_30_45.png?alt=media&amp;token=1db5c262-68fd-46d5-a2ba-3279ceb6cc04" alt="LCL과 FCL 해상운송 방식을 비교하는 컨테이너 화물 이미지" loading="lazy">
+        <span><strong>LCL과 FCL, 어느 시점부터 FCL이 유리할까?</strong><small>2026-08-14</small></span>
+      </a>
+    </div>
+      </section>
+      <div class="ad-slot ad-slot--rectangle article-ad"><span>Advertisement</span><small>Reserved ad placement</small></div>
+    </aside>
+          </div>
         </div>
-      </article>
-    </main>
+      </main>
+    </div>
   </body>
 </html>
