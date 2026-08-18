@@ -1,6 +1,20 @@
 window.LOGILEE_POSTS = [
   {
     "slug": "china-typhoon-port-delay-shipment-impact",
+    "language": "en",
+    "status": "published",
+    "title": "What Happens to My Cargo When a Chinese Port Stops for a Typhoon?",
+    "description": "A practical guide to how typhoon-related port closures in China can lead to vessel waiting, port omission, rollover, schedule changes, and ETA impact.",
+    "category": "market",
+    "date": "2026-08-14",
+    "publishedAt": "2026-08-14T07:51:20.040Z",
+    "readingTime": "7 min read",
+    "path": "en/posts/china-typhoon-port-delay-shipment-impact/",
+    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_34da3b8f-7d59-4526-8381-7ac3e0298577-ChatGPT%20Image%202026%EB%85%84%208%EC%9B%94%2014%EC%9D%BC%20%EC%98%A4%ED%9B%84%2004_50_55.png?alt=media&token=31ad7c7c-ba4b-42f2-a3b0-3e11ba56f202",
+    "imageAlt": "Chinese container port and cargo vessel affected by typhoon and severe weather"
+  },
+  {
+    "slug": "china-typhoon-port-delay-shipment-impact",
     "language": "ko",
     "status": "published",
     "title": "중국 항만이 태풍으로 멈추면 내 화물에는 어떤 일이 생길까?",
@@ -15,6 +29,20 @@ window.LOGILEE_POSTS = [
   },
   {
     "slug": "rhine-low-water-logistics-impact",
+    "language": "en",
+    "status": "published",
+    "title": "Why Rhine Low Water Can Raise European Logistics Costs",
+    "description": "A practical importer-focused explanation of how record-low Rhine water levels affect loading capacity, freight rates, rail and truck alternatives, and European supply chains.",
+    "category": "market",
+    "date": "2026-08-14",
+    "publishedAt": "2026-08-14T07:45:13.610Z",
+    "readingTime": "5 min read",
+    "path": "en/posts/rhine-low-water-logistics-impact/",
+    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_a7a45aa1-96ed-492e-8c46-2c03d6347023-ChatGPT%20Image%202026%EB%85%84%208%EC%9B%94%2014%EC%9D%BC%20%EC%98%A4%ED%9B%84%2004_42_32.png?alt=media&token=d5517725-39ee-4897-8793-208c89c0d656",
+    "imageAlt": "Inland cargo vessel operating on the Rhine River during low water conditions"
+  },
+  {
+    "slug": "rhine-low-water-logistics-impact",
     "language": "ko",
     "status": "published",
     "title": "라인강 수위가 낮아지면 왜 유럽 물류비가 오를까?",
@@ -26,6 +54,20 @@ window.LOGILEE_POSTS = [
     "path": "ko/posts/rhine-low-water-logistics-impact/",
     "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_a7a45aa1-96ed-492e-8c46-2c03d6347023-ChatGPT%20Image%202026%EB%85%84%208%EC%9B%94%2014%EC%9D%BC%20%EC%98%A4%ED%9B%84%2004_42_32.png?alt=media&token=d5517725-39ee-4897-8793-208c89c0d656",
     "imageAlt": "저수위로 수면이 낮아진 라인강을 운항하는 내륙 화물선"
+  },
+  {
+    "slug": "lcl-vs-fcl",
+    "language": "en",
+    "status": "published",
+    "title": "LCL vs FCL: When Does a Full Container Start to Make Sense?",
+    "description": "A practical comparison of LCL and FCL by CBM, ocean freight, destination charges, cargo characteristics, lead time, and total logistics cost.",
+    "category": "guides",
+    "date": "2026-08-14",
+    "publishedAt": "2026-08-14T07:28:22.554Z",
+    "readingTime": "5 min read",
+    "path": "en/posts/lcl-vs-fcl/",
+    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_871871bb-1a1a-4190-b340-829322f30f24-ChatGPT%20Image%202026%EB%85%84%208%EC%9B%94%2014%EC%9D%BC%20%EC%98%A4%ED%9B%84%2004_30_45.png?alt=media&token=1db5c262-68fd-46d5-a2ba-3279ceb6cc04",
+    "imageAlt": "Container freight image comparing LCL and FCL ocean shipping"
   },
   {
     "slug": "lcl-vs-fcl",
@@ -98,51 +140,87 @@ window.LOGILEE_POSTS = [
     "imageAlt": "FOB와 CIF 수입 조건 비교를 설명하는 컨테이너선과 국제 무역항"
   },
   {
-    "slug": "global-sales",
+    "slug": "cbm-calculation",
     "language": "en",
-    "title": "Global Sales",
-    "description": "A collected LOGILEE blog section for global sales practice and overseas business workflows.",
-    "category": "Global Trade",
-    "date": "2025-10-12",
-    "readingTime": "3 min read",
-    "path": "Blog - extra/global-sales.html",
-    "image": "",
-    "imageAlt": "LOGILEE global sales article"
+    "status": "published",
+    "title": "Complete Guide to CBM Calculation",
+    "description": "A legacy LOGILEE post explaining the basic logistics formula for calculating cargo volume in CBM.",
+    "category": "Logistics",
+    "date": "2025-05-11",
+    "publishedAt": "2025-05-11T00:00:00.000Z",
+    "readingTime": "2 min read",
+    "path": "en/posts/cbm-calculation/",
+    "image": "assets/trade-hero-port.jpg",
+    "imageAlt": "Complete Guide to CBM Calculation"
   },
   {
     "slug": "cbm-calculation",
     "language": "ko",
+    "status": "published",
     "title": "CBM 계산법 완전 정리",
     "description": "물류에서 부피를 산정하는 기본 방식과 CBM 계산 예시를 정리한 기존 포스트입니다.",
     "category": "Logistics",
     "date": "2025-05-11",
+    "publishedAt": "2025-05-11T00:00:00.000Z",
     "readingTime": "2분 읽기",
-    "path": "Blog - extra/post1.html",
-    "image": "",
-    "imageAlt": "LOGILEE CBM calculation post"
+    "path": "ko/posts/cbm-calculation/",
+    "image": "assets/trade-hero-port.jpg",
+    "imageAlt": "CBM 계산법 완전 정리"
+  },
+  {
+    "slug": "hs-code-search",
+    "language": "en",
+    "status": "published",
+    "title": "How to Find an HS Code More Easily",
+    "description": "A legacy LOGILEE post introducing basic reference paths for product classification and HS Code search.",
+    "category": "Customs",
+    "date": "2025-05-09",
+    "publishedAt": "2025-05-09T00:00:00.000Z",
+    "readingTime": "2 min read",
+    "path": "en/posts/hs-code-search/",
+    "image": "assets/trade-hero-port.jpg",
+    "imageAlt": "How to Find an HS Code More Easily"
   },
   {
     "slug": "hs-code-search",
     "language": "ko",
+    "status": "published",
     "title": "HS CODE 쉽게 찾는 방법",
     "description": "상품 분류와 HS Code 검색을 위한 기본 확인 경로를 소개하는 기존 포스트입니다.",
     "category": "Customs",
     "date": "2025-05-09",
+    "publishedAt": "2025-05-09T00:00:00.000Z",
     "readingTime": "2분 읽기",
-    "path": "Blog - extra/post2.html",
-    "image": "",
-    "imageAlt": "LOGILEE HS Code post"
+    "path": "ko/posts/hs-code-search/",
+    "image": "assets/trade-hero-port.jpg",
+    "imageAlt": "HS CODE 쉽게 찾는 방법"
+  },
+  {
+    "slug": "trade-terms",
+    "language": "en",
+    "status": "published",
+    "title": "Trade Terms Every Practitioner Should Know",
+    "description": "A legacy LOGILEE post summarizing common trade terms such as FOB, CIF, and EXW.",
+    "category": "Trade",
+    "date": "2025-05-08",
+    "publishedAt": "2025-05-08T00:00:00.000Z",
+    "readingTime": "2 min read",
+    "path": "en/posts/trade-terms/",
+    "image": "assets/trade-hero-port.jpg",
+    "imageAlt": "Trade Terms Every Practitioner Should Know"
   },
   {
     "slug": "trade-terms",
     "language": "ko",
+    "status": "published",
     "title": "무역 실무자가 꼭 알아야 할 용어",
     "description": "FOB, CIF, EXW 등 무역 실무에서 자주 쓰이는 조건을 정리한 기존 포스트입니다.",
     "category": "Trade",
     "date": "2025-05-08",
+    "publishedAt": "2025-05-08T00:00:00.000Z",
     "readingTime": "2분 읽기",
-    "path": "Blog - extra/post3.html",
-    "image": "",
-    "imageAlt": "LOGILEE trade terms post"
+    "path": "ko/posts/trade-terms/",
+    "image": "assets/trade-hero-port.jpg",
+    "imageAlt": "무역 실무자가 꼭 알아야 할 용어"
   }
 ];

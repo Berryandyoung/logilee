@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url><loc>https://www.logilee.com/ko/</loc><xhtml:link rel="alternate" hreflang="ko" href="https://www.logilee.com/ko/"/><xhtml:link rel="alternate" hreflang="en" href="https://www.logilee.com/en/"/></url>
@@ -55,11 +55,20 @@
   <url><loc>https://www.logilee.com/en/ports/jebel-ali.html</loc><xhtml:link rel="alternate" hreflang="ko" href="https://www.logilee.com/ko/ports/jebel-ali.html"/><xhtml:link rel="alternate" hreflang="en" href="https://www.logilee.com/en/ports/jebel-ali.html"/></url>
   <url><loc>https://www.logilee.com/ko/ports/cat-lai.html</loc><xhtml:link rel="alternate" hreflang="ko" href="https://www.logilee.com/ko/ports/cat-lai.html"/><xhtml:link rel="alternate" hreflang="en" href="https://www.logilee.com/en/ports/cat-lai.html"/></url>
   <url><loc>https://www.logilee.com/en/ports/cat-lai.html</loc><xhtml:link rel="alternate" hreflang="ko" href="https://www.logilee.com/ko/ports/cat-lai.html"/><xhtml:link rel="alternate" hreflang="en" href="https://www.logilee.com/en/ports/cat-lai.html"/></url>
+  <url><loc>https://www.logilee.com/en/posts/cbm-calculation/</loc><lastmod>2025-05-11</lastmod></url>
+  <url><loc>https://www.logilee.com/en/posts/china-typhoon-port-delay-shipment-impact/</loc><lastmod>2026-08-14</lastmod></url>
   <url><loc>https://www.logilee.com/en/posts/commercial-invoice-common-mistakes/</loc><lastmod>2026-08-14</lastmod></url>
-  <url><loc>https://www.logilee.com/ko/posts/commercial-invoice-common-mistakes/</loc><lastmod>2026-08-14</lastmod></url>
   <url><loc>https://www.logilee.com/en/posts/fob-vs-cif/</loc><lastmod>2026-08-14</lastmod></url>
+  <url><loc>https://www.logilee.com/en/posts/hs-code-search/</loc><lastmod>2025-05-09</lastmod></url>
+  <url><loc>https://www.logilee.com/en/posts/lcl-vs-fcl/</loc><lastmod>2026-08-14</lastmod></url>
+  <url><loc>https://www.logilee.com/en/posts/rhine-low-water-logistics-impact/</loc><lastmod>2026-08-14</lastmod></url>
+  <url><loc>https://www.logilee.com/en/posts/trade-terms/</loc><lastmod>2025-05-08</lastmod></url>
+  <url><loc>https://www.logilee.com/ko/posts/cbm-calculation/</loc><lastmod>2025-05-11</lastmod></url>
+  <url><loc>https://www.logilee.com/ko/posts/china-typhoon-port-delay-shipment-impact/</loc><lastmod>2026-08-14</lastmod></url>
+  <url><loc>https://www.logilee.com/ko/posts/commercial-invoice-common-mistakes/</loc><lastmod>2026-08-14</lastmod></url>
   <url><loc>https://www.logilee.com/ko/posts/fob-vs-cif/</loc><lastmod>2026-08-14</lastmod></url>
+  <url><loc>https://www.logilee.com/ko/posts/hs-code-search/</loc><lastmod>2025-05-09</lastmod></url>
   <url><loc>https://www.logilee.com/ko/posts/lcl-vs-fcl/</loc><lastmod>2026-08-14</lastmod></url>
   <url><loc>https://www.logilee.com/ko/posts/rhine-low-water-logistics-impact/</loc><lastmod>2026-08-14</lastmod></url>
-  <url><loc>https://www.logilee.com/ko/posts/china-typhoon-port-delay-shipment-impact/</loc><lastmod>2026-08-14</lastmod></url>
+  <url><loc>https://www.logilee.com/ko/posts/trade-terms/</loc><lastmod>2025-05-08</lastmod></url>
 </urlset>
