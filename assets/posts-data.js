@@ -1,6 +1,21 @@
 window.LOGILEE_POSTS = [
   {
     "slug": "hormuz-red-sea-shipping-risk-august-2026",
+    "language": "en",
+    "status": "published",
+    "title": "Hormuz and Red Sea Risks: Impact on Global Logistics in August 2026",
+    "description": "We analyze the impact of the Strait of Hormuz and Red Sea risks on maritime transport as of August 2026, covering Suez/Cape routes, transit times, freight rates, and checklists.",
+    "category": "guides",
+    "date": "2026-08-19",
+    "publishedAt": "2026-08-19T12:02:58.464Z",
+    "readingTime": "6 min read",
+    "path": "en/posts/hormuz-red-sea-shipping-risk-august-2026/",
+    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_948a27d6-3f23-4df6-8222-d6f17b0c8fca-ChatGPT%20Image%202026%EB%85%84%208%EC%9B%94%2019%EC%9D%BC%20%EC%98%A4%EC%A0%84%2009_51_26.png?alt=media&token=67d34f67-ffe0-446c-ba2d-a828a5a1a35e",
+    "imageAlt": "Large container ship passing through the Suez Canal with surrounding desert landscape",
+    "imageCredit": "Chat GPT"
+  },
+  {
+    "slug": "hormuz-red-sea-shipping-risk-august-2026",
     "language": "ko",
     "status": "published",
     "title": "호르무즈·홍해 리스크, 2026년 8월 글로벌 물류에 어떤 영향을 주고 있나?",
