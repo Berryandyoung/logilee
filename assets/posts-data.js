@@ -1,5 +1,20 @@
 window.LOGILEE_POSTS = [
   {
+    "slug": "hormuz-red-sea-shipping-risk-august-2026",
+    "language": "ko",
+    "status": "published",
+    "title": "호르무즈·홍해 리스크, 2026년 8월 글로벌 물류에 어떤 영향을 주고 있나?",
+    "description": "2026년 8월 호르무즈 해협과 홍해 리스크가 해상운송에 미치는 영향을 분석합니다. 수에즈·희망봉 항로, 운송기간, 운임, 보험료와 수출입 실무 체크포인트를 정리했습니다.",
+    "category": "guides",
+    "date": "2026-08-19",
+    "publishedAt": "2026-08-19T02:18:24.788Z",
+    "readingTime": "5遺??쎄린",
+    "path": "ko/posts/hormuz-red-sea-shipping-risk-august-2026/",
+    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_948a27d6-3f23-4df6-8222-d6f17b0c8fca-ChatGPT%20Image%202026%EB%85%84%208%EC%9B%94%2019%EC%9D%BC%20%EC%98%A4%EC%A0%84%2009_51_26.png?alt=media&token=67d34f67-ffe0-446c-ba2d-a828a5a1a35e",
+    "imageAlt": "수에즈 운하를 통과하는 대형 컨테이너선과 주변 사막 전경",
+    "imageCredit": "Chat GPT"
+  },
+  {
     "slug": "china-typhoon-port-delay-shipment-impact",
     "language": "en",
     "status": "published",
@@ -141,20 +156,6 @@ window.LOGILEE_POSTS = [
   },
   {
     "slug": "cbm-calculation",
-    "language": "en",
-    "status": "published",
-    "title": "Complete Guide to CBM Calculation",
-    "description": "A legacy LOGILEE post explaining the basic logistics formula for calculating cargo volume in CBM.",
-    "category": "Logistics",
-    "date": "2025-05-11",
-    "publishedAt": "2025-05-11T00:00:00.000Z",
-    "readingTime": "2 min read",
-    "path": "en/posts/cbm-calculation/",
-    "image": "assets/trade-hero-port.jpg",
-    "imageAlt": "Complete Guide to CBM Calculation"
-  },
-  {
-    "slug": "cbm-calculation",
     "language": "ko",
     "status": "published",
     "title": "CBM 계산법 완전 정리",
@@ -166,6 +167,20 @@ window.LOGILEE_POSTS = [
     "path": "ko/posts/cbm-calculation/",
     "image": "assets/trade-hero-port.jpg",
     "imageAlt": "CBM 계산법 완전 정리"
+  },
+  {
+    "slug": "cbm-calculation",
+    "language": "en",
+    "status": "published",
+    "title": "Complete Guide to CBM Calculation",
+    "description": "A legacy LOGILEE post explaining the basic logistics formula for calculating cargo volume in CBM.",
+    "category": "Logistics",
+    "date": "2025-05-11",
+    "publishedAt": "2025-05-11T00:00:00.000Z",
+    "readingTime": "2 min read",
+    "path": "en/posts/cbm-calculation/",
+    "image": "assets/trade-hero-port.jpg",
+    "imageAlt": "Complete Guide to CBM Calculation"
   },
   {
     "slug": "hs-code-search",
