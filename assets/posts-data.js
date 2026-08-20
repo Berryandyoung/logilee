@@ -1,5 +1,21 @@
 window.LOGILEE_POSTS = [
   {
+    "slug": "us-illegal-transshipment-origin-2026",
+    "language": "en",
+    "status": "published",
+    "title": "Strengthening U.S. Enforcement Against 'Illegal Transshipment': Origin Management Checkpoints for Korean Exporters",
+    "description": "We summarize the U.S. crackdown on illegal transshipment, covering origin determination, substantial transformation, required documentation, and the 40% additional tariff risk for Korean exporters.",
+    "category": "guides",
+    "date": "2026-08-20",
+    "publishedAt": "2026-08-20T09:16:48.974Z",
+    "readingTime": "7 min read",
+    "path": "en/posts/us-illegal-transshipment-origin-2026/",
+    "image": "썸네일과 동일한 이미지를 사용하는 걸 추천.",
+    "imageAlt": "Container port image representing U.S. illegal transshipment enforcement and exporter origin management",
+    "imageCredit": "OpenAI",
+    "imageLicense": "AI Generated"
+  },
+  {
     "slug": "us-de-minimis-2026",
     "language": "en",
     "status": "published",
