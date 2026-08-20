@@ -1,5 +1,21 @@
 window.LOGILEE_POSTS = [
   {
+    "slug": "us-de-minimis-2026",
+    "language": "en",
+    "status": "published",
+    "title": "End of $800 De Minimis Exemption: What Korean Exporters Need to Know About U.S. Customs Changes",
+    "description": "The suspension of the $800 De Minimis exemption has changed small-value export customs. We cover tariffs, HS Codes, origin, D2C shipping, and customs practices for Korean exporters.",
+    "category": "customs",
+    "date": "2026-08-20",
+    "publishedAt": "2026-08-20T05:37:47.822Z",
+    "readingTime": "10 min read",
+    "path": "en/posts/us-de-minimis-2026/",
+    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_951c23d0-d6b0-44da-af51-855f9ef2e377-ChatGPT%20Image%202026%EB%85%84%208%EC%9B%94%2020%EC%9D%BC%20%EC%98%A4%ED%9B%84%2002_29_30.png?alt=media&token=ac2fe179-443d-4f00-807e-6619028c8589",
+    "imageAlt": "International logistics image representing U.S. small-value exports and De Minimis customs changes",
+    "imageCredit": "OpenAI",
+    "imageLicense": "AI Generated"
+  },
+  {
     "slug": "hormuz-red-sea-shipping-risk-august-2026",
     "language": "en",
     "status": "published",
