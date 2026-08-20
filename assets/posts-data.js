@@ -1,6 +1,22 @@
 window.LOGILEE_POSTS = [
   {
     "slug": "us-illegal-transshipment-origin-2026",
+    "language": "ko",
+    "status": "published",
+    "title": "미국 ‘불법 환적’ 단속 강화: 한국 수출기업의 원산지 관리 체크포인트",
+    "description": "미국의 불법 환적 단속 강화에 따라 한국 수출기업이 확인해야 할 원산지 판단, 실질적 변형, 증빙자료와 40% 추가관세 리스크를 정리합니다.",
+    "category": "guides",
+    "date": "2026-08-20",
+    "publishedAt": "2026-08-20T09:17:14.663Z",
+    "readingTime": "8遺??쎄린",
+    "path": "ko/posts/us-illegal-transshipment-origin-2026/",
+    "image": "썸네일과 동일한 이미지를 사용하는 걸 추천.",
+    "imageAlt": "미국의 불법 환적 단속과 수출기업의 원산지 관리를 표현한 컨테이너 항만 이미지",
+    "imageCredit": "OpenAI",
+    "imageLicense": "AI Generated"
+  },
+  {
+    "slug": "us-illegal-transshipment-origin-2026",
     "language": "en",
     "status": "published",
     "title": "Strengthening U.S. Enforcement Against 'Illegal Transshipment': Origin Management Checkpoints for Korean Exporters",
