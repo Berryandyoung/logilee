@@ -16,6 +16,22 @@ window.LOGILEE_POSTS = [
     "imageLicense": "AI Generated"
   },
   {
+    "slug": "us-de-minimis-2026",
+    "language": "ko",
+    "status": "published",
+    "title": "미국 $800 소액면세 종료, 한국 수출기업이 알아야 할 De Minimis 통관 변화",
+    "description": "미국의 $800 이하 De Minimis 면세 중단으로 소액 수출 통관이 달라졌습니다. 한국 수출기업이 알아야 할 관세, HS Code, 원산지, D2C 배송과 통관 실무를 정리합니다.",
+    "category": "customs",
+    "date": "2026-08-20",
+    "publishedAt": "2026-08-20T05:31:34.293Z",
+    "readingTime": "7遺??쎄린",
+    "path": "ko/posts/us-de-minimis-2026/",
+    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_951c23d0-d6b0-44da-af51-855f9ef2e377-ChatGPT%20Image%202026%EB%85%84%208%EC%9B%94%2020%EC%9D%BC%20%EC%98%A4%ED%9B%84%2002_29_30.png?alt=media&token=ac2fe179-443d-4f00-807e-6619028c8589",
+    "imageAlt": "미국 소액 수출과 De Minimis 통관 변화를 표현한 국제물류 이미지",
+    "imageCredit": "OpenAI",
+    "imageLicense": "AI Generated"
+  },
+  {
     "slug": "hormuz-red-sea-shipping-risk-august-2026",
     "language": "en",
     "status": "published",
