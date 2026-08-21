@@ -1,5 +1,21 @@
 window.LOGILEE_POSTS = [
   {
+    "slug": "hs-code-vs-hts-code-us-export",
+    "language": "ko",
+    "status": "published",
+    "title": "미국 수출할 때 HS Code와 HTS Code는 무엇이 다를까? [한국 수출기업 실무 가이드]",
+    "description": "미국 수출 시 HS Code와 HTS Code는 어떻게 다를까요? HS 6자리와 미국 HTSUS 8·10자리 구조, Chapter 99 추가관세, 한미 FTA와 세번분류 실무 체크포인트를 정리합니다.",
+    "category": "guides",
+    "date": "2026-08-21",
+    "publishedAt": "2026-08-21T01:24:52.301Z",
+    "readingTime": "6遺??쎄린",
+    "path": "ko/posts/hs-code-vs-hts-code-us-export/",
+    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_cae49afe-90db-4db1-b0c7-721c39657861-ChatGPT%20Image%202026%EB%85%84%208%EC%9B%94%2021%EC%9D%BC%20%EC%98%A4%EC%A0%84%2010_11_48.png?alt=media&token=c622ba38-f2aa-4438-8e66-c930429a871a",
+    "imageAlt": "미국 수출입 품목분류와 통관 정보를 확인하는 물류 담당자",
+    "imageCredit": "OpenAI",
+    "imageLicense": "AI Generated"
+  },
+  {
     "slug": "us-illegal-transshipment-origin-2026",
     "language": "ko",
     "status": "published",
