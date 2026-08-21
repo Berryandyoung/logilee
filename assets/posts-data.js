@@ -1,5 +1,21 @@
 window.LOGILEE_POSTS = [
   {
+    "slug": "china-port-congestion-typhoon-shipping-2026",
+    "language": "en",
+    "status": "published",
+    "title": "China Port Congestion After Typhoon Disruptions: What Shippers Should Watch",
+    "description": "Shanghai and Ningbo face vessel backlogs and schedule disruption after severe weather. Learn how shippers can manage rollover, blank sailing and transit risks.",
+    "category": "logistics",
+    "date": "2026-08-21",
+    "publishedAt": "2026-08-21T01:29:58.657Z",
+    "readingTime": "6 min read",
+    "path": "en/posts/china-port-congestion-typhoon-shipping-2026/",
+    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_fc5856d4-0ebc-4764-bf8b-9313cc858b56-ChatGPT%20Image%202026%EB%85%84%208%EC%9B%94%2021%EC%9D%BC%20%EC%98%A4%EC%A0%84%2010_27_22.png?alt=media&token=bc8012b9-24e5-4095-89a1-3e4891354eae",
+    "imageAlt": "Container ship and cargo operations at a busy international port",
+    "imageCredit": "OpenAI",
+    "imageLicense": "AI Generated"
+  },
+  {
     "slug": "hs-code-vs-hts-code-us-export",
     "language": "ko",
     "status": "published",
