@@ -418,5 +418,31 @@
         </div>
       </main>
     </div>
+    <script>
+      (() => {
+        const view = {"endpoint":"https://us-central1-logilee-cms.cloudfunctions.net/trackLogileePostView","slug":"hs-code-vs-hts-code-us-export","language":"ko","ttlMs":21600000};
+        if (!view.slug || !view.language || !view.endpoint) return;
+        const key = ["logilee", "post-view", view.language, view.slug].join(":");
+        const now = Date.now();
+        try {
+          const previous = Number(localStorage.getItem(key) || 0);
+          if (previous && now - previous < view.ttlMs) return;
+          localStorage.setItem(key, String(now));
+        } catch {
+          return;
+        }
+        fetch(view.endpoint, {
+          method: "POST",
+          mode: "cors",
+          keepalive: true,
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ slug: view.slug, language: view.language })
+        }).then((response) => {
+          if (!response.ok) localStorage.removeItem(key);
+        }).catch(() => {
+          try { localStorage.removeItem(key); } catch {}
+        });
+      })();
+    </script>
   </body>
 </html>
