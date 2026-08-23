@@ -1,5 +1,21 @@
 window.LOGILEE_POSTS = [
   {
+    "slug": "hs-customs-value-freight-insurance-incoterms-guide",
+    "language": "ko",
+    "status": "published",
+    "title": "HS 신고가격에 운임과 보험료를 포함해야 할까? 인코텀즈별 정리와 실무 사례",
+    "description": "HS 신고가격에 운임과 보험료를 포함해야 하는지 CIF·FOB·EXW 등 인코텀즈 조건별로 정리하고, 수출입 신고 시 확인해야 할 관세가격 계산과 실무 체크포인트를 설명합니다.",
+    "category": "guides",
+    "date": "2026-08-23",
+    "publishedAt": "2026-08-23T04:11:36.010Z",
+    "readingTime": "3遺??쎄린",
+    "path": "ko/posts/hs-customs-value-freight-insurance-incoterms-guide/",
+    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_36da1531-bc71-475c-af4a-1c7366f75604-ChatGPT%20Image%202026%EB%85%84%208%EC%9B%94%2023%EC%9D%BC%20%EC%98%A4%ED%9B%84%2001_10_51.png?alt=media&token=0b64c857-9e61-499a-9bf5-a6a14c82f07c",
+    "imageAlt": "수출입 서류와 계산기를 보며 신고가격을 검토하는 무역 실무자",
+    "imageCredit": "LOGILEE",
+    "imageLicense": "AI Generated"
+  },
+  {
     "slug": "china-port-congestion-typhoon-shipping-2026",
     "language": "en",
     "status": "published",
