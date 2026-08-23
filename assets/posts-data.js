@@ -1,5 +1,21 @@
 window.LOGILEE_POSTS = [
   {
+    "slug": "eu-deforestation-regulation-eudr-guide-2026",
+    "language": "en",
+    "status": "published",
+    "title": "EU Deforestation Regulation (EUDR): What Importers and Exporters Need to Know in 2026",
+    "description": "EUDR begins applying from 30 December 2026 for large and medium operators. Learn the scope, due diligence rules, traceability requirements and key preparation steps.",
+    "category": "trade",
+    "date": "2026-08-23",
+    "publishedAt": "2026-08-23T04:14:01.490Z",
+    "readingTime": "6 min read",
+    "path": "en/posts/eu-deforestation-regulation-eudr-guide-2026/",
+    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_653848e7-31a9-4d9d-abcc-ff6421aa17ce-ChatGPT%20Image%202026%EB%85%84%208%EC%9B%94%2023%EC%9D%BC%20%EC%98%A4%ED%9B%84%2001_13_44.png?alt=media&token=141fa149-8daa-4bc0-95f6-94bffb307ab3",
+    "imageAlt": "Supply chain professional inspecting timber at an international cargo terminal",
+    "imageCredit": "LOGILEE",
+    "imageLicense": "AI Generated"
+  },
+  {
     "slug": "hs-customs-value-freight-insurance-incoterms-guide",
     "language": "ko",
     "status": "published",
