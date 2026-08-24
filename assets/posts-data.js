@@ -1,5 +1,21 @@
 window.LOGILEE_POSTS = [
   {
+    "slug": "korea-exports-august-2026-semiconductor",
+    "language": "ko",
+    "status": "published",
+    "title": "8월 수출 1~20일 역대 최대…반도체가 한국 수출의 절반 가까이 차지",
+    "description": "2026년 8월 1~20일 한국 수출이 552억 달러로 역대 최대를 기록했습니다. 반도체 수출 급증과 140억 달러 무역흑자의 의미, 품목별 흐름과 월말 확인 포인트를 정리합니다.",
+    "category": "guides",
+    "date": "2026-08-24",
+    "publishedAt": "2026-08-24T07:08:49.245Z",
+    "readingTime": "3遺??쎄린",
+    "path": "ko/posts/korea-exports-august-2026-semiconductor/",
+    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_017f8a19-875f-4b67-9810-b4e24ecac028-ChatGPT%20Image%202026%EB%85%84%208%EC%9B%94%2024%EC%9D%BC%20%EC%98%A4%ED%9B%84%2004_07_47.png?alt=media&token=5aabc2ba-af94-4532-b60a-ec0a878368c0",
+    "imageAlt": "대형 컨테이너 터미널에서 수출 화물 작업을 관리하는 물류 담당자",
+    "imageCredit": "LOGILEE",
+    "imageLicense": "AI Generated"
+  },
+  {
     "slug": "eu-deforestation-regulation-eudr-guide-2026",
     "language": "en",
     "status": "published",
