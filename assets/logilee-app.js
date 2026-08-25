@@ -1806,6 +1806,130 @@ function populateCountrySelects() {
   });
 }
 
+function countryComboboxItems(lang = currentLang()) {
+  return TRADE_COUNTRIES.map(([code, en, ko]) => ({
+    code,
+    en,
+    ko,
+    label: lang === "ko" ? ko : en,
+    search: `${code} ${en} ${ko}`.toLowerCase()
+  }));
+}
+
+function enhanceCountryCombobox(select, onSelect) {
+  if (!select || select.dataset.comboboxReady === "true") return;
+  const lang = currentLang();
+  const items = countryComboboxItems(lang);
+  const labels = lang === "ko"
+    ? { label: "국가 선택", placeholder: "국가명 또는 ISO 코드 검색...", noResult: "일치하는 국가가 없습니다." }
+    : { label: "Select country", placeholder: "Search country name or ISO code...", noResult: "No matching countries." };
+  const id = `country-combobox-${Math.random().toString(36).slice(2, 9)}`;
+  const listId = `${id}-list`;
+  const wrap = document.createElement("div");
+  wrap.className = "country-combobox";
+  wrap.dataset.countryCombobox = "";
+  wrap.innerHTML = `
+    <label class="sr-only" for="${id}">${labels.label}</label>
+    <div class="country-combobox-control">
+      <i data-lucide="search"></i>
+      <input id="${id}" type="text" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="${listId}" aria-label="${labels.label}" placeholder="${labels.placeholder}">
+      <button type="button" aria-label="${lang === "ko" ? "국가 목록 열기" : "Open country list"}"><i data-lucide="chevron-down"></i></button>
+    </div>
+    <div class="country-combobox-list" id="${listId}" role="listbox"></div>
+  `;
+  select.classList.add("visually-hidden-select");
+  select.setAttribute("tabindex", "-1");
+  select.setAttribute("aria-hidden", "true");
+  select.parentElement?.appendChild(wrap);
+  select.dataset.comboboxReady = "true";
+
+  const input = wrap.querySelector("input");
+  const button = wrap.querySelector("button");
+  const list = wrap.querySelector(".country-combobox-list");
+  let matches = [...items];
+  let activeIndex = -1;
+  let open = false;
+
+  const selectedItem = () => items.find((item) => item.code === select.value) || items[0];
+  const setInputToSelected = () => {
+    const item = selectedItem();
+    if (item) input.value = `${item.label} (${item.code})`;
+  };
+  const close = ({ reset = true } = {}) => {
+    open = false;
+    activeIndex = -1;
+    wrap.classList.remove("is-open");
+    input.setAttribute("aria-expanded", "false");
+    input.removeAttribute("aria-activedescendant");
+    if (reset) setInputToSelected();
+  };
+  const render = () => {
+    list.innerHTML = matches.length
+      ? matches.map((item, index) => `<button type="button" role="option" id="${listId}-${item.code}" data-country-option="${item.code}" aria-selected="${index === activeIndex}"><span>${escapeHtml(item.label)}</span><small>${escapeHtml(item.code)} · ${escapeHtml(item.en)}</small></button>`).join("")
+      : `<div class="country-combobox-empty">${labels.noResult}</div>`;
+    input.setAttribute("aria-activedescendant", activeIndex >= 0 && matches[activeIndex] ? `${listId}-${matches[activeIndex].code}` : "");
+  };
+  const filter = (query = "") => {
+    const q = query.trim().toLowerCase();
+    matches = q ? items.filter((item) => item.search.includes(q)) : [...items];
+    activeIndex = matches.length ? 0 : -1;
+    render();
+  };
+  const show = () => {
+    open = true;
+    wrap.classList.add("is-open");
+    input.setAttribute("aria-expanded", "true");
+    filter(input.value.includes("(") ? "" : input.value);
+  };
+  const choose = (code, { push = true } = {}) => {
+    if (!code || select.value === code && !push) {
+      close();
+      return;
+    }
+    select.value = code;
+    setInputToSelected();
+    close({ reset: false });
+    onSelect?.(code, { push });
+  };
+
+  setInputToSelected();
+  render();
+  input.addEventListener("focus", () => show());
+  input.addEventListener("input", () => {
+    if (!open) show();
+    filter(input.value);
+  });
+  button.addEventListener("click", () => {
+    open ? close() : (input.focus(), show());
+  });
+  list.addEventListener("mousedown", (event) => event.preventDefault());
+  list.addEventListener("click", (event) => {
+    const option = event.target.closest("[data-country-option]");
+    if (option) choose(option.dataset.countryOption);
+  });
+  input.addEventListener("keydown", (event) => {
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      if (!open) show(); else activeIndex = Math.min(activeIndex + 1, matches.length - 1);
+      render();
+    } else if (event.key === "ArrowUp") {
+      event.preventDefault();
+      if (!open) show(); else activeIndex = Math.max(activeIndex - 1, 0);
+      render();
+    } else if (event.key === "Enter") {
+      event.preventDefault();
+      if (!open) show(); else if (matches[activeIndex]) choose(matches[activeIndex].code);
+    } else if (event.key === "Escape") {
+      event.preventDefault();
+      close();
+    }
+  });
+  document.addEventListener("click", (event) => {
+    if (!wrap.contains(event.target)) close();
+  });
+  select.addEventListener("change", () => setInputToSelected());
+  select.updateComboboxLabel = setInputToSelected;
+}
 function dayName(date, lang) {
   return new Intl.DateTimeFormat(lang === "ko" ? "ko-KR" : "en-US", { weekday: "long", timeZone: "UTC" }).format(new Date(`${date}T00:00:00Z`));
 }
@@ -2040,6 +2164,7 @@ async function getCountryMetadata(country) {
     iso: country,
     capital: "N/A",
     region: "N/A",
+    incomeGroup: "N/A",
     languages: COUNTRY_LANGUAGE_REFERENCE[country] || "N/A",
     currency: currencyCode ? `${currencyCode} · ${CURRENCY_NAME_REFERENCE[currencyCode] || currencyCode}` : "N/A",
     flagPng: `https://flagcdn.com/w160/${country.toLowerCase()}.png`,
@@ -2065,7 +2190,8 @@ async function getCountryMetadata(country) {
       officialName: item.name || "",
       iso: item.iso2Code || country,
       capital: item.capitalCity || fallback.capital,
-      region: [item.region?.value, item.incomeLevel?.value].filter(Boolean).join(" / ") || fallback.region,
+      region: item.region?.value || fallback.region,
+      incomeGroup: item.incomeLevel?.value || fallback.incomeGroup,
       latlng: Number.isFinite(lat) && Number.isFinite(lon) ? [lat, lon] : null,
       mapUrl: Number.isFinite(lat) && Number.isFinite(lon) ? `https://www.openstreetmap.org/#map=5/${lat}/${lon}` : ""
     };
@@ -2093,8 +2219,8 @@ function countryOverviewMarkup(country, meta) {
   const lang = currentLang();
   const localizedName = countryNameFromCode(country, lang);
   const rows = lang === "ko"
-    ? [["영문명", meta.name], ["공식명", meta.officialName], ["ISO code", meta.iso], ["수도", meta.capital], ["지역", meta.region], ["언어", meta.languages], ["통화", meta.currency]]
-    : [["Country name", localizedName], ["Official name", meta.officialName], ["ISO code", meta.iso], ["Capital", meta.capital], ["Region", meta.region], ["Languages", meta.languages], ["Currency", meta.currency]];
+    ? [["영문명", meta.name], ["공식명", meta.officialName], ["ISO code", meta.iso], ["수도", meta.capital], ["지역", meta.region], ["소득분류", meta.incomeGroup], ["언어", meta.languages], ["통화", meta.currency]]
+    : [["Country name", localizedName], ["Official name", meta.officialName], ["ISO code", meta.iso], ["Capital", meta.capital], ["Region", meta.region], ["Income Group", meta.incomeGroup], ["Languages", meta.languages], ["Currency", meta.currency]];
   return `
     <section class="country-overview-grid" aria-label="${lang === "ko" ? "국가 개요" : "Country overview"}">
       <div class="country-overview-card">
@@ -2121,33 +2247,46 @@ function tradeSnapshotMarkup(records) {
   const facts = [];
   if (Number.isFinite(balance?.value)) {
     const surplus = balance.value >= 0;
-    facts.push(lang === "ko"
-      ? `${balance.year}년 기준 상품·서비스 수출입 차액은 ${formatIndicatorValue(balance, { compact: true })}이며, 수출이 수입보다 ${surplus ? "컸습니다" : "작았습니다"}.`
-      : `In ${balance.year}, the goods and services trade balance was ${formatIndicatorValue(balance, { compact: true })}; exports were ${surplus ? "higher" : "lower"} than imports.`);
+    facts.push({
+      title: lang === "ko" ? "Trade Balance" : "Trade Balance",
+      text: lang === "ko"
+        ? `${balance.year}년 기준 상품·서비스 무역수지는 ${formatIndicatorValue(balance, { compact: true })} ${surplus ? "흑자" : "적자"}입니다.`
+        : `In ${balance.year}, the goods and services trade balance was a ${formatIndicatorValue(balance, { compact: true })} ${surplus ? "surplus" : "deficit"}.`
+    });
   }
   if (Number.isFinite(exports?.value) && Number.isFinite(imports?.value) && exports.year === imports.year) {
-    facts.push(lang === "ko"
-      ? `${exports.year}년 수출은 ${formatIndicatorValue(exports, { compact: true })}, 수입은 ${formatIndicatorValue(imports, { compact: true })}입니다.`
-      : `In ${exports.year}, exports were ${formatIndicatorValue(exports, { compact: true })} and imports were ${formatIndicatorValue(imports, { compact: true })}.`);
+    facts.push({
+      title: lang === "ko" ? "Export / Import Scale" : "Export / Import Scale",
+      text: lang === "ko"
+        ? `${exports.year}년 수출은 ${formatIndicatorValue(exports, { compact: true })}, 수입은 ${formatIndicatorValue(imports, { compact: true })}입니다.`
+        : `In ${exports.year}, exports were ${formatIndicatorValue(exports, { compact: true })} and imports were ${formatIndicatorValue(imports, { compact: true })}.`
+    });
   }
   if (Number.isFinite(exportGrowth?.value) && Number.isFinite(importGrowth?.value)) {
-    facts.push(lang === "ko"
-      ? `최신 수출 증가율은 ${formatIndicatorValue(exportGrowth)}, 수입 증가율은 ${formatIndicatorValue(importGrowth)}입니다.`
-      : `The latest export growth rate is ${formatIndicatorValue(exportGrowth)}, compared with import growth of ${formatIndicatorValue(importGrowth)}.`);
+    const diff = Math.abs(exportGrowth.value - importGrowth.value);
+    const exportHigher = exportGrowth.value >= importGrowth.value;
+    facts.push({
+      title: lang === "ko" ? "Growth Comparison" : "Growth Comparison",
+      text: lang === "ko"
+        ? `최신 수출 증가율은 ${formatIndicatorValue(exportGrowth)}, 수입 증가율은 ${formatIndicatorValue(importGrowth)}로, ${exportHigher ? "수출" : "수입"} 증가율이 ${formatRate(diff, 2)}%p 높습니다.`
+        : `The latest export growth rate is ${formatIndicatorValue(exportGrowth)} and import growth is ${formatIndicatorValue(importGrowth)}, so ${exportHigher ? "export" : "import"} growth is higher by ${formatRate(diff, 2)} percentage points.`
+    });
   }
   if (Number.isFinite(tradeShare?.value)) {
-    facts.push(lang === "ko"
-      ? `${tradeShare.year}년 무역 규모는 GDP의 ${formatIndicatorValue(tradeShare)}로 표시됩니다.`
-      : `In ${tradeShare.year}, trade was reported at ${formatIndicatorValue(tradeShare)} of GDP.`);
+    facts.push({
+      title: lang === "ko" ? "Trade Share" : "Trade Share",
+      text: lang === "ko"
+        ? `${tradeShare.year}년 상품·서비스 무역 규모는 GDP의 ${formatIndicatorValue(tradeShare)}로 표시됩니다.`
+        : `In ${tradeShare.year}, goods and services trade was reported at ${formatIndicatorValue(tradeShare)} of GDP.`
+    });
   }
   return `
     <section class="country-profile-section">
       <h2>${lang === "ko" ? "Trade Snapshot" : "Trade Snapshot"}</h2>
-      <ul class="trade-fact-list">${facts.slice(0, 4).map((fact) => `<li>${escapeHtml(fact)}</li>`).join("") || `<li>${lang === "ko" ? "선택 국가의 비교 가능한 수출입 지표가 부족합니다." : "Comparable export and import indicators are not available for this country."}</li>`}</ul>
+      <div class="trade-fact-list">${facts.map((fact) => `<article><strong>${escapeHtml(fact.title)}</strong><p>${escapeHtml(fact.text)}</p></article>`).join("") || `<article><p>${lang === "ko" ? "선택 국가의 비교 가능한 수출입 지표가 부족합니다." : "Comparable export and import indicators are not available for this country."}</p></article>`}</div>
     </section>
   `;
 }
-
 function countryToolsMarkup(country) {
   const lang = currentLang();
   const currency = COUNTRY_CURRENCY[country] || "USD";
@@ -2187,10 +2326,11 @@ function dataSourcesMarkup(meta) {
       <h2>${lang === "ko" ? "Sources & Data Notes" : "Sources & Data Notes"}</h2>
       <div class="source-note-grid">
         <div><strong>Economic & Trade Data</strong><a href="https://data.worldbank.org/" target="_blank" rel="noopener">World Bank</a></div>
-        <div><strong>Country Metadata</strong><a href="https://data.worldbank.org/country" target="_blank" rel="noopener">${escapeHtml(meta.source || "World Bank country metadata")}</a></div>
+        <div><strong>Country Metadata</strong><a href="https://data.worldbank.org/country" target="_blank" rel="noopener">World Bank + LOGILEE local reference</a></div>
         <div><strong>Map</strong><a href="https://www.openstreetmap.org/" target="_blank" rel="noopener">OpenStreetMap</a></div>
+        <div><strong>Flag</strong><a href="https://flagcdn.com/" target="_blank" rel="noopener">FlagCDN</a></div>
       </div>
-      <p class="muted">${lang === "ko" ? "지표별 최신 이용 가능 연도는 다를 수 있습니다. 표시 연도를 확인하고, 실제 거래 전 최신 규제·관세·통관 조건은 공식 채널에서 별도 확인하세요." : "Latest available years can differ by indicator. Check the displayed year and confirm current regulations, tariffs, and customs conditions through official channels before a transaction."}</p>
+      <p class="muted">${lang === "ko" ? "외부 데이터 제공 상태에 따라 일부 정보의 업데이트 시점이 다를 수 있습니다. 각 지표의 표시 연도를 확인하고, 실제 거래 전 최신 규제·관세·통관 조건은 공식 채널에서 별도로 확인하세요." : "Update timing can differ across external data providers. Check the displayed year for each indicator and confirm current regulations, tariffs, and customs conditions through official channels before a transaction."}</p>
     </section>
   `;
 }
@@ -2223,6 +2363,7 @@ async function wireCountryProfile() {
   const form = document.querySelector("[data-country-profile-form]");
   if (!form) return;
   populateCountrySelects();
+  const select = form.querySelector("[data-country-select]");
   const output = document.querySelector("[data-country-profile-output]");
   const lang = currentLang();
   const labels = lang === "ko"
@@ -2251,7 +2392,7 @@ async function wireCountryProfile() {
   const render = async () => {
     output.innerHTML = `<div class="data-empty">${labels.loading}</div>`;
     try {
-      const country = form.querySelector("[data-country-select]").value;
+      const country = select.value;
       const [records, meta] = await Promise.all([getWorldBankRecords(country), getCountryMetadata(country)]);
       const priority = ["Population", "GDP", "GDP Growth", "Inflation", "Trade (% of GDP)", "Exports of goods and services", "Imports of goods and services", "Trade Balance", "Export Growth", "Import Growth"];
       const byLabel = new Map(records.map((row) => [row.label, row]));
@@ -2282,13 +2423,24 @@ async function wireCountryProfile() {
       dataError(output, labels.unavailable);
     }
   };
-  form.addEventListener("submit", (event) => {
-    event.preventDefault();
-    const country = form.querySelector("[data-country-select]").value;
+  const updateUrlAndRender = (country, { push = true } = {}) => {
     const url = new URL(location.href);
     if (country) url.searchParams.set("country", country);
-    history.replaceState(null, "", url);
+    if (push) history.pushState({ country }, "", url); else history.replaceState({ country }, "", url);
     render();
+  };
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    updateUrlAndRender(select.value, { push: false });
+  });
+  enhanceCountryCombobox(select, (country, options) => updateUrlAndRender(country, options));
+  window.addEventListener("popstate", () => {
+    const country = new URLSearchParams(location.search).get("country");
+    if (country && [...select.options].some((option) => option.value === country)) {
+      select.value = country;
+      select.updateComboboxLabel?.();
+      render();
+    }
   });
   render();
 }
