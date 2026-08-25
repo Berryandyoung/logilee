@@ -1,4 +1,4 @@
-﻿const LOGILEE = {
+const LOGILEE = {
   ko: {
     searchPlaceholder: "물류 용어, 도구, 항만, 문서를 검색하세요",
     noResult: "No results found.",
@@ -105,6 +105,97 @@ function currentLang() {
   return document.documentElement.lang && document.documentElement.lang.startsWith("ko") ? "ko" : "en";
 }
 
+function languageRoot(lang) {
+  const match = location.pathname.match(/^(.*?)(?:\/ko|\/en)(?:\/|$)/);
+  return `${match ? match[1] : ""}/${lang}/`;
+}
+
+function pageUrlForLang(lang, page = "") {
+  return `${languageRoot(lang)}${page}`;
+}
+
+function localizedSearchUrl(lang, query) {
+  return `${pageUrlForLang(lang, "search.html")}?q=${encodeURIComponent(query)}`;
+}
+
+function localizedResultUrl(item, lang) {
+  const base = `${location.origin}${pageUrlForLang(lang)}`;
+  try {
+    const url = new URL(item.url, base);
+    return `${url.pathname}${url.search}${url.hash}`;
+  } catch {
+    return item.url;
+  }
+}
+
+function alternateLanguageHref(lang, previousLinks = []) {
+  const alternate = document.querySelector(`link[rel="alternate"][hreflang="${lang}"]`);
+  if (alternate?.href) return alternate.href;
+  const existing = previousLinks.find((href) => href.includes(`/${lang}/`) || href.includes(`../${lang}/`));
+  if (existing) return existing;
+  const otherLang = lang === "ko" ? "en" : "ko";
+  if (location.pathname.includes(`/${otherLang}/`)) {
+    return `${location.pathname.replace(`/${otherLang}/`, `/${lang}/`)}${location.search}${location.hash}`;
+  }
+  return pageUrlForLang(lang);
+}
+
+function ensureGlobalHeader() {
+  if (!location.pathname.includes("/ko/") && !location.pathname.includes("/en/")) return;
+  let topbar = document.querySelector(".topbar");
+  if (topbar?.querySelector("[data-header-search]")) return;
+  if (!topbar) {
+    const host = document.querySelector(".main, .content, main.page");
+    if (!host) return;
+    topbar = document.createElement("header");
+    topbar.className = "topbar workspace-topbar global-common-topbar";
+    host.insertBefore(topbar, host.firstChild);
+  }
+
+  const lang = currentLang();
+  const previousLanguageLinks = [...topbar.querySelectorAll("a")]
+    .map((link) => link.getAttribute("href") || "")
+    .filter(Boolean);
+  const mobileNav = topbar.querySelector("nav[data-mobile-nav]");
+  if (mobileNav) mobileNav.classList.add("global-mobile-nav");
+
+  const placeholder = lang === "ko" ? "LOGILEE 검색..." : "Search LOGILEE...";
+  const searchLabel = lang === "ko" ? "LOGILEE 검색" : "Search LOGILEE";
+  const menuLabel = lang === "ko" ? "메뉴 열기" : "Open menu";
+  const koHref = alternateLanguageHref("ko", previousLanguageLinks);
+  const enHref = alternateLanguageHref("en", previousLanguageLinks);
+
+  topbar.classList.add("workspace-topbar", "global-common-topbar");
+  topbar.innerHTML = `
+    <a class="mobile-logo" href="${pageUrlForLang(lang)}">LOGILEE</a>
+    <form class="header-search" data-header-search role="search">
+      <i data-lucide="search"></i>
+      <input name="q" autocomplete="off" placeholder="${placeholder}" aria-label="${searchLabel}">
+      <button type="submit" aria-label="${lang === "ko" ? "검색" : "Search"}"><i data-lucide="arrow-right"></i></button>
+      <div class="header-search-results" data-header-search-results></div>
+    </form>
+    <div class="top-actions">
+      <div class="language-menu" data-language-menu>
+        <button class="icon-btn language-button" type="button" aria-expanded="false"><i data-lucide="globe-2"></i> Language <i data-lucide="chevron-down"></i></button>
+        <div class="language-dropdown">
+          <span>Language</span>
+          <a class="${lang === "ko" ? "is-active" : ""}" href="${koHref}" data-lang-choice="ko">Korean</a>
+          <a class="${lang === "en" ? "is-active" : ""}" href="${enHref}" data-lang-choice="en">English</a>
+        </div>
+      </div>
+      <button class="menu-btn" data-menu-toggle aria-expanded="false" aria-label="${menuLabel}"><i data-lucide="menu"></i></button>
+    </div>
+  `;
+  if (mobileNav) topbar.appendChild(mobileNav);
+}
+function ensureIconLibrary() {
+  if (window.lucide || document.querySelector('script[src*="lucide"]')) return;
+  const script = document.createElement("script");
+  script.src = "https://unpkg.com/lucide@latest/dist/umd/lucide.min.js";
+  script.defer = true;
+  script.onload = refreshIcons;
+  document.head.appendChild(script);
+}
 function refreshIcons() {
   if (window.lucide) window.lucide.createIcons();
 }
@@ -353,9 +444,9 @@ function renderResults(target, results, lang) {
   `).join("");
 }
 
-function resultMarkup(item) {
+function resultMarkup(item, lang = currentLang()) {
   return `
-    <a class="header-result-item" href="${item.url}">
+    <a class="header-result-item" href="${localizedResultUrl(item, lang)}">
       <span>${item.type}</span>
       <strong>${item.title}</strong>
       <small>${item.summary}</small>
@@ -379,7 +470,7 @@ function wireHeaderSearch() {
       }
       const matches = runSearch(q, lang).slice(0, 5);
       results.innerHTML = matches.length
-        ? matches.map(resultMarkup).join("")
+        ? matches.map((item) => resultMarkup(item, lang)).join("")
         : `<div class="header-result-empty">${lang === "ko" ? "No results found." : "No results found."}</div>`;
       form.classList.add("has-results");
     };
@@ -389,7 +480,7 @@ function wireHeaderSearch() {
     form.addEventListener("submit", (event) => {
       event.preventDefault();
       const q = input.value.trim();
-      if (q) location.href = `search.html?q=${encodeURIComponent(q)}`;
+      if (q) location.href = localizedSearchUrl(lang, q);
     });
     document.addEventListener("click", (event) => {
       if (!form.contains(event.target)) form.classList.remove("has-results");
@@ -409,14 +500,14 @@ function wireSearch() {
       const q = input.value.trim();
       if (!q) return;
       localStorage.setItem("logilee-last-search", q);
-      location.href = `search.html?q=${encodeURIComponent(q)}`;
+      location.href = localizedSearchUrl(lang, q);
     });
   });
   document.querySelectorAll("[data-search-chip]").forEach((button) => {
     button.addEventListener("click", () => {
       const q = button.dataset.searchChip || button.textContent.trim();
       localStorage.setItem("logilee-last-search", q);
-      location.href = `search.html?q=${encodeURIComponent(q)}`;
+      location.href = localizedSearchUrl(lang, q);
     });
   });
   const results = document.querySelector("[data-search-results]");
@@ -2304,6 +2395,8 @@ async function wireNewsPage() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  ensureIconLibrary();
+  ensureGlobalHeader();
   enhanceSidebar();
   refreshIcons();
   wireMenu();

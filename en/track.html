@@ -52,12 +52,15 @@
           <div data-recent></div>
         </section>
 
-        <section class="page-section">
-          <div class="section-heading"><span class="eyebrow">Providers</span><h2>Supported Official Pages</h2></div>
+        <section class="page-section" aria-labelledby="tracking-sections-title">
+          <div class="section-heading"><span class="eyebrow">Providers</span><h2 id="tracking-sections-title">Supported Official Pages</h2></div>
           <div class="resource-list">
-            <article class="resource-row"><div><strong>Courier</strong><p>DHL, FedEx, UPS, and USPS links open official parcel tracking pages.</p></div><div class="carrier-list"><span class="chip">DHL</span><span class="chip">FedEx</span><span class="chip">UPS</span><span class="chip">USPS</span></div></article>
-            <article class="resource-row"><div><strong>Ocean</strong><p>Maersk, MSC, HMM, and CMA CGM links open official ocean carrier tracking pages.</p></div><div class="carrier-list"><span class="chip">Maersk</span><span class="chip">MSC</span><span class="chip">HMM</span><span class="chip">CMA CGM</span></div></article>
-            <article class="resource-row"><div><strong>Air Cargo</strong><p>Air cargo portals vary by airline and may not support prefilled URLs. Use the airline cargo portal with the AWB number.</p></div><div class="related-row"><a href="https://www.lufthansa-cargo.com/en/eservices/etracking" target="_blank" rel="noopener">Lufthansa Cargo</a><a href="https://scekprd.emirates.com/skychain/app?initial=y&service=page%2Fnwp%3ATrackshipmt" target="_blank" rel="noopener">Emirates SkyCargo</a></div></article>
+            <article class="resource-row" id="container"><div><strong>Container</strong><p>Use a container number to open the official container tracking page when the carrier supports it.</p></div><div class="carrier-list"><span class="chip">Maersk</span><span class="chip">MSC</span><span class="chip">HMM</span><span class="chip">CMA CGM</span></div></article>
+            <article class="resource-row" id="bl"><div><strong>B/L</strong><p>Use an ocean bill of lading reference to open carrier B/L tracking pages.</p></div><div class="carrier-list"><span class="chip">Maersk</span><span class="chip">MSC</span><span class="chip">HMM</span><span class="chip">CMA CGM</span></div></article>
+            <article class="resource-row" id="booking"><div><strong>Booking</strong><p>Booking reference support varies by carrier, so confirm it on the official carrier lookup screen.</p></div><div class="carrier-list"><span class="chip">Carrier Portal</span><span class="chip">Booking Reference</span></div></article>
+            <article class="resource-row" id="awb"><div><strong>AWB</strong><p>Air cargo portals vary by airline and may not support prefilled URLs. Use the airline cargo portal with the AWB number.</p></div><div class="related-row"><a href="https://www.lufthansa-cargo.com/en/eservices/etracking" target="_blank" rel="noopener">Lufthansa Cargo</a><a href="https://scekprd.emirates.com/skychain/app?initial=y&service=page%2Fnwp%3ATrackshipmt" target="_blank" rel="noopener">Emirates SkyCargo</a></div></article>
+            <article class="resource-row" id="courier"><div><strong>Courier</strong><p>DHL, FedEx, UPS, and USPS links open official parcel tracking pages.</p></div><div class="carrier-list"><span class="chip">DHL</span><span class="chip">FedEx</span><span class="chip">UPS</span><span class="chip">USPS</span></div></article>
+            <article class="resource-row" id="ocean-carrier"><div><strong>Ocean Carrier</strong><p>Maersk, MSC, HMM, and CMA CGM links open official ocean carrier tracking pages.</p></div><div class="carrier-list"><span class="chip">Maersk</span><span class="chip">MSC</span><span class="chip">HMM</span><span class="chip">CMA CGM</span></div></article>
           </div>
         </section>
 

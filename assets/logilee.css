@@ -1,4 +1,4 @@
-﻿:root {
+:root {
   --ink-navy: #071a2b;
   --deep-navy: #0b3158;
   --signal-blue: #176bff;
@@ -6266,5 +6266,58 @@ body.sidebar-drawer-active {
 
   .post-meta span + span::before {
     margin-right: 10px;
+  }
+}
+
+.global-common-topbar {
+  justify-content: space-between;
+}
+
+.global-common-topbar .header-search {
+  margin: 0;
+}
+
+.global-common-topbar .global-mobile-nav {
+  display: none;
+}
+
+@media (max-width: 1100px) {
+  .global-common-topbar .global-mobile-nav.is-open {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .global-common-topbar {
+    gap: 10px;
+  }
+
+  .global-common-topbar .top-actions {
+    margin-left: auto;
+  }
+
+  .global-common-topbar .language-button {
+    width: 42px;
+    justify-content: center;
+    overflow: hidden;
+    font-size: 0;
+    gap: 0;
+  }
+
+  .global-common-topbar .language-button svg,
+  .global-common-topbar .language-button i {
+    font-size: 16px;
+  }
+
+  .global-common-topbar .language-button svg:last-child,
+  .global-common-topbar .language-button i:last-child {
+    display: none;
+  }
+}
+
+@media (max-width: 520px) {
+  .home-page .guide-list {
+    grid-template-columns: 1fr;
   }
 }
