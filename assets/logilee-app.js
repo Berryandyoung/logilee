@@ -1640,55 +1640,67 @@ async function wireCurrencyConverter() {
   }
 }
 
-const TRADE_COUNTRIES = [
-  ["KR", "South Korea", "대한민국"],
-  ["CN", "China", "중국"],
-  ["US", "United States", "미국"],
-  ["JP", "Japan", "일본"],
-  ["DE", "Germany", "독일"],
-  ["VN", "Vietnam", "베트남"],
-  ["IN", "India", "인도"],
-  ["MX", "Mexico", "멕시코"],
-  ["SG", "Singapore", "싱가포르"],
-  ["GB", "United Kingdom", "영국"],
-  ["NL", "Netherlands", "네덜란드"],
-  ["AE", "United Arab Emirates", "아랍에미리트"],
-  ["HK", "Hong Kong", "홍콩"],
-  ["TH", "Thailand", "태국"],
-  ["MY", "Malaysia", "말레이시아"],
-  ["LK", "Sri Lanka", "스리랑카"],
-  ["BE", "Belgium", "벨기에"],
-  ["TW", "Taiwan", "대만"],
-  ["FR", "France", "프랑스"],
-  ["ES", "Spain", "스페인"],
-  ["IT", "Italy", "이탈리아"],
-  ["GR", "Greece", "그리스"],
-  ["RO", "Romania", "루마니아"],
-  ["PL", "Poland", "폴란드"],
-  ["CA", "Canada", "캐나다"],
-  ["BR", "Brazil", "브라질"],
-  ["AR", "Argentina", "아르헨티나"],
-  ["PE", "Peru", "페루"],
-  ["CO", "Colombia", "콜롬비아"],
-  ["PA", "Panama", "파나마"],
-  ["ZA", "South Africa", "남아프리카공화국"],
-  ["MA", "Morocco", "모로코"],
-  ["EG", "Egypt", "이집트"],
-  ["KE", "Kenya", "케냐"],
-  ["TZ", "Tanzania", "탄자니아"],
-  ["NG", "Nigeria", "나이지리아"],
-  ["GH", "Ghana", "가나"],
-  ["SA", "Saudi Arabia", "사우디아라비아"],
-  ["OM", "Oman", "오만"],
-  ["QA", "Qatar", "카타르"],
-  ["PK", "Pakistan", "파키스탄"],
-  ["BD", "Bangladesh", "방글라데시"],
-  ["ID", "Indonesia", "인도네시아"],
-  ["PH", "Philippines", "필리핀"]
+const ISO_COUNTRY_CODES = [
+  "AD", "AE", "AF", "AG", "AI", "AL", "AM", "AO", "AQ", "AR", "AS", "AT", "AU", "AW", "AX", "AZ",
+  "BA", "BB", "BD", "BE", "BF", "BG", "BH", "BI", "BJ", "BL", "BM", "BN", "BO", "BQ", "BR", "BS",
+  "BT", "BV", "BW", "BY", "BZ", "CA", "CC", "CD", "CF", "CG", "CH", "CI", "CK", "CL", "CM", "CN",
+  "CO", "CR", "CU", "CV", "CW", "CX", "CY", "CZ", "DE", "DJ", "DK", "DM", "DO", "DZ", "EC", "EE",
+  "EG", "EH", "ER", "ES", "ET", "FI", "FJ", "FK", "FM", "FO", "FR", "GA", "GB", "GD", "GE", "GF",
+  "GG", "GH", "GI", "GL", "GM", "GN", "GP", "GQ", "GR", "GS", "GT", "GU", "GW", "GY", "HK", "HM",
+  "HN", "HR", "HT", "HU", "ID", "IE", "IL", "IM", "IN", "IO", "IQ", "IR", "IS", "IT", "JE", "JM",
+  "JO", "JP", "KE", "KG", "KH", "KI", "KM", "KN", "KP", "KR", "KW", "KY", "KZ", "LA", "LB", "LC",
+  "LI", "LK", "LR", "LS", "LT", "LU", "LV", "LY", "MA", "MC", "MD", "ME", "MF", "MG", "MH", "MK",
+  "ML", "MM", "MN", "MO", "MP", "MQ", "MR", "MS", "MT", "MU", "MV", "MW", "MX", "MY", "MZ", "NA",
+  "NC", "NE", "NF", "NG", "NI", "NL", "NO", "NP", "NR", "NU", "NZ", "OM", "PA", "PE", "PF", "PG",
+  "PH", "PK", "PL", "PM", "PN", "PR", "PS", "PT", "PW", "PY", "QA", "RE", "RO", "RS", "RU", "RW",
+  "SA", "SB", "SC", "SD", "SE", "SG", "SH", "SI", "SJ", "SK", "SL", "SM", "SN", "SO", "SR", "SS",
+  "ST", "SV", "SX", "SY", "SZ", "TC", "TD", "TF", "TG", "TH", "TJ", "TK", "TL", "TM", "TN", "TO",
+  "TR", "TT", "TV", "TW", "TZ", "UA", "UG", "UM", "US", "UY", "UZ", "VA", "VC", "VE", "VG", "VI",
+  "VN", "VU", "WF", "WS", "YE", "YT", "ZA", "ZM", "ZW"
 ];
 
-const COUNTRY_CURRENCY = { KR: "KRW", CN: "CNY", US: "USD", JP: "JPY", DE: "EUR", VN: "VND", IN: "INR", MX: "MXN", SG: "SGD", GB: "GBP", NL: "EUR", AE: "AED", HK: "HKD", TH: "THB", MY: "MYR", LK: "LKR", BE: "EUR", TW: "TWD", FR: "EUR", ES: "EUR", IT: "EUR", GR: "EUR", RO: "RON", PL: "PLN", CA: "CAD", BR: "BRL", AR: "ARS", PE: "PEN", CO: "COP", PA: "PAB", ZA: "ZAR", MA: "MAD", EG: "EGP", KE: "KES", TZ: "TZS", NG: "NGN", GH: "GHS", SA: "SAR", OM: "OMR", QA: "QAR", PK: "PKR", BD: "BDT", ID: "IDR", PH: "PHP" };
+const PRIORITY_COUNTRY_CODES = [
+  "KR", "CN", "US", "JP", "DE", "VN", "IN", "MX", "SG", "GB", "NL", "AE", "HK", "TH", "MY", "LK",
+  "BE", "TW", "FR", "ES", "IT", "GR", "RO", "PL", "CA", "BR", "AR", "PE", "CO", "PA", "ZA", "MA",
+  "EG", "KE", "TZ", "NG", "GH", "SA", "OM", "QA", "PK", "BD", "ID", "PH", "ET", "CG", "CD"
+];
 
+const COUNTRY_NAME_OVERRIDES = {
+  KR: { en: "South Korea", ko: "대한민국" }, CN: { en: "China", ko: "중국" }, US: { en: "United States", ko: "미국" }, JP: { en: "Japan", ko: "일본" }, DE: { en: "Germany", ko: "독일" }, VN: { en: "Vietnam", ko: "베트남" }, IN: { en: "India", ko: "인도" }, MX: { en: "Mexico", ko: "멕시코" }, SG: { en: "Singapore", ko: "싱가포르" }, GB: { en: "United Kingdom", ko: "영국" }, NL: { en: "Netherlands", ko: "네덜란드" }, AE: { en: "United Arab Emirates", ko: "아랍에미리트" }, HK: { en: "Hong Kong", ko: "홍콩" }, TH: { en: "Thailand", ko: "태국" }, MY: { en: "Malaysia", ko: "말레이시아" }, LK: { en: "Sri Lanka", ko: "스리랑카" }, BE: { en: "Belgium", ko: "벨기에" }, TW: { en: "Taiwan", ko: "대만" }, FR: { en: "France", ko: "프랑스" }, ES: { en: "Spain", ko: "스페인" }, IT: { en: "Italy", ko: "이탈리아" }, GR: { en: "Greece", ko: "그리스" }, RO: { en: "Romania", ko: "루마니아" }, PL: { en: "Poland", ko: "폴란드" }, CA: { en: "Canada", ko: "캐나다" }, BR: { en: "Brazil", ko: "브라질" }, AR: { en: "Argentina", ko: "아르헨티나" }, PE: { en: "Peru", ko: "페루" }, CO: { en: "Colombia", ko: "콜롬비아" }, PA: { en: "Panama", ko: "파나마" }, ZA: { en: "South Africa", ko: "남아프리카공화국" }, MA: { en: "Morocco", ko: "모로코" }, EG: { en: "Egypt", ko: "이집트" }, KE: { en: "Kenya", ko: "케냐" }, TZ: { en: "Tanzania", ko: "탄자니아" }, NG: { en: "Nigeria", ko: "나이지리아" }, GH: { en: "Ghana", ko: "가나" }, SA: { en: "Saudi Arabia", ko: "사우디아라비아" }, OM: { en: "Oman", ko: "오만" }, QA: { en: "Qatar", ko: "카타르" }, PK: { en: "Pakistan", ko: "파키스탄" }, BD: { en: "Bangladesh", ko: "방글라데시" }, ID: { en: "Indonesia", ko: "인도네시아" }, PH: { en: "Philippines", ko: "필리핀" }, ET: { en: "Ethiopia", ko: "에티오피아" }, CG: { en: "Republic of the Congo", ko: "콩고공화국" }, CD: { en: "Democratic Republic of the Congo", ko: "콩고민주공화국" }, RU: { en: "Russia", ko: "러시아" }
+};
+
+const COUNTRY_SEARCH_ALIASES = {
+  KR: ["한국", "대한민국", "남한", "South Korea", "Korea", "Republic of Korea"],
+  US: ["미국", "미합중국", "USA", "US", "United States"],
+  GB: ["영국", "UK", "Britain", "Great Britain", "United Kingdom"],
+  ZA: ["남아공", "남아프리카", "남아프리카공화국", "South Africa"],
+  AE: ["UAE", "아랍에미리트", "아랍에미리트연합", "United Arab Emirates"],
+  VN: ["베트남", "Vietnam"], DE: ["독일", "Germany"], CN: ["중국", "China"], JP: ["일본", "Japan"],
+  RU: ["러시아", "Russia", "Russian Federation"], ET: ["에티오피아", "Ethiopia"],
+  CG: ["콩고", "콩고공화국", "Congo", "Republic of Congo", "Republic of the Congo", "Congo Rep", "Congo, Rep."],
+  CD: ["콩고", "콩고 민주 공화국", "콩고민주공화국", "민주콩고", "DR콩고", "DRC", "Congo", "DR Congo", "Democratic Republic of Congo", "Democratic Republic of the Congo", "Congo Dem Rep", "Congo, Dem. Rep."]
+};
+
+function displayCountryName(code, lang = "en") {
+  const override = COUNTRY_NAME_OVERRIDES[code]?.[lang];
+  if (override) return override;
+  try {
+    return new Intl.DisplayNames([lang === "ko" ? "ko-KR" : "en-US"], { type: "region" }).of(code) || code;
+  } catch {
+    return code;
+  }
+}
+
+const TRADE_COUNTRIES = ISO_COUNTRY_CODES
+  .map((code) => [code, displayCountryName(code, "en"), displayCountryName(code, "ko")])
+  .sort((a, b) => {
+    const priorityA = PRIORITY_COUNTRY_CODES.indexOf(a[0]);
+    const priorityB = PRIORITY_COUNTRY_CODES.indexOf(b[0]);
+    if (priorityA >= 0 || priorityB >= 0) return (priorityA >= 0 ? priorityA : 999) - (priorityB >= 0 ? priorityB : 999);
+    return a[1].localeCompare(b[1], "en");
+  });
+
+const COUNTRY_CURRENCY = { KR: "KRW", CN: "CNY", US: "USD", JP: "JPY", DE: "EUR", VN: "VND", IN: "INR", MX: "MXN", SG: "SGD", GB: "GBP", NL: "EUR", AE: "AED", HK: "HKD", TH: "THB", MY: "MYR", LK: "LKR", BE: "EUR", TW: "TWD", FR: "EUR", ES: "EUR", IT: "EUR", GR: "EUR", RO: "RON", PL: "PLN", CA: "CAD", BR: "BRL", AR: "ARS", PE: "PEN", CO: "COP", PA: "PAB", ZA: "ZAR", MA: "MAD", EG: "EGP", KE: "KES", TZ: "TZS", NG: "NGN", GH: "GHS", SA: "SAR", OM: "OMR", QA: "QAR", PK: "PKR", BD: "BDT", ID: "IDR", PH: "PHP", ET: "ETB", CG: "XAF", CD: "CDF" };
 const PORTS = [
   { slug: "busan", name: "Port of Busan", country: "South Korea", iso: "KR", locode: "KRPUS", lat: 35.10, lon: 129.04, timezone: "Asia/Seoul", region: "Northeast Asia", type: "Seaport" },
   { slug: "shanghai", name: "Port of Shanghai", country: "China", iso: "CN", locode: "CNSHA", lat: 31.23, lon: 121.50, timezone: "Asia/Shanghai", region: "East Asia", type: "Seaport" },
@@ -1801,19 +1813,55 @@ function populateCountrySelects() {
     const allOption = select.options.length === 1 && select.options[0].value === "" ? select.options[0].outerHTML : "";
     select.innerHTML = allOption + TRADE_COUNTRIES.map(([code, en, ko]) => `<option value="${code}">${lang === "ko" ? ko : en}</option>`).join("");
     const params = new URLSearchParams(location.search);
-    const value = params.get(select.dataset.param || "country");
+    const value = params.get(select.dataset.param || "country")?.toUpperCase();
     if (value && [...select.options].some((option) => option.value === value)) select.value = value;
   });
 }
 
+function normalizeCountrySearch(value = "") {
+  return String(value)
+    .normalize("NFKC")
+    .toLowerCase()
+    .replace(/[’'`]/g, "")
+    .replace(/&/g, " and ")
+    .replace(/[^\p{L}\p{N}]+/gu, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function compactCountrySearch(value = "") {
+  return normalizeCountrySearch(value).replace(/\s+/g, "");
+}
+
 function countryComboboxItems(lang = currentLang()) {
-  return TRADE_COUNTRIES.map(([code, en, ko]) => ({
-    code,
-    en,
-    ko,
-    label: lang === "ko" ? ko : en,
-    search: `${code} ${en} ${ko}`.toLowerCase()
-  }));
+  return TRADE_COUNTRIES.map(([code, en, ko]) => {
+    const aliases = COUNTRY_SEARCH_ALIASES[code] || [];
+    const terms = [code, en, ko, ...aliases];
+    const normalizedTerms = [...new Set(terms.flatMap((term) => [normalizeCountrySearch(term), compactCountrySearch(term)]).filter(Boolean))];
+    return {
+      code,
+      en,
+      ko,
+      label: lang === "ko" ? ko : en,
+      terms: normalizedTerms
+    };
+  });
+}
+
+function countryMatchScore(item, query) {
+  const q = normalizeCountrySearch(query);
+  const compact = compactCountrySearch(query);
+  if (!q && !compact) return 0;
+  const queries = [q, compact].filter(Boolean);
+  let best = 0;
+  item.terms.forEach((term) => {
+    queries.forEach((needle) => {
+      if (term === needle) best = Math.max(best, 100);
+      else if (term.startsWith(needle)) best = Math.max(best, 80);
+      else if (term.includes(needle)) best = Math.max(best, 50);
+    });
+  });
+  return best;
 }
 
 function enhanceCountryCombobox(select, onSelect) {
@@ -1870,8 +1918,19 @@ function enhanceCountryCombobox(select, onSelect) {
     input.setAttribute("aria-activedescendant", activeIndex >= 0 && matches[activeIndex] ? `${listId}-${matches[activeIndex].code}` : "");
   };
   const filter = (query = "") => {
-    const q = query.trim().toLowerCase();
-    matches = q ? items.filter((item) => item.search.includes(q)) : [...items];
+    const q = normalizeCountrySearch(query);
+    if (q) {
+      const scored = items
+        .map((item) => ({ item, score: countryMatchScore(item, query) }))
+        .filter((entry) => entry.score > 0);
+      const exactMatch = scored.some((entry) => entry.score === 100);
+      matches = scored
+        .filter((entry) => !exactMatch || entry.score === 100)
+        .sort((a, b) => b.score - a.score || items.indexOf(a.item) - items.indexOf(b.item))
+        .map((entry) => entry.item);
+    } else {
+      matches = [...items];
+    }
     activeIndex = matches.length ? 0 : -1;
     render();
   };
@@ -2071,12 +2130,17 @@ const WB_INDICATORS = [
 
 async function getWorldBankRecords(country) {
   const records = await Promise.all(WB_INDICATORS.map(async ([label, code, digits]) => {
-    const data = await fetchJson(`https://api.worldbank.org/v2/country/${country}/indicator/${code}?format=json&per_page=80&date=2018:2026`, {
-      cacheKey: `logilee:wb:${country}:${code}`,
-      ttl: 24 * 60 * 60 * 1000
-    });
-    const item = Array.isArray(data?.[1]) ? data[1].find((row) => row.value !== null) : null;
-    return { label, code, value: item?.value, year: item?.date || "N/A", digits };
+    try {
+      const data = await fetchJson(`https://api.worldbank.org/v2/country/${country}/indicator/${code}?format=json&per_page=80&date=2018:2026`, {
+        cacheKey: `logilee:wb:${country}:${code}`,
+        ttl: 24 * 60 * 60 * 1000
+      });
+      const item = Array.isArray(data?.[1]) ? data[1].find((row) => row.value !== null) : null;
+      return { label, code, value: item?.value, year: item?.date || "N/A", digits };
+    } catch (error) {
+      console.warn("World Bank indicator unavailable:", country, code, error);
+      return { label, code, value: null, year: "N/A", digits };
+    }
   }));
   const exports = records.find((row) => row.code === "NE.EXP.GNFS.CD");
   const imports = records.find((row) => row.code === "NE.IMP.GNFS.CD");
@@ -2099,11 +2163,11 @@ const EU_COUNTRY_CODES = new Set(["AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE"
 const PORT_DETAIL_SLUGS = new Set(["busan", "shanghai", "singapore", "rotterdam", "los-angeles", "long-beach", "ningbo-zhoushan", "jebel-ali", "cat-lai", "hamburg"]);
 
 const COUNTRY_LANGUAGE_REFERENCE = {
-  KR: "Korean", CN: "Mandarin Chinese", US: "English", JP: "Japanese", DE: "German", VN: "Vietnamese", IN: "Hindi, English", MX: "Spanish", SG: "English, Malay, Mandarin, Tamil", GB: "English", NL: "Dutch", AE: "Arabic", HK: "Chinese, English", TH: "Thai", MY: "Malay", LK: "Sinhala, Tamil", BE: "Dutch, French, German", TW: "Mandarin Chinese", FR: "French", ES: "Spanish", IT: "Italian", GR: "Greek", RO: "Romanian", PL: "Polish", CA: "English, French", BR: "Portuguese", AR: "Spanish", PE: "Spanish", CO: "Spanish", PA: "Spanish", ZA: "Zulu, Xhosa, Afrikaans, English", MA: "Arabic, Amazigh", EG: "Arabic", KE: "Swahili, English", TZ: "Swahili, English", NG: "English", GH: "English", SA: "Arabic", OM: "Arabic", QA: "Arabic", PK: "Urdu, English", BD: "Bengali", ID: "Indonesian", PH: "Filipino, English"
+  KR: "Korean", CN: "Mandarin Chinese", US: "English", JP: "Japanese", DE: "German", VN: "Vietnamese", IN: "Hindi, English", MX: "Spanish", SG: "English, Malay, Mandarin, Tamil", GB: "English", NL: "Dutch", AE: "Arabic", HK: "Chinese, English", TH: "Thai", MY: "Malay", LK: "Sinhala, Tamil", BE: "Dutch, French, German", TW: "Mandarin Chinese", FR: "French", ES: "Spanish", IT: "Italian", GR: "Greek", RO: "Romanian", PL: "Polish", CA: "English, French", BR: "Portuguese", AR: "Spanish", PE: "Spanish", CO: "Spanish", PA: "Spanish", ZA: "Zulu, Xhosa, Afrikaans, English", MA: "Arabic, Amazigh", EG: "Arabic", KE: "Swahili, English", TZ: "Swahili, English", NG: "English", GH: "English", SA: "Arabic", OM: "Arabic", QA: "Arabic", PK: "Urdu, English", BD: "Bengali", ID: "Indonesian", PH: "Filipino, English", ET: "Amharic", CG: "French", CD: "French"
 };
 
 const CURRENCY_NAME_REFERENCE = {
-  KRW: "South Korean won", CNY: "Chinese yuan", USD: "United States dollar", JPY: "Japanese yen", EUR: "Euro", VND: "Vietnamese dong", INR: "Indian rupee", MXN: "Mexican peso", SGD: "Singapore dollar", GBP: "Pound sterling", AED: "United Arab Emirates dirham", HKD: "Hong Kong dollar", THB: "Thai baht", MYR: "Malaysian ringgit", LKR: "Sri Lankan rupee", TWD: "New Taiwan dollar", RON: "Romanian leu", PLN: "Polish zloty", CAD: "Canadian dollar", BRL: "Brazilian real", ARS: "Argentine peso", PEN: "Peruvian sol", COP: "Colombian peso", PAB: "Panamanian balboa", ZAR: "South African rand", MAD: "Moroccan dirham", EGP: "Egyptian pound", KES: "Kenyan shilling", TZS: "Tanzanian shilling", NGN: "Nigerian naira", GHS: "Ghanaian cedi", SAR: "Saudi riyal", OMR: "Omani rial", QAR: "Qatari riyal", PKR: "Pakistani rupee", BDT: "Bangladeshi taka", IDR: "Indonesian rupiah", PHP: "Philippine peso"
+  KRW: "South Korean won", CNY: "Chinese yuan", USD: "United States dollar", JPY: "Japanese yen", EUR: "Euro", VND: "Vietnamese dong", INR: "Indian rupee", MXN: "Mexican peso", SGD: "Singapore dollar", GBP: "Pound sterling", AED: "United Arab Emirates dirham", HKD: "Hong Kong dollar", THB: "Thai baht", MYR: "Malaysian ringgit", LKR: "Sri Lankan rupee", TWD: "New Taiwan dollar", RON: "Romanian leu", PLN: "Polish zloty", CAD: "Canadian dollar", BRL: "Brazilian real", ARS: "Argentine peso", PEN: "Peruvian sol", COP: "Colombian peso", PAB: "Panamanian balboa", ZAR: "South African rand", MAD: "Moroccan dirham", EGP: "Egyptian pound", KES: "Kenyan shilling", TZS: "Tanzanian shilling", NGN: "Nigerian naira", GHS: "Ghanaian cedi", SAR: "Saudi riyal", OMR: "Omani rial", QAR: "Qatari riyal", PKR: "Pakistani rupee", BDT: "Bangladeshi taka", IDR: "Indonesian rupiah", PHP: "Philippine peso", ETB: "Ethiopian birr", XAF: "Central African CFA franc", CDF: "Congolese franc"
 };
 
 const INDICATOR_UNITS = {
@@ -2435,7 +2499,7 @@ async function wireCountryProfile() {
   });
   enhanceCountryCombobox(select, (country, options) => updateUrlAndRender(country, options));
   window.addEventListener("popstate", () => {
-    const country = new URLSearchParams(location.search).get("country");
+    const country = new URLSearchParams(location.search).get("country")?.toUpperCase();
     if (country && [...select.options].some((option) => option.value === country)) {
       select.value = country;
       select.updateComboboxLabel?.();

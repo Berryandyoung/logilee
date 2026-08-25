@@ -6551,13 +6551,18 @@ body.sidebar-drawer-active {
 
 /* Country selector final polish */
 .country-selector-panel {
+  position: relative;
+  z-index: 20;
   align-items: center;
   margin-bottom: 18px;
   padding: 16px;
+  overflow: visible;
 }
 
 .country-selector-field {
+  position: relative;
   width: min(100%, 620px);
+  overflow: visible;
 }
 
 .country-selector-field label {
@@ -6566,6 +6571,7 @@ body.sidebar-drawer-active {
 
 .country-combobox {
   position: relative;
+  z-index: 30;
   width: 100%;
 }
 
@@ -6615,10 +6621,12 @@ body.sidebar-drawer-active {
   top: calc(100% + 8px);
   left: 0;
   right: 0;
-  z-index: 50;
+  z-index: 120;
   display: none;
-  max-height: 320px;
+  max-height: min(320px, calc(100vh - 220px));
+  overflow-x: hidden;
   overflow-y: auto;
+  overscroll-behavior: contain;
   padding: 8px;
   border: 1px solid var(--border);
   border-radius: 12px;
