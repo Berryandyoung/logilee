@@ -156,6 +156,7 @@ function ensureGlobalHeader() {
   const previousLanguageLinks = [...topbar.querySelectorAll("a")]
     .map((link) => link.getAttribute("href") || "")
     .filter(Boolean);
+  const shell = document.querySelector(".workspace-shell");
   const mobileNav = topbar.querySelector("nav[data-mobile-nav]");
   if (mobileNav) mobileNav.classList.add("global-mobile-nav");
 
@@ -186,8 +187,104 @@ function ensureGlobalHeader() {
       <button class="menu-btn" data-menu-toggle aria-expanded="false" aria-label="${menuLabel}"><i data-lucide="menu"></i></button>
     </div>
   `;
-  if (mobileNav) topbar.appendChild(mobileNav);
+  if (mobileNav && !shell) topbar.appendChild(mobileNav);
 }
+
+function workspaceNavMarkup(lang) {
+  const nav = lang === "ko"
+    ? {
+        label: "LOGILEE 업무 메뉴",
+        home: "Home",
+        trade: "Trade",
+        country: "국가별 무역 프로필",
+        holidays: "무역 공휴일",
+        eu: "EU 무역 통계",
+        global: "Global Trade Explorer",
+        hs: "HS Code",
+        logistics: "Logistics",
+        tracking: "Tracking Launcher",
+        ports: "Port Search",
+        cbm: "CBM Calculator",
+        compliance: "Compliance",
+        hub: "Compliance Hub",
+        rules: "수출입 규제",
+        market: "Market",
+        freight: "Freight Market",
+        fx: "환율 계산기",
+        business: "영업일 계산기",
+        resources: "Resources",
+        templates: "Templates",
+        documents: "Documents",
+        dictionary: "Dictionary",
+        learn: "Learn",
+        contact: "Contact & Office"
+      }
+    : {
+        label: "LOGILEE workspace menu",
+        home: "Home",
+        trade: "Trade",
+        country: "Country Trade Profile",
+        holidays: "Trade Holidays",
+        eu: "EU Trade Explorer",
+        global: "Global Trade Explorer",
+        hs: "HS Code",
+        logistics: "Logistics",
+        tracking: "Tracking Launcher",
+        ports: "Port Search",
+        cbm: "CBM Calculator",
+        compliance: "Compliance",
+        hub: "Compliance Hub",
+        rules: "Import / Export Rules",
+        market: "Market",
+        freight: "Freight Market",
+        fx: "Currency Converter",
+        business: "Business Day Calculator",
+        resources: "Resources",
+        templates: "Templates",
+        documents: "Documents",
+        dictionary: "Dictionary",
+        learn: "Learn",
+        contact: "Contact & Office"
+      };
+  const hsHref = lang === "ko" ? "../hscode.html" : "../hscode-en.html";
+  return `
+    <a class="brand compact-brand" href="./"><strong>LOGILEE</strong><span>Global Trade Workspace</span></a>
+    <nav class="workspace-nav" aria-label="${nav.label}">
+      <a class="nav-home" href="./"><i data-lucide="home"></i> ${nav.home}</a>
+      <section><h2>${nav.trade}</h2><a href="country-trade-profile.html"><i data-lucide="globe"></i>${nav.country}</a><a href="holidays.html"><i data-lucide="calendar-check"></i>${nav.holidays}</a><a href="eu-trade-explorer.html"><i data-lucide="chart-column"></i>${nav.eu}</a><a href="global-trade-explorer.html"><i data-lucide="chart-column"></i>${nav.global}</a><a href="${hsHref}"><i data-lucide="barcode"></i>${nav.hs}</a></section>
+      <section><h2>${nav.logistics}</h2><a href="track.html"><i data-lucide="radar"></i>${nav.tracking}</a><a href="ports.html"><i data-lucide="anchor"></i>${nav.ports}</a><a href="cbm.html"><i data-lucide="calculator"></i>${nav.cbm}</a></section>
+      <section><h2>${nav.compliance}</h2><a href="dashboard.html"><i data-lucide="shield-check"></i>${nav.hub}</a><a href="dashboard.html"><i data-lucide="shield-alert"></i>${nav.rules}</a></section>
+      <section><h2>${nav.market}</h2><a href="freight-market.html"><i data-lucide="chart-no-axes-combined"></i>${nav.freight}</a><a href="currency-converter.html"><i data-lucide="badge-dollar-sign"></i>${nav.fx}</a><a href="business-day.html"><i data-lucide="calendar-clock"></i>${nav.business}</a></section>
+      <section><h2>${nav.resources}</h2><a href="templates.html"><i data-lucide="copy"></i>${nav.templates}</a><a href="documents.html"><i data-lucide="file-text"></i>${nav.documents}</a><a href="dictionary.html"><i data-lucide="languages"></i>${nav.dictionary}</a><a href="learn.html"><i data-lucide="graduation-cap"></i>${nav.learn}</a><a href="contact.html"><i data-lucide="building-2"></i>${nav.contact}</a></section>
+    </nav>
+  `;
+}
+
+function ensureGlobalSidebar() {
+  if (!location.pathname.includes("/ko/") && !location.pathname.includes("/en/")) return;
+  let shell = document.querySelector(".shell");
+  let rail = shell?.querySelector(":scope > aside.rail");
+  if (!shell) {
+    const pageMain = document.querySelector("body > main.page");
+    if (!pageMain) return;
+    shell = document.createElement("div");
+    shell.className = "shell workspace-shell";
+    rail = document.createElement("aside");
+    rail.className = "rail workspace-rail";
+    const mainHost = document.createElement("main");
+    mainHost.className = "main";
+    document.body.insertBefore(shell, pageMain);
+    shell.append(rail, mainHost);
+    mainHost.appendChild(pageMain);
+  }
+  if (!rail) return;
+  shell.classList.add("workspace-shell");
+  rail.classList.add("workspace-rail");
+  if (rail.querySelector(".workspace-nav")) return;
+  rail.setAttribute("aria-label", currentLang() === "ko" ? "LOGILEE 업무 메뉴" : "LOGILEE workspace menu");
+  rail.innerHTML = workspaceNavMarkup(currentLang());
+}
+
 function ensureIconLibrary() {
   if (window.lucide || document.querySelector('script[src*="lucide"]')) return;
   const script = document.createElement("script");
@@ -267,6 +364,13 @@ function enhanceSidebar() {
     panel.appendChild(inner);
     section.replaceChildren(trigger, panel);
   });
+
+  if (!activeGroupId) {
+    activeGroupId = {
+      "about.html": "resources",
+      "countries.html": "trade"
+    }[currentFile] || "";
+  }
 
   if (!document.querySelector("[data-sidebar-overlay]")) {
     const overlay = document.createElement("div");
@@ -1867,6 +1971,229 @@ function countryNameFromCode(country, lang = currentLang()) {
   return found ? found[lang === "ko" ? 2 : 1] : country;
 }
 
+const EU_COUNTRY_CODES = new Set(["AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR", "HU", "IE", "IT", "LV", "LT", "LU", "MT", "NL", "PL", "PT", "RO", "SK", "SI", "ES", "SE"]);
+const PORT_DETAIL_SLUGS = new Set(["busan", "shanghai", "singapore", "rotterdam", "los-angeles", "long-beach", "ningbo-zhoushan", "jebel-ali", "cat-lai", "hamburg"]);
+
+const COUNTRY_LANGUAGE_REFERENCE = {
+  KR: "Korean", CN: "Mandarin Chinese", US: "English", JP: "Japanese", DE: "German", VN: "Vietnamese", IN: "Hindi, English", MX: "Spanish", SG: "English, Malay, Mandarin, Tamil", GB: "English", NL: "Dutch", AE: "Arabic", HK: "Chinese, English", TH: "Thai", MY: "Malay", LK: "Sinhala, Tamil", BE: "Dutch, French, German", TW: "Mandarin Chinese", FR: "French", ES: "Spanish", IT: "Italian", GR: "Greek", RO: "Romanian", PL: "Polish", CA: "English, French", BR: "Portuguese", AR: "Spanish", PE: "Spanish", CO: "Spanish", PA: "Spanish", ZA: "Zulu, Xhosa, Afrikaans, English", MA: "Arabic, Amazigh", EG: "Arabic", KE: "Swahili, English", TZ: "Swahili, English", NG: "English", GH: "English", SA: "Arabic", OM: "Arabic", QA: "Arabic", PK: "Urdu, English", BD: "Bengali", ID: "Indonesian", PH: "Filipino, English"
+};
+
+const CURRENCY_NAME_REFERENCE = {
+  KRW: "South Korean won", CNY: "Chinese yuan", USD: "United States dollar", JPY: "Japanese yen", EUR: "Euro", VND: "Vietnamese dong", INR: "Indian rupee", MXN: "Mexican peso", SGD: "Singapore dollar", GBP: "Pound sterling", AED: "United Arab Emirates dirham", HKD: "Hong Kong dollar", THB: "Thai baht", MYR: "Malaysian ringgit", LKR: "Sri Lankan rupee", TWD: "New Taiwan dollar", RON: "Romanian leu", PLN: "Polish zloty", CAD: "Canadian dollar", BRL: "Brazilian real", ARS: "Argentine peso", PEN: "Peruvian sol", COP: "Colombian peso", PAB: "Panamanian balboa", ZAR: "South African rand", MAD: "Moroccan dirham", EGP: "Egyptian pound", KES: "Kenyan shilling", TZS: "Tanzanian shilling", NGN: "Nigerian naira", GHS: "Ghanaian cedi", SAR: "Saudi riyal", OMR: "Omani rial", QAR: "Qatari riyal", PKR: "Pakistani rupee", BDT: "Bangladeshi taka", IDR: "Indonesian rupiah", PHP: "Philippine peso"
+};
+
+const INDICATOR_UNITS = {
+  "Population": "people",
+  "GDP": "current US$",
+  "GDP Growth": "%",
+  "Inflation": "%",
+  "Trade (% of GDP)": "%",
+  "Exports of goods and services": "current US$",
+  "Imports of goods and services": "current US$",
+  "Trade Balance": "current US$",
+  "Export Growth": "%",
+  "Import Growth": "%"
+};
+
+function indicatorUnit(label) {
+  return INDICATOR_UNITS[label] || "";
+}
+
+function isMoneyIndicator(label) {
+  return ["GDP", "Exports of goods and services", "Imports of goods and services", "Trade Balance"].includes(label);
+}
+
+function isPercentIndicator(label) {
+  return ["GDP Growth", "Inflation", "Trade (% of GDP)", "Export Growth", "Import Growth"].includes(label);
+}
+
+function abbreviateNumber(value, digits = 2) {
+  const abs = Math.abs(value);
+  if (abs >= 1e12) return `${formatRate(value / 1e12, digits)}T`;
+  if (abs >= 1e9) return `${formatRate(value / 1e9, digits)}B`;
+  if (abs >= 1e6) return `${formatRate(value / 1e6, digits)}M`;
+  if (abs >= 1e3) return `${formatRate(value / 1e3, digits)}K`;
+  return formatRate(value, digits);
+}
+
+function formatIndicatorValue(row, { compact = false } = {}) {
+  if (!row || row.value === undefined || row.value === null || !Number.isFinite(Number(row.value))) return "N/A";
+  const value = Number(row.value);
+  if (isMoneyIndicator(row.label)) return compact ? `US$ ${abbreviateNumber(value)}` : `US$ ${formatRate(value, row.digits)}`;
+  if (isPercentIndicator(row.label)) return `${formatRate(value, row.digits)}%`;
+  if (row.label === "Population") return compact ? abbreviateNumber(value, 2) : `${formatRate(value, 0)} people`;
+  return formatRate(value, row.digits);
+}
+
+function plainIndicatorValue(row) {
+  if (!row || row.value === undefined || row.value === null || !Number.isFinite(Number(row.value))) return "N/A";
+  return formatRate(Number(row.value), row.digits);
+}
+
+async function getCountryMetadata(country) {
+  const currencyCode = COUNTRY_CURRENCY[country] || "";
+  const fallbackName = countryNameFromCode(country, "en");
+  const fallback = {
+    source: "World Bank country metadata with LOGILEE local language and currency reference",
+    name: fallbackName,
+    officialName: "",
+    iso: country,
+    capital: "N/A",
+    region: "N/A",
+    languages: COUNTRY_LANGUAGE_REFERENCE[country] || "N/A",
+    currency: currencyCode ? `${currencyCode} · ${CURRENCY_NAME_REFERENCE[currencyCode] || currencyCode}` : "N/A",
+    flagPng: `https://flagcdn.com/w160/${country.toLowerCase()}.png`,
+    flagSvg: `https://flagcdn.com/${country.toLowerCase()}.svg`,
+    flagAlt: `${fallbackName} flag`,
+    latlng: null,
+    mapUrl: ""
+  };
+  try {
+    const data = await fetchJson(`https://api.worldbank.org/v2/country/${country}?format=json`, {
+      cacheKey: `logilee:country-meta-wb:${country}`,
+      ttl: 7 * 24 * 60 * 60 * 1000,
+      timeout: 9000
+    });
+    const item = Array.isArray(data?.[1]) ? data[1][0] : null;
+    if (!item) throw new Error("No World Bank country metadata");
+    const lat = Number(item.latitude);
+    const lon = Number(item.longitude);
+    return {
+      ...fallback,
+      source: "World Bank country metadata with LOGILEE local language and currency reference",
+      name: item.name || fallback.name,
+      officialName: item.name || "",
+      iso: item.iso2Code || country,
+      capital: item.capitalCity || fallback.capital,
+      region: [item.region?.value, item.incomeLevel?.value].filter(Boolean).join(" / ") || fallback.region,
+      latlng: Number.isFinite(lat) && Number.isFinite(lon) ? [lat, lon] : null,
+      mapUrl: Number.isFinite(lat) && Number.isFinite(lon) ? `https://www.openstreetmap.org/#map=5/${lat}/${lon}` : ""
+    };
+  } catch (error) {
+    console.warn("Country metadata unavailable:", error);
+    return fallback;
+  }
+}
+function countryMapMarkup(meta, country) {
+  const lang = currentLang();
+  if (meta?.latlng?.length >= 2) {
+    const [lat, lon] = meta.latlng;
+    const bbox = `${lon - 18},${lat - 10},${lon + 18},${lat + 10}`;
+    return `
+      <div class="country-map-frame">
+        <iframe title="${escapeAttribute(countryNameFromCode(country, lang))} map" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.openstreetmap.org/export/embed.html?bbox=${encodeURIComponent(bbox)}&layer=mapnik&marker=${encodeURIComponent(`${lat},${lon}`)}"></iframe>
+      </div>
+      <a class="source-link" href="${escapeAttribute(meta.mapUrl || `https://www.openstreetmap.org/#map=5/${lat}/${lon}`)}" target="_blank" rel="noopener">OpenStreetMap</a>
+    `;
+  }
+  return `<div class="country-map-fallback"><strong>${lang === "ko" ? "지도 위치를 불러올 수 없습니다." : "Map location unavailable."}</strong><span>${lang === "ko" ? "프로필 데이터와 도구는 계속 사용할 수 있습니다." : "The profile data and tools remain available."}</span></div>`;
+}
+
+function countryOverviewMarkup(country, meta) {
+  const lang = currentLang();
+  const localizedName = countryNameFromCode(country, lang);
+  const rows = lang === "ko"
+    ? [["영문명", meta.name], ["공식명", meta.officialName], ["ISO code", meta.iso], ["수도", meta.capital], ["지역", meta.region], ["언어", meta.languages], ["통화", meta.currency]]
+    : [["Country name", localizedName], ["Official name", meta.officialName], ["ISO code", meta.iso], ["Capital", meta.capital], ["Region", meta.region], ["Languages", meta.languages], ["Currency", meta.currency]];
+  return `
+    <section class="country-overview-grid" aria-label="${lang === "ko" ? "국가 개요" : "Country overview"}">
+      <div class="country-overview-card">
+        <div class="country-identity">
+          ${meta.flagPng || meta.flagSvg ? `<img src="${escapeAttribute(meta.flagSvg || meta.flagPng)}" alt="${escapeAttribute(meta.flagAlt)}" loading="lazy">` : `<span class="flag-fallback">${escapeHtml(country)}</span>`}
+          <div><span class="kicker">Country Overview</span><h2>${escapeHtml(localizedName)}</h2></div>
+        </div>
+        <dl class="country-facts">${rows.filter(([, value]) => value).map(([label, value]) => `<div><dt>${escapeHtml(label)}</dt><dd>${escapeHtml(value)}</dd></div>`).join("")}</dl>
+      </div>
+      <div class="country-map-card"><span class="kicker">Map</span>${countryMapMarkup(meta, country)}</div>
+    </section>
+  `;
+}
+
+function tradeSnapshotMarkup(records) {
+  const lang = currentLang();
+  const byLabel = new Map(records.map((row) => [row.label, row]));
+  const exports = byLabel.get("Exports of goods and services");
+  const imports = byLabel.get("Imports of goods and services");
+  const balance = byLabel.get("Trade Balance");
+  const exportGrowth = byLabel.get("Export Growth");
+  const importGrowth = byLabel.get("Import Growth");
+  const tradeShare = byLabel.get("Trade (% of GDP)");
+  const facts = [];
+  if (Number.isFinite(balance?.value)) {
+    const surplus = balance.value >= 0;
+    facts.push(lang === "ko"
+      ? `${balance.year}년 기준 상품·서비스 수출입 차액은 ${formatIndicatorValue(balance, { compact: true })}이며, 수출이 수입보다 ${surplus ? "컸습니다" : "작았습니다"}.`
+      : `In ${balance.year}, the goods and services trade balance was ${formatIndicatorValue(balance, { compact: true })}; exports were ${surplus ? "higher" : "lower"} than imports.`);
+  }
+  if (Number.isFinite(exports?.value) && Number.isFinite(imports?.value) && exports.year === imports.year) {
+    facts.push(lang === "ko"
+      ? `${exports.year}년 수출은 ${formatIndicatorValue(exports, { compact: true })}, 수입은 ${formatIndicatorValue(imports, { compact: true })}입니다.`
+      : `In ${exports.year}, exports were ${formatIndicatorValue(exports, { compact: true })} and imports were ${formatIndicatorValue(imports, { compact: true })}.`);
+  }
+  if (Number.isFinite(exportGrowth?.value) && Number.isFinite(importGrowth?.value)) {
+    facts.push(lang === "ko"
+      ? `최신 수출 증가율은 ${formatIndicatorValue(exportGrowth)}, 수입 증가율은 ${formatIndicatorValue(importGrowth)}입니다.`
+      : `The latest export growth rate is ${formatIndicatorValue(exportGrowth)}, compared with import growth of ${formatIndicatorValue(importGrowth)}.`);
+  }
+  if (Number.isFinite(tradeShare?.value)) {
+    facts.push(lang === "ko"
+      ? `${tradeShare.year}년 무역 규모는 GDP의 ${formatIndicatorValue(tradeShare)}로 표시됩니다.`
+      : `In ${tradeShare.year}, trade was reported at ${formatIndicatorValue(tradeShare)} of GDP.`);
+  }
+  return `
+    <section class="country-profile-section">
+      <h2>${lang === "ko" ? "Trade Snapshot" : "Trade Snapshot"}</h2>
+      <ul class="trade-fact-list">${facts.slice(0, 4).map((fact) => `<li>${escapeHtml(fact)}</li>`).join("") || `<li>${lang === "ko" ? "선택 국가의 비교 가능한 수출입 지표가 부족합니다." : "Comparable export and import indicators are not available for this country."}</li>`}</ul>
+    </section>
+  `;
+}
+
+function countryToolsMarkup(country) {
+  const lang = currentLang();
+  const currency = COUNTRY_CURRENCY[country] || "USD";
+  const countryLabel = countryNameFromCode(country, lang);
+  const tools = [
+    [lang === "ko" ? "해당 국가 Trade Statistics" : "Country trade statistics", `country-trade-profile.html?country=${country}`, "globe"],
+    [lang === "ko" ? "Public Holidays" : "Public holidays", `holidays.html?country=${country}`, "calendar-check"],
+    [lang === "ko" ? "Major Ports" : "Major ports", `ports.html?country=${country}`, "anchor"],
+    [`USD/${currency} ${lang === "ko" ? "환율 계산" : "currency check"}`, `currency-converter.html?from=USD&to=${currency}`, "badge-dollar-sign"],
+    [lang === "ko" ? "HS Code Search" : "HS Code search", lang === "ko" ? "../hscode.html" : "../hscode-en.html", "barcode"]
+  ];
+  if (EU_COUNTRY_CODES.has(country)) tools.push([lang === "ko" ? "EU Trade Explorer" : "EU Trade Explorer", `eu-trade-explorer.html?reporter=${country}`, "chart-column"]);
+  return `
+    <section class="country-profile-section">
+      <h2>${lang === "ko" ? "Trade & Logistics Tools" : "Trade & Logistics Tools"}</h2>
+      <p class="muted">${lang === "ko" ? `${countryLabel} 조사에서 다음 단계로 이어질 수 있는 LOGILEE 도구입니다.` : `LOGILEE tools that can support the next step of ${countryLabel} research.`}</p>
+      <div class="country-tool-grid">${tools.map(([label, href, icon]) => `<a href="${href}"><i data-lucide="${icon}"></i><strong>${escapeHtml(label)}</strong></a>`).join("")}</div>
+    </section>
+  `;
+}
+
+function countryPortsMarkup(country) {
+  const lang = currentLang();
+  const ports = ALL_PORTS.filter((port) => port.iso === country).slice(0, 8);
+  return `
+    <section class="country-profile-section">
+      <h2>${lang === "ko" ? "Major Ports" : "Major Ports"}</h2>
+      ${ports.length ? `<div class="major-port-grid">${ports.map((port) => `<a href="${PORT_DETAIL_SLUGS.has(port.slug) ? `ports/${port.slug}.html` : `ports.html?q=${encodeURIComponent(port.name)}`}"><strong>${escapeHtml(port.name)}</strong><span>${escapeHtml(port.locode)} · ${escapeHtml(port.type)}</span></a>`).join("")}</div>` : `<div class="data-empty">${lang === "ko" ? "이 국가에 등록된 LOGILEE 항만 데이터가 아직 없습니다." : "No LOGILEE port records are registered for this country yet."}</div>`}
+    </section>
+  `;
+}
+
+function dataSourcesMarkup(meta) {
+  const lang = currentLang();
+  return `
+    <section class="country-profile-section source-notes">
+      <h2>${lang === "ko" ? "Sources & Data Notes" : "Sources & Data Notes"}</h2>
+      <div class="source-note-grid">
+        <div><strong>Economic & Trade Data</strong><a href="https://data.worldbank.org/" target="_blank" rel="noopener">World Bank</a></div>
+        <div><strong>Country Metadata</strong><a href="https://data.worldbank.org/country" target="_blank" rel="noopener">${escapeHtml(meta.source || "World Bank country metadata")}</a></div>
+        <div><strong>Map</strong><a href="https://www.openstreetmap.org/" target="_blank" rel="noopener">OpenStreetMap</a></div>
+      </div>
+      <p class="muted">${lang === "ko" ? "지표별 최신 이용 가능 연도는 다를 수 있습니다. 표시 연도를 확인하고, 실제 거래 전 최신 규제·관세·통관 조건은 공식 채널에서 별도 확인하세요." : "Latest available years can differ by indicator. Check the displayed year and confirm current regulations, tariffs, and customs conditions through official channels before a transaction."}</p>
+    </section>
+  `;
+}
 function countryRelatedMarkup(country) {
   const currency = COUNTRY_CURRENCY[country] || "USD";
   const lang = currentLang();
@@ -1897,39 +2224,74 @@ async function wireCountryProfile() {
   if (!form) return;
   populateCountrySelects();
   const output = document.querySelector("[data-country-profile-output]");
+  const lang = currentLang();
+  const labels = lang === "ko"
+    ? {
+        loading: "국가 프로필 데이터를 불러오는 중입니다...",
+        unavailable: "국가 무역 프로필 데이터를 일시적으로 불러올 수 없습니다.",
+        economic: "Economic & Trade Snapshot",
+        detailed: "Detailed Indicators",
+        indicator: "Indicator",
+        value: "Value",
+        readable: "Readable value",
+        unit: "Unit",
+        year: "Latest available year"
+      }
+    : {
+        loading: "Loading country profile data...",
+        unavailable: "Country trade profile data is temporarily unavailable.",
+        economic: "Economic & Trade Snapshot",
+        detailed: "Detailed Indicators",
+        indicator: "Indicator",
+        value: "Value",
+        readable: "Readable value",
+        unit: "Unit",
+        year: "Latest available year"
+      };
   const render = async () => {
-    output.innerHTML = `<div class="data-empty">Loading...</div>`;
+    output.innerHTML = `<div class="data-empty">${labels.loading}</div>`;
     try {
       const country = form.querySelector("[data-country-select]").value;
-      const records = await getWorldBankRecords(country);
-      const priority = ["Population", "GDP", "GDP Growth", "Inflation", "Trade (% of GDP)", "Exports of goods and services", "Imports of goods and services"];
+      const [records, meta] = await Promise.all([getWorldBankRecords(country), getCountryMetadata(country)]);
+      const priority = ["Population", "GDP", "GDP Growth", "Inflation", "Trade (% of GDP)", "Exports of goods and services", "Imports of goods and services", "Trade Balance", "Export Growth", "Import Growth"];
       const byLabel = new Map(records.map((row) => [row.label, row]));
       output.innerHTML = `
-        <h2>${countryNameFromCode(country)}</h2>
-        <p class="muted">ISO Code: ${country}</p>
-        <div class="stat-grid country-kpi-grid">
-          ${priority.map((label) => {
-            const row = byLabel.get(label);
-            return `<div class="stat-block"><span>${label}</span><strong>${row?.value === undefined || row?.value === null ? "N/A" : formatRate(row.value, row.digits)}</strong><small>${row?.year || "N/A"}</small></div>`;
-          }).join("")}
-        </div>
-        <div class="responsive-table"><table class="result-table"><thead><tr><th>Indicator</th><th>Value</th><th>Latest available year</th></tr></thead>
-        <tbody>${records.map((row) => `<tr><td>${row.label}</td><td>${row.value === undefined || row.value === null ? "N/A" : formatRate(row.value, row.digits)}</td><td>${row.year}</td></tr>`).join("")}</tbody></table></div>
-        <p class="muted">Economic data: World Bank</p>
-        ${countryRelatedMarkup(country)}
+        ${countryOverviewMarkup(country, meta)}
+        <section class="country-profile-section">
+          <h2>${labels.economic}</h2>
+          <div class="stat-grid country-kpi-grid">
+            ${priority.map((label) => {
+              const row = byLabel.get(label);
+              return `<div class="stat-block"><span>${escapeHtml(label)}</span><strong>${formatIndicatorValue(row, { compact: true })}</strong><small>${escapeHtml(indicatorUnit(label))} · ${escapeHtml(row?.year || "N/A")}</small></div>`;
+            }).join("")}
+          </div>
+        </section>
+        ${tradeSnapshotMarkup(records)}
+        ${countryToolsMarkup(country)}
+        ${countryPortsMarkup(country)}
+        <section class="country-profile-section">
+          <h2>${labels.detailed}</h2>
+          <div class="responsive-table"><table class="result-table"><thead><tr><th>${labels.indicator}</th><th>${labels.readable}</th><th>${labels.value}</th><th>${labels.unit}</th><th>${labels.year}</th></tr></thead>
+          <tbody>${records.map((row) => `<tr><td>${escapeHtml(row.label)}</td><td>${formatIndicatorValue(row, { compact: true })}</td><td>${plainIndicatorValue(row)}</td><td>${escapeHtml(indicatorUnit(row.label))}</td><td>${escapeHtml(row.year)}</td></tr>`).join("")}</tbody></table></div>
+        </section>
+        ${dataSourcesMarkup(meta)}
       `;
+      refreshIcons();
     } catch (error) {
       console.warn("Country profile unavailable:", error);
-      dataError(output, "Country trade profile data is temporarily unavailable.");
+      dataError(output, labels.unavailable);
     }
   };
   form.addEventListener("submit", (event) => {
     event.preventDefault();
+    const country = form.querySelector("[data-country-select]").value;
+    const url = new URL(location.href);
+    if (country) url.searchParams.set("country", country);
+    history.replaceState(null, "", url);
     render();
   });
   render();
 }
-
 async function wireCountryCompare() {
   const form = document.querySelector("[data-country-compare-form]");
   if (!form) return;
@@ -2396,6 +2758,7 @@ async function wireNewsPage() {
 
 document.addEventListener("DOMContentLoaded", () => {
   ensureIconLibrary();
+  ensureGlobalSidebar();
   ensureGlobalHeader();
   enhanceSidebar();
   refreshIcons();
