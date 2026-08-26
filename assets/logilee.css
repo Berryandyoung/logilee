@@ -6759,3 +6759,121 @@ body.sidebar-drawer-active {
     grid-template-columns: 1fr;
   }
 }
+
+/* Holiday calendar planning polish */
+.holiday-controls {
+  align-items: end;
+  justify-content: flex-start;
+}
+
+.holiday-year-field {
+  width: min(180px, 100%);
+}
+
+.holiday-year-field select {
+  min-height: 48px;
+  border-radius: 12px;
+  font-weight: 800;
+}
+
+.holiday-static-intro {
+  margin-top: 0;
+}
+
+.holiday-summary-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.holiday-result-section {
+  margin-top: 20px;
+}
+
+.holiday-result-section h2 {
+  margin-bottom: 12px;
+  color: var(--ink-navy);
+  font-size: 22px;
+}
+
+.trade-schedule-snapshot dl {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0;
+}
+
+.trade-schedule-snapshot div {
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid #e2ebf6;
+  border-radius: 8px;
+  background: #fbfdff;
+}
+
+.trade-schedule-snapshot dt {
+  color: var(--secondary-text);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.trade-schedule-snapshot dd {
+  margin: 5px 0 0;
+  color: var(--main-text);
+  font-weight: 850;
+}
+
+.holiday-table tr.is-past-row {
+  color: var(--secondary-text);
+  background: #fafcff;
+}
+
+.holiday-table tr.is-past-row td {
+  opacity: 0.72;
+}
+
+.holiday-table tr.is-next-row td {
+  font-weight: 850;
+}
+
+.holiday-tool-grid {
+  margin-top: 8px;
+}
+
+.checklist-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.checklist-grid article {
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid #e2ebf6;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.checklist-grid h3 {
+  margin-bottom: 6px;
+  color: var(--ink-navy);
+  font-size: 16px;
+}
+
+.checklist-grid p {
+  margin: 0;
+}
+
+.holiday-source-panel strong {
+  color: var(--ink-navy);
+}
+
+@media (max-width: 860px) {
+  .holiday-summary-grid,
+  .trade-schedule-snapshot dl,
+  .checklist-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .holiday-year-field {
+    width: 100%;
+  }
+}

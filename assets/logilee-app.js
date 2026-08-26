@@ -2006,48 +2006,246 @@ async function getHolidays(country, year) {
   });
 }
 
+async function getNagerAvailableCountries() {
+  try {
+    const countries = await fetchJson("https://date.nager.at/api/v3/AvailableCountries", {
+      cacheKey: "logilee:nager:available-countries",
+      ttl: 7 * 24 * 60 * 60 * 1000,
+      timeout: 9000
+    });
+    return new Set((Array.isArray(countries) ? countries : []).map((item) => String(item.countryCode || item.key || "").toUpperCase()).filter(Boolean));
+  } catch (error) {
+    console.warn("Nager.Date country coverage unavailable:", error);
+    return null;
+  }
+}
+
+function holidayYearRange() {
+  const current = new Date().getFullYear();
+  return Array.from({ length: 6 }, (_, index) => current - 1 + index);
+}
+
+function populateHolidayYears(select) {
+  if (!select) return;
+  const years = holidayYearRange();
+  const params = new URLSearchParams(location.search);
+  const requested = Number(params.get("year"));
+  const current = new Date().getFullYear();
+  const selected = years.includes(requested) ? requested : current;
+  select.innerHTML = years.map((year) => `<option value="${year}">${year}</option>`).join("");
+  select.value = String(selected);
+}
+
+function holidayDateValue(date) {
+  return new Date(`${date}T00:00:00Z`).getTime();
+}
+
+function todayIsoLocal() {
+  const now = new Date();
+  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+}
+
+function daysUntilHoliday(date) {
+  const today = new Date(todayIsoLocal());
+  const holiday = new Date(`${date}T00:00:00Z`);
+  return Math.round((holiday.getTime() - today.getTime()) / 86400000);
+}
+
+function longestHolidayStretch(holidays) {
+  const dates = [...new Set(holidays.map((item) => item.date))].sort();
+  let best = 0;
+  let current = 0;
+  let previous = null;
+  dates.forEach((date) => {
+    if (previous && holidayDateValue(date) - holidayDateValue(previous) === 86400000) current += 1;
+    else current = 1;
+    best = Math.max(best, current);
+    previous = date;
+  });
+  return best;
+}
+
+function holidayHeavyMonths(holidays, lang = currentLang()) {
+  const counts = new Map();
+  holidays.forEach((item) => {
+    const month = item.date.slice(5, 7);
+    counts.set(month, (counts.get(month) || 0) + 1);
+  });
+  const max = Math.max(0, ...counts.values());
+  if (!max) return "N/A";
+  const formatter = new Intl.DateTimeFormat(lang === "ko" ? "ko-KR" : "en-US", { month: "long", timeZone: "UTC" });
+  return [...counts.entries()]
+    .filter(([, count]) => count === max)
+    .map(([month]) => formatter.format(new Date(`2026-${month}-01T00:00:00Z`)))
+    .join(lang === "ko" ? ", " : ", ");
+}
+
+function holidayRelatedToolsMarkup(country) {
+  const lang = currentLang();
+  const currency = COUNTRY_CURRENCY[country] || "USD";
+  const tools = lang === "ko"
+    ? [
+        ["국가 무역 프로필", `country-trade-profile.html?country=${country}`, "globe"],
+        ["주요 항만", `ports.html?country=${country}`, "anchor"],
+        ["환율 계산기", `currency-converter.html?from=USD&to=${currency}`, "badge-dollar-sign"],
+        ["무역 통계", `country-trade-profile.html?country=${country}`, "chart-column"],
+        ["HS Code 검색", "../hscode.html", "barcode"]
+      ]
+    : [
+        ["Country Trade Profile", `country-trade-profile.html?country=${country}`, "globe"],
+        ["Major Ports", `ports.html?country=${country}`, "anchor"],
+        ["Currency Converter", `currency-converter.html?from=USD&to=${currency}`, "badge-dollar-sign"],
+        ["Trade Statistics", `country-trade-profile.html?country=${country}`, "chart-column"],
+        ["HS Code Search", "../hscode-en.html", "barcode"]
+      ];
+  return `
+    <section class="holiday-result-section">
+      <h2>${lang === "ko" ? "Related Trade Tools" : "Related Trade Tools"}</h2>
+      <div class="country-tool-grid holiday-tool-grid">${tools.map(([label, href, icon]) => `<a href="${href}"><i data-lucide="${icon}"></i><strong>${escapeHtml(label)}</strong></a>`).join("")}</div>
+    </section>
+  `;
+}
+
+function holidayScheduleSnapshotMarkup(holidays, nextHoliday, metrics) {
+  const lang = currentLang();
+  const nextText = nextHoliday ? `${nextHoliday.date} ${nextHoliday.localName || nextHoliday.name}` : "N/A";
+  const heavy = holidayHeavyMonths(holidays, lang);
+  const rows = lang === "ko"
+    ? [
+        ["총 공휴일", `${holidays.length}일`],
+        ["평일 공휴일", `${metrics.weekdayCount}일`],
+        ["월/금 공휴일", `${metrics.mondayFridayCount}일`],
+        ["최장 연속 공휴일", `${metrics.longestStretch}일`],
+        ["공휴일 집중 월", heavy],
+        ["다음 공휴일", nextText]
+      ]
+    : [
+        ["Total holidays", `${holidays.length}`],
+        ["Weekday holidays", `${metrics.weekdayCount}`],
+        ["Monday/Friday holidays", `${metrics.mondayFridayCount}`],
+        ["Longest consecutive stretch", `${metrics.longestStretch} day${metrics.longestStretch === 1 ? "" : "s"}`],
+        ["Holiday-heavy month", heavy],
+        ["Next holiday", nextText]
+      ];
+  return `
+    <section class="holiday-result-section trade-schedule-snapshot">
+      <h2>${lang === "ko" ? "Trade Schedule Snapshot" : "Trade Schedule Snapshot"}</h2>
+      <dl>${rows.map(([label, value]) => `<div><dt>${escapeHtml(label)}</dt><dd>${escapeHtml(value)}</dd></div>`).join("")}</dl>
+    </section>
+  `;
+}
+
 async function wireHolidayCalendar() {
   const form = document.querySelector("[data-holiday-form]");
   if (!form) return;
   populateCountrySelects();
+  const select = form.querySelector("[data-country-select]");
   const year = form.querySelector("[data-year]");
-  if (year && !year.value) year.value = new Date().getFullYear();
+  populateHolidayYears(year);
   const output = document.querySelector("[data-holiday-output]");
+  const lang = currentLang();
+  const labels = lang === "ko"
+    ? {
+        loading: "공휴일 데이터를 불러오는 중입니다...",
+        unavailable: "선택한 국가 또는 연도의 공휴일 데이터를 제공하지 않습니다.",
+        total: "전체 공휴일",
+        weekday: "평일 공휴일",
+        weekend: "주말 공휴일",
+        next: "다음 공휴일",
+        date: "날짜",
+        name: "영문명",
+        localName: "현지명",
+        day: "요일",
+        noNext: "선택 연도에 남은 공휴일이 없습니다."
+      }
+    : {
+        loading: "Loading holiday data...",
+        unavailable: "Holiday data is not available for the selected country or year.",
+        total: "전체 공휴일",
+        weekday: "평일 공휴일",
+        weekend: "주말 공휴일",
+        next: "다음 공휴일",
+        date: "Date",
+        name: "Holiday",
+        localName: "Local Name",
+        day: "Day",
+        noNext: "No remaining holiday in the selected year."
+      };
+  const coverage = await getNagerAvailableCountries();
+  const currentRenderToken = { value: 0 };
   const render = async () => {
-    output.innerHTML = `<div class="data-empty">Loading...</div>`;
+    const token = ++currentRenderToken.value;
+    const country = select.value;
+    const valueYear = year.value;
+    output.innerHTML = `<div class="data-empty">${labels.loading}</div>`;
     try {
-      const country = form.querySelector("[data-country-select]").value;
-      const valueYear = year.value;
-      const holidays = await getHolidays(country, valueYear);
-      const today = new Date();
-      const todayIso = isoDate(today);
-      const nextHoliday = holidays.find((item) => item.date >= todayIso);
+      if (coverage && !coverage.has(country)) {
+        output.innerHTML = `<div class="data-empty">${labels.unavailable}</div>${holidayRelatedToolsMarkup(country)}`;
+        refreshIcons();
+        return;
+      }
+      const holidays = (await getHolidays(country, valueYear)).sort((a, b) => a.date.localeCompare(b.date));
+      if (token !== currentRenderToken.value) return;
+      const todayIso = todayIsoLocal();
+      const nextHoliday = holidays.find((item) => item.date >= todayIso) || (Number(valueYear) > new Date().getFullYear() ? holidays[0] : null);
       const weekdayCount = holidays.filter((item) => {
         const day = new Date(`${item.date}T00:00:00Z`).getUTCDay();
         return day !== 0 && day !== 6;
       }).length;
+      const weekendCount = holidays.length - weekdayCount;
+      const mondayFridayCount = holidays.filter((item) => {
+        const day = new Date(`${item.date}T00:00:00Z`).getUTCDay();
+        return day === 1 || day === 5;
+      }).length;
+      const metrics = { weekdayCount, weekendCount, mondayFridayCount, longestStretch: longestHolidayStretch(holidays) };
+      const dday = nextHoliday ? daysUntilHoliday(nextHoliday.date) : null;
       output.innerHTML = `
-        <div class="stat-grid compact-stat-grid">
-          <div class="stat-block"><span>Total Holidays</span><strong>${holidays.length}</strong></div>
-          <div class="stat-block"><span>Weekday Holidays</span><strong>${weekdayCount}</strong></div>
-          <div class="stat-block"><span>Next Holiday</span><strong>${nextHoliday ? localDateLabel(nextHoliday.date) : "N/A"}</strong><small>${nextHoliday ? nextHoliday.localName || nextHoliday.name : ""}</small></div>
+        <div class="stat-grid compact-stat-grid holiday-summary-grid">
+          <div class="stat-block"><span>${labels.total}</span><strong>${holidays.length}</strong><small>${escapeHtml(valueYear)}</small></div>
+          <div class="stat-block"><span>${labels.weekday}</span><strong>${weekdayCount}</strong><small>Mon-Fri</small></div>
+          <div class="stat-block"><span>${labels.weekend}</span><strong>${weekendCount}</strong><small>Sat-Sun</small></div>
+          <div class="stat-block"><span>${labels.next}</span><strong>${nextHoliday ? localDateLabel(nextHoliday.date, lang) : "N/A"}</strong><small>${nextHoliday ? `${escapeHtml(nextHoliday.localName || nextHoliday.name)} · D-${Math.max(0, dday)}` : labels.noNext}</small></div>
         </div>
-        <div class="responsive-table"><table class="result-table"><thead><tr><th>Date</th><th>Holiday</th><th>Local Name</th><th>Day</th></tr></thead>
-        <tbody>${holidays.map((item) => `<tr class="${nextHoliday && item.date === nextHoliday.date ? "is-next-row" : ""}"><td>${item.date}</td><td>${item.name}</td><td>${item.localName}</td><td>${dayName(item.date, currentLang())}</td></tr>`).join("")}</tbody></table></div>
-        <p class="muted">Holiday data: Nager.Date</p>
+        ${holidayScheduleSnapshotMarkup(holidays, nextHoliday, metrics)}
+        <div class="responsive-table holiday-table-wrap"><table class="result-table holiday-table"><thead><tr><th>${labels.date}</th><th>${labels.name}</th><th>${labels.localName}</th><th>${labels.day}</th></tr></thead>
+        <tbody>${holidays.map((item) => {
+          const isPast = item.date < todayIso;
+          const isNext = nextHoliday && item.date === nextHoliday.date;
+          return `<tr class="${isNext ? "is-next-row" : isPast ? "is-past-row" : ""}"><td>${escapeHtml(item.date)}</td><td>${escapeHtml(item.name)}</td><td>${escapeHtml(item.localName)}</td><td>${escapeHtml(dayName(item.date, lang))}</td></tr>`;
+        }).join("")}</tbody></table></div>
+        ${holidayRelatedToolsMarkup(country)}
       `;
+      refreshIcons();
     } catch (error) {
       console.warn("Holiday calendar unavailable:", error);
-      dataError(output, "Holiday data is temporarily unavailable.");
+      output.innerHTML = `<div class="data-empty">${labels.unavailable}</div>${holidayRelatedToolsMarkup(select.value)}`;
+      refreshIcons();
     }
+  };
+  const updateUrlAndRender = ({ push = true } = {}) => {
+    const url = new URL(location.href);
+    url.searchParams.set("country", select.value);
+    url.searchParams.set("year", year.value);
+    if (push) history.pushState({ country: select.value, year: year.value }, "", url); else history.replaceState({ country: select.value, year: year.value }, "", url);
+    render();
   };
   form.addEventListener("submit", (event) => {
     event.preventDefault();
+    updateUrlAndRender({ push: false });
+  });
+  enhanceCountryCombobox(select, () => updateUrlAndRender());
+  year.addEventListener("change", () => updateUrlAndRender());
+  window.addEventListener("popstate", () => {
+    const params = new URLSearchParams(location.search);
+    const country = params.get("country")?.toUpperCase();
+    const selectedYear = params.get("year");
+    if (country && [...select.options].some((option) => option.value === country)) select.value = country;
+    if (selectedYear && [...year.options].some((option) => option.value === selectedYear)) year.value = selectedYear;
+    select.updateComboboxLabel?.();
     render();
   });
-  render();
+  updateUrlAndRender({ push: false });
 }
-
 function addDaysUtc(date, days) {
   const next = new Date(date);
   next.setUTCDate(next.getUTCDate() + days);
