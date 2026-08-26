@@ -2952,14 +2952,40 @@ function renderPortWeather() {
 }
 
 const EUROSTAT_REPORTERS = [
-  ["DE", "Germany", "독일"],
+  ["AT", "Austria", "오스트리아"],
+  ["BE", "Belgium", "벨기에"],
+  ["BG", "Bulgaria", "불가리아"],
+  ["HR", "Croatia", "크로아티아"],
+  ["CY", "Cyprus", "키프로스"],
+  ["CZ", "Czechia", "체코"],
+  ["DK", "Denmark", "덴마크"],
+  ["EE", "Estonia", "에스토니아"],
+  ["FI", "Finland", "핀란드"],
   ["FR", "France", "프랑스"],
-  ["NL", "Netherlands", "네덜란드"],
+  ["DE", "Germany", "독일"],
+  ["EL", "Greece", "그리스"],
+  ["HU", "Hungary", "헝가리"],
+  ["IE", "Ireland", "아일랜드"],
   ["IT", "Italy", "이탈리아"],
-  ["ES", "Spain", "스페인"],
+  ["LV", "Latvia", "라트비아"],
+  ["LT", "Lithuania", "리투아니아"],
+  ["LU", "Luxembourg", "룩셈부르크"],
+  ["MT", "Malta", "몰타"],
+  ["NL", "Netherlands", "네덜란드"],
   ["PL", "Poland", "폴란드"],
-  ["BE", "Belgium", "벨기에"]
+  ["PT", "Portugal", "포르투갈"],
+  ["RO", "Romania", "루마니아"],
+  ["SK", "Slovakia", "슬로바키아"],
+  ["SI", "Slovenia", "슬로베니아"],
+  ["ES", "Spain", "스페인"],
+  ["SE", "Sweden", "스웨덴"]
 ];
+
+const EUROSTAT_REPORTER_ALIASES = {
+  CZ: ["Czech Republic", "체코 공화국"],
+  EL: ["GR", "Hellas", "Greek Republic"],
+  NL: ["Holland"]
+};
 
 const EUROSTAT_PARTNERS = [
   ["WORLD", "World - all countries", "전 세계"]
@@ -3316,7 +3342,7 @@ function wireEuTradeExplorer() {
     if (field.tagName === "SELECT" && ![...field.options].some((option) => option.value === value)) return;
     field.value = value;
   });
-  enhanceSimpleCombobox(reporter, EUROSTAT_REPORTERS.map(([value, en, ko]) => ({ value, label: lang === "ko" ? ko : en, meta: `${value} · ${en}`, terms: [value, en, ko, ...(COUNTRY_SEARCH_ALIASES[value] || [])].map(normalizeCountrySearch) })), lang === "ko" ? { label: "Reporter 선택", placeholder: "Reporter 국가 검색...", open: "Reporter 목록 열기", empty: "일치하는 reporter가 없습니다." } : { label: "Select reporter", placeholder: "Search reporter country...", open: "Open reporter list", empty: "No matching reporter." });
+  enhanceSimpleCombobox(reporter, EUROSTAT_REPORTERS.map(([value, en, ko]) => ({ value, label: lang === "ko" ? ko : en, meta: `${value} · ${en}`, terms: [value, en, ko, ...(EUROSTAT_REPORTER_ALIASES[value] || []), ...(COUNTRY_SEARCH_ALIASES[value] || [])].map(normalizeCountrySearch) })), lang === "ko" ? { label: "Reporter 선택", placeholder: "Reporter 국가 검색...", open: "Reporter 목록 열기", empty: "일치하는 reporter가 없습니다." } : { label: "Select reporter", placeholder: "Search reporter country...", open: "Open reporter list", empty: "No matching reporter." });
   enhanceSimpleCombobox(product, EUROSTAT_PRODUCTS.map(([value, en, ko]) => ({ value, label: lang === "ko" ? ko : en, meta: value, terms: [value, en, ko].map(normalizeCountrySearch) })), lang === "ko" ? { label: "Product Group 선택", placeholder: "SITC 코드 또는 품목명 검색...", open: "Product 목록 열기", empty: "일치하는 품목군이 없습니다." } : { label: "Select product group", placeholder: "Search SITC code or product group...", open: "Open product list", empty: "No matching product group." });
   const render = async () => {
     const selectedYear = year.value;
