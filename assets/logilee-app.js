@@ -2544,7 +2544,7 @@ function tradeSnapshotMarkup(records) {
   }
   return `
     <section class="country-profile-section">
-      <h2>${lang === "ko" ? "Trade Snapshot" : "Trade Snapshot"}</h2>
+      <h2>${lang === "ko" ? "무역 스냅샷" : "Trade Snapshot"}</h2>
       <div class="trade-fact-list">${facts.map((fact) => `<article><strong>${escapeHtml(fact.title)}</strong><p>${escapeHtml(fact.text)}</p></article>`).join("") || `<article><p>${lang === "ko" ? "선택 국가의 비교 가능한 수출입 지표가 부족합니다." : "Comparable export and import indicators are not available for this country."}</p></article>`}</div>
     </section>
   `;
@@ -2953,85 +2953,338 @@ function renderPortWeather() {
 
 const EUROSTAT_REPORTERS = [
   ["DE", "Germany", "독일"],
-  ["NL", "Netherlands", "네덜란드"],
   ["FR", "France", "프랑스"],
+  ["NL", "Netherlands", "네덜란드"],
   ["IT", "Italy", "이탈리아"],
   ["ES", "Spain", "스페인"],
-  ["BE", "Belgium", "벨기에"],
-  ["PL", "Poland", "폴란드"]
+  ["PL", "Poland", "폴란드"],
+  ["BE", "Belgium", "벨기에"]
 ];
 
 const EUROSTAT_PARTNERS = [
-  ["WORLD", "World", "전 세계"],
-  ["EXT_EU27_2020", "Extra-EU27", "EU27 역외"],
-  ["EU27_2020", "EU27", "EU27"],
-  ["EXT_EA21", "Extra-euro area", "유로존 역외"]
+  ["WORLD", "World - all countries", "전 세계"]
 ];
 
 const EUROSTAT_PRODUCTS = [
-  ["TOTAL", "Total - all products", "전체 상품"],
-  ["SITC0_1", "Food, drinks and tobacco", "식품, 음료, 담배"],
-  ["SITC2_4", "Raw materials", "원재료"],
-  ["SITC3", "Mineral fuels and related materials", "광물성 연료"],
-  ["SITC5", "Chemicals and related products", "화학제품"],
-  ["SITC6_8", "Other manufactured goods", "기타 제조품"],
-  ["SITC7", "Machinery and transport equipment", "기계 및 운송장비"],
-  ["SITC9", "Unclassified commodities", "기타 미분류 상품"]
+  ["TOTAL", "SITC Total - all products", "SITC 전체 상품"],
+  ["SITC0_1", "SITC 0-1 - Food, drinks and tobacco", "SITC 0-1 - 식품, 음료, 담배"],
+  ["SITC2_4", "SITC 2-4 - Raw materials", "SITC 2-4 - 원재료"],
+  ["SITC3", "SITC 3 - Mineral fuels and related materials", "SITC 3 - 광물성 연료"],
+  ["SITC5", "SITC 5 - Chemicals and related products", "SITC 5 - 화학제품"],
+  ["SITC6_8", "SITC 6-8 - Other manufactured goods", "SITC 6-8 - 기타 제조품"],
+  ["SITC7", "SITC 7 - Machinery and transport equipment", "SITC 7 - 기계 및 운송장비"],
+  ["SITC9", "SITC 9 - Unclassified commodities", "SITC 9 - 기타 미분류 상품"]
 ];
+
+const EUROSTAT_YEARS = Array.from({ length: 24 }, (_, index) => String(2025 - index));
+const EUROSTAT_DATASET = "ext_lt_intertrd";
+const EUROSTAT_UNIT = "million EUR";
+const EUROSTAT_PRODUCT_CODES = EUROSTAT_PRODUCTS.map(([code]) => code).filter((code) => code !== "TOTAL");
+const EUROSTAT_FLOW_CODES = { export: "MIO_EXP_VAL", import: "MIO_IMP_VAL" };
 
 function optionMarkup(options) {
   const lang = currentLang();
   return options.map(([value, en, ko]) => `<option value="${value}">${lang === "ko" ? ko : en}</option>`).join("");
 }
 
+function selectOptionLabel(options, code, lang = currentLang()) {
+  const found = options.find(([value]) => value === code);
+  return found ? found[lang === "ko" ? 2 : 1] : code;
+}
+
 function eurostatCategoryLabel(data, dimension, code) {
   return data?.dimension?.[dimension]?.category?.label?.[code] || code;
 }
 
-function firstEurostatValue(data) {
-  if (!data?.value) return null;
-  if (Array.isArray(data.value)) return data.value.find((value) => value !== null && value !== undefined);
-  const firstKey = Object.keys(data.value)[0];
-  return firstKey ? data.value[firstKey] : null;
+function eurostatFriendlyUpdated(value, lang = currentLang()) {
+  if (!value) return lang === "ko" ? "업데이트 일자 미제공" : "Update date unavailable";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return lang === "ko"
+    ? `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일 업데이트`
+    : `Updated ${new Intl.DateTimeFormat("en-GB", { day: "2-digit", month: "short", year: "numeric" }).format(date)}`;
 }
 
-function formatEurostatMillionEur(value) {
-  if (!Number.isFinite(value)) return "N/A";
-  const raw = `${formatRate(value, 1)} million EUR`;
-  if (Math.abs(value) >= 1000000) return `${raw} (approx. ${formatRate(value / 1000000, 2)} trillion EUR)`;
-  if (Math.abs(value) >= 1000) return `${raw} (approx. ${formatRate(value / 1000, 2)} billion EUR)`;
-  return raw;
+function eurostatRawValue(data, codes) {
+  const ids = data?.id || [];
+  const sizes = data?.size || [];
+  if (!ids.length || !sizes.length || !data?.dimension) return null;
+  let index = 0;
+  for (let i = 0; i < ids.length; i += 1) {
+    const dimension = ids[i];
+    const code = codes[dimension];
+    const map = data.dimension?.[dimension]?.category?.index || {};
+    const dimIndex = map[code];
+    if (dimIndex === undefined || dimIndex === null) return null;
+    index = index * sizes[i] + Number(dimIndex);
+  }
+  const values = data.value;
+  if (Array.isArray(values)) return values[index] ?? null;
+  return values?.[index] ?? null;
 }
 
-async function getEurostatTrade({ reporter, partner, product, year, flow }) {
-  const indicator = flow === "import" ? "MIO_IMP_VAL" : "MIO_EXP_VAL";
-  const params = new URLSearchParams({
-    format: "JSON",
-    lang: "EN",
-    freq: "A",
-    geo: reporter,
-    partner,
-    sitc06: product,
-    indic_et: indicator,
-    time: year
+function eurostatRows(data, selections) {
+  const flows = selections.flows || [selections.flowCode];
+  const products = selections.products || [selections.product];
+  const partners = selections.partners || [selections.partner];
+  const years = selections.years || [selections.year];
+  const rows = [];
+  flows.forEach((flowCode) => {
+    products.forEach((product) => {
+      partners.forEach((partner) => {
+        years.forEach((year) => {
+          const value = eurostatRawValue(data, { freq: "A", indic_et: flowCode, sitc06: product, partner, geo: selections.reporter, time: year });
+          rows.push({
+            reporter: selections.reporter,
+            partner,
+            product,
+            flowCode,
+            flow: flowCode === EUROSTAT_FLOW_CODES.import ? "import" : "export",
+            year,
+            value: value === null || value === undefined ? null : Number(value),
+            dataset: EUROSTAT_DATASET,
+            updated: data.updated || ""
+          });
+        });
+      });
+    });
   });
-  const url = `https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/ext_lt_intertrd?${params}`;
-  const data = await fetchJson(url, {
-    cacheKey: `logilee:eurostat:${reporter}:${partner}:${product}:${year}:${flow}`,
+  return rows;
+}
+
+async function getEurostatDataset(selections, extraParams = {}) {
+  const params = new URLSearchParams({ format: "JSON", lang: "EN", freq: "A", geo: selections.reporter });
+  const addValues = (name, values) => values.forEach((value) => params.append(name, value));
+  addValues("partner", extraParams.partners || [selections.partner]);
+  addValues("sitc06", extraParams.products || [selections.product]);
+  addValues("indic_et", extraParams.flows || [EUROSTAT_FLOW_CODES.export, EUROSTAT_FLOW_CODES.import]);
+  addValues("time", extraParams.years || [selections.year]);
+  const url = `https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/${EUROSTAT_DATASET}?${params}`;
+  return fetchJson(url, {
+    cacheKey: `logilee:eurostat:${params.toString()}`,
     ttl: 12 * 60 * 60 * 1000,
-    timeout: 12000
+    timeout: 14000
   });
-  const value = firstEurostatValue(data);
-  return {
-    dataset: "ext_lt_intertrd",
-    updated: data.updated || "",
-    reporter: eurostatCategoryLabel(data, "geo", reporter),
-    partner: eurostatCategoryLabel(data, "partner", partner),
-    product: eurostatCategoryLabel(data, "sitc06", product),
-    flow: eurostatCategoryLabel(data, "indic_et", indicator),
-    year,
-    value
+}
+
+function eurostatValueLabel(value, { compact = true } = {}) {
+  if (!Number.isFinite(value)) return "N/A";
+  if (!compact) return `EUR ${formatRate(value, 1)} million`;
+  const abs = Math.abs(value);
+  if (abs >= 1000000) return `€${formatRate(value / 1000000, 2)}T`;
+  if (abs >= 1000) return `€${formatRate(value / 1000, 1)}B`;
+  return `€${formatRate(value, 1)}M`;
+}
+
+function eurostatPercent(current, previous) {
+  if (!Number.isFinite(current) || !Number.isFinite(previous) || previous === 0) return null;
+  return ((current - previous) / previous) * 100;
+}
+
+function eurostatReporterFlag(code) {
+  return `<img class="eu-reporter-flag" src="https://flagcdn.com/${code.toLowerCase()}.svg" alt="" loading="lazy">`;
+}
+
+function euTradeSnapshotMarkup(context) {
+  const lang = currentLang();
+  const rows = [];
+  if (Number.isFinite(context.exports?.value) && Number.isFinite(context.imports?.value)) {
+    const diff = context.exports.value - context.imports.value;
+    rows.push(lang === "ko"
+      ? `선택 연도 수출은 ${eurostatValueLabel(context.exports.value)}, 수입은 ${eurostatValueLabel(context.imports.value)}입니다.`
+      : `Selected-year exports are ${eurostatValueLabel(context.exports.value)} and imports are ${eurostatValueLabel(context.imports.value)}.`);
+    rows.push(lang === "ko"
+      ? `무역수지는 ${eurostatValueLabel(Math.abs(diff))} ${diff >= 0 ? "흑자" : "적자"}입니다.`
+      : `The trade balance is a ${eurostatValueLabel(Math.abs(diff))} ${diff >= 0 ? "surplus" : "deficit"}.`);
+  }
+  if (Number.isFinite(context.selectedCurrent?.value) && Number.isFinite(context.selectedPrevious?.value)) {
+    const yoy = eurostatPercent(context.selectedCurrent.value, context.selectedPrevious.value);
+    if (yoy !== null) rows.push(lang === "ko"
+      ? `${context.flowLabel}은 전년 대비 ${yoy >= 0 ? "+" : ""}${formatRate(yoy, 1)}%입니다.`
+      : `${context.flowLabel} changed ${yoy >= 0 ? "+" : ""}${formatRate(yoy, 1)}% from the previous year.`);
+  }
+  if (context.topProduct && Number.isFinite(context.totalProductValue) && context.totalProductValue > 0) {
+    rows.push(lang === "ko"
+      ? `${context.topProduct.label} 비중은 ${formatRate((context.topProduct.value / context.totalProductValue) * 100, 1)}%입니다.`
+      : `${context.topProduct.label} represents ${formatRate((context.topProduct.value / context.totalProductValue) * 100, 1)}% of selected ${context.flowLabel.toLowerCase()}.`);
+  }
+  return `
+    <section class="eu-dashboard-section eu-trade-snapshot">
+      <h2>${lang === "ko" ? "무역 스냅샷" : "Trade Snapshot"}</h2>
+      ${rows.length ? `<ul>${rows.map((row) => `<li>${escapeHtml(row)}</li>`).join("")}</ul>` : `<div class="data-empty">${lang === "ko" ? "계산 가능한 요약 데이터가 없습니다." : "No calculated snapshot is available for this selection."}</div>`}
+    </section>
+  `;
+}
+
+function euLineChartMarkup(trendRows) {
+  const lang = currentLang();
+  const rows = trendRows.filter((row) => Number.isFinite(row.exportValue) || Number.isFinite(row.importValue));
+  if (!rows.length) return `<section class="eu-dashboard-section"><h2>${lang === "ko" ? "최근 5개년 무역 추이" : "5-Year Trade Trend"}</h2><div class="data-empty">${lang === "ko" ? "최근 추이 데이터를 표시할 수 없습니다." : "Trend data is unavailable for this selection."}</div></section>`;
+  const width = 640;
+  const height = 250;
+  const pad = { left: 58, right: 18, top: 24, bottom: 34 };
+  const values = rows.flatMap((row) => [row.exportValue, row.importValue]).filter(Number.isFinite);
+  const max = Math.max(...values, 1);
+  const x = (index) => rows.length === 1 ? width / 2 : pad.left + (index * (width - pad.left - pad.right)) / (rows.length - 1);
+  const y = (value) => pad.top + (1 - value / max) * (height - pad.top - pad.bottom);
+  const line = (key) => rows.map((row, index) => Number.isFinite(row[key]) ? `${x(index)},${y(row[key])}` : "").filter(Boolean).join(" ");
+  return `
+    <section class="eu-dashboard-section eu-chart-section">
+      <div class="section-head"><h2>${lang === "ko" ? "최근 5개년 수출입 추이" : "5-Year Export / Import Trend"}</h2><span>${EUROSTAT_UNIT}</span></div>
+      <svg class="eu-line-chart" viewBox="0 0 ${width} ${height}" role="img" aria-label="5-year export and import trend">
+        <line x1="${pad.left}" y1="${height - pad.bottom}" x2="${width - pad.right}" y2="${height - pad.bottom}" />
+        <line x1="${pad.left}" y1="${pad.top}" x2="${pad.left}" y2="${height - pad.bottom}" />
+        <text x="8" y="${pad.top + 5}">${escapeHtml(eurostatValueLabel(max))}</text>
+        <text x="10" y="${height - pad.bottom}">€0</text>
+        <polyline class="export-line" points="${line("exportValue")}" />
+        <polyline class="import-line" points="${line("importValue")}" />
+        ${rows.map((row, index) => `<g><text x="${x(index)}" y="${height - 10}" text-anchor="middle">${escapeHtml(row.year)}</text>${Number.isFinite(row.exportValue) ? `<circle class="export-dot" cx="${x(index)}" cy="${y(row.exportValue)}" r="4"><title>${row.year} Export: ${eurostatValueLabel(row.exportValue, { compact: false })}</title></circle>` : ""}${Number.isFinite(row.importValue) ? `<circle class="import-dot" cx="${x(index)}" cy="${y(row.importValue)}" r="4"><title>${row.year} Import: ${eurostatValueLabel(row.importValue, { compact: false })}</title></circle>` : ""}</g>`).join("")}
+      </svg>
+      <div class="eu-chart-legend"><span class="export-line-key">${lang === "ko" ? "수출" : "Export"}</span><span class="import-line-key">${lang === "ko" ? "수입" : "Import"}</span></div>
+    </section>
+  `;
+}
+
+function euComparisonMarkup(exports, imports) {
+  const lang = currentLang();
+  const hasExports = Number.isFinite(exports?.value);
+  const hasImports = Number.isFinite(imports?.value);
+  const title = lang === "ko" ? "수출입 비교" : "Export vs Import";
+  if (!hasExports && !hasImports) {
+    return `<section class="eu-dashboard-section eu-comparison-section"><h2>${title}</h2><div class="data-empty">${lang === "ko" ? "선택 조건의 수출입 비교 데이터를 표시할 수 없습니다." : "Export/import comparison data is unavailable for this selection."}</div></section>`;
+  }
+  const max = Math.max(hasExports ? exports.value : 0, hasImports ? imports.value : 0, 1);
+  const bars = [
+    [lang === "ko" ? "수출" : "Export", exports?.value, "export"],
+    [lang === "ko" ? "수입" : "Import", imports?.value, "import"]
+  ];
+  return `
+    <section class="eu-dashboard-section eu-comparison-section">
+      <h2>${title}</h2>
+      <div class="eu-bar-compare">${bars.map(([label, value, type]) => `<div><span>${label}</span><div class="eu-bar-track"><b class="${type}" style="width:${Number.isFinite(value) ? Math.max(2, (value / max) * 100) : 0}%"></b></div><strong>${eurostatValueLabel(value)}</strong></div>`).join("")}</div>
+    </section>
+  `;
+}
+
+function euProductBreakdownMarkup(rows, selectedFlow) {
+  const lang = currentLang();
+  const title = lang === "ko" ? "품목 구조" : "Product Breakdown";
+  const items = rows.filter((row) => row.flow === selectedFlow && row.product !== "TOTAL" && Number.isFinite(row.value))
+    .map((row) => ({ ...row, label: selectOptionLabel(EUROSTAT_PRODUCTS, row.product, lang) }))
+    .sort((a, b) => b.value - a.value)
+    .slice(0, 7);
+  if (!items.length) return `<section class="eu-dashboard-section"><h2>${title}</h2><div class="data-empty">${lang === "ko" ? "SITC 품목 구조 데이터를 표시할 수 없습니다." : "SITC product breakdown is unavailable for this selection."}</div></section>`;
+  const total = items.reduce((sum, row) => sum + row.value, 0);
+  const max = Math.max(...items.map((row) => row.value), 1);
+  return `
+    <section class="eu-dashboard-section eu-product-breakdown">
+      <h2>${title}</h2>
+      <div class="eu-ranking-list">${items.map((row) => `<article><div><strong>${escapeHtml(row.label)}</strong><span>${escapeHtml(row.product)} · ${total ? formatRate((row.value / total) * 100, 1) : "N/A"}%</span></div><div class="eu-bar-track"><b style="width:${Math.max(2, (row.value / max) * 100)}%"></b></div><em>${eurostatValueLabel(row.value)}</em></article>`).join("")}</div>
+    </section>
+  `;
+}
+
+function euPartnersMarkup() {
+  const lang = currentLang();
+  return `
+    <section class="eu-dashboard-section">
+      <h2>${lang === "ko" ? "주요 교역 상대" : "Major Trade Partners"}</h2>
+      <div class="data-empty">${lang === "ko" ? "현재 Eurostat ext_lt_intertrd 데이터셋은 이 화면에서 안정적으로 사용할 수 있는 partner 값을 World aggregate로 제한합니다. 개별 상대국 ranking은 이 페이지에서 임의로 생성하지 않습니다." : "This screen limits partner selection to the World aggregate because individual partner-country rankings are not exposed reliably through the current ext_lt_intertrd workflow. Rankings are not generated here."}</div>
+    </section>
+  `;
+}
+
+function euDetailedDataMarkup(rows, labels) {
+  const lang = currentLang();
+  const headers = lang === "ko"
+    ? ["Reporter", "Partner", "품목 그룹", "SITC", "Flow", "Year", "거래액", "Unit", "Source"]
+    : ["Reporter", "Partner", "Product Group", "SITC", "Flow", "Year", "Trade Value", "Unit", "Source"];
+  return `
+    <section class="eu-dashboard-section">
+      <h2>${lang === "ko" ? "원데이터" : "Detailed Data"}</h2>
+      <div class="responsive-table"><table class="result-table eu-detail-table"><thead><tr>${headers.map((header) => `<th>${header}</th>`).join("")}</tr></thead><tbody>
+        ${rows.map((row) => `<tr><td>${escapeHtml(labels.reporter)}</td><td>${escapeHtml(selectOptionLabel(EUROSTAT_PARTNERS, row.partner, lang))}</td><td>${escapeHtml(selectOptionLabel(EUROSTAT_PRODUCTS, row.product, lang))}</td><td>${escapeHtml(row.product)}</td><td>${row.flow === "export" ? (lang === "ko" ? "수출" : "Export") : (lang === "ko" ? "수입" : "Import")}</td><td>${escapeHtml(row.year)}</td><td>${Number.isFinite(row.value) ? escapeHtml(eurostatValueLabel(row.value, { compact: false })) : "N/A"}</td><td>${EUROSTAT_UNIT}</td><td>Eurostat</td></tr>`).join("")}
+      </tbody></table></div>
+    </section>
+  `;
+}
+
+function euDataClassificationMarkup(context) {
+  const lang = currentLang();
+  const rows = lang === "ko"
+    ? [["데이터 출처", "Eurostat"], ["데이터셋", EUROSTAT_DATASET], ["품목 분류", "SITC"], ["통화 / 단위", EUROSTAT_UNIT], ["기준 연도", context.year], ["업데이트", eurostatFriendlyUpdated(context.updated, lang)]]
+    : [["Data Source", "Eurostat"], ["Dataset", EUROSTAT_DATASET], ["Product Classification", "SITC"], ["Currency / Unit", EUROSTAT_UNIT], ["Reference Period", context.year], ["Last Updated", eurostatFriendlyUpdated(context.updated, lang)]];
+  return `<section class="eu-dashboard-section eu-classification"><h2>${lang === "ko" ? "데이터 및 분류" : "Data & Classification"}</h2><dl>${rows.map(([label, value]) => `<div><dt>${label}</dt><dd>${escapeHtml(value)}</dd></div>`).join("")}</dl><p class="muted">${lang === "ko" ? "이 도구의 품목 그룹은 SITC 분류를 사용합니다. HS/CN 품목 코드 조회가 필요한 경우 LOGILEE HS Code Search를 이용하세요." : "Product groups in this tool use SITC classification. Use LOGILEE HS Code Search when you need HS/CN item code lookup."}</p></section>`;
+}
+
+function euRelatedToolsMarkup(reporter) {
+  const lang = currentLang();
+  const currency = COUNTRY_CURRENCY[reporter] || "EUR";
+  const tools = lang === "ko"
+    ? [["국가 무역 프로필", `country-trade-profile.html?country=${reporter}`, "globe"], ["무역 공휴일", `holidays.html?country=${reporter}`, "calendar-check"], ["주요 항만", `ports.html?country=${reporter}`, "anchor"], ["HS Code 검색", "../hscode.html", "barcode"], ["환율 계산기", `currency-converter.html?from=EUR&to=${currency}`, "badge-dollar-sign"]]
+    : [["Country Trade Profile", `country-trade-profile.html?country=${reporter}`, "globe"], ["Trade Holidays", `holidays.html?country=${reporter}`, "calendar-check"], ["Major Ports", `ports.html?country=${reporter}`, "anchor"], ["HS Code Search", "../hscode-en.html", "barcode"], ["Currency Converter", `currency-converter.html?from=EUR&to=${currency}`, "badge-dollar-sign"]];
+  return `<section class="eu-dashboard-section"><h2>${lang === "ko" ? "관련 무역 도구" : "Related Trade Tools"}</h2><div class="country-tool-grid eu-tool-grid">${tools.map(([label, href, icon]) => `<a href="${href}"><i data-lucide="${icon}"></i><strong>${escapeHtml(label)}</strong></a>`).join("")}</div></section>`;
+}
+
+function populateEurostatYears(select, defaultYear = EUROSTAT_YEARS[0]) {
+  select.innerHTML = EUROSTAT_YEARS.map((year) => `<option value="${year}">${year}</option>`).join("");
+  select.value = EUROSTAT_YEARS.includes(defaultYear) ? defaultYear : EUROSTAT_YEARS[0];
+}
+
+function enhanceSimpleCombobox(select, items, labels) {
+  if (!select || select.dataset.simpleComboboxReady === "true") return;
+  const id = `simple-combobox-${Math.random().toString(36).slice(2, 9)}`;
+  const listId = `${id}-list`;
+  const wrap = document.createElement("div");
+  wrap.className = "country-combobox simple-combobox";
+  wrap.innerHTML = `
+    <label class="sr-only" for="${id}">${labels.label}</label>
+    <div class="country-combobox-control">
+      <i data-lucide="search"></i>
+      <input id="${id}" type="text" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="${listId}" aria-label="${labels.label}" placeholder="${labels.placeholder}">
+      <button type="button" aria-label="${labels.open}"><i data-lucide="chevron-down"></i></button>
+    </div>
+    <div class="country-combobox-list" id="${listId}" role="listbox"></div>
+  `;
+  select.classList.add("visually-hidden-select");
+  select.setAttribute("tabindex", "-1");
+  select.setAttribute("aria-hidden", "true");
+  select.parentElement?.appendChild(wrap);
+  select.dataset.simpleComboboxReady = "true";
+  const input = wrap.querySelector("input");
+  const button = wrap.querySelector("button");
+  const list = wrap.querySelector(".country-combobox-list");
+  let matches = [...items];
+  let activeIndex = -1;
+  let open = false;
+  const setInput = () => { input.value = items.find((item) => item.value === select.value)?.label || ""; };
+  const render = () => {
+    list.innerHTML = matches.length ? matches.map((item, index) => `<button type="button" role="option" id="${listId}-${escapeAttribute(item.value)}" data-simple-option="${escapeAttribute(item.value)}" aria-selected="${index === activeIndex}"><span>${escapeHtml(item.label)}</span><small>${escapeHtml(item.meta || item.value)}</small></button>`).join("") : `<div class="country-combobox-empty">${labels.empty}</div>`;
+    input.setAttribute("aria-activedescendant", activeIndex >= 0 && matches[activeIndex] ? `${listId}-${matches[activeIndex].value}` : "");
   };
+  const filter = () => {
+    const query = normalizeCountrySearch(input.value);
+    matches = query ? items.filter((item) => item.terms.some((term) => term.includes(query) || compactCountrySearch(term).includes(compactCountrySearch(query)))) : [...items];
+    activeIndex = matches.length ? 0 : -1;
+    render();
+  };
+  const show = () => { open = true; wrap.classList.add("is-open"); input.setAttribute("aria-expanded", "true"); filter(); };
+  const close = () => { open = false; wrap.classList.remove("is-open"); input.setAttribute("aria-expanded", "false"); input.removeAttribute("aria-activedescendant"); setInput(); };
+  const choose = (value) => { if (!value) return; select.value = value; select.dispatchEvent(new Event("change", { bubbles: true })); setInput(); close(); };
+  setInput(); render();
+  input.addEventListener("focus", show);
+  input.addEventListener("input", show);
+  button.addEventListener("click", () => open ? close() : (input.focus(), show()));
+  list.addEventListener("mousedown", (event) => event.preventDefault());
+  list.addEventListener("click", (event) => { const option = event.target.closest("[data-simple-option]"); if (option) choose(option.dataset.simpleOption); });
+  input.addEventListener("keydown", (event) => {
+    if (event.key === "ArrowDown") { event.preventDefault(); if (!open) show(); else activeIndex = Math.min(activeIndex + 1, matches.length - 1); render(); }
+    else if (event.key === "ArrowUp") { event.preventDefault(); if (!open) show(); else activeIndex = Math.max(activeIndex - 1, 0); render(); }
+    else if (event.key === "Enter") { event.preventDefault(); if (!open) show(); else if (matches[activeIndex]) choose(matches[activeIndex].value); }
+    else if (event.key === "Escape") { event.preventDefault(); close(); }
+  });
+  document.addEventListener("click", (event) => { if (!wrap.contains(event.target)) close(); });
+  select.addEventListener("change", setInput);
 }
 
 function wireEuTradeExplorer() {
@@ -3044,14 +3297,18 @@ function wireEuTradeExplorer() {
   const year = form.querySelector("[name='year']");
   const flow = form.querySelector("[name='flow']");
   const output = document.querySelector("[data-eu-trade-output]");
+  const lang = currentLang();
+  const labels = lang === "ko"
+    ? { loading: "Eurostat 데이터를 불러오는 중입니다...", unavailable: "선택한 조건의 Eurostat 데이터를 표시할 수 없습니다.", reporter: "Reporter", partner: "Partner", product: "Product Group", year: "Year", flow: "Flow", search: "조회" }
+    : { loading: "Loading Eurostat data...", unavailable: "Eurostat data is unavailable for this selection.", reporter: "Reporter", partner: "Partner", product: "Product Group", year: "Year", flow: "Flow", search: "Search" };
   reporter.innerHTML = optionMarkup(EUROSTAT_REPORTERS);
   partner.innerHTML = optionMarkup(EUROSTAT_PARTNERS);
   product.innerHTML = optionMarkup(EUROSTAT_PRODUCTS);
+  populateEurostatYears(year);
   reporter.value = "DE";
   partner.value = "WORLD";
   product.value = "TOTAL";
   flow.value = "export";
-  if (!year.value) year.value = "2023";
   ["reporter", "partner", "product", "year", "flow"].forEach((name) => {
     const field = form.querySelector(`[name='${name}']`);
     const value = params.get(name);
@@ -3059,48 +3316,66 @@ function wireEuTradeExplorer() {
     if (field.tagName === "SELECT" && ![...field.options].some((option) => option.value === value)) return;
     field.value = value;
   });
+  enhanceSimpleCombobox(reporter, EUROSTAT_REPORTERS.map(([value, en, ko]) => ({ value, label: lang === "ko" ? ko : en, meta: `${value} · ${en}`, terms: [value, en, ko, ...(COUNTRY_SEARCH_ALIASES[value] || [])].map(normalizeCountrySearch) })), lang === "ko" ? { label: "Reporter 선택", placeholder: "Reporter 국가 검색...", open: "Reporter 목록 열기", empty: "일치하는 reporter가 없습니다." } : { label: "Select reporter", placeholder: "Search reporter country...", open: "Open reporter list", empty: "No matching reporter." });
+  enhanceSimpleCombobox(product, EUROSTAT_PRODUCTS.map(([value, en, ko]) => ({ value, label: lang === "ko" ? ko : en, meta: value, terms: [value, en, ko].map(normalizeCountrySearch) })), lang === "ko" ? { label: "Product Group 선택", placeholder: "SITC 코드 또는 품목명 검색...", open: "Product 목록 열기", empty: "일치하는 품목군이 없습니다." } : { label: "Select product group", placeholder: "Search SITC code or product group...", open: "Open product list", empty: "No matching product group." });
   const render = async () => {
-    const selectedYear = String(year.value || "").trim();
-    if (!/^\d{4}$/.test(selectedYear) || Number(selectedYear) < 2010 || Number(selectedYear) > new Date().getFullYear()) {
-      dataError(output, currentLang() === "ko" ? "연도는 2010년 이후의 4자리 값으로 입력해 주세요." : "Enter a four-digit year from 2010 onward.");
-      return;
-    }
-    output.innerHTML = `<div class="data-empty">${currentLang() === "ko" ? "Eurostat 데이터를 불러오는 중입니다..." : "Loading Eurostat data..."}</div>`;
+    const selectedYear = year.value;
+    output.innerHTML = `<div class="data-empty">${labels.loading}</div>`;
     try {
-      const result = await getEurostatTrade({
-        reporter: reporter.value,
-        partner: partner.value,
-        product: product.value,
-        year: selectedYear,
-        flow: flow.value
-      });
+      const selections = { reporter: reporter.value, partner: partner.value, product: product.value, year: selectedYear, flow: flow.value };
+      const currentYear = Number(selectedYear);
+      const trendYears = EUROSTAT_YEARS.filter((item) => Number(item) <= currentYear).slice(0, 5).reverse();
+      const [currentData, previousData, trendData, productData] = await Promise.all([
+        getEurostatDataset(selections),
+        EUROSTAT_YEARS.includes(String(currentYear - 1)) ? getEurostatDataset({ ...selections, year: String(currentYear - 1) }) : Promise.resolve(null),
+        getEurostatDataset(selections, { years: trendYears }),
+        getEurostatDataset(selections, { products: EUROSTAT_PRODUCT_CODES, flows: [EUROSTAT_FLOW_CODES[flow.value]] }).catch((error) => ({ error }))
+      ]);
+      const currentRows = eurostatRows(currentData, { ...selections, flows: [EUROSTAT_FLOW_CODES.export, EUROSTAT_FLOW_CODES.import], years: [selectedYear] });
+      const previousRows = previousData ? eurostatRows(previousData, { ...selections, flows: [EUROSTAT_FLOW_CODES.export, EUROSTAT_FLOW_CODES.import], years: [String(currentYear - 1)] }) : [];
+      const trendRowsRaw = eurostatRows(trendData, { ...selections, flows: [EUROSTAT_FLOW_CODES.export, EUROSTAT_FLOW_CODES.import], years: trendYears });
+      const productRows = productData?.error ? [] : eurostatRows(productData, { ...selections, product: selections.product, products: EUROSTAT_PRODUCT_CODES, flows: [EUROSTAT_FLOW_CODES[flow.value]], years: [selectedYear] });
+      const exports = currentRows.find((row) => row.flow === "export");
+      const imports = currentRows.find((row) => row.flow === "import");
+      const selectedCurrent = currentRows.find((row) => row.flow === flow.value);
+      const selectedPrevious = previousRows.find((row) => row.flow === flow.value);
+      const yoy = eurostatPercent(selectedCurrent?.value, selectedPrevious?.value);
+      const reporterLabel = selectOptionLabel(EUROSTAT_REPORTERS, selections.reporter, lang);
+      const partnerLabel = selectOptionLabel(EUROSTAT_PARTNERS, selections.partner, lang);
+      const productLabel = selectOptionLabel(EUROSTAT_PRODUCTS, selections.product, lang);
+      const flowLabel = flow.value === "export" ? (lang === "ko" ? "수출" : "Export") : (lang === "ko" ? "수입" : "Import");
+      const trendRows = trendYears.map((trendYear) => ({
+        year: trendYear,
+        exportValue: trendRowsRaw.find((row) => row.year === trendYear && row.flow === "export")?.value,
+        importValue: trendRowsRaw.find((row) => row.year === trendYear && row.flow === "import")?.value
+      }));
+      const topProduct = productRows.filter((row) => Number.isFinite(row.value)).sort((a, b) => b.value - a.value)[0];
+      const totalProductValue = productRows.filter((row) => Number.isFinite(row.value)).reduce((sum, row) => sum + row.value, 0);
+      const detailedRows = [...currentRows, ...previousRows, ...trendRowsRaw, ...productRows].filter((row, index, rows) => rows.findIndex((item) => item.reporter === row.reporter && item.partner === row.partner && item.product === row.product && item.flow === row.flow && item.year === row.year) === index);
       output.innerHTML = `
-        <div class="eu-result-summary">
-          <span class="kicker">${result.dataset}</span>
-          <h2>${result.reporter} → ${result.partner}</h2>
-          <div class="stat-grid compact-stat-grid">
-            <div class="stat-block"><span>${result.flow}</span><strong>${formatEurostatMillionEur(result.value)}</strong><small>${result.year}</small></div>
-            <div class="stat-block"><span>Product Group</span><strong>${result.product}</strong><small>SITC aggregate</small></div>
-            <div class="stat-block"><span>Updated</span><strong>${result.updated || "Latest available"}</strong><small>Eurostat metadata</small></div>
-          </div>
-        </div>
-        <div class="responsive-table"><table class="result-table">
-          <thead><tr><th>Reporter</th><th>Partner</th><th>Product</th><th>Year</th><th>Flow</th><th>Trade Value</th><th>Source</th></tr></thead>
-          <tbody><tr>
-            <td>${result.reporter}</td>
-            <td>${result.partner}</td>
-            <td>${result.product}</td>
-            <td>${result.year}</td>
-            <td>${result.flow}</td>
-            <td>${formatEurostatMillionEur(result.value)}</td>
-            <td>Eurostat</td>
-          </tr></tbody>
-        </table></div>
-        <p class="muted">Dataset: ${result.dataset}. Updated: ${result.updated || "latest available"}. Product groups use SITC categories, not HS/CN line codes.</p>
+        <section class="eu-result-header">
+          ${eurostatReporterFlag(selections.reporter)}
+          <div><span class="kicker">${EUROSTAT_DATASET}</span><h2>${escapeHtml(productLabel.includes("Total") || productLabel.includes("전체") ? `${reporterLabel} Trade Overview` : `${reporterLabel} — ${productLabel.replace(/^SITC[^-]*-\s*/, "")} Trade Overview`)}</h2><p>${escapeHtml(partnerLabel)} · ${escapeHtml(productLabel)} · ${escapeHtml(selectedYear)}</p></div>
+        </section>
+        <section class="eu-kpi-grid">
+          <article><span>${lang === "ko" ? "수출" : "Exports"}</span><strong>${eurostatValueLabel(exports?.value)}</strong><small>${selectedYear} · ${EUROSTAT_UNIT}</small></article>
+          <article><span>${lang === "ko" ? "수입" : "Imports"}</span><strong>${eurostatValueLabel(imports?.value)}</strong><small>${selectedYear} · ${EUROSTAT_UNIT}</small></article>
+          <article><span>${lang === "ko" ? "무역수지" : "Trade Balance"}</span><strong>${Number.isFinite(exports?.value) && Number.isFinite(imports?.value) ? eurostatValueLabel(exports.value - imports.value) : "N/A"}</strong><small>${lang === "ko" ? "수출 - 수입" : "Exports - Imports"}</small></article>
+          <article><span>${flowLabel} YoY</span><strong>${yoy === null ? "N/A" : `${yoy >= 0 ? "+" : ""}${formatRate(yoy, 1)}%`}</strong><small>${currentYear - 1} → ${selectedYear}</small></article>
+        </section>
+        ${euTradeSnapshotMarkup({ exports, imports, selectedCurrent, selectedPrevious, flowLabel, topProduct: topProduct ? { ...topProduct, label: selectOptionLabel(EUROSTAT_PRODUCTS, topProduct.product, lang) } : null, totalProductValue })}
+        ${euLineChartMarkup(trendRows)}
+        ${euComparisonMarkup(exports, imports)}
+        ${euProductBreakdownMarkup(productRows, flow.value)}
+        ${euPartnersMarkup()}
+        ${euDetailedDataMarkup(detailedRows, { reporter: reporterLabel })}
+        ${euDataClassificationMarkup({ year: selectedYear, updated: currentData.updated })}
+        ${euRelatedToolsMarkup(selections.reporter)}
       `;
+      refreshIcons();
     } catch (error) {
       console.warn("Eurostat trade unavailable:", error);
-      dataError(output, currentLang() === "ko" ? "Eurostat 데이터를 일시적으로 불러올 수 없습니다." : "Eurostat data is temporarily unavailable.");
+      dataError(output, labels.unavailable);
     }
   };
   form.addEventListener("submit", (event) => {
@@ -3110,12 +3385,21 @@ function wireEuTradeExplorer() {
       const field = form.querySelector(`[name='${name}']`);
       if (field?.value) url.searchParams.set(name, field.value); else url.searchParams.delete(name);
     });
-    history.replaceState(null, "", url);
+    history.pushState(null, "", url);
+    render();
+  });
+  window.addEventListener("popstate", () => {
+    const next = new URLSearchParams(location.search);
+    ["reporter", "partner", "product", "year", "flow"].forEach((name) => {
+      const field = form.querySelector(`[name='${name}']`);
+      const value = next.get(name);
+      if (field && value && [...field.options].some((option) => option.value === value)) field.value = value;
+    });
+    form.querySelectorAll("select").forEach((select) => select.dispatchEvent(new Event("change")));
     render();
   });
   render();
 }
-
 function wireTradeExplorerParams() {
   const form = document.querySelector("[data-trade-explorer-form]");
   if (!form) return;
