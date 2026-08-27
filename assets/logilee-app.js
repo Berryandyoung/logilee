@@ -710,7 +710,7 @@ function setupAdSlots() {
   });
 }
 
-const TRADE_CURRENCIES = ["USD", "KRW", "EUR", "CNY", "JPY", "GBP", "AUD", "CAD", "SGD", "HKD", "CHF", "INR", "MXN", "THB", "MYR"];
+const TRADE_CURRENCIES = ["USD", "KRW", "EUR", "CNY", "JPY", "GBP", "AUD", "CAD", "SGD", "HKD", "CHF", "INR", "MXN", "THB", "MYR", "PLN", "SEK", "DKK", "CZK", "HUF", "RON"];
 
 async function getUsdRates() {
   const url = `https://api.frankfurter.dev/v2/rates?base=USD&quotes=${TRADE_CURRENCIES.filter((code) => code !== "USD").join(",")}`;
@@ -1700,7 +1700,7 @@ const TRADE_COUNTRIES = ISO_COUNTRY_CODES
     return a[1].localeCompare(b[1], "en");
   });
 
-const COUNTRY_CURRENCY = { KR: "KRW", CN: "CNY", US: "USD", JP: "JPY", DE: "EUR", VN: "VND", IN: "INR", MX: "MXN", SG: "SGD", GB: "GBP", NL: "EUR", AE: "AED", HK: "HKD", TH: "THB", MY: "MYR", LK: "LKR", BE: "EUR", TW: "TWD", FR: "EUR", ES: "EUR", IT: "EUR", GR: "EUR", RO: "RON", PL: "PLN", CA: "CAD", BR: "BRL", AR: "ARS", PE: "PEN", CO: "COP", PA: "PAB", ZA: "ZAR", MA: "MAD", EG: "EGP", KE: "KES", TZ: "TZS", NG: "NGN", GH: "GHS", SA: "SAR", OM: "OMR", QA: "QAR", PK: "PKR", BD: "BDT", ID: "IDR", PH: "PHP", ET: "ETB", CG: "XAF", CD: "CDF" };
+const COUNTRY_CURRENCY = { KR: "KRW", CN: "CNY", US: "USD", JP: "JPY", DE: "EUR", VN: "VND", IN: "INR", MX: "MXN", SG: "SGD", GB: "GBP", NL: "EUR", AE: "AED", HK: "HKD", TH: "THB", MY: "MYR", LK: "LKR", AT: "EUR", BE: "EUR", BG: "EUR", HR: "EUR", CY: "EUR", CZ: "CZK", DK: "DKK", EE: "EUR", FI: "EUR", FR: "EUR", EL: "EUR", ES: "EUR", IT: "EUR", GR: "EUR", HU: "HUF", IE: "EUR", LV: "EUR", LT: "EUR", LU: "EUR", MT: "EUR", PT: "EUR", RO: "RON", SK: "EUR", SI: "EUR", SE: "SEK", TW: "TWD", PL: "PLN", CA: "CAD", BR: "BRL", AR: "ARS", PE: "PEN", CO: "COP", PA: "PAB", ZA: "ZAR", MA: "MAD", EG: "EGP", KE: "KES", TZ: "TZS", NG: "NGN", GH: "GHS", SA: "SAR", OM: "OMR", QA: "QAR", PK: "PKR", BD: "BDT", ID: "IDR", PH: "PHP", ET: "ETB", CG: "XAF", CD: "CDF" };
 const PORTS = [
   { slug: "busan", name: "Port of Busan", country: "South Korea", iso: "KR", locode: "KRPUS", lat: 35.10, lon: 129.04, timezone: "Asia/Seoul", region: "Northeast Asia", type: "Seaport" },
   { slug: "shanghai", name: "Port of Shanghai", country: "China", iso: "CN", locode: "CNSHA", lat: 31.23, lon: 121.50, timezone: "Asia/Shanghai", region: "East Asia", type: "Seaport" },
@@ -3174,6 +3174,11 @@ function eurostatPercent(current, previous) {
   return ((current - previous) / previous) * 100;
 }
 
+function eurostatShare(value, total) {
+  if (!Number.isFinite(value) || !Number.isFinite(total) || total <= 0) return null;
+  return (value / total) * 100;
+}
+
 function eurostatFlagCode(code) {
   return code === "EL" ? "gr" : String(code || "").toLowerCase();
 }
@@ -3235,10 +3240,11 @@ function euTradeSnapshotMarkup(context) {
       ? `${context.flowLabel}은 전년 대비 ${yoy >= 0 ? "+" : ""}${formatRate(yoy, 1)}%입니다.`
       : `${context.flowLabel} changed ${yoy >= 0 ? "+" : ""}${formatRate(yoy, 1)}% from the previous year.`);
   }
-  if (context.topProduct && Number.isFinite(context.totalProductValue) && context.totalProductValue > 0) {
-    rows.push(lang === "ko"
-      ? `${context.topProduct.label} 비중은 ${formatRate((context.topProduct.value / context.totalProductValue) * 100, 1)}%입니다.`
-      : `${context.topProduct.label} represents ${formatRate((context.topProduct.value / context.totalProductValue) * 100, 1)}% of selected ${context.flowLabel.toLowerCase()}.`);
+  if (context.topProduct && Number.isFinite(context.selectedTotalValue)) {
+    const share = eurostatShare(context.topProduct.value, context.selectedTotalValue);
+    if (share !== null) rows.push(lang === "ko"
+      ? `${context.topProduct.label} 비중은 ${formatRate(share, 1)}%입니다.`
+      : `${context.topProduct.label} represents ${formatRate(share, 1)}% of selected ${context.flowLabel.toLowerCase()}.`);
   }
   return `
     <section class="eu-dashboard-section eu-trade-snapshot">
@@ -3309,24 +3315,22 @@ function euComparisonMarkup(exports, imports) {
   `;
 }
 
-function euProductBreakdownMarkup(rows, selectedFlow) {
+function euProductBreakdownMarkup(rows, selectedFlow, totalValue) {
   const lang = currentLang();
   const title = lang === "ko" ? "품목 구조" : "Product Breakdown";
   const items = rows.filter((row) => row.flow === selectedFlow && row.product !== "TOTAL" && Number.isFinite(row.value))
     .map((row) => {
       const label = selectOptionLabel(EUROSTAT_PRODUCTS, row.product, lang);
       const name = label.replace(/^SITC\s*[0-9_\-]+\s*-\s*/i, "");
-      return { ...row, label, name };
+      return { ...row, label, name, share: eurostatShare(row.value, totalValue) };
     })
     .sort((a, b) => b.value - a.value)
     .slice(0, 7);
   if (!items.length) return `<section class="eu-dashboard-section"><h2>${title}</h2><div class="data-empty">${lang === "ko" ? "SITC 품목 구조 데이터를 표시할 수 없습니다." : "SITC product breakdown is unavailable for this selection."}</div></section>`;
-  const total = items.reduce((sum, row) => sum + row.value, 0);
-  const max = Math.max(...items.map((row) => row.value), 1);
   return `
     <section class="eu-dashboard-section eu-product-breakdown eu-primary-section">
       <h2>${title}</h2>
-      <div class="eu-ranking-list">${items.map((row) => `<article><div class="eu-sitc-label"><span>${escapeHtml(row.product)} · ${total ? formatRate((row.value / total) * 100, 1) : "N/A"}%</span><strong>${escapeHtml(row.name)}</strong></div><div class="eu-bar-track"><b style="width:${Math.max(2, (row.value / max) * 100)}%"></b></div><em>${eurostatValueLabel(row.value)}</em></article>`).join("")}</div>
+      <div class="eu-ranking-list">${items.map((row) => `<article><div class="eu-sitc-label"><span>${escapeHtml(row.product)} · ${row.share === null ? "N/A" : `${formatRate(row.share, 1)}%`}</span><strong>${escapeHtml(row.name)}</strong></div><div class="eu-bar-track"><b style="width:${row.share === null ? 0 : Math.max(2, Math.min(100, row.share))}%"></b></div><em>${eurostatValueLabel(row.value)}</em></article>`).join("")}</div>
     </section>
   `;
 }
@@ -3367,11 +3371,21 @@ function euDetailedDataMarkup(rows, labels) {
   const yearRange = years.length > 1 ? `${years[0]}-${years[years.length - 1]}` : years[0] || "N/A";
   const summaryLabel = lang === "ko" ? "원데이터 보기" : "View Detailed Data";
   const helper = `${EUROSTAT_DATASET} · ${yearRange} · ${EUROSTAT_UNIT}`;
+  const flowOrder = { export: 0, import: 1 };
+  const sortedRows = [...rows].sort((a, b) => {
+    const productDiff = (a.product === "TOTAL" ? 0 : 1) - (b.product === "TOTAL" ? 0 : 1);
+    if (productDiff) return productDiff;
+    const yearDiff = Number(b.year) - Number(a.year);
+    if (yearDiff) return yearDiff;
+    const flowDiff = (flowOrder[a.flow] ?? 9) - (flowOrder[b.flow] ?? 9);
+    if (flowDiff) return flowDiff;
+    return String(a.product).localeCompare(String(b.product), undefined, { numeric: true });
+  });
   return `
     <details class="eu-dashboard-section eu-detail-disclosure">
       <summary><span><strong>${summaryLabel}</strong><small>${escapeHtml(helper)}</small></span><b aria-hidden="true"></b></summary>
       <div class="responsive-table"><table class="result-table eu-detail-table"><thead><tr>${headers.map((header) => `<th>${header}</th>`).join("")}</tr></thead><tbody>
-        ${rows.map((row) => `<tr><td>${escapeHtml(labels.reporter)}</td><td>${escapeHtml(selectOptionLabel(EUROSTAT_PARTNERS, row.partner, lang))}</td><td>${escapeHtml(selectOptionLabel(EUROSTAT_PRODUCTS, row.product, lang))}</td><td>${escapeHtml(row.product)}</td><td>${row.flow === "export" ? (lang === "ko" ? "수출" : "Export") : (lang === "ko" ? "수입" : "Import")}</td><td>${escapeHtml(row.year)}</td><td>${Number.isFinite(row.value) ? escapeHtml(eurostatValueLabel(row.value, { compact: false })) : "N/A"}</td><td>${EUROSTAT_UNIT}</td><td>Eurostat</td></tr>`).join("")}
+        ${sortedRows.map((row) => `<tr><td>${escapeHtml(labels.reporter)}</td><td>${escapeHtml(selectOptionLabel(EUROSTAT_PARTNERS, row.partner, lang))}</td><td>${escapeHtml(selectOptionLabel(EUROSTAT_PRODUCTS, row.product, lang))}</td><td>${escapeHtml(row.product)}</td><td>${row.flow === "export" ? (lang === "ko" ? "수출" : "Export") : (lang === "ko" ? "수입" : "Import")}</td><td>${escapeHtml(row.year)}</td><td>${Number.isFinite(row.value) ? escapeHtml(eurostatValueLabel(row.value, { compact: false })) : "N/A"}</td><td>${EUROSTAT_UNIT}</td><td>Eurostat</td></tr>`).join("")}
       </tbody></table></div>
     </details>
   `;
@@ -3384,15 +3398,23 @@ function euDataClassificationMarkup(context) {
   return `<section class="eu-dashboard-section eu-classification"><h2>${lang === "ko" ? "데이터 및 분류" : "Data & Classification"}</h2><dl>${rows.map(([label, value]) => `<div><dt>${label}</dt><dd>${escapeHtml(value)}</dd></div>`).join("")}</dl><p class="muted">${lang === "ko" ? "이 도구의 품목 그룹은 SITC 분류를 사용합니다. HS/CN 품목 코드 조회가 필요한 경우 LOGILEE HS Code Search를 이용하세요." : "Product groups in this tool use SITC classification. Use LOGILEE HS Code Search when you need HS/CN item code lookup."}</p></section>`;
 }
 
-function euRelatedToolsMarkup(reporter) {
-  const lang = currentLang();
-  const currency = COUNTRY_CURRENCY[reporter] || "EUR";
-  const tools = lang === "ko"
-    ? [["국가 무역 프로필", `country-trade-profile.html?country=${reporter}`, "globe"], ["무역 공휴일", `holidays.html?country=${reporter}`, "calendar-check"], ["주요 항만", `ports.html?country=${reporter}`, "anchor"], ["HS Code 검색", "../hscode.html", "barcode"], ["환율 계산기", `currency-converter.html?from=EUR&to=${currency}`, "badge-dollar-sign"]]
-    : [["Country Trade Profile", `country-trade-profile.html?country=${reporter}`, "globe"], ["Trade Holidays", `holidays.html?country=${reporter}`, "calendar-check"], ["Major Ports", `ports.html?country=${reporter}`, "anchor"], ["HS Code Search", "../hscode-en.html", "barcode"], ["Currency Converter", `currency-converter.html?from=EUR&to=${currency}`, "badge-dollar-sign"]];
-  return `<section class="eu-dashboard-section"><h2>${lang === "ko" ? "관련 무역 도구" : "Related Trade Tools"}</h2><div class="country-tool-grid eu-tool-grid">${tools.map(([label, href, icon]) => `<a href="${href}"><i data-lucide="${icon}"></i><strong>${escapeHtml(label)}</strong></a>`).join("")}</div></section>`;
+function euCurrencyConverterHref(reporter, partner) {
+  if (!partner || partner === "WORLD") return "currency-converter.html";
+  const from = COUNTRY_CURRENCY[reporter];
+  const to = COUNTRY_CURRENCY[partner];
+  if (!from || !to || from === to) return "currency-converter.html";
+  if (!TRADE_CURRENCIES.includes(from) || !TRADE_CURRENCIES.includes(to)) return "currency-converter.html";
+  return `currency-converter.html?from=${from}&to=${to}`;
 }
 
+function euRelatedToolsMarkup(reporter, partner) {
+  const lang = currentLang();
+  const currencyHref = euCurrencyConverterHref(reporter, partner);
+  const tools = lang === "ko"
+    ? [["국가 무역 프로필", `country-trade-profile.html?country=${reporter}`, "globe"], ["무역 공휴일", `holidays.html?country=${reporter}`, "calendar-check"], ["주요 항만", `ports.html?country=${reporter}`, "anchor"], ["HS Code 검색", "../hscode.html", "barcode"], ["환율 계산기", currencyHref, "badge-dollar-sign"]]
+    : [["Country Trade Profile", `country-trade-profile.html?country=${reporter}`, "globe"], ["Trade Holidays", `holidays.html?country=${reporter}`, "calendar-check"], ["Major Ports", `ports.html?country=${reporter}`, "anchor"], ["HS Code Search", "../hscode-en.html", "barcode"], ["Currency Converter", currencyHref, "badge-dollar-sign"]];
+  return `<section class="eu-dashboard-section"><h2>${lang === "ko" ? "관련 무역 도구" : "Related Trade Tools"}</h2><div class="country-tool-grid eu-tool-grid">${tools.map(([label, href, icon]) => `<a href="${href}"><i data-lucide="${icon}"></i><strong>${escapeHtml(label)}</strong></a>`).join("")}</div></section>`;
+}
 function populateEurostatYears(select, defaultYear = EUROSTAT_YEARS[0]) {
   select.innerHTML = EUROSTAT_YEARS.map((year) => `<option value="${year}">${year}</option>`).join("");
   select.value = EUROSTAT_YEARS.includes(defaultYear) ? defaultYear : EUROSTAT_YEARS[0];
@@ -3522,7 +3544,7 @@ function wireEuTradeExplorer() {
         importValue: trendRowsRaw.find((row) => row.year === trendYear && row.flow === "import")?.value
       }));
       const topProduct = productRows.filter((row) => Number.isFinite(row.value)).sort((a, b) => b.value - a.value)[0];
-      const totalProductValue = productRows.filter((row) => Number.isFinite(row.value)).reduce((sum, row) => sum + row.value, 0);
+      const selectedTotalValue = selectedCurrent?.value;
       const detailedRows = [...currentRows, ...previousRows, ...trendRowsRaw, ...productRows].filter((row, index, rows) => rows.findIndex((item) => item.reporter === row.reporter && item.partner === row.partner && item.product === row.product && item.flow === row.flow && item.year === row.year) === index);
       output.innerHTML = `
         <section class="eu-result-header">
@@ -3535,14 +3557,14 @@ function wireEuTradeExplorer() {
           <article><span>${lang === "ko" ? "무역수지" : "Trade Balance"}</span><strong>${Number.isFinite(exports?.value) && Number.isFinite(imports?.value) ? eurostatValueLabel(exports.value - imports.value) : "N/A"}</strong><small>${lang === "ko" ? "수출 - 수입" : "Exports - Imports"}</small></article>
           <article><span>${flowLabel} YoY</span><strong>${yoy === null ? "N/A" : `${yoy >= 0 ? "+" : ""}${formatRate(yoy, 1)}%`}</strong><small>${currentYear - 1} → ${selectedYear}</small></article>
         </section>
-        ${euTradeSnapshotMarkup({ ...context, exports, imports, selectedCurrent, selectedPrevious, flowLabel, topProduct: topProduct ? { ...topProduct, label: selectOptionLabel(EUROSTAT_PRODUCTS, topProduct.product, lang) } : null, totalProductValue })}
+        ${euTradeSnapshotMarkup({ ...context, exports, imports, selectedCurrent, selectedPrevious, flowLabel, topProduct: topProduct ? { ...topProduct, label: selectOptionLabel(EUROSTAT_PRODUCTS, topProduct.product, lang) } : null, selectedTotalValue })}
         ${euLineChartMarkup(trendRows)}
         ${euComparisonMarkup(exports, imports)}
-        ${euProductBreakdownMarkup(productRows, flow.value)}
+        ${euProductBreakdownMarkup(productRows, flow.value, selectedTotalValue)}
         ${selections.partner === "WORLD" ? euMajorTradePartnersMarkup(partnerRows, partnerData, currentRows) : ""}
         ${euDetailedDataMarkup(detailedRows, { reporter: reporterLabel })}
         ${euDataClassificationMarkup({ year: selectedYear, updated: currentData.updated })}
-        ${euRelatedToolsMarkup(selections.reporter)}
+        ${euRelatedToolsMarkup(selections.reporter, selections.partner)}
       `;
       refreshIcons();
     } catch (error) {
