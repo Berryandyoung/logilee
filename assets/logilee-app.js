@@ -3095,6 +3095,7 @@ async function getEurostatDataset(selections, extraParams = {}) {
 
 function eurostatValueLabel(value, { compact = true } = {}) {
   if (!Number.isFinite(value)) return "N/A";
+  if (value === 0) return compact ? "€0" : "EUR 0 million";
   if (!compact) return `EUR ${formatRate(value, 1)} million`;
   const abs = Math.abs(value);
   if (abs >= 1000000) return `€${formatRate(value / 1000000, 2)}T`;
@@ -3142,42 +3143,54 @@ function euTradeSnapshotMarkup(context) {
   `;
 }
 
+function eurostatNiceTicks(maxValue, count = 4) {
+  if (!Number.isFinite(maxValue) || maxValue <= 0) return [0, 1];
+  const roughStep = maxValue / Math.max(1, count - 1);
+  const power = Math.pow(10, Math.floor(Math.log10(roughStep)));
+  const fraction = roughStep / power;
+  const niceFraction = fraction <= 1 ? 1 : fraction <= 2 ? 2 : fraction <= 5 ? 5 : 10;
+  const step = niceFraction * power;
+  const top = Math.ceil(maxValue / step) * step;
+  const ticks = [];
+  for (let value = 0; value <= top + step / 2; value += step) ticks.push(value);
+  return ticks.length >= 3 ? ticks : [0, top / 2, top];
+}
+
 function euLineChartMarkup(trendRows) {
   const lang = currentLang();
   const rows = trendRows.filter((row) => Number.isFinite(row.exportValue) || Number.isFinite(row.importValue));
   if (!rows.length) return `<section class="eu-dashboard-section"><h2>${lang === "ko" ? "최근 5개년 무역 추이" : "5-Year Trade Trend"}</h2><div class="data-empty">${lang === "ko" ? "최근 추이 데이터를 표시할 수 없습니다." : "Trend data is unavailable for this selection."}</div></section>`;
   const width = 640;
   const height = 250;
-  const pad = { left: 58, right: 18, top: 24, bottom: 34 };
+  const pad = { left: 64, right: 18, top: 24, bottom: 34 };
   const values = rows.flatMap((row) => [row.exportValue, row.importValue]).filter(Number.isFinite);
-  const max = Math.max(...values, 1);
+  const ticks = eurostatNiceTicks(Math.max(...values, 1), 4);
+  const max = Math.max(...ticks, 1);
   const x = (index) => rows.length === 1 ? width / 2 : pad.left + (index * (width - pad.left - pad.right)) / (rows.length - 1);
   const y = (value) => pad.top + (1 - value / max) * (height - pad.top - pad.bottom);
   const line = (key) => rows.map((row, index) => Number.isFinite(row[key]) ? `${x(index)},${y(row[key])}` : "").filter(Boolean).join(" ");
   return `
-    <section class="eu-dashboard-section eu-chart-section">
+    <section class="eu-dashboard-section eu-chart-section eu-primary-section">
       <div class="section-head"><h2>${lang === "ko" ? "최근 5개년 수출입 추이" : "5-Year Export / Import Trend"}</h2><span>${EUROSTAT_UNIT}</span></div>
       <svg class="eu-line-chart" viewBox="0 0 ${width} ${height}" role="img" aria-label="5-year export and import trend">
-        <line x1="${pad.left}" y1="${height - pad.bottom}" x2="${width - pad.right}" y2="${height - pad.bottom}" />
-        <line x1="${pad.left}" y1="${pad.top}" x2="${pad.left}" y2="${height - pad.bottom}" />
-        <text x="8" y="${pad.top + 5}">${escapeHtml(eurostatValueLabel(max))}</text>
-        <text x="10" y="${height - pad.bottom}">€0</text>
+        ${ticks.map((tick) => `<g class="eu-chart-tick"><line x1="${pad.left}" y1="${y(tick)}" x2="${width - pad.right}" y2="${y(tick)}" /><text x="8" y="${y(tick) + 4}">${escapeHtml(eurostatValueLabel(tick))}</text></g>`).join("")}
+        <line class="eu-chart-axis" x1="${pad.left}" y1="${height - pad.bottom}" x2="${width - pad.right}" y2="${height - pad.bottom}" />
+        <line class="eu-chart-axis" x1="${pad.left}" y1="${pad.top}" x2="${pad.left}" y2="${height - pad.bottom}" />
         <polyline class="export-line" points="${line("exportValue")}" />
         <polyline class="import-line" points="${line("importValue")}" />
-        ${rows.map((row, index) => `<g><text x="${x(index)}" y="${height - 10}" text-anchor="middle">${escapeHtml(row.year)}</text>${Number.isFinite(row.exportValue) ? `<circle class="export-dot" cx="${x(index)}" cy="${y(row.exportValue)}" r="4"><title>${row.year} Export: ${eurostatValueLabel(row.exportValue, { compact: false })}</title></circle>` : ""}${Number.isFinite(row.importValue) ? `<circle class="import-dot" cx="${x(index)}" cy="${y(row.importValue)}" r="4"><title>${row.year} Import: ${eurostatValueLabel(row.importValue, { compact: false })}</title></circle>` : ""}</g>`).join("")}
+        ${rows.map((row, index) => `<g><text class="eu-chart-year" x="${x(index)}" y="${height - 10}" text-anchor="middle">${escapeHtml(row.year)}</text>${Number.isFinite(row.exportValue) ? `<circle class="export-dot" cx="${x(index)}" cy="${y(row.exportValue)}" r="4"><title>${row.year} Export: ${eurostatValueLabel(row.exportValue, { compact: false })}</title></circle>` : ""}${Number.isFinite(row.importValue) ? `<circle class="import-dot" cx="${x(index)}" cy="${y(row.importValue)}" r="4"><title>${row.year} Import: ${eurostatValueLabel(row.importValue, { compact: false })}</title></circle>` : ""}</g>`).join("")}
       </svg>
       <div class="eu-chart-legend"><span class="export-line-key">${lang === "ko" ? "수출" : "Export"}</span><span class="import-line-key">${lang === "ko" ? "수입" : "Import"}</span></div>
     </section>
   `;
 }
-
 function euComparisonMarkup(exports, imports) {
   const lang = currentLang();
   const hasExports = Number.isFinite(exports?.value);
   const hasImports = Number.isFinite(imports?.value);
   const title = lang === "ko" ? "수출입 비교" : "Export vs Import";
   if (!hasExports && !hasImports) {
-    return `<section class="eu-dashboard-section eu-comparison-section"><h2>${title}</h2><div class="data-empty">${lang === "ko" ? "선택 조건의 수출입 비교 데이터를 표시할 수 없습니다." : "Export/import comparison data is unavailable for this selection."}</div></section>`;
+    return `<section class="eu-dashboard-section eu-comparison-section eu-primary-section"><h2>${title}</h2><div class="data-empty">${lang === "ko" ? "선택 조건의 수출입 비교 데이터를 표시할 수 없습니다." : "Export/import comparison data is unavailable for this selection."}</div></section>`;
   }
   const max = Math.max(hasExports ? exports.value : 0, hasImports ? imports.value : 0, 1);
   const bars = [
@@ -3185,7 +3198,7 @@ function euComparisonMarkup(exports, imports) {
     [lang === "ko" ? "수입" : "Import", imports?.value, "import"]
   ];
   return `
-    <section class="eu-dashboard-section eu-comparison-section">
+    <section class="eu-dashboard-section eu-comparison-section eu-primary-section">
       <h2>${title}</h2>
       <div class="eu-bar-compare">${bars.map(([label, value, type]) => `<div><span>${label}</span><div class="eu-bar-track"><b class="${type}" style="width:${Number.isFinite(value) ? Math.max(2, (value / max) * 100) : 0}%"></b></div><strong>${eurostatValueLabel(value)}</strong></div>`).join("")}</div>
     </section>
@@ -3196,45 +3209,41 @@ function euProductBreakdownMarkup(rows, selectedFlow) {
   const lang = currentLang();
   const title = lang === "ko" ? "품목 구조" : "Product Breakdown";
   const items = rows.filter((row) => row.flow === selectedFlow && row.product !== "TOTAL" && Number.isFinite(row.value))
-    .map((row) => ({ ...row, label: selectOptionLabel(EUROSTAT_PRODUCTS, row.product, lang) }))
+    .map((row) => {
+      const label = selectOptionLabel(EUROSTAT_PRODUCTS, row.product, lang);
+      const name = label.replace(/^SITC\s*[0-9_\-]+\s*-\s*/i, "");
+      return { ...row, label, name };
+    })
     .sort((a, b) => b.value - a.value)
     .slice(0, 7);
   if (!items.length) return `<section class="eu-dashboard-section"><h2>${title}</h2><div class="data-empty">${lang === "ko" ? "SITC 품목 구조 데이터를 표시할 수 없습니다." : "SITC product breakdown is unavailable for this selection."}</div></section>`;
   const total = items.reduce((sum, row) => sum + row.value, 0);
   const max = Math.max(...items.map((row) => row.value), 1);
   return `
-    <section class="eu-dashboard-section eu-product-breakdown">
+    <section class="eu-dashboard-section eu-product-breakdown eu-primary-section">
       <h2>${title}</h2>
-      <div class="eu-ranking-list">${items.map((row) => `<article><div><strong>${escapeHtml(row.label)}</strong><span>${escapeHtml(row.product)} · ${total ? formatRate((row.value / total) * 100, 1) : "N/A"}%</span></div><div class="eu-bar-track"><b style="width:${Math.max(2, (row.value / max) * 100)}%"></b></div><em>${eurostatValueLabel(row.value)}</em></article>`).join("")}</div>
+      <div class="eu-ranking-list">${items.map((row) => `<article><div class="eu-sitc-label"><span>${escapeHtml(row.product)} · ${total ? formatRate((row.value / total) * 100, 1) : "N/A"}%</span><strong>${escapeHtml(row.name)}</strong></div><div class="eu-bar-track"><b style="width:${Math.max(2, (row.value / max) * 100)}%"></b></div><em>${eurostatValueLabel(row.value)}</em></article>`).join("")}</div>
     </section>
   `;
 }
-
-function euPartnersMarkup() {
-  const lang = currentLang();
-  return `
-    <section class="eu-dashboard-section">
-      <h2>${lang === "ko" ? "주요 교역 상대" : "Major Trade Partners"}</h2>
-      <div class="data-empty">${lang === "ko" ? "현재 Eurostat ext_lt_intertrd 데이터셋은 이 화면에서 안정적으로 사용할 수 있는 partner 값을 World aggregate로 제한합니다. 개별 상대국 ranking은 이 페이지에서 임의로 생성하지 않습니다." : "This screen limits partner selection to the World aggregate because individual partner-country rankings are not exposed reliably through the current ext_lt_intertrd workflow. Rankings are not generated here."}</div>
-    </section>
-  `;
-}
-
 function euDetailedDataMarkup(rows, labels) {
   const lang = currentLang();
   const headers = lang === "ko"
     ? ["Reporter", "Partner", "품목 그룹", "SITC", "Flow", "Year", "거래액", "Unit", "Source"]
     : ["Reporter", "Partner", "Product Group", "SITC", "Flow", "Year", "Trade Value", "Unit", "Source"];
+  const years = [...new Set(rows.map((row) => row.year).filter(Boolean))].sort();
+  const yearRange = years.length > 1 ? `${years[0]}-${years[years.length - 1]}` : years[0] || "N/A";
+  const summaryLabel = lang === "ko" ? "원데이터 보기" : "View Detailed Data";
+  const helper = `${EUROSTAT_DATASET} · ${yearRange} · ${EUROSTAT_UNIT}`;
   return `
-    <section class="eu-dashboard-section">
-      <h2>${lang === "ko" ? "원데이터" : "Detailed Data"}</h2>
+    <details class="eu-dashboard-section eu-detail-disclosure">
+      <summary><span><strong>${summaryLabel}</strong><small>${escapeHtml(helper)}</small></span><b aria-hidden="true"></b></summary>
       <div class="responsive-table"><table class="result-table eu-detail-table"><thead><tr>${headers.map((header) => `<th>${header}</th>`).join("")}</tr></thead><tbody>
         ${rows.map((row) => `<tr><td>${escapeHtml(labels.reporter)}</td><td>${escapeHtml(selectOptionLabel(EUROSTAT_PARTNERS, row.partner, lang))}</td><td>${escapeHtml(selectOptionLabel(EUROSTAT_PRODUCTS, row.product, lang))}</td><td>${escapeHtml(row.product)}</td><td>${row.flow === "export" ? (lang === "ko" ? "수출" : "Export") : (lang === "ko" ? "수입" : "Import")}</td><td>${escapeHtml(row.year)}</td><td>${Number.isFinite(row.value) ? escapeHtml(eurostatValueLabel(row.value, { compact: false })) : "N/A"}</td><td>${EUROSTAT_UNIT}</td><td>Eurostat</td></tr>`).join("")}
       </tbody></table></div>
-    </section>
+    </details>
   `;
 }
-
 function euDataClassificationMarkup(context) {
   const lang = currentLang();
   const rows = lang === "ko"
@@ -3393,7 +3402,6 @@ function wireEuTradeExplorer() {
         ${euLineChartMarkup(trendRows)}
         ${euComparisonMarkup(exports, imports)}
         ${euProductBreakdownMarkup(productRows, flow.value)}
-        ${euPartnersMarkup()}
         ${euDetailedDataMarkup(detailedRows, { reporter: reporterLabel })}
         ${euDataClassificationMarkup({ year: selectedYear, updated: currentData.updated })}
         ${euRelatedToolsMarkup(selections.reporter)}

@@ -7202,3 +7202,162 @@ body.sidebar-drawer-active {
     align-items: flex-start;
   }
 }
+/* EU Trade Explorer final polish */
+.eu-primary-section {
+  margin-top: 20px;
+}
+
+.eu-dashboard-section:not(.eu-primary-section) {
+  margin-top: 18px;
+}
+
+.eu-dashboard-section h2,
+.eu-detail-disclosure summary strong {
+  font-size: 19px;
+  line-height: 1.25;
+}
+
+.eu-kpi-grid {
+  margin-bottom: 16px;
+}
+
+.eu-line-chart .eu-chart-tick line {
+  stroke: #edf3fb;
+  stroke-width: 1;
+}
+
+.eu-line-chart .eu-chart-axis {
+  stroke: #cfdbea;
+  stroke-width: 1;
+}
+
+.eu-line-chart .eu-chart-tick text,
+.eu-line-chart .eu-chart-year {
+  fill: #64748b;
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.eu-product-breakdown .eu-ranking-list {
+  gap: 7px;
+}
+
+.eu-product-breakdown .eu-ranking-list article {
+  grid-template-columns: minmax(190px, 1.15fr) minmax(180px, 2.2fr) minmax(80px, auto);
+  gap: 10px;
+  padding: 9px 10px;
+}
+
+.eu-product-breakdown .eu-ranking-list strong {
+  font-size: 13px;
+  line-height: 1.32;
+}
+
+.eu-product-breakdown .eu-ranking-list span {
+  font-size: 11px;
+  line-height: 1.3;
+}
+
+.eu-product-breakdown .eu-ranking-list em {
+  font-size: 13px;
+}
+
+.eu-product-breakdown .eu-bar-track {
+  height: 8px;
+}
+
+.eu-detail-disclosure {
+  border: 1px solid #e2ebf6;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.eu-detail-disclosure summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  min-height: 58px;
+  padding: 12px 14px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.eu-detail-disclosure summary::-webkit-details-marker {
+  display: none;
+}
+
+.eu-detail-disclosure summary span,
+.eu-detail-disclosure summary small {
+  display: block;
+}
+
+.eu-detail-disclosure summary strong {
+  color: var(--ink-navy);
+}
+
+.eu-detail-disclosure summary small {
+  margin-top: 3px;
+  color: var(--secondary-text);
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.eu-detail-disclosure summary b {
+  width: 9px;
+  height: 9px;
+  border-right: 2px solid var(--secondary-text);
+  border-bottom: 2px solid var(--secondary-text);
+  transform: rotate(45deg);
+  transition: transform 0.15s ease;
+}
+
+.eu-detail-disclosure[open] summary b {
+  transform: rotate(225deg);
+}
+
+.eu-detail-disclosure summary:focus-visible {
+  outline: 3px solid rgba(23, 107, 255, 0.28);
+  outline-offset: 3px;
+}
+
+.eu-detail-disclosure .responsive-table {
+  border-top: 1px solid #e2ebf6;
+}
+
+.eu-detail-table {
+  font-size: 13px;
+}
+
+.eu-detail-table th,
+.eu-detail-table td {
+  padding-top: 9px;
+  padding-bottom: 9px;
+}
+
+.eu-classification,
+.eu-dashboard-section:has(.eu-tool-grid) {
+  color: var(--secondary-text);
+}
+
+@media (max-width: 760px) {
+  .eu-dashboard-section h2,
+  .eu-detail-disclosure summary strong {
+    font-size: 18px;
+  }
+
+  .eu-product-breakdown .eu-ranking-list article {
+    grid-template-columns: 1fr;
+    gap: 7px;
+    padding: 10px;
+  }
+
+  .eu-line-chart .eu-chart-tick text,
+  .eu-line-chart .eu-chart-year {
+    font-size: 10px;
+  }
+
+  .eu-detail-disclosure summary {
+    align-items: flex-start;
+  }
+}
