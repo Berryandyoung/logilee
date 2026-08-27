@@ -7394,3 +7394,52 @@ body.sidebar-drawer-active {
     grid-template-columns: 1fr;
   }
 }
+
+/* Global Trade Explorer V1 */
+.global-trade-static-intro {
+  margin-top: 0;
+}
+
+.global-trade-toolbar {
+  display: grid;
+  grid-template-columns: minmax(130px, 1.05fr) minmax(132px, 1.05fr) minmax(170px, 1.2fr) minmax(82px, 0.55fr) minmax(90px, 0.6fr) minmax(86px, 0.45fr);
+  gap: 8px;
+  align-items: end;
+}
+
+.global-trade-toolbar .field {
+  min-width: 0;
+}
+
+.global-trade-toolbar select,
+.global-trade-toolbar input,
+.global-trade-toolbar .primary-btn,
+.global-trade-toolbar .country-combobox-control {
+  min-height: 48px;
+}
+
+.global-trade-toolbar .primary-btn {
+  justify-content: center;
+  white-space: nowrap;
+}
+
+.global-world-flag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--secondary-text);
+  font-size: 11px;
+  font-weight: 900;
+}
+
+@media (max-width: 1120px) {
+  .global-trade-toolbar {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .global-trade-toolbar {
+    grid-template-columns: 1fr;
+  }
+}

@@ -44,6 +44,7 @@ temp/
 *credentials*
 *secret*
 firebase*.json
+!firebase.json
 serviceAccount*.json
 
 # Local tool state

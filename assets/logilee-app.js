@@ -3595,24 +3595,202 @@ function wireEuTradeExplorer() {
   });
   render();
 }
+const GLOBAL_TRADE_ENDPOINT = "https://us-central1-logilee-cms.cloudfunctions.net/globalTradeExplorer";
+const GLOBAL_TRADE_YEARS = Array.from({ length: 16 }, (_, index) => String(2025 - index));
+const GLOBAL_HS_OPTIONS = [
+  ["2613", "Molybdenum ores and concentrates", "몰리브덴 광과 정광"],
+  ["8504", "Electrical transformers, static converters and inductors", "변압기, 정지형 변환기 및 인덕터"],
+  ["8703", "Motor cars and other motor vehicles", "승용차 및 기타 차량"],
+  ["8708", "Parts and accessories of motor vehicles", "자동차 부분품과 부속품"],
+  ["9403", "Other furniture and parts thereof", "기타 가구 및 부분품"],
+  ["8542", "Electronic integrated circuits", "전자집적회로"],
+  ["2710", "Petroleum oils, other than crude", "석유와 역청유 조제품"],
+  ["3004", "Medicaments in measured doses", "소매용 의약품"],
+  ["8471", "Automatic data processing machines", "자동자료처리기계"],
+  ["6204", "Women's suits, jackets, dresses and similar clothing", "여성용 의류"]
+];
+
+function globalTradeValueLabel(value, { compact = true } = {}) {
+  if (!Number.isFinite(value)) return "N/A";
+  if (!compact) return `USD ${formatRate(value, 0)}`;
+  const abs = Math.abs(value);
+  if (abs >= 1000000000000) return `US$ ${formatRate(value / 1000000000000, 2)}T`;
+  if (abs >= 1000000000) return `US$ ${formatRate(value / 1000000000, 1)}B`;
+  if (abs >= 1000000) return `US$ ${formatRate(value / 1000000, 1)}M`;
+  if (abs >= 1000) return `US$ ${formatRate(value / 1000, 1)}K`;
+  return `US$ ${formatRate(value, 0)}`;
+}
+
+function globalFlowLabel(flow, lang = currentLang()) {
+  return flow === "import" ? (lang === "ko" ? "수입" : "Import") : (lang === "ko" ? "수출" : "Export");
+}
+
+function globalDirectionLabel(context, flow) {
+  const lang = currentLang();
+  if (context.partner === "WORLD") return flow === "export"
+    ? (lang === "ko" ? "전 세계 대상 수출" : "Exports to world")
+    : (lang === "ko" ? "전 세계발 수입" : "Imports from world");
+  return flow === "export"
+    ? (lang === "ko" ? `${context.partnerLabel} 대상 수출` : `Exports to ${context.partnerLabel}`)
+    : (lang === "ko" ? `${context.partnerLabel}발 수입` : `Imports from ${context.partnerLabel}`);
+}
+
+function globalReporterFlag(code) {
+  return /^[A-Z]{2}$/.test(code) ? `<img class="eu-reporter-flag" src="https://flagcdn.com/${code.toLowerCase()}.svg" alt="" loading="lazy">` : `<span class="eu-reporter-flag global-world-flag">World</span>`;
+}
+
+function globalHsLabel(hs, lang = currentLang()) {
+  const item = GLOBAL_HS_OPTIONS.find(([code]) => code === hs);
+  return item ? item[lang === "ko" ? 2 : 1] : (lang === "ko" ? `HS ${hs} 품목` : `HS ${hs} commodity`);
+}
+
+function globalTradeSnapshotMarkup(data, context) {
+  const lang = currentLang();
+  const rows = [];
+  const exportsValue = data.current?.exportValue;
+  const importsValue = data.current?.importValue;
+  if (Number.isFinite(exportsValue)) rows.push(lang === "ko"
+    ? `${context.year}년 ${context.reporterLabel}의 ${context.partnerLabel} 대상 HS ${context.hs} 수출은 ${globalTradeValueLabel(exportsValue)}입니다.`
+    : `${context.reporterLabel}'s HS ${context.hs} exports to ${context.partnerLabel} in ${context.year} were ${globalTradeValueLabel(exportsValue)}.`);
+  if (Number.isFinite(importsValue)) rows.push(lang === "ko"
+    ? `${context.year}년 ${context.partnerLabel}발 HS ${context.hs} 수입은 ${globalTradeValueLabel(importsValue)}입니다.`
+    : `${context.reporterLabel}'s HS ${context.hs} imports from ${context.partnerLabel} in ${context.year} were ${globalTradeValueLabel(importsValue)}.`);
+  if (Number.isFinite(data.current?.tradeBalance)) rows.push(lang === "ko"
+    ? `무역수지는 ${globalTradeValueLabel(Math.abs(data.current.tradeBalance))} ${data.current.tradeBalance >= 0 ? "흑자" : "적자"}입니다.`
+    : `The trade balance is a ${globalTradeValueLabel(Math.abs(data.current.tradeBalance))} ${data.current.tradeBalance >= 0 ? "surplus" : "deficit"}.`);
+  if (Number.isFinite(data.yoy?.value)) rows.push(lang === "ko"
+    ? `${globalFlowLabel(data.yoy.flow, lang)}은 전년 대비 ${data.yoy.value >= 0 ? "+" : ""}${formatRate(data.yoy.value, 1)}%입니다.`
+    : `${globalFlowLabel(data.yoy.flow, lang)} changed ${data.yoy.value >= 0 ? "+" : ""}${formatRate(data.yoy.value, 1)}% from the previous year.`);
+  return `<section class="eu-dashboard-section eu-trade-snapshot"><h2>${lang === "ko" ? "무역 스냅샷" : "Trade Snapshot"}</h2>${rows.length ? `<ul>${rows.map((row) => `<li>${escapeHtml(row)}</li>`).join("")}</ul>` : `<div class="data-empty">${lang === "ko" ? "계산 가능한 거래 요약이 없습니다. 선택 조건에 대한 UN Comtrade 데이터가 없을 수 있습니다." : "No calculated trade snapshot is available. UN Comtrade may not have data for this selection."}</div>`}</section>`;
+}
+
+function globalLineChartMarkup(trendRows) {
+  const lang = currentLang();
+  const rows = (trendRows || []).filter((row) => Number.isFinite(row.exportValue) || Number.isFinite(row.importValue));
+  if (!rows.length) return `<section class="eu-dashboard-section"><h2>${lang === "ko" ? "최근 5개년 수출입 추이" : "5-Year Export / Import Trend"}</h2><div class="data-empty">${lang === "ko" ? "최근 추이 데이터를 표시할 수 없습니다." : "Trend data is unavailable for this selection."}</div></section>`;
+  const width = 640;
+  const height = 250;
+  const pad = { left: 72, right: 18, top: 24, bottom: 34 };
+  const values = rows.flatMap((row) => [row.exportValue, row.importValue]).filter(Number.isFinite);
+  const ticks = eurostatNiceTicks(Math.max(...values, 1), 4);
+  const max = Math.max(...ticks, 1);
+  const x = (index) => rows.length === 1 ? width / 2 : pad.left + (index * (width - pad.left - pad.right)) / (rows.length - 1);
+  const y = (value) => pad.top + (1 - value / max) * (height - pad.top - pad.bottom);
+  const line = (key) => rows.map((row, index) => Number.isFinite(row[key]) ? `${x(index)},${y(row[key])}` : "").filter(Boolean).join(" ");
+  return `<section class="eu-dashboard-section eu-chart-section eu-primary-section"><div class="section-head"><h2>${lang === "ko" ? "최근 5개년 수출입 추이" : "5-Year Export / Import Trend"}</h2><span>USD</span></div><svg class="eu-line-chart" viewBox="0 0 ${width} ${height}" role="img" aria-label="5-year export and import trend">${ticks.map((tick) => `<g><line x1="${pad.left}" y1="${y(tick)}" x2="${width - pad.right}" y2="${y(tick)}" /><text x="8" y="${y(tick) + 4}">${escapeHtml(globalTradeValueLabel(tick))}</text></g>`).join("")}<line x1="${pad.left}" y1="${height - pad.bottom}" x2="${width - pad.right}" y2="${height - pad.bottom}" /><line x1="${pad.left}" y1="${pad.top}" x2="${pad.left}" y2="${height - pad.bottom}" /><polyline class="export-line" points="${line("exportValue")}" /><polyline class="import-line" points="${line("importValue")}" />${rows.map((row, index) => `<g><text x="${x(index)}" y="${height - 10}" text-anchor="middle">${escapeHtml(row.year)}</text>${Number.isFinite(row.exportValue) ? `<circle class="export-dot" cx="${x(index)}" cy="${y(row.exportValue)}" r="4"><title>${row.year} Export: ${globalTradeValueLabel(row.exportValue, { compact: false })}</title></circle>` : ""}${Number.isFinite(row.importValue) ? `<circle class="import-dot" cx="${x(index)}" cy="${y(row.importValue)}" r="4"><title>${row.year} Import: ${globalTradeValueLabel(row.importValue, { compact: false })}</title></circle>` : ""}</g>`).join("")}</svg><div class="eu-chart-legend"><span class="export-line-key">${lang === "ko" ? "수출" : "Export"}</span><span class="import-line-key">${lang === "ko" ? "수입" : "Import"}</span></div></section>`;
+}
+
+function globalComparisonMarkup(data) {
+  const lang = currentLang();
+  const exportsValue = data.current?.exportValue;
+  const importsValue = data.current?.importValue;
+  if (!Number.isFinite(exportsValue) && !Number.isFinite(importsValue)) return `<section class="eu-dashboard-section eu-comparison-section eu-primary-section"><h2>${lang === "ko" ? "수출입 비교" : "Export vs Import"}</h2><div class="data-empty">${lang === "ko" ? "선택 연도의 수출입 비교 데이터를 표시할 수 없습니다." : "Export/import comparison data is unavailable for the selected year."}</div></section>`;
+  const max = Math.max(Number.isFinite(exportsValue) ? exportsValue : 0, Number.isFinite(importsValue) ? importsValue : 0, 1);
+  const bars = [[lang === "ko" ? "수출" : "Export", exportsValue, "export"], [lang === "ko" ? "수입" : "Import", importsValue, "import"]];
+  return `<section class="eu-dashboard-section eu-comparison-section eu-primary-section"><h2>${lang === "ko" ? "수출입 비교" : "Export vs Import"}</h2><div class="eu-bar-compare">${bars.map(([label, value, type]) => `<div><span>${label}</span><div class="eu-bar-track"><b class="${type}" style="width:${Number.isFinite(value) ? Math.max(2, (value / max) * 100) : 0}%"></b></div><strong>${globalTradeValueLabel(value)}</strong></div>`).join("")}</div></section>`;
+}
+
+function globalDetailedDataMarkup(data, context) {
+  const lang = currentLang();
+  const rows = [...(data.rows || [])].sort((a, b) => Number(b.year) - Number(a.year) || (a.flow === "export" ? -1 : 1));
+  const headers = ["Reporter", "Partner", "HS", "Product", "Flow", "Year", "Trade Value", "Quantity", "Net Weight", "Source"];
+  const years = rows.map((row) => row.year).filter(Boolean).sort();
+  const helper = `UN Comtrade · ${years[0] || context.year}${years.length > 1 ? `-${years[years.length - 1]}` : ""} · USD`;
+  return `<details class="eu-dashboard-section eu-detail-disclosure"><summary><span><strong>${lang === "ko" ? "원데이터 보기" : "View Detailed Data"}</strong><small>${escapeHtml(helper)}</small></span><b aria-hidden="true"></b></summary><div class="responsive-table"><table class="result-table eu-detail-table"><thead><tr>${headers.map((header) => `<th>${header}</th>`).join("")}</tr></thead><tbody>${rows.map((row) => `<tr><td>${escapeHtml(context.reporterLabel)}</td><td>${escapeHtml(context.partnerLabel)}</td><td>${escapeHtml(context.hs)}</td><td>${escapeHtml(context.hsLabel)}</td><td>${globalFlowLabel(row.flow, lang)}</td><td>${escapeHtml(row.year)}</td><td>${Number.isFinite(row.value) ? escapeHtml(globalTradeValueLabel(row.value, { compact: false })) : "N/A"}</td><td>${Number.isFinite(row.quantity) ? escapeHtml(`${formatRate(row.quantity, 0)} ${row.quantityUnit || ""}`.trim()) : "N/A"}</td><td>${Number.isFinite(row.netWeight) ? escapeHtml(`${formatRate(row.netWeight, 0)} kg`) : "N/A"}</td><td>UN Comtrade</td></tr>`).join("")}</tbody></table></div></details>`;
+}
+
+function globalDataClassificationMarkup(data, context) {
+  const lang = currentLang();
+  const meta = data.metadata || {};
+  const rows = lang === "ko"
+    ? [["데이터 출처", "UN Comtrade"], ["Dataset/API", meta.api || "data/v1/get/C/A/HS"], ["품목 분류", meta.classification || "HS combined annual data"], ["통화 / 단위", "USD"], ["기준 연도", context.year], ["Cache", data.cache?.hit ? "hit" : "miss"]]
+    : [["Data Source", "UN Comtrade"], ["Dataset/API", meta.api || "data/v1/get/C/A/HS"], ["Classification", meta.classification || "HS combined annual data"], ["Currency / Unit", "USD"], ["Reference Year", context.year], ["Cache", data.cache?.hit ? "hit" : "miss"]];
+  const note = lang === "ko" ? "UN Comtrade HS combined annual data를 사용합니다. HS 개정판과 전환 데이터가 섞일 수 있으므로 연도별 품목 정의 차이는 원자료 확인이 필요합니다." : "This tool uses UN Comtrade HS combined annual data. HS revisions and converted records can affect year-to-year comparability, so confirm commodity definitions in the source when filing or auditing.";
+  return `<section class="eu-dashboard-section eu-classification"><h2>${lang === "ko" ? "데이터 및 분류" : "Data & Classification"}</h2><dl>${rows.map(([label, value]) => `<div><dt>${label}</dt><dd>${escapeHtml(String(value))}</dd></div>`).join("")}</dl><p class="muted">${escapeHtml(note)}</p></section>`;
+}
+
+function globalRelatedToolsMarkup(context) {
+  const lang = currentLang();
+  const currencyHref = euCurrencyConverterHref(context.reporter, context.partner);
+  const euCodes = new Set(EUROSTAT_REPORTERS.map(([code]) => code));
+  const tools = lang === "ko"
+    ? [["국가 무역 프로필", `country-trade-profile.html?country=${context.reporter}`, "globe"], ["무역 공휴일", `holidays.html?country=${context.reporter}`, "calendar-check"], ["주요 항만", `ports.html?country=${context.reporter}`, "anchor"], ["HS Code 검색", "../hscode.html", "barcode"], ["환율 계산기", currencyHref, "badge-dollar-sign"]]
+    : [["Country Trade Profile", `country-trade-profile.html?country=${context.reporter}`, "globe"], ["Trade Holidays", `holidays.html?country=${context.reporter}`, "calendar-check"], ["Major Ports", `ports.html?country=${context.reporter}`, "anchor"], ["HS Code Search", "../hscode-en.html", "barcode"], ["Currency Converter", currencyHref, "badge-dollar-sign"]];
+  if (euCodes.has(context.reporter)) tools.push(lang === "ko" ? ["EU 무역 통계", `eu-trade-explorer.html?reporter=${context.reporter}`, "chart-column"] : ["EU Trade Explorer", `eu-trade-explorer.html?reporter=${context.reporter}`, "chart-column"]);
+  return `<section class="eu-dashboard-section"><h2>${lang === "ko" ? "관련 무역 도구" : "Related Trade Tools"}</h2><div class="country-tool-grid eu-tool-grid">${tools.map(([label, href, icon]) => `<a href="${href}"><i data-lucide="${icon}"></i><strong>${escapeHtml(label)}</strong></a>`).join("")}</div></section>`;
+}
+
+function renderGlobalTradeDashboard(output, data) {
+  const lang = currentLang();
+  const query = data.query || {};
+  const context = { reporter: query.reporter, partner: query.partner, hs: query.hs, year: query.year, flow: query.flow, reporterLabel: displayCountryName(query.reporter, lang), partnerLabel: query.partner === "WORLD" ? (lang === "ko" ? "전 세계" : "World") : displayCountryName(query.partner, lang), hsLabel: globalHsLabel(query.hs, lang) };
+  const selectedFlow = globalFlowLabel(query.flow, lang);
+  output.innerHTML = `<section class="eu-result-header">${globalReporterFlag(context.reporter)}<div><h2>${escapeHtml(context.reporterLabel)} → ${escapeHtml(context.partnerLabel)} HS ${escapeHtml(context.hs)} ${lang === "ko" ? "무역 개요" : "Trade Overview"}</h2><p>${escapeHtml(context.hsLabel)} · ${escapeHtml(context.year)}</p></div></section><section class="eu-kpi-grid"><article><span>${lang === "ko" ? "수출" : "Exports"}</span><strong>${globalTradeValueLabel(data.current?.exportValue)}</strong><small>${escapeHtml(globalDirectionLabel(context, "export"))}</small></article><article><span>${lang === "ko" ? "수입" : "Imports"}</span><strong>${globalTradeValueLabel(data.current?.importValue)}</strong><small>${escapeHtml(globalDirectionLabel(context, "import"))}</small></article><article><span>${lang === "ko" ? "무역수지" : "Trade Balance"}</span><strong>${globalTradeValueLabel(data.current?.tradeBalance)}</strong><small>${lang === "ko" ? "수출 - 수입" : "Exports - Imports"}</small></article><article><span>${selectedFlow} YoY</span><strong>${Number.isFinite(data.yoy?.value) ? `${data.yoy.value >= 0 ? "+" : ""}${formatRate(data.yoy.value, 1)}%` : "N/A"}</strong><small>${escapeHtml(`${data.yoy?.previousYear || Number(context.year) - 1} → ${context.year}`)}</small></article></section>${globalTradeSnapshotMarkup(data, context)}${globalLineChartMarkup(data.trend)}${globalComparisonMarkup(data)}${globalDetailedDataMarkup(data, context)}${globalDataClassificationMarkup(data, context)}${globalRelatedToolsMarkup(context)}`;
+  refreshIcons();
+}
+
+function globalTradeErrorMarkup(error, status) {
+  const lang = currentLang();
+  const messages = { invalid_hs: lang === "ko" ? "HS Code는 2, 4, 6자리 숫자로 입력하세요." : "Enter a 2, 4, or 6 digit HS code.", invalid_year: lang === "ko" ? "지원되는 연도를 선택하세요." : "Select a supported year.", unsupported_reporter: lang === "ko" ? "UN Comtrade annual HS 데이터에서 지원되지 않는 Reporter입니다." : "This reporter is not supported for UN Comtrade annual HS data.", unsupported_partner: lang === "ko" ? "UN Comtrade annual HS 데이터에서 지원되지 않는 Partner입니다." : "This partner is not supported for UN Comtrade annual HS data.", backend_not_configured: lang === "ko" ? "Global Trade 데이터 백엔드 설정이 아직 완료되지 않았습니다." : "The Global Trade data backend is not fully configured yet.", rate_limited: lang === "ko" ? "UN Comtrade 요청 한도에 도달했습니다. 잠시 후 다시 시도하세요." : "UN Comtrade is rate limited. Please try again later.", upstream_unavailable: lang === "ko" ? "UN Comtrade 데이터를 일시적으로 불러올 수 없습니다." : "UN Comtrade data is temporarily unavailable." };
+  return `<div class="data-empty">${escapeHtml(messages[error] || (status === 404 ? (lang === "ko" ? "선택 조건의 데이터가 없습니다." : "No data is available for this selection.") : messages.upstream_unavailable))}</div>`;
+}
+
+async function fetchGlobalTrade(selected) {
+  const url = new URL(GLOBAL_TRADE_ENDPOINT);
+  Object.entries(selected).forEach(([key, value]) => url.searchParams.set(key, value));
+  const response = await fetchWithTimeout(url.toString(), { cache: "no-store" }, 45000);
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    const error = new Error(data?.error || `API ${response.status}`);
+    error.status = response.status;
+    error.code = data?.error || "";
+    throw error;
+  }
+  return data;
+}
+
 function wireTradeExplorerParams() {
   const form = document.querySelector("[data-trade-explorer-form]");
   if (!form) return;
   const params = new URLSearchParams(location.search);
-  form.querySelectorAll("[name]").forEach((field) => {
-    const value = params.get(field.name);
-    if (value) field.value = value;
-  });
+  const lang = currentLang();
+  const reporter = form.querySelector("[name='reporter']");
+  const partner = form.querySelector("[name='partner']");
+  const hs = form.querySelector("[name='hs']");
+  const year = form.querySelector("[name='year']");
+  const flow = form.querySelector("[name='flow']");
   const output = document.querySelector("[data-trade-explorer-output]");
+  const countryItems = TRADE_COUNTRIES.map(([value, en, ko]) => ({ value, label: lang === "ko" ? ko : en, meta: `${value} · ${en}`, terms: [value, en, ko, ...(COUNTRY_SEARCH_ALIASES[value] || [])].map(normalizeCountrySearch) }));
+  const partnerItems = [{ value: "WORLD", label: lang === "ko" ? "전 세계" : "World", meta: "World aggregate", terms: ["world", "전세계", "전 세계", "global"].map(normalizeCountrySearch) }, ...countryItems];
+  reporter.innerHTML = optionMarkup(TRADE_COUNTRIES);
+  partner.innerHTML = `<option value="WORLD">${lang === "ko" ? "전 세계" : "World"}</option>${optionMarkup(TRADE_COUNTRIES)}`;
+  hs.innerHTML = GLOBAL_HS_OPTIONS.map(([code, en, ko]) => `<option value="${code}">${escapeHtml(`${code} - ${lang === "ko" ? ko : en}`)}</option>`).join("");
+  year.innerHTML = GLOBAL_TRADE_YEARS.map((item) => `<option value="${item}">${item}</option>`).join("");
+  reporter.value = "KR";
+  partner.value = "US";
+  hs.value = "2613";
+  year.value = GLOBAL_TRADE_YEARS[0];
+  flow.value = "export";
+  ["reporter", "partner", "hs", "year", "flow"].forEach((name) => { const field = form.querySelector(`[name='${name}']`); const value = params.get(name); if (value) field.value = name === "partner" || name === "reporter" ? value.toUpperCase() : value; });
+  enhanceSimpleCombobox(reporter, countryItems, lang === "ko" ? { label: "Reporter 선택", placeholder: "Reporter 국가 검색...", open: "Reporter 목록 열기", empty: "일치하는 reporter가 없습니다." } : { label: "Select reporter", placeholder: "Search reporter country...", open: "Open reporter list", empty: "No matching reporter." });
+  enhanceSimpleCombobox(partner, partnerItems, lang === "ko" ? { label: "Partner 선택", placeholder: "Partner 또는 World 검색...", open: "Partner 목록 열기", empty: "일치하는 partner가 없습니다." } : { label: "Select partner", placeholder: "Search partner or World...", open: "Open partner list", empty: "No matching partner." });
+  enhanceSimpleCombobox(hs, GLOBAL_HS_OPTIONS.map(([value, en, ko]) => ({ value, label: `${value} - ${lang === "ko" ? ko : en}`, meta: "HS", terms: [value, en, ko].map(normalizeCountrySearch) })), lang === "ko" ? { label: "HS Code 선택", placeholder: "HS Code 또는 품목명 검색...", open: "HS 목록 열기", empty: "일치하는 HS 예시가 없습니다." } : { label: "Select HS code", placeholder: "Search HS code or product...", open: "Open HS list", empty: "No matching HS example." });
+  const render = async () => {
+    const selected = { reporter: reporter.value, partner: partner.value, hs: hs.value, year: year.value, flow: flow.value };
+    const localError = !/^[A-Z]{2}$/.test(selected.reporter) ? "unsupported_reporter" : !/^(WORLD|[A-Z]{2})$/.test(selected.partner) ? "unsupported_partner" : !/^(?:\d{2}|\d{4}|\d{6})$/.test(selected.hs) ? "invalid_hs" : !GLOBAL_TRADE_YEARS.includes(selected.year) ? "invalid_year" : "";
+    if (localError) { output.innerHTML = globalTradeErrorMarkup(localError, 400); return; }
+    output.innerHTML = `<div class="data-empty">${lang === "ko" ? "UN Comtrade 데이터를 조회하는 중입니다..." : "Loading UN Comtrade data..."}</div>`;
+    try { renderGlobalTradeDashboard(output, await fetchGlobalTrade(selected)); }
+    catch (error) { output.innerHTML = globalTradeErrorMarkup(error.code, error.status); }
+  };
   form.addEventListener("submit", (event) => {
     event.preventDefault();
     const url = new URL(location.href);
-    form.querySelectorAll("[name]").forEach((field) => {
-      if (field.value) url.searchParams.set(field.name, field.value); else url.searchParams.delete(field.name);
-    });
+    ["reporter", "partner", "hs", "year", "flow"].forEach((name) => { const field = form.querySelector(`[name='${name}']`); if (field.value) url.searchParams.set(name, field.value); else url.searchParams.delete(name); });
     history.replaceState(null, "", url);
-    if (output) output.innerHTML = `<div class="data-empty">${currentLang() === "ko" ? "쿼리가 준비되었습니다. 현재 이 페이지는 실시간 UN Comtrade 데이터를 제공하지 않으며, 데이터 연결을 준비 중입니다." : "Query prepared. This page does not provide live UN Comtrade data yet; the data connection is in preparation."}</div>`;
+    render();
   });
+  if (params.get("hs")) render();
 }
 
 async function wireNewsPage() {
