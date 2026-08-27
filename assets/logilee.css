@@ -7361,3 +7361,36 @@ body.sidebar-drawer-active {
     align-items: flex-start;
   }
 }
+/* EU Trade Explorer bilateral trade polish */
+.eu-line-chart .export-line,
+.eu-line-chart .import-line {
+  fill: none;
+}
+
+.eu-line-chart .export-dot {
+  fill: var(--signal-blue);
+}
+
+.eu-line-chart .import-dot {
+  fill: #16a085;
+}
+
+.eu-partner-ranking .eu-ranking-list article {
+  grid-template-columns: minmax(190px, 1.2fr) minmax(180px, 2.1fr) minmax(82px, auto);
+}
+
+.eu-partner-ranking small,
+.eu-sitc-label small {
+  display: block;
+  margin-top: 3px;
+  color: var(--secondary-text);
+  font-size: 11px;
+  font-weight: 750;
+  line-height: 1.35;
+}
+
+@media (max-width: 760px) {
+  .eu-partner-ranking .eu-ranking-list article {
+    grid-template-columns: 1fr;
+  }
+}
