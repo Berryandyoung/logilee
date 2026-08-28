@@ -1364,27 +1364,174 @@ function wireCbm() {
   });
 }
 
-const carrierLinks = {
-  dhl: "https://www.dhl.com/kr-en/home/tracking.html?tracking-id=",
-  fedex: "https://www.fedex.com/fedextrack/?trknbr=",
-  ups: "https://www.ups.com/track?tracknum=",
-  usps: "https://tools.usps.com/go/TrackConfirmAction?qtc_tLabels1=",
-  maersk: "https://www.maersk.com/tracking/",
-  msc: "https://www.msc.com/track-a-shipment?bl=",
-  hmm: "https://www.hmm21.com/cms/business/ebiz/trackTrace/index.jsp?blNo=",
-  cma: "https://www.cma-cgm.com/ebusiness/tracking?SearchBy=BL&Reference="
-};
+const TRACKING_CARRIERS = [
+  { id: "maersk", name: "Maersk", category: "ocean", url: "https://www.maersk.com/tracking/", deepLink: false, prefixes: ["MAEU", "MSKU", "MRSU"] },
+  { id: "msc", name: "MSC", category: "ocean", url: "https://www.msc.com/track-a-shipment", deepLink: false, prefixes: ["MSCU", "MEDU"] },
+  { id: "cma", name: "CMA CGM", category: "ocean", url: "https://www.cma-cgm.com/ebusiness/tracking", deepLink: false, prefixes: ["CMAU", "CMDU", "CGMU"] },
+  { id: "hmm", name: "HMM", category: "ocean", url: "https://www.hmm21.com/cms/business/ebiz/trackTrace/index.jsp", deepLink: false, prefixes: ["HMMU", "HDMU"] },
+  { id: "one", name: "ONE", category: "ocean", url: "https://ecomm.one-line.com/one-ecom/manage-shipment/cargo-tracking", deepLink: false, prefixes: ["ONEY"] },
+  { id: "cosco", name: "COSCO Shipping", category: "ocean", url: "https://elines.coscoshipping.com/ebusiness/cargoTracking", deepLink: false, prefixes: ["COSU", "CBHU"] },
+  { id: "evergreen", name: "Evergreen", category: "ocean", url: "https://ct.shipmentlink.com/servlet/TDB1_CargoTracking.do", deepLink: false, prefixes: ["EISU", "EMCU", "EGHU"] },
+  { id: "yangming", name: "Yang Ming", category: "ocean", url: "https://www.yangming.com/e-service/track_trace/track_trace_cargo_tracking.aspx", deepLink: false, prefixes: ["YMLU"] },
+  { id: "zim", name: "ZIM", category: "ocean", url: "https://www.zim.com/tools/track-a-shipment", deepLink: false, prefixes: ["ZIMU"] },
+  { id: "koreanair", name: "Korean Air Cargo", category: "air", url: "https://cargo.koreanair.com/en/tracking", deepLink: false, awbPrefix: "180" },
+  { id: "asiana", name: "Asiana Cargo", category: "air", url: "https://www.asianacargo.com/tracking/viewTraceAirWaybill.do", deepLink: false, awbPrefix: "988" },
+  { id: "lufthansa", name: "Lufthansa Cargo", category: "air", url: "https://www.lufthansa-cargo.com/en/eservices/etracking", deepLink: false, awbPrefix: "020" },
+  { id: "emirates", name: "Emirates SkyCargo", category: "air", url: "https://www.skycargo.com/track-a-shipment/", deepLink: false, awbPrefix: "176" },
+  { id: "qatar", name: "Qatar Airways Cargo", category: "air", url: "https://www.qrcargo.com/s/track-your-shipment", deepLink: false, awbPrefix: "157" },
+  { id: "cathay", name: "Cathay Cargo", category: "air", url: "https://www.cathaycargo.com/en-us/track-and-trace.html", deepLink: false, awbPrefix: "160" },
+  { id: "dhl", name: "DHL", category: "courier", url: "https://www.dhl.com/kr-en/home/tracking.html?tracking-id=", deepLink: true, patterns: [/^\d{10}$/] },
+  { id: "fedex", name: "FedEx", category: "courier", url: "https://www.fedex.com/fedextrack/?trknbr=", deepLink: true, patterns: [/^\d{12}$/, /^\d{15}$/, /^\d{20}$/, /^\d{22}$/] },
+  { id: "ups", name: "UPS", category: "courier", url: "https://www.ups.com/track?tracknum=", deepLink: true, patterns: [/^1Z[A-Z0-9]{16}$/i, /^T\d{10}$/i, /^\d{9}$/, /^\d{12}$/] },
+  { id: "usps", name: "USPS", category: "courier", url: "https://tools.usps.com/go/TrackConfirmAction?qtc_tLabels1=", deepLink: true, patterns: [/^\d{20,22}$/, /^9\d{21,33}$/] }
+];
 
-function detectCarrier(value) {
-  const code = value.toUpperCase();
-  if (code.startsWith("1Z")) return "ups";
-  if (/^\d{12}$/.test(code)) return "fedex";
-  if (/^\d{10}$/.test(code)) return "dhl";
-  if (code.startsWith("MAEU")) return "maersk";
-  if (code.startsWith("MED")) return "msc";
-  if (code.startsWith("HMM")) return "hmm";
-  if (code.startsWith("CMD") || code.startsWith("CMA")) return "cma";
-  return "";
+const AIR_PREFIX_HINTS = new Map(TRACKING_CARRIERS.filter((carrier) => carrier.awbPrefix).map((carrier) => [carrier.awbPrefix, carrier]));
+const OCEAN_PREFIX_HINTS = new Map(TRACKING_CARRIERS.filter((carrier) => carrier.category === "ocean").flatMap((carrier) => (carrier.prefixes || []).map((prefix) => [prefix, carrier])));
+
+function normalizeTrackingReference(value) {
+  return String(value || "").trim().toUpperCase().replace(/[\s-]+/g, "");
+}
+
+function prettyTrackingReference(value) {
+  const clean = normalizeTrackingReference(value);
+  if (/^\d{11}$/.test(clean)) return `${clean.slice(0, 3)}-${clean.slice(3)}`;
+  return clean;
+}
+
+function maskTrackingReference(value) {
+  const clean = normalizeTrackingReference(value);
+  if (clean.length <= 6) return clean;
+  return `${clean.slice(0, 4)}...${clean.slice(-3)}`;
+}
+
+function containerCheckDigit(number) {
+  const clean = normalizeTrackingReference(number);
+  if (!/^[A-Z]{4}\d{7}$/.test(clean)) return null;
+  const map = {};
+  let value = 10;
+  for (let code = 65; code <= 90; code += 1) {
+    while (value % 11 === 0) value += 1;
+    map[String.fromCharCode(code)] = value;
+    value += 1;
+  }
+  const payload = clean.slice(0, 10);
+  const sum = [...payload].reduce((total, char, index) => {
+    const numeric = /\d/.test(char) ? Number(char) : map[char];
+    return total + numeric * Math.pow(2, index);
+  }, 0);
+  const digit = sum % 11 % 10;
+  return { expected: digit, actual: Number(clean[10]), valid: digit === Number(clean[10]) };
+}
+
+function awbCheckDigit(number) {
+  const clean = normalizeTrackingReference(number);
+  if (!/^\d{11}$/.test(clean)) return null;
+  const serial = clean.slice(3, 10);
+  const actual = Number(clean[10]);
+  const expected = Number(serial) % 7;
+  return { expected, actual, valid: expected === actual };
+}
+
+function trackingCarrierUrl(carrier, reference) {
+  if (!carrier) return "";
+  return carrier.deepLink ? `${carrier.url}${encodeURIComponent(normalizeTrackingReference(reference))}` : carrier.url;
+}
+
+function trackingResultLabel(type, lang = currentLang()) {
+  const labels = {
+    ko: { container: "Container", awb: "AWB / Air Cargo", courier: "Courier", bl: "B/L", booking: "Booking", unsupported: "지원 범위 외", empty: "입력 대기" },
+    en: { container: "Container", awb: "AWB / Air Cargo", courier: "Courier", bl: "B/L", booking: "Booking", unsupported: "Unsupported", empty: "Ready" }
+  };
+  return labels[lang][type] || labels[lang].unsupported;
+}
+
+function inspectTrackingReference(value, manualCarrierId = "") {
+  const lang = currentLang();
+  const clean = normalizeTrackingReference(value);
+  const manualCarrier = TRACKING_CARRIERS.find((carrier) => carrier.id === manualCarrierId) || null;
+  if (!clean) return { type: "empty", status: "empty", severity: "neutral", rows: [], candidates: [], primaryCarrier: manualCarrier };
+
+  const rows = [[lang === "ko" ? "정규화 번호" : "Normalized reference", prettyTrackingReference(clean)]];
+  let result = { type: "unsupported", status: "unsupported", severity: "warning", rows, candidates: [], primaryCarrier: manualCarrier, reference: clean };
+
+  if (/^[A-Z]{4}\d{7}$/.test(clean)) {
+    const check = containerCheckDigit(clean);
+    const owner = clean.slice(0, 4);
+    const possible = OCEAN_PREFIX_HINTS.get(owner);
+    result = { type: "container", status: check?.valid ? "valid" : "invalid", severity: check?.valid ? "success" : "danger", rows: [...rows, ["Format", "ISO 6346"], [lang === "ko" ? "Check Digit" : "Check Digit", check?.valid ? (lang === "ko" ? `Valid (${check.actual})` : `Valid (${check.actual})`) : (lang === "ko" ? `Invalid: expected ${check.expected}, got ${check.actual}` : `Invalid: expected ${check.expected}, got ${check.actual}`)], [lang === "ko" ? "Owner Prefix" : "Owner Prefix", owner], [lang === "ko" ? "주의" : "Note", lang === "ko" ? "Owner code는 실제 운송사를 확정하지 않습니다." : "Owner code does not always identify the operating carrier."]], candidates: possible ? [possible] : [], primaryCarrier: manualCarrier || possible || null, reference: clean };
+    return result;
+  }
+
+  if (/^\d{11}$/.test(clean)) {
+    const check = awbCheckDigit(clean);
+    const prefix = clean.slice(0, 3);
+    const carrier = AIR_PREFIX_HINTS.get(prefix);
+    result = { type: "awb", status: check?.valid ? "valid" : "invalid", severity: check?.valid ? "success" : "danger", rows: [...rows, ["Format", "IATA AWB 3+8"], [lang === "ko" ? "Airline Prefix" : "Airline Prefix", prefix], [lang === "ko" ? "AWB Check Digit" : "AWB Check Digit", check?.valid ? (lang === "ko" ? `Valid (${check.actual})` : `Valid (${check.actual})`) : (lang === "ko" ? `Invalid: expected ${check.expected}, got ${check.actual}` : `Invalid: expected ${check.expected}, got ${check.actual}`)]], candidates: carrier ? [carrier] : [], primaryCarrier: manualCarrier || carrier || null, reference: clean };
+    return result;
+  }
+
+  const courierCandidates = TRACKING_CARRIERS.filter((carrier) => carrier.category === "courier" && (carrier.patterns || []).some((pattern) => pattern.test(clean)));
+  if (courierCandidates.length) {
+    result = { type: "courier", status: courierCandidates.length === 1 ? "valid" : "multiple", severity: courierCandidates.length === 1 ? "success" : "warning", rows: [...rows, ["Format", lang === "ko" ? "Courier tracking number pattern" : "Courier tracking number pattern"], [lang === "ko" ? "감지 결과" : "Detection", courierCandidates.length === 1 ? courierCandidates[0].name : (lang === "ko" ? "여러 후보" : "Multiple candidates")]], candidates: courierCandidates, primaryCarrier: manualCarrier || (courierCandidates.length === 1 ? courierCandidates[0] : null), reference: clean };
+    return result;
+  }
+
+  const oceanCandidates = TRACKING_CARRIERS.filter((carrier) => carrier.category === "ocean" && (carrier.prefixes || []).some((prefix) => clean.startsWith(prefix)));
+  if (oceanCandidates.length) {
+    result = { type: clean.length <= 12 ? "bl" : "container", status: "possible", severity: "warning", rows: [...rows, [lang === "ko" ? "Prefix" : "Prefix", oceanCandidates.map((carrier) => carrier.prefixes.find((prefix) => clean.startsWith(prefix))).filter(Boolean).join(", ")], [lang === "ko" ? "판정" : "Detection", lang === "ko" ? "Possible carrier only" : "Possible carrier only"]], candidates: oceanCandidates, primaryCarrier: manualCarrier || oceanCandidates[0], reference: clean };
+    return result;
+  }
+
+  if (/^[A-Z0-9]{6,18}$/.test(clean)) {
+    result = { type: "bl", status: "unknown", severity: "neutral", rows: [...rows, ["Format", lang === "ko" ? "Carrier-specific reference" : "Carrier-specific reference"], [lang === "ko" ? "판정" : "Detection", lang === "ko" ? "Carrier를 확정할 수 없습니다." : "Carrier cannot be confirmed."]], candidates: [], primaryCarrier: manualCarrier, reference: clean };
+  }
+  return result;
+}
+
+function trackingStatusText(result, lang = currentLang()) {
+  if (result.status === "empty") return lang === "ko" ? "번호를 입력해 주세요." : "Enter a reference number.";
+  if (result.status === "valid") return lang === "ko" ? "형식 검증 완료" : "Format validated";
+  if (result.status === "invalid") return lang === "ko" ? "형식 오류" : "Invalid format";
+  if (result.status === "multiple") return lang === "ko" ? "여러 후보" : "Multiple candidates";
+  if (result.status === "unknown") return lang === "ko" ? "Carrier 미확정" : "Carrier unknown";
+  if (result.status === "unsupported") return lang === "ko" ? "지원하지 않는 번호 형식" : "Unsupported reference type";
+  return lang === "ko" ? "가능성 있음" : "Possible match";
+}
+
+function renderTrackingResult(target, result) {
+  if (!target) return;
+  const lang = currentLang();
+  if (result.type === "empty") {
+    target.innerHTML = `<div class="tracking-empty-state"><i data-lucide="radar"></i><strong>${trackingStatusText(result, lang)}</strong><p>${lang === "ko" ? "Container, B/L, AWB, Courier 번호를 한 곳에서 검사합니다." : "Inspect container, B/L, AWB, and courier references in one place."}</p></div>`;
+    refreshIcons();
+    return;
+  }
+  const primary = result.primaryCarrier;
+  const cta = primary ? `<a class="primary-btn" href="${escapeAttribute(trackingCarrierUrl(primary, result.reference))}" target="_blank" rel="noopener"><i data-lucide="external-link"></i>${lang === "ko" ? "공식 조회 열기" : "Open official tracking"}</a>` : "";
+  target.innerHTML = `<article class="tracking-result-card is-${escapeAttribute(result.severity)}"><div class="tracking-result-head"><div><span class="kicker">${escapeHtml(trackingResultLabel(result.type, lang))}</span><h2>${escapeHtml(trackingStatusText(result, lang))}</h2></div><span class="tracking-status-pill"><i data-lucide="${result.severity === "success" ? "check-circle-2" : result.severity === "danger" ? "x-circle" : "alert-circle"}"></i>${escapeHtml(trackingStatusText(result, lang))}</span></div><dl class="tracking-kv-grid">${result.rows.map(([key, value]) => `<div><dt>${escapeHtml(key)}</dt><dd>${escapeHtml(value)}</dd></div>`).join("")}${primary ? `<div><dt>${lang === "ko" ? "Carrier" : "Carrier"}</dt><dd>${escapeHtml(result.status === "possible" || result.status === "multiple" ? `${lang === "ko" ? "Possible: " : "Possible: "}${primary.name}` : primary.name)}</dd></div>` : `<div><dt>${lang === "ko" ? "Carrier" : "Carrier"}</dt><dd>${lang === "ko" ? "자동 식별 불가" : "Not identified"}</dd></div>`}</dl>${result.candidates.length > 1 ? `<div class="tracking-candidates"><h3>${lang === "ko" ? "Possible carriers" : "Possible carriers"}</h3>${result.candidates.map((carrier) => `<a href="${escapeAttribute(trackingCarrierUrl(carrier, result.reference))}" target="_blank" rel="noopener"><strong>${escapeHtml(carrier.name)}</strong><span>${escapeHtml(carrier.category)}</span></a>`).join("")}</div>` : ""}<div class="tracking-result-actions">${cta}<a class="secondary-btn" href="#carrier-directory">${lang === "ko" ? "Carrier 직접 선택" : "Select carrier manually"}</a></div><p class="muted">${lang === "ko" ? "LOGILEE는 공식 조회 페이지로 연결하며 실시간 shipment status를 생성하지 않습니다." : "LOGILEE opens official tracking services and does not generate live shipment status."}</p></article>`;
+  refreshIcons();
+}
+
+function trackingDirectoryMarkup() {
+  const lang = currentLang();
+  const groups = ["ocean", "air", "courier"];
+  const groupLabels = {
+    ko: { ocean: "Ocean Carrier", air: "Air Cargo", courier: "Courier" },
+    en: { ocean: "Ocean Carrier", air: "Air Cargo", courier: "Courier" }
+  };
+  const helpers = {
+    ko: { ocean: "Container, B/L, Booking reference는 carrier별 공식 화면에서 확인합니다.", air: "AWB는 항공사 cargo portal에서 확인합니다.", courier: "공식 parcel tracking 화면으로 이동합니다." },
+    en: { ocean: "Use official carrier screens for container, B/L, and booking references.", air: "Use the airline cargo portal for AWB tracking.", courier: "Open official parcel tracking services." }
+  };
+  return groups.map((group) => `<section class="tracking-directory-group"><div><h3>${groupLabels[lang][group]}</h3><p>${helpers[lang][group]}</p></div><div class="tracking-directory-list">${TRACKING_CARRIERS.filter((carrier) => carrier.category === group).map((carrier) => `<a href="${escapeAttribute(carrier.url)}" target="_blank" rel="noopener" data-track-carrier-link="${escapeAttribute(carrier.id)}"><strong>${escapeHtml(carrier.name)}</strong><span>${carrier.deepLink ? (lang === "ko" ? "번호 전달 지원" : "Prefill supported") : (lang === "ko" ? "공식 페이지 열기" : "Official page")}</span></a>`).join("")}</div></section>`).join("");
+}
+
+function renderTrackingRecent(target) {
+  if (!target) return;
+  const lang = currentLang();
+  const items = JSON.parse(localStorage.getItem("logilee-recent-track-v2") || "[]");
+  target.innerHTML = `<div class="tracking-recent-head"><h2>${lang === "ko" ? "최근 검사" : "Recent checks"}</h2>${items.length ? `<button type="button" data-clear-track-recent>${lang === "ko" ? "지우기" : "Clear"}</button>` : ""}</div>${items.length ? `<div class="tracking-recent-list">${items.map((item) => `<span>${escapeHtml(item.type)} · ${escapeHtml(item.masked)}</span>`).join("")}</div>` : `<p class="muted">${lang === "ko" ? "개인정보 보호를 위해 전체 번호는 저장하지 않습니다." : "Full reference numbers are not stored for privacy."}</p>`}`;
 }
 
 function wireTracking() {
@@ -1393,33 +1540,41 @@ function wireTracking() {
   const lang = currentLang();
   const number = form.querySelector("[data-track-number]");
   const carrier = form.querySelector("[data-carrier]");
+  const output = document.querySelector("[data-track-output]");
   const recent = document.querySelector("[data-recent]");
-  const renderRecent = () => {
-    const items = JSON.parse(localStorage.getItem("logilee-recent-track") || "[]");
-    if (!recent) return;
-    recent.innerHTML = items.length ? items.map((item) => `<span class="chip">${item}</span>`).join("") : `<p class="muted">${LOGILEE[lang].recent}: -</p>`;
+  const directory = document.querySelector("[data-carrier-directory]");
+  if (carrier) {
+    carrier.innerHTML = `<option value="">${lang === "ko" ? "자동 감지 / 직접 선택" : "Auto detect / manual select"}</option>${TRACKING_CARRIERS.map((item) => `<option value="${escapeAttribute(item.id)}">${escapeHtml(item.name)} · ${escapeHtml(item.category)}</option>`).join("")}`;
+  }
+  if (directory) directory.innerHTML = trackingDirectoryMarkup();
+  const saveRecent = (result) => {
+    if (!result.reference || result.type === "empty") return;
+    const next = { type: trackingResultLabel(result.type, lang), masked: maskTrackingReference(result.reference), time: Date.now() };
+    const items = JSON.parse(localStorage.getItem("logilee-recent-track-v2") || "[]");
+    localStorage.setItem("logilee-recent-track-v2", JSON.stringify([next, ...items.filter((item) => item.masked !== next.masked)].slice(0, 5)));
+    renderTrackingRecent(recent);
   };
-  number.addEventListener("input", () => {
-    const detected = detectCarrier(number.value.replace(/\s+/g, ""));
-    if (detected) carrier.value = detected;
-  });
+  const render = (persist = false) => {
+    const result = inspectTrackingReference(number.value, carrier.value);
+    renderTrackingResult(output, result);
+    if (persist) saveRecent(result);
+  };
+  number.addEventListener("input", () => render(false));
+  carrier.addEventListener("change", () => render(false));
   form.addEventListener("submit", (event) => {
     event.preventDefault();
-    const clean = number.value.replace(/\s+/g, "");
-    const selected = carrier.value || detectCarrier(clean);
-    if (!clean || !carrierLinks[selected]) {
-      alert(LOGILEE[lang].invalid);
-      return;
-    }
-    const items = JSON.parse(localStorage.getItem("logilee-recent-track") || "[]");
-    localStorage.setItem("logilee-recent-track", JSON.stringify([clean, ...items.filter((item) => item !== clean)].slice(0, 5)));
-    renderRecent();
-    alert(LOGILEE[lang].external);
-    window.open(carrierLinks[selected] + encodeURIComponent(clean), "_blank", "noopener");
+    const result = inspectTrackingReference(number.value, carrier.value);
+    renderTrackingResult(output, result);
+    saveRecent(result);
+    if (result.primaryCarrier && result.status !== "invalid") window.open(trackingCarrierUrl(result.primaryCarrier, result.reference), "_blank", "noopener");
   });
-  renderRecent();
+  document.addEventListener("click", (event) => {
+    const clear = event.target.closest("[data-clear-track-recent]");
+    if (clear) { localStorage.removeItem("logilee-recent-track-v2"); renderTrackingRecent(recent); }
+  });
+  renderTrackingRecent(recent);
+  render(false);
 }
-
 function wireDictionary() {
   const list = document.querySelector("[data-term-list]");
   const detail = document.querySelector("[data-term-detail]");
