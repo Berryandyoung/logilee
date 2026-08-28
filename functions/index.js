@@ -99,8 +99,8 @@ async function fetchWithRetry(url, options = {}) {
 async function loadReferences() {
   if (referenceCache && Date.now() - referenceCacheTime < 24 * 60 * 60 * 1000) return referenceCache;
   const [reporters, partners] = await Promise.all([
-    fetchJson(`${COMTRADE_BASE}/files/v1/app/reference/Reporters.json`, {}, 15000),
-    fetchJson(`${COMTRADE_BASE}/files/v1/app/reference/partnerAreas.json`, {}, 15000)
+    fetchWithRetry(`${COMTRADE_BASE}/files/v1/app/reference/Reporters.json`),
+    fetchWithRetry(`${COMTRADE_BASE}/files/v1/app/reference/partnerAreas.json`)
   ]);
   const reporterByIso = new Map();
   const partnerByIso = new Map();
@@ -253,7 +253,13 @@ exports.globalTradeExplorer = onRequest({
     return;
   }
 
-  const references = await loadReferences();
+  let references;
+  try {
+    references = await loadReferences();
+  } catch (error) {
+    json(res, 502, { error: "upstream_unavailable", message: "UN Comtrade reference data is temporarily unavailable." });
+    return;
+  }
   const reporter = references.reporterByIso.get(reporterIso);
   const partner = partnerIso === "WORLD" ? { iso: "WORLD", code: "0", name: "World" } : references.partnerByIso.get(partnerIso);
   if (!reporter) {
