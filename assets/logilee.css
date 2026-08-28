@@ -8605,104 +8605,80 @@ body.sidebar-drawer-active {
     gap: 4px;
   }
 }
-/* Port map visual quality polish */
-.port-map-card--mosaic {
+/* Port map Leaflet hotfix */
+.port-map-card--leaflet {
   isolation: isolate;
   min-height: 330px;
+  overflow: hidden;
   background: linear-gradient(135deg, #dbeaf5 0%, #eef6fb 52%, #d6e7f0 100%);
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.72), 0 18px 36px rgba(7, 26, 43, 0.08);
 }
 
-.port-map-card--mosaic::before {
+.port-map-card--leaflet::before {
   content: "";
   position: absolute;
   inset: 0;
-  z-index: 2;
+  z-index: 410;
   pointer-events: none;
   background:
-    linear-gradient(180deg, rgba(4, 23, 42, 0.12), rgba(255, 255, 255, 0.02) 32%, rgba(4, 23, 42, 0.2)),
-    radial-gradient(circle at 50% 50%, rgba(43, 107, 177, 0.03), rgba(7, 26, 43, 0.14) 100%);
+    linear-gradient(180deg, rgba(4, 23, 42, 0.06), rgba(255, 255, 255, 0.01) 34%, rgba(4, 23, 42, 0.10)),
+    radial-gradient(circle at 50% 50%, rgba(43, 107, 177, 0.02), rgba(7, 26, 43, 0.08) 100%);
   mix-blend-mode: multiply;
 }
 
-.port-map-card--mosaic::after {
-  content: "";
+.port-map-leaflet {
   position: absolute;
   inset: 0;
-  z-index: 3;
-  pointer-events: none;
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.22) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.18) 1px, transparent 1px);
-  background-size: 72px 72px;
-  opacity: 0.32;
-}
-
-.port-map-tile-grid {
-  position: absolute;
-  inset: -18%;
   z-index: 1;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(3, 1fr);
-  transform: scale(1.04);
-  filter: saturate(0.8) contrast(0.96) brightness(1.04);
+  min-height: 100%;
+  background: #dbeaf5;
 }
 
-.port-map-card--mosaic .port-map-tile-grid img[data-map-tile] {
+.port-map-card--leaflet .leaflet-container {
   width: 100%;
   height: 100%;
-  min-height: 0;
-  display: block;
-  object-fit: cover;
+  min-height: inherit;
+  font-family: inherit;
+  background: #dbeaf5;
 }
 
-.port-map-toolbar {
+.port-map-card--leaflet .leaflet-tile-pane {
+  filter: saturate(0.88) contrast(0.98) brightness(1.03);
+}
+
+.port-map-card--leaflet .leaflet-control-zoom {
+  overflow: hidden;
+  border: 1px solid rgba(210, 224, 237, 0.92);
+  border-radius: 8px;
+  box-shadow: 0 8px 20px rgba(7, 26, 43, 0.10);
+}
+
+.port-map-card--leaflet .leaflet-control-zoom a {
+  border-color: rgba(210, 224, 237, 0.86);
+  color: var(--deep-navy);
+  font-weight: 900;
+}
+
+.port-map-card--leaflet .leaflet-control-attribution {
+  padding: 3px 6px;
+  border-top-left-radius: 6px;
+  background: rgba(255, 255, 255, 0.88);
+  color: var(--secondary-text);
+  font-size: 10px;
+}
+
+.port-map-card--leaflet .leaflet-control-attribution a {
+  color: var(--signal-blue);
+}
+
+.port-map-reset {
   position: absolute;
   top: 12px;
-  left: 12px;
   right: 12px;
-  z-index: 7;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  pointer-events: none;
-}
-
-.port-map-toolbar span,
-.port-map-caption,
-.port-map-card--mosaic p {
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-}
-
-.port-map-toolbar span {
-  max-width: min(50%, 220px);
-  overflow: hidden;
-  padding: 7px 10px;
-  border: 1px solid rgba(210, 224, 237, 0.88);
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.9);
-  color: var(--deep-navy);
-  font-size: 12px;
-  font-weight: 900;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.port-map-toolbar div {
-  display: inline-flex;
-  gap: 6px;
-  pointer-events: auto;
-}
-
-.port-map-toolbar button {
-  min-width: 32px;
+  z-index: 500;
+  min-width: 58px;
   height: 32px;
-  display: grid;
-  place-items: center;
-  padding: 0 9px;
+  padding: 0 10px;
   border: 1px solid rgba(210, 224, 237, 0.92);
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.94);
@@ -8712,36 +8688,30 @@ body.sidebar-drawer-active {
   box-shadow: 0 8px 20px rgba(7, 26, 43, 0.08);
 }
 
-.port-map-toolbar button:hover,
-.port-map-toolbar button:focus-visible {
+.port-map-reset:hover,
+.port-map-reset:focus-visible {
   border-color: rgba(43, 107, 177, 0.58);
   color: var(--signal-blue);
 }
 
-.port-map-card--mosaic .port-map-pin {
-  z-index: 8;
+.port-leaflet-marker {
+  display: grid;
+  justify-items: center;
+  gap: 7px;
+  pointer-events: none;
+}
+
+.port-leaflet-marker span {
   width: 18px;
   height: 18px;
+  display: block;
   border: 4px solid #fff;
+  border-radius: 999px;
   background: #1f6fb8;
   box-shadow: 0 0 0 7px rgba(31, 111, 184, 0.18), 0 8px 20px rgba(7, 26, 43, 0.24);
 }
 
-.port-map-card--mosaic .port-map-pin::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: 100%;
-  width: 2px;
-  height: 26px;
-  background: linear-gradient(rgba(31, 111, 184, 0.65), rgba(31, 111, 184, 0));
-  transform: translateX(-50%);
-}
-
-.port-map-card--mosaic .port-map-pin b {
-  position: absolute;
-  left: 50%;
-  top: calc(100% + 22px);
+.port-leaflet-marker b {
   padding: 5px 8px;
   border: 1px solid rgba(210, 224, 237, 0.95);
   border-radius: 7px;
@@ -8752,15 +8722,21 @@ body.sidebar-drawer-active {
   letter-spacing: 0;
   white-space: nowrap;
   box-shadow: 0 8px 20px rgba(7, 26, 43, 0.12);
-  transform: translateX(-50%);
+}
+
+.port-map-caption,
+.port-map-card--leaflet p,
+.port-map-fallback {
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
 }
 
 .port-map-caption {
   position: absolute;
   left: 12px;
-  bottom: 58px;
-  z-index: 7;
-  max-width: calc(100% - 24px);
+  top: 12px;
+  z-index: 500;
+  max-width: calc(100% - 96px);
   display: grid;
   gap: 3px;
   padding: 9px 11px;
@@ -8783,33 +8759,62 @@ body.sidebar-drawer-active {
   font-weight: 800;
 }
 
-.port-map-card--mosaic p {
-  z-index: 7;
+.port-map-card--leaflet p {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 26px;
+  z-index: 500;
+  max-width: min(620px, calc(100% - 24px));
+  margin: 0;
   padding: 7px 9px;
   border: 1px solid rgba(210, 224, 237, 0.82);
+  border-radius: 8px;
   background: rgba(255, 255, 255, 0.9);
+  color: var(--secondary-text);
+  font-size: 11px;
+  font-weight: 760;
+}
+
+.port-map-fallback {
+  position: absolute;
+  inset: 0;
+  z-index: 520;
+  display: none;
+  place-content: center;
+  gap: 8px;
+  padding: 24px;
+  background: rgba(248, 251, 255, 0.94);
+  color: var(--deep-navy);
+  text-align: center;
+}
+
+.port-map-fallback strong,
+.port-map-fallback span,
+.port-map-fallback a {
+  display: block;
+}
+
+.port-map-fallback a {
+  color: var(--signal-blue);
+  font-weight: 900;
+}
+
+.port-map-card--leaflet.is-map-fallback .port-map-fallback {
+  display: grid;
 }
 
 @media (max-width: 520px) {
-  .port-map-card--mosaic {
+  .port-map-card--leaflet {
     min-height: 270px;
   }
 
-  .port-map-toolbar {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .port-map-toolbar span {
-    max-width: 100%;
-  }
-
   .port-map-caption {
-    bottom: 76px;
-    right: 12px;
+    max-width: calc(100% - 84px);
   }
 
-  .port-map-card--mosaic p {
+  .port-map-card--leaflet p {
+    bottom: 24px;
     font-size: 10px;
   }
 }

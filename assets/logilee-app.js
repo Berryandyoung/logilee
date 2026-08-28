@@ -3058,32 +3058,44 @@ function portMapZoom(port) {
   return 11;
 }
 
-function portTileXY(lat, lon, zoom) {
-  const latRad = lat * Math.PI / 180;
-  const n = Math.pow(2, zoom);
-  return {
-    x: Math.floor((lon + 180) / 360 * n),
-    y: Math.floor((1 - Math.log(Math.tan(latRad) + 1 / Math.cos(latRad)) / Math.PI) / 2 * n),
-    n
-  };
-}
+const LEAFLET_VERSION = "1.9.4";
+const LEAFLET_CSS_URL = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
+const LEAFLET_JS_URL = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
+const LEAFLET_CSS_INTEGRITY = "sha256-p4NxAoJBhIINfQ8dS/lZ7wG29RGrP31PsyWSgG3JY=";
+const LEAFLET_JS_INTEGRITY = "sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=";
+let leafletLoadPromise = null;
+const portLeafletMaps = new WeakMap();
 
-function portTileUrl(x, y, zoom, n) {
-  const wrappedX = ((x % n) + n) % n;
-  const clampedY = Math.max(0, Math.min(n - 1, y));
-  return `https://tile.openstreetmap.org/${zoom}/${wrappedX}/${clampedY}.png`;
-}
-
-function portMapTilesMarkup(port, zoom = portMapZoom(port)) {
-  if (![port.lat, port.lon].every(Number.isFinite)) return "";
-  const center = portTileXY(port.lat, port.lon, zoom);
-  const tiles = [];
-  for (let dy = -1; dy <= 1; dy += 1) {
-    for (let dx = -1; dx <= 1; dx += 1) {
-      tiles.push(`<img src="${escapeAttribute(portTileUrl(center.x + dx, center.y + dy, zoom, center.n))}" alt="" loading="lazy" data-map-tile style="grid-column:${dx + 2};grid-row:${dy + 2}">`);
+function loadLeafletForPortMap() {
+  if (window.L?.map) return Promise.resolve(window.L);
+  if (leafletLoadPromise) return leafletLoadPromise;
+  leafletLoadPromise = new Promise((resolve, reject) => {
+    if (!document.querySelector("link[data-logilee-leaflet]")) {
+      const link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.href = LEAFLET_CSS_URL;
+      link.integrity = LEAFLET_CSS_INTEGRITY;
+      link.crossOrigin = "";
+      link.dataset.logileeLeaflet = LEAFLET_VERSION;
+      document.head.appendChild(link);
     }
-  }
-  return tiles.join("");
+    const existing = document.querySelector("script[data-logilee-leaflet]");
+    if (existing) {
+      existing.addEventListener("load", () => resolve(window.L), { once: true });
+      existing.addEventListener("error", () => reject(new Error("Leaflet failed to load")), { once: true });
+      return;
+    }
+    const script = document.createElement("script");
+    script.src = LEAFLET_JS_URL;
+    script.integrity = LEAFLET_JS_INTEGRITY;
+    script.crossOrigin = "";
+    script.defer = true;
+    script.dataset.logileeLeaflet = LEAFLET_VERSION;
+    script.onload = () => window.L?.map ? resolve(window.L) : reject(new Error("Leaflet unavailable"));
+    script.onerror = () => reject(new Error("Leaflet failed to load"));
+    document.head.appendChild(script);
+  });
+  return leafletLoadPromise;
 }
 
 function portLocationMapMarkup(port) {
@@ -3091,16 +3103,60 @@ function portLocationMapMarkup(port) {
   const zoom = portMapZoom(port);
   const label = `${port.name} ${lang === "ko" ? "위치 지도" : "location map"}`;
   const coordinates = `${port.lat.toFixed(4)}, ${port.lon.toFixed(4)}`;
-  return `<div class="port-map-card port-map-card--mosaic" data-port-map="${escapeAttribute(port.slug)}" data-map-zoom="${zoom}" data-map-min="9" data-map-max="13" role="img" aria-label="${escapeAttribute(label)}"><div class="port-map-toolbar"><span>${lang === "ko" ? "위치 지도" : "Location Map"}</span><div><button type="button" data-port-map-zoom="out" aria-label="${lang === "ko" ? "지도 축소" : "Zoom out"}">−</button><button type="button" data-port-map-reset aria-label="${lang === "ko" ? "지도 초기화" : "Reset map"}">${lang === "ko" ? "초기화" : "Reset"}</button><button type="button" data-port-map-zoom="in" aria-label="${lang === "ko" ? "지도 확대" : "Zoom in"}">+</button></div></div><div class="port-map-tile-grid" data-port-map-tiles>${portMapTilesMarkup(port, zoom)}</div><span class="port-map-pin" aria-hidden="true"><b>${escapeHtml(port.locode)}</b></span><div class="port-map-caption"><strong>${escapeHtml(port.name)}</strong><span>${escapeHtml(coordinates)} · ${lang === "ko" ? "Approximate location" : "Approximate location"}</span></div><p>${lang === "ko" ? "일반 위치 지도입니다. 공식 터미널 배치도는 아래 Official Port Map 링크에서 별도로 확인하세요." : "General location map. Official terminal or port-layout maps are listed separately below when available."} <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors</a></p></div>`;
+  return `<div class="port-map-card port-map-card--leaflet" data-port-map="${escapeAttribute(port.slug)}" data-map-zoom="${zoom}" data-map-min="9" data-map-max="13" aria-label="${escapeAttribute(label)}"><div class="port-map-leaflet" data-port-leaflet-map></div><button class="port-map-reset" type="button" data-port-map-reset aria-label="${lang === "ko" ? "지도 초기화" : "Reset map"}">${lang === "ko" ? "초기화" : "Reset"}</button><div class="port-map-caption"><strong>${escapeHtml(port.name)}</strong><span>${escapeHtml(coordinates)} · ${lang === "ko" ? "Approximate location" : "Approximate location"}</span></div><p>${lang === "ko" ? "일반 위치 지도입니다. 공식 터미널 배치도는 아래 Official Port Map 링크에서 별도로 확인하세요." : "General location map. Official terminal or port-layout maps are listed separately below when available."} <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors</a></p><div class="port-map-fallback"><strong>${lang === "ko" ? "지도를 불러올 수 없습니다." : "Map could not load."}</strong><span>${escapeHtml(coordinates)}</span><a href="${escapeAttribute(portOsmUrl(port, zoom))}" target="_blank" rel="noopener">OpenStreetMap →</a></div></div>`;
 }
 
-function updatePortMapElement(map, port, zoom) {
-  const min = Number(map.dataset.mapMin || 9);
-  const max = Number(map.dataset.mapMax || 13);
-  const nextZoom = Math.max(min, Math.min(max, zoom));
-  map.dataset.mapZoom = String(nextZoom);
-  const tileRoot = map.querySelector("[data-port-map-tiles]");
-  if (tileRoot) tileRoot.innerHTML = portMapTilesMarkup(port, nextZoom);
+function initializePortMapElement(map, port) {
+  if (!map || !port || portLeafletMaps.has(map) || ![port.lat, port.lon].every(Number.isFinite)) return;
+  const target = map.querySelector("[data-port-leaflet-map]");
+  if (!target) return;
+  const zoom = Number(map.dataset.mapZoom || portMapZoom(port));
+  loadLeafletForPortMap().then((L) => {
+    if (!document.body.contains(map) || portLeafletMaps.has(map)) return;
+    const leaflet = L.map(target, {
+      center: [port.lat, port.lon],
+      zoom,
+      minZoom: Number(map.dataset.mapMin || 9),
+      maxZoom: Number(map.dataset.mapMax || 13),
+      scrollWheelZoom: true,
+      touchZoom: true,
+      dragging: true,
+      zoomControl: true,
+      attributionControl: true
+    });
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a>'
+    }).addTo(leaflet);
+    const marker = L.divIcon({
+      className: "port-leaflet-marker",
+      html: `<span></span><b>${escapeHtml(port.locode)}</b>`,
+      iconSize: [76, 48],
+      iconAnchor: [38, 21]
+    });
+    L.marker([port.lat, port.lon], { icon: marker, keyboard: false }).addTo(leaflet);
+    portLeafletMaps.set(map, leaflet);
+    map.classList.add("is-map-ready");
+    setTimeout(() => leaflet.invalidateSize(), 80);
+  }).catch((error) => {
+    console.warn("Port map unavailable:", error);
+    map.classList.add("is-map-fallback");
+  });
+}
+
+function initializePortMaps(root = document) {
+  root.querySelectorAll("[data-port-map]").forEach((map) => {
+    const port = ALL_PORTS.find((item) => item.slug === map.dataset.portMap);
+    initializePortMapElement(map, port);
+  });
+}
+
+function updatePortMapElement(map, port) {
+  const leaflet = portLeafletMaps.get(map);
+  if (!leaflet || !port) return;
+  map.dataset.mapZoom = String(portMapZoom(port));
+  leaflet.setView([port.lat, port.lon], portMapZoom(port), { animate: false });
+  setTimeout(() => leaflet.invalidateSize(), 40);
 }
 
 function portFlag(port) {
@@ -3228,6 +3284,7 @@ function wirePortFinder() {
       history.replaceState({ locode: port.locode }, "", url);
     }
     refreshIcons();
+    initializePortMaps(profile);
     if (scroll) profile.scrollIntoView({ behavior: "smooth", block: "start" });
   };
   const render = ({ keepProfile = false } = {}) => {
@@ -3246,6 +3303,7 @@ function wirePortFinder() {
         ? `<section class="port-intel-section"><h2>${lang === "ko" ? "UN/LOCODE 확인 필요" : "UN/LOCODE Not Found"}</h2><div class="data-empty">${lang === "ko" ? "입력한 UN/LOCODE가 현재 LOGILEE 항만 reference에 없습니다. 국가 필터와 항만명을 함께 확인하세요." : "The requested UN/LOCODE is not in the current LOGILEE port reference. Check the country filter and port name."}</div></section>`
         : (preferred ? portProfileMarkup(preferred) : "");
       refreshIcons();
+      initializePortMaps(profile);
     }
   };
   const updateUrl = () => {
