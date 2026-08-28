@@ -4,16 +4,50 @@
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8548711851361478" crossorigin="anonymous"></script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" href="favicon.ico" sizes="any">
-    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="android-chrome-192x192.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-  <title>HS Code 검색 | LOGILEE</title>
-  <meta name="description" content="HS Code 또는 품목 키워드를 입력해 공식 USITC 분류 정보 확인을 돕는 LOGILEE 검색 도구입니다.">
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="android-chrome-192x192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <title>HS Code 검색 및 Tariff Line 검증 | LOGILEE</title>
+  <meta name="description" content="UN Comtrade HS reference로 HS 2자리, 4자리, 6자리 분류를 검색하고 국가별 공식 tariff schedule 검증 링크와 Global Trade Explorer를 연결합니다.">
   <link rel="canonical" href="https://www.logilee.com/hscode.html">
   <link rel="alternate" hreflang="ko" href="https://www.logilee.com/hscode.html">
   <link rel="alternate" hreflang="en" href="https://www.logilee.com/hscode-en.html">
   <link rel="stylesheet" href="assets/logilee.css">
 </head>
-<body><div class="shell"><aside class="rail"><a class="brand" href="ko/"><strong>LOGILEE</strong><span>Global Logistics Workspace</span></a><p class="rail-copy">LOGILEE는 공식 분류 정보 확인을 돕는 launcher이며 내부 HS DB처럼 표시하지 않습니다.</p></aside><main class="main"><header class="topbar"><a class="mobile-logo" href="ko/">LOGILEE</a><nav data-mobile-nav><a href="ko/">Home</a><a href="ko/tools.html">도구</a><a href="ko/global-trade-explorer.html">Global Trade</a><a href="ko/eu-trade-explorer.html">EU Trade</a><a href="ko/dictionary.html">Dictionary</a></nav><div class="top-actions"><a class="icon-btn" href="hscode-en.html">KO / EN</a><button class="menu-btn" data-menu-toggle aria-label="메뉴">Menu</button></div></header><div class="page"><section class="page-title"><p class="eyebrow">Customs Reference</p><h1>HS Code 검색</h1><p class="lead">HS Code 또는 품목 키워드를 입력해 공식 USITC 조회 페이지에서 분류 정보를 확인합니다.</p></section><section class="calculator"><form class="panel" data-hs-launcher><div class="form-grid compact-form"><div class="field"><label for="hs-query">HS Code 또는 품목 키워드</label><input id="hs-query" name="q" placeholder="battery, 8507, cotton shirt"></div><button class="primary-btn" type="submit">USITC에서 확인 -&gt;</button></div></form><aside class="panel"><h2>HS 구조</h2><div class="data-status-list"><div><strong>2-digit</strong><span>Chapter</span></div><div><strong>4-digit</strong><span>Heading</span></div><div><strong>6-digit</strong><span>Subheading</span></div></div></aside></section><section class="panel prose-panel"><h2>분류 전 확인할 점</h2><p>HS 분류는 재질, 기능, 용도, 구성, 관할 국가별 tariff schedule에 따라 달라질 수 있습니다. 신고 전 공식 자료나 통관 전문가와 확인하세요.</p><div class="related-row"><a href="ko/global-trade-explorer.html">Global Trade Explorer</a><a href="ko/eu-trade-explorer.html">EU Trade Explorer</a><a href="ko/dictionary.html?term=hs-code">Dictionary: HS Code</a></div></section><div class="section ad-slot">Advertisement - Reserved ad placement</div></div></main></div><script>document.querySelector("[data-hs-launcher]")?.addEventListener("submit",(event)=>{event.preventDefault();const q=new FormData(event.currentTarget).get("q").trim();if(q) window.open(`https://hts.usitc.gov/?query=${encodeURIComponent(q)}`,"_blank","noopener");});</script><script src="assets/logilee-app.js" defer></script></body></html>
+<body>
+  <div class="shell workspace-shell hs-root-shell">
+    <aside class="rail workspace-rail" aria-label="LOGILEE 업무 메뉴">
+      <a class="brand compact-brand" href="ko/"><strong>LOGILEE</strong><span>Global Trade Workspace</span></a>
+      <nav class="workspace-nav" aria-label="LOGILEE 업무 메뉴">
+        <a class="nav-home" href="ko/"><i data-lucide="home"></i> Home</a>
+        <section><h2>Trade</h2><a href="ko/country-trade-profile.html"><i data-lucide="globe"></i>국가별 무역 프로필</a><a href="ko/holidays.html"><i data-lucide="calendar-check"></i>무역 공휴일</a><a href="ko/eu-trade-explorer.html"><i data-lucide="chart-column"></i>EU 무역 통계</a><a href="ko/global-trade-explorer.html"><i data-lucide="chart-column"></i>Global Trade Explorer</a><a href="hscode.html"><i data-lucide="barcode"></i>HS Code</a></section>
+        <section><h2>Logistics</h2><a href="ko/track.html"><i data-lucide="radar"></i>Tracking Launcher</a><a href="ko/ports.html"><i data-lucide="anchor"></i>Port Search</a><a href="ko/cbm.html"><i data-lucide="calculator"></i>CBM Calculator</a></section>
+        <section><h2>Compliance</h2><a href="ko/dashboard.html"><i data-lucide="shield-check"></i>Compliance Hub</a><a href="ko/dashboard.html"><i data-lucide="shield-alert"></i>수출입 규제</a></section>
+        <section><h2>Market</h2><a href="ko/freight-market.html"><i data-lucide="chart-no-axes-combined"></i>Freight Market</a><a href="ko/currency-converter.html"><i data-lucide="badge-dollar-sign"></i>환율 계산기</a><a href="ko/business-day.html"><i data-lucide="calendar-clock"></i>영업일 계산기</a></section>
+        <section><h2>Resources</h2><a href="ko/templates.html"><i data-lucide="copy"></i>Templates</a><a href="ko/documents.html"><i data-lucide="file-text"></i>Documents</a><a href="ko/dictionary.html"><i data-lucide="languages"></i>Dictionary</a><a href="ko/learn.html"><i data-lucide="graduation-cap"></i>Learn</a><a href="ko/contact.html"><i data-lucide="building-2"></i>Contact & Office</a></section>
+      </nav>
+    </aside>
+    <main class="main">
+      <header class="topbar workspace-topbar"><a class="mobile-logo" href="ko/">LOGILEE</a><nav data-mobile-nav><a href="ko/">Home</a><a href="ko/tools.html">도구</a><a href="ko/global-trade-explorer.html">Global Trade</a><a href="ko/eu-trade-explorer.html">EU Trade</a><a href="ko/dictionary.html">Dictionary</a></nav><div class="top-actions"><a class="icon-btn" href="hscode-en.html">KO / EN</a><button class="menu-btn" data-menu-toggle aria-label="메뉴"><i data-lucide="menu"></i></button></div></header>
+      <div class="page hs-classification-page">
+        <section class="page-title hs-static-intro"><p class="eyebrow">Customs Classification Workspace</p><h1>HS Code 검색 및 Tariff Line 검증</h1><p class="lead">UN Comtrade HS reference를 기준으로 국제 HS 2/4/6자리 분류를 검색하고, 수출국과 수입국의 공식 tariff schedule 검증 흐름으로 이어갑니다.</p><p class="muted">국제 HS 6자리는 국가별 8-10자리 이상 tariff line의 출발점입니다. LOGILEE는 검증되지 않은 국가별 세번을 임의 생성하지 않습니다.</p></section>
+        <section class="panel hs-tool-panel" data-hs-classification-tool>
+          <form class="hs-classification-toolbar" data-hs-classification-form>
+            <div class="field hs-code-field"><label for="hs-code-input">HS Code 또는 품목명</label><select id="hs-code-input" name="hscode"></select></div>
+            <div class="field"><label for="hs-export-country">수출국</label><select id="hs-export-country" name="export"></select></div>
+            <div class="field"><label for="hs-import-country">수입국</label><select id="hs-import-country" name="import"></select></div>
+            <button class="primary-btn hs-search-btn" type="submit"><i data-lucide="search"></i> 확인</button>
+          </form>
+          <div class="hs-helper-strip"><span>HS 2자리 Chapter</span><span>HS 4자리 Heading</span><span>HS 6자리 Subheading</span><span>국가별 tariff line은 공식 자료로 검증</span></div>
+          <div data-hs-classification-output><div class="data-empty">HS reference를 불러오는 중입니다...</div></div>
+        </section>
+        <section class="panel prose-panel hs-crawler-note"><h2>이 도구가 제공하는 것</h2><p>HS Code 검색, HS 계층 확인, 수출입 국가 선택, 공식 tariff schedule 링크, 미국 HTSUS 후보 조회, UN Comtrade 기반 Global Trade Explorer 연결을 제공합니다. 실제 신고 전 관할 세관의 최신 자료를 확인하세요.</p></section>
+        <div class="section ad-slot">Advertisement - Reserved ad placement</div>
+      </div>
+    </main>
+  </div>
+  <script src="assets/logilee-app.js" defer></script>
+</body>
+</html>

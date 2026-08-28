@@ -406,3 +406,64 @@ exports.globalTradeExplorer = onRequest({
     });
   }
 });
+
+exports.hsTariffLookup = onRequest({
+  region: "us-central1",
+  cors: false,
+  timeoutSeconds: 30,
+  memory: "256MiB"
+}, async (req, res) => {
+  setCors(req, res);
+  if (req.method === "OPTIONS") {
+    res.status(204).send("");
+    return;
+  }
+  if (req.method !== "GET") {
+    json(res, 405, { error: "method_not_allowed" });
+    return;
+  }
+
+  const country = cleanIso(req.query.country || "US");
+  const hs = cleanHs(req.query.hscode || req.query.hs);
+  if (country !== "US") {
+    json(res, 400, { error: "unsupported_country", message: "Only official HTSUS candidate lookup is enabled." });
+    return;
+  }
+  if (!/^\d{6}$/.test(hs)) {
+    json(res, 400, { error: "invalid_hs", message: "National tariff candidates require a 6 digit HS subheading." });
+    return;
+  }
+
+  const cacheKey = `hs_tariff_v1_us_${hs}`.toLowerCase();
+  const cached = await readCache(cacheKey);
+  if (cached) {
+    json(res, 200, cached);
+    return;
+  }
+
+  try {
+    const data = await fetchWithRetry(`https://hts.usitc.gov/reststop/search?keyword=${encodeURIComponent(hs)}`, {
+      headers: { "User-Agent": "LOGILEE HS Code Lookup" }
+    });
+    const candidates = (Array.isArray(data) ? data : [])
+      .map((row) => ({
+        code: String(row.htsno || row.htsNo || row.code || "").trim(),
+        description: String(row.description || row.desc || "").trim(),
+        general: String(row.general || "").trim()
+      }))
+      .filter((row) => row.code.replace(/\D/g, "").startsWith(hs))
+      .sort((a, b) => a.code.localeCompare(b.code))
+      .slice(0, 80);
+    const payload = {
+      query: { country, hscode: hs },
+      source: { name: "USITC HTSUS", url: `https://hts.usitc.gov/?query=${encodeURIComponent(hs)}` },
+      candidates,
+      metadata: { accessedAt: new Date().toISOString(), sourceEndpoint: "https://hts.usitc.gov/reststop/search", note: "Candidate tariff lines are official HTSUS search results filtered by the selected HS6 prefix." },
+      cache: { hit: false, backend: "firestore", ttlHours: 24 }
+    };
+    await writeCache(cacheKey, payload);
+    json(res, 200, payload);
+  } catch (error) {
+    json(res, 502, { error: "upstream_unavailable", message: "USITC HTSUS is temporarily unavailable." });
+  }
+});

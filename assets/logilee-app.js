@@ -105,6 +105,11 @@ function currentLang() {
   return document.documentElement.lang && document.documentElement.lang.startsWith("ko") ? "ko" : "en";
 }
 
+function logileeAssetUrl(file) {
+  const normalized = String(file || "").replace(/^\/+/, "");
+  return `${/^\/(?:ko|en)\//.test(location.pathname) ? "../assets/" : "assets/"}${normalized}`;
+}
+
 function languageRoot(lang) {
   const match = location.pathname.match(/^(.*?)(?:\/ko|\/en)(?:\/|$)/);
   return `${match ? match[1] : ""}/${lang}/`;
@@ -3597,7 +3602,7 @@ function wireEuTradeExplorer() {
 }
 const GLOBAL_TRADE_ENDPOINT = "https://us-central1-logilee-cms.cloudfunctions.net/globalTradeExplorer";
 const GLOBAL_TRADE_YEARS = Array.from({ length: 16 }, (_, index) => String(2025 - index));
-const GLOBAL_HS_REFERENCE_URL = "../assets/comtrade-hs-reference.json";
+const GLOBAL_HS_REFERENCE_URL = logileeAssetUrl("comtrade-hs-reference.json");
 const GLOBAL_HS_POPULAR_CODES = ["2613", "8504", "8703", "8708", "9403", "8542", "2710", "3004", "8471", "6204"];
 const GLOBAL_HS_FALLBACK_OPTIONS = [
   { code: "2613", desc: "Molybdenum ores and concentrates", level: 4, unit: "kg" },
@@ -3691,6 +3696,13 @@ function globalHsLabel(hs, lang = currentLang()) {
   return lang === "ko" ? `HS ${code} 품목명 없음` : `HS ${code} description unavailable`;
 }
 
+function parseGlobalHsInput(value) {
+  const raw = String(value || "").trim();
+  const leading = raw.match(/^(\d{6}|\d{4}|\d{2})(?=\D|$)/);
+  if (leading) return normalizeGlobalHsCode(leading[1]);
+  const digits = normalizeGlobalHsCode(raw);
+  return digits.length > 6 ? digits.slice(0, 6) : digits;
+}
 function globalHsSearchItems(items, rawQuery, labels) {
   const query = normalizeCountrySearch(rawQuery);
   const compactQuery = compactCountrySearch(query);
@@ -3764,7 +3776,7 @@ function enhanceGlobalHsCombobox(select, items, labels) {
     input.value = code ? `${code}${item?.desc ? ` - ${item.desc}` : ""}` : "";
   };
   const commit = () => {
-    const code = normalizeGlobalHsCode(input.value || select.value);
+    const code = parseGlobalHsInput(input.value || select.value);
     if (!validGlobalHsCode(code)) return "";
     ensureOption(code);
     select.dispatchEvent(new Event("change", { bubbles: true }));
@@ -3772,7 +3784,7 @@ function enhanceGlobalHsCombobox(select, items, labels) {
     return code;
   };
   select.globalHsCommit = commit;
-  select.globalHsRawCode = () => normalizeGlobalHsCode(input.value || select.value);
+  select.globalHsRawCode = () => parseGlobalHsInput(input.value || select.value);
   const render = () => {
     list.innerHTML = matches.length ? matches.map((item, index) => `<button type="button" role="option" id="${listId}-${escapeAttribute(item.code)}" data-hs-option="${escapeAttribute(item.code)}" aria-selected="${index === activeIndex}"><span><strong>${escapeHtml(item.code)}</strong> — ${escapeHtml(item.desc || labels.noDescription)}</span><small>${escapeHtml(globalHsLevelLabel(item.code))}${item.direct ? ` · ${escapeHtml(labels.directBadge)}` : ""}</small></button>`).join("") : `<div class="country-combobox-empty">${escapeHtml(labels.empty)}</div>`;
     input.setAttribute("aria-activedescendant", activeIndex >= 0 && matches[activeIndex] ? `${listId}-${matches[activeIndex].code}` : "");
@@ -3961,6 +3973,215 @@ async function wireTradeExplorerParams() {
   if (params.get("hs")) render();
 }
 
+const HS_TARIFF_ENDPOINT = "https://us-central1-logilee-cms.cloudfunctions.net/hsTariffLookup";
+const HS_TARIFF_SOURCES = {
+  KR: { name: "Korea Customs Service Tariff", status: "official-link", url: "https://www.customs.go.kr/english/ad/ct/CustomsTariffList.do" },
+  US: { name: "HTSUS", status: "searchable", url: "https://hts.usitc.gov/", api: "https://hts.usitc.gov/reststop/search" },
+  EU: { name: "EU TARIC", status: "official-link", url: "https://taxation-customs.ec.europa.eu/online-services/online-services-and-databases-customs/eu-customs-tariff-taric_en" },
+  JP: { name: "Japan Customs Tariff Schedule", status: "official-link", url: "https://www.customs.go.jp/english/tariff/" },
+  CN: { name: "China Customs tariff resources", status: "official-link", url: "http://english.customs.gov.cn/" },
+  GB: { name: "UK Integrated Online Tariff", status: "official-link", url: "https://www.trade-tariff.service.gov.uk/" },
+  CA: { name: "Canadian Customs Tariff", status: "official-link", url: "https://www.cbsa-asfc.gc.ca/trade-commerce/tariff-tarif/menu-eng.html" },
+  AU: { name: "Australian Working Tariff", status: "official-link", url: "https://www.abf.gov.au/importing-exporting-and-manufacturing/tariff-classification/current-tariff" }
+};
+const HS_EU_COUNTRIES = new Set(["AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR", "HU", "IE", "IT", "LV", "LT", "LU", "MT", "NL", "PL", "PT", "RO", "SK", "SI", "ES", "SE"]);
+
+function hsCodeParam(params) {
+  return normalizeGlobalHsCode(params.get("hscode") || params.get("hs") || params.get("q") || "8504");
+}
+
+function hsTariffSourceForCountry(code) {
+  if (code === "US") return HS_TARIFF_SOURCES.US;
+  if (code === "KR") return HS_TARIFF_SOURCES.KR;
+  if (HS_EU_COUNTRIES.has(code)) return HS_TARIFF_SOURCES.EU;
+  if (code === "JP") return HS_TARIFF_SOURCES.JP;
+  if (code === "CN") return HS_TARIFF_SOURCES.CN;
+  if (code === "GB") return HS_TARIFF_SOURCES.GB;
+  if (code === "CA") return HS_TARIFF_SOURCES.CA;
+  if (code === "AU") return HS_TARIFF_SOURCES.AU;
+  return null;
+}
+
+function hsCountrySelectItems(lang = currentLang()) {
+  return TRADE_COUNTRIES.map(([value, en, ko]) => ({
+    value,
+    label: lang === "ko" ? ko : en,
+    meta: `${value} · ${en}`,
+    terms: [value, en, ko, ...(COUNTRY_SEARCH_ALIASES[value] || [])].map(normalizeCountrySearch)
+  }));
+}
+
+function hsFindHierarchy(code) {
+  const normalized = normalizeGlobalHsCode(code);
+  const chapter = normalized.length >= 2 ? findGlobalHsItem(normalized.slice(0, 2)) : null;
+  const heading = normalized.length >= 4 ? findGlobalHsItem(normalized.slice(0, 4)) : null;
+  const subheading = normalized.length >= 6 ? findGlobalHsItem(normalized.slice(0, 6)) : null;
+  const children = globalHsReferenceItems
+    .filter((item) => normalized.length === 2 ? item.level === 4 && item.code.startsWith(normalized) : normalized.length === 4 ? item.level === 6 && item.code.startsWith(normalized) : false)
+    .sort((a, b) => a.code.localeCompare(b.code));
+  return { chapter, heading, subheading, children };
+}
+
+function hsLevelShort(code, lang = currentLang()) {
+  const length = String(code || "").length;
+  if (length === 2) return lang === "ko" ? "Chapter" : "Chapter";
+  if (length === 4) return lang === "ko" ? "Heading" : "Heading";
+  if (length === 6) return lang === "ko" ? "Subheading" : "Subheading";
+  return "HS";
+}
+
+function hsGlobalTradeHref(code, exporter, importer, lang = currentLang()) {
+  const partner = importer || "US";
+  return `${lang}/global-trade-explorer.html?reporter=${encodeURIComponent(exporter || "KR")}&partner=${encodeURIComponent(partner)}&hs=${encodeURIComponent(code)}&flow=export`;
+}
+
+function hsOfficialSearchHref(source, code) {
+  const hs = normalizeGlobalHsCode(code);
+  if (!source) return "";
+  if (source === HS_TARIFF_SOURCES.US) return `https://hts.usitc.gov/?query=${encodeURIComponent(hs)}`;
+  if (source === HS_TARIFF_SOURCES.GB) return `https://www.trade-tariff.service.gov.uk/search?query=${encodeURIComponent(hs)}`;
+  return source.url;
+}
+
+function hsStaticReferenceMarkup(context) {
+  const lang = currentLang();
+  const rows = lang === "ko"
+    ? [["International HS Reference", "UN Comtrade HS combined reference"], ["Coverage", "HS 2 / HS 4 / HS 6"], ["National tariff line", "국가별 8-10자리 이상 세번은 공식 자료로 검증"], ["Classification risk", "재질, 기능, 용도, 구성에 따라 달라질 수 있음"]]
+    : [["International HS Reference", "UN Comtrade HS combined reference"], ["Coverage", "HS 2 / HS 4 / HS 6"], ["National tariff line", "Verify 8-10+ digit national codes in official tariff schedules"], ["Classification risk", "Material, function, use, and composition can change classification"]];
+  return `<section class="eu-dashboard-section eu-classification hs-data-note"><h2>${lang === "ko" ? "데이터 및 분류 기준" : "Data & Classification"}</h2><dl>${rows.map(([label, value]) => `<div><dt>${escapeHtml(label)}</dt><dd>${escapeHtml(value)}</dd></div>`).join("")}</dl><p class="muted">${escapeHtml(context.note)}</p></section>`;
+}
+
+function hsHierarchyMarkup(code, item) {
+  const lang = currentLang();
+  const hierarchy = hsFindHierarchy(code);
+  const trail = [hierarchy.chapter, hierarchy.heading, hierarchy.subheading].filter(Boolean);
+  const childLimit = code.length === 2 ? 24 : 36;
+  const childLabel = code.length === 2 ? (lang === "ko" ? "이 Chapter의 주요 Heading" : "Headings in this chapter") : (lang === "ko" ? "이 Heading의 Subheading" : "Subheadings in this heading");
+  return `<section class="eu-dashboard-section hs-hierarchy-section"><h2>${lang === "ko" ? "HS 계층 구조" : "HS Hierarchy"}</h2><div class="hs-hierarchy-trail">${trail.map((row) => `<article class="${row.code === code ? "is-current" : ""}"><span>${escapeHtml(hsLevelShort(row.code, lang))}</span><strong>${escapeHtml(row.code)}</strong><p>${escapeHtml(row.desc || (lang === "ko" ? "품목명 없음" : "description unavailable"))}</p></article>`).join("")}</div>${hierarchy.children.length ? `<div class="hs-child-list"><div class="section-head"><h3>${escapeHtml(childLabel)}</h3><span>${hierarchy.children.length} ${lang === "ko" ? "개" : "items"}</span></div><div>${hierarchy.children.slice(0, childLimit).map((child) => `<a href="?hscode=${escapeAttribute(child.code)}"><strong>${escapeHtml(child.code)}</strong><span>${escapeHtml(child.desc || "")}</span></a>`).join("")}</div>${hierarchy.children.length > childLimit ? `<p class="muted">${lang === "ko" ? `상위 ${childLimit}개만 표시합니다. 검색창에서 더 구체적인 코드나 품목명을 입력하세요.` : `Showing the first ${childLimit}. Search a more specific code or product name to narrow the list.`}</p>` : ""}</div>` : ""}</section>`;
+}
+
+async function fetchUsHtsCandidates(code) {
+  const hs6 = normalizeGlobalHsCode(code).slice(0, 6);
+  const url = new URL(HS_TARIFF_ENDPOINT);
+  url.searchParams.set("country", "US");
+  url.searchParams.set("hscode", hs6);
+  const response = await fetchWithTimeout(url.toString(), { cache: "force-cache" }, 20000);
+  if (!response.ok) throw new Error(`HTSUS lookup ${response.status}`);
+  const data = await response.json();
+  return (Array.isArray(data.candidates) ? data.candidates : [])
+    .map((row) => ({ code: String(row.code || "").trim(), desc: String(row.description || row.desc || "").trim(), general: String(row.general || "").trim() }))
+    .filter((row) => row.code.replace(/\D/g, "").startsWith(hs6))
+    .slice(0, 40);
+}
+
+function hsTariffCardMarkup(role, country, code, candidates, error) {
+  const lang = currentLang();
+  const source = hsTariffSourceForCountry(country);
+  const countryName = displayCountryName(country, lang);
+  const roleLabel = role === "export" ? (lang === "ko" ? "수출국" : "Export country") : (lang === "ko" ? "수입국" : "Import country");
+  if (!source) {
+    return `<article class="hs-mapper-card"><span>${roleLabel}</span><h3>${escapeHtml(countryName)}</h3><p>${lang === "ko" ? "이 국가의 공식 tariff schedule을 안정적으로 자동 조회할 수 없어 매핑 후보를 표시하지 않습니다." : "No stable official tariff schedule lookup is enabled for this country, so candidate mappings are not displayed."}</p></article>`;
+  }
+  if (source.status !== "searchable") {
+    return `<article class="hs-mapper-card hs-unsupported"><span>${roleLabel}</span><h3>${escapeHtml(countryName)} · ${escapeHtml(source.name)}</h3><p>${lang === "ko" ? "공식 자료에서 국가별 세번을 직접 확인하세요. LOGILEE는 검증되지 않은 8-10자리 코드를 생성하지 않습니다." : "Check the national tariff line in the official source. LOGILEE does not generate unverified 8-10 digit codes."}</p><a class="text-link" href="${escapeAttribute(hsOfficialSearchHref(source, code))}" target="_blank" rel="noopener">${lang === "ko" ? "공식 자료 열기" : "Open official source"}</a></article>`;
+  }
+  if (error) {
+    return `<article class="hs-mapper-card"><span>${roleLabel}</span><h3>${escapeHtml(countryName)} · ${escapeHtml(source.name)}</h3><p>${lang === "ko" ? "USITC 후보를 일시적으로 불러오지 못했습니다. 공식 HTS에서 직접 확인하세요." : "USITC candidates could not be loaded temporarily. Verify directly in the official HTS."}</p><a class="text-link" href="${escapeAttribute(hsOfficialSearchHref(source, code))}" target="_blank" rel="noopener">${lang === "ko" ? "HTSUS에서 확인" : "Verify on HTSUS"}</a></article>`;
+  }
+  return `<article class="hs-mapper-card hs-supported"><span>${roleLabel}</span><h3>${escapeHtml(countryName)} · ${escapeHtml(source.name)}</h3><p>${lang === "ko" ? "공식 HTSUS 검색 결과 중 선택한 HS6로 시작하는 후보입니다. 1:N 후보이며 추천 순위가 아닙니다." : "Official HTSUS search candidates starting with the selected HS6. This is a 1:N candidate list, not a recommendation."}</p>${candidates.length ? `<div class="hs-candidate-list">${candidates.map((candidate) => `<div><strong>${escapeHtml(candidate.code)}</strong><span>${escapeHtml(candidate.desc || (lang === "ko" ? "설명 없음" : "No description"))}</span>${candidate.general ? `<small>${lang === "ko" ? "General rate text" : "General rate text"}: ${escapeHtml(candidate.general)}</small>` : ""}</div>`).join("")}</div>` : `<div class="data-empty">${lang === "ko" ? "선택한 HS6로 시작하는 HTSUS 후보를 찾지 못했습니다." : "No HTSUS candidates starting with this HS6 were found."}</div>`}<a class="text-link" href="${escapeAttribute(hsOfficialSearchHref(source, code))}" target="_blank" rel="noopener">${lang === "ko" ? "HTSUS 원문 열기" : "Open HTSUS source"}</a></article>`;
+}
+
+function hsOfficialResourcesMarkup(code) {
+  const lang = currentLang();
+  const rows = [
+    ["UN Comtrade HS Reference", "https://comtradeapi.un.org/files/v1/app/reference/HS.json"],
+    ["Korea Customs Service", HS_TARIFF_SOURCES.KR.url],
+    ["USITC HTSUS", hsOfficialSearchHref(HS_TARIFF_SOURCES.US, code)],
+    ["EU TARIC", HS_TARIFF_SOURCES.EU.url],
+    ["Japan Customs", HS_TARIFF_SOURCES.JP.url],
+    ["China Customs", HS_TARIFF_SOURCES.CN.url],
+    ["UK Trade Tariff", HS_TARIFF_SOURCES.GB.url],
+    ["Canada Customs Tariff", HS_TARIFF_SOURCES.CA.url],
+    ["Australia Working Tariff", HS_TARIFF_SOURCES.AU.url]
+  ];
+  return `<section class="eu-dashboard-section"><h2>${lang === "ko" ? "공식 검증 자료" : "Official Verification"}</h2><div class="country-tool-grid eu-tool-grid hs-official-grid">${rows.map(([label, href]) => `<a href="${escapeAttribute(href)}" target="_blank" rel="noopener"><i data-lucide="external-link"></i><strong>${escapeHtml(label)}</strong></a>`).join("")}</div></section>`;
+}
+
+function hsNextToolsMarkup(code, exporter, importer) {
+  const lang = currentLang();
+  const tools = lang === "ko"
+    ? [["Global Trade에서 거래 데이터 보기", hsGlobalTradeHref(code, exporter, importer, "ko"), "chart-column"], ["EU Trade Explorer", "ko/eu-trade-explorer.html", "bar-chart-3"], ["Dictionary: HS Code", "ko/dictionary.html?term=hs-code", "book-open"], ["Country Trade Profile", `ko/country-trade-profile.html?country=${encodeURIComponent(exporter)}`, "globe"]]
+    : [["Open in Global Trade Explorer", hsGlobalTradeHref(code, exporter, importer, "en"), "chart-column"], ["EU Trade Explorer", "en/eu-trade-explorer.html", "bar-chart-3"], ["Dictionary: HS Code", "en/dictionary.html?term=hs-code", "book-open"], ["Country Trade Profile", `en/country-trade-profile.html?country=${encodeURIComponent(exporter)}`, "globe"]];
+  return `<section class="eu-dashboard-section"><h2>${lang === "ko" ? "다음 실무 도구" : "Next Trade Tools"}</h2><div class="country-tool-grid eu-tool-grid">${tools.map(([label, href, icon]) => `<a href="${escapeAttribute(href)}"><i data-lucide="${icon}"></i><strong>${escapeHtml(label)}</strong></a>`).join("")}</div></section>`;
+}
+
+async function renderHsClassification(output, selected) {
+  const lang = currentLang();
+  const code = normalizeGlobalHsCode(selected.code);
+  if (!validGlobalHsCode(code)) {
+    output.innerHTML = `<div class="data-empty">${lang === "ko" ? "HS Code는 2, 4, 6자리 숫자로 입력하세요." : "Enter a 2, 4, or 6 digit HS code."}</div>`;
+    return;
+  }
+  const item = findGlobalHsItem(code);
+  const missing = !item;
+  const hs6Ready = code.length === 6;
+  let exportCandidates = [];
+  let importCandidates = [];
+  let exportError = null;
+  let importError = null;
+  if (hs6Ready) {
+    await Promise.all([
+      selected.exporter === "US" ? fetchUsHtsCandidates(code).then((rows) => { exportCandidates = rows; }).catch((error) => { exportError = error; }) : Promise.resolve(),
+      selected.importer === "US" ? fetchUsHtsCandidates(code).then((rows) => { importCandidates = rows; }).catch((error) => { importError = error; }) : Promise.resolve()
+    ]);
+  }
+  const desc = item?.desc || (lang === "ko" ? "UN Comtrade HS reference에서 일치하는 설명을 찾지 못했습니다." : "No matching description was found in the UN Comtrade HS reference.");
+  output.innerHTML = `<section class="eu-result-header hs-result-header"><i data-lucide="barcode"></i><div><span class="kicker">UN Comtrade HS Reference</span><h2>HS ${escapeHtml(code)} ${escapeHtml(hsLevelShort(code, lang))}</h2><p>${escapeHtml(desc)}</p></div></section><section class="eu-kpi-grid hs-summary-grid"><article><span>${lang === "ko" ? "선택 코드" : "Selected code"}</span><strong>${escapeHtml(code)}</strong><small>${escapeHtml(globalHsLevelLabel(code, lang))}</small></article><article><span>${lang === "ko" ? "Reference" : "Reference"}</span><strong>${missing ? "No match" : "Matched"}</strong><small>UN Comtrade HS combined</small></article><article><span>${lang === "ko" ? "수출국" : "Export country"}</span><strong>${escapeHtml(selected.exporter)}</strong><small>${escapeHtml(displayCountryName(selected.exporter, lang))}</small></article><article><span>${lang === "ko" ? "수입국" : "Import country"}</span><strong>${escapeHtml(selected.importer)}</strong><small>${escapeHtml(displayCountryName(selected.importer, lang))}</small></article></section>${missing ? `<div class="data-empty hs-warning">${lang === "ko" ? "해당 코드는 2/4/6자리 형식은 맞지만 현재 LOGILEE HS reference에 없습니다. 공식 자료에서 직접 검증하세요." : "The code has a valid 2/4/6 digit format, but it is not present in the current LOGILEE HS reference. Verify it in official sources."}</div>` : hsHierarchyMarkup(code, item)}<section class="eu-dashboard-section hs-mapper-section"><div class="section-head"><h2>${lang === "ko" ? "국가별 Tariff Line 후보" : "National Tariff Line Candidates"}</h2><span>${hs6Ready ? "HS6" : (lang === "ko" ? "HS6 필요" : "HS6 required")}</span></div>${hs6Ready ? `<div class="hs-mapper-grid">${hsTariffCardMarkup("export", selected.exporter, code, exportCandidates, exportError)}${hsTariffCardMarkup("import", selected.importer, code, importCandidates, importError)}</div>` : `<div class="data-empty">${lang === "ko" ? "국가별 8-10자리 tariff line 후보는 HS 6자리 Subheading을 선택했을 때만 표시합니다." : "National 8-10 digit tariff-line candidates are shown only after selecting an HS 6-digit subheading."}</div>`}</section><section class="eu-dashboard-section hs-reverse-section"><h2>${lang === "ko" ? "Reverse Lookup" : "Reverse Lookup"}</h2><p>${lang === "ko" ? "국가별 tariff line에서 국제 HS6로 되돌리는 자동 역매핑은 이번 버전에서 제공하지 않습니다. 국가별 추가 세번 체계가 다르므로 공식 자료에서 원문을 확인하세요." : "Automated reverse mapping from national tariff lines back to international HS6 is not enabled in this version. National extensions differ by jurisdiction, so verify in the official schedule."}</p></section>${hsStaticReferenceMarkup({ note: lang === "ko" ? "LOGILEE는 국제 HS reference와 공식 검증 링크를 결합해 분류 리서치를 돕습니다. 신고용 최종 분류는 관할 세관 자료와 전문가 검토로 확인하세요." : "LOGILEE combines an international HS reference with official verification links for classification research. Confirm filing classifications with the relevant customs authority or a qualified specialist." })}${hsOfficialResourcesMarkup(code)}${hsNextToolsMarkup(code, selected.exporter, selected.importer)}`;
+  refreshIcons();
+}
+
+async function wireHsClassificationPage() {
+  const form = document.querySelector("[data-hs-classification-form]");
+  if (!form) return;
+  const lang = currentLang();
+  const params = new URLSearchParams(location.search);
+  const hs = form.querySelector("[name='hscode']");
+  const exporter = form.querySelector("[name='export']");
+  const importer = form.querySelector("[name='import']");
+  const output = document.querySelector("[data-hs-classification-output]");
+  const hsReference = await loadGlobalHsReference();
+  const countryItems = hsCountrySelectItems(lang);
+  const optionMarkupLocal = (rows) => rows.map(([code, en, ko]) => `<option value="${code}">${lang === "ko" ? ko : en}</option>`).join("");
+  exporter.innerHTML = optionMarkupLocal(TRADE_COUNTRIES);
+  importer.innerHTML = optionMarkupLocal(TRADE_COUNTRIES);
+  exporter.value = (params.get("export") || params.get("exporter") || params.get("reporter") || "KR").toUpperCase();
+  importer.value = (params.get("import") || params.get("importer") || params.get("partner") || "US").toUpperCase();
+  const initialHs = hsCodeParam(params) || "8504";
+  hs.innerHTML = `<option value="${escapeAttribute(initialHs)}">${escapeHtml(initialHs)}</option>`;
+  hs.value = initialHs;
+  enhanceGlobalHsCombobox(hs, hsReference, lang === "ko" ? { label: "HS Code 선택", placeholder: "HS Code 또는 품목명 검색", open: "HS 목록 열기", empty: "검색 결과가 없습니다. 2, 4, 6자리 HS Code는 직접 입력할 수 있습니다.", direct: (code) => `HS ${code}로 직접 확인`, directBadge: "직접 입력", noDescription: "품목명 없음" } : { label: "Select HS code", placeholder: "Search HS code or product", open: "Open HS list", empty: "No results. You can directly enter a 2, 4, or 6 digit HS code.", direct: (code) => `Use HS ${code}`, directBadge: "direct entry", noDescription: "description unavailable" });
+  enhanceSimpleCombobox(exporter, countryItems, lang === "ko" ? { label: "수출국 선택", placeholder: "수출국 검색", open: "수출국 목록 열기", empty: "일치하는 국가가 없습니다." } : { label: "Select export country", placeholder: "Search export country", open: "Open export country list", empty: "No matching country." });
+  enhanceSimpleCombobox(importer, countryItems, lang === "ko" ? { label: "수입국 선택", placeholder: "수입국 검색", open: "수입국 목록 열기", empty: "일치하는 국가가 없습니다." } : { label: "Select import country", placeholder: "Search import country", open: "Open import country list", empty: "No matching country." });
+  const render = () => {
+    const rawHs = typeof hs.globalHsRawCode === "function" ? hs.globalHsRawCode() : hs.value;
+    if (validGlobalHsCode(rawHs) && typeof hs.globalHsCommit === "function") hs.globalHsCommit();
+    const selected = { code: normalizeGlobalHsCode(rawHs), exporter: exporter.value, importer: importer.value };
+    output.innerHTML = `<div class="data-empty">${lang === "ko" ? "HS reference를 확인하는 중입니다..." : "Checking the HS reference..."}</div>`;
+    renderHsClassification(output, selected);
+  };
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const rawHs = typeof hs.globalHsRawCode === "function" ? hs.globalHsRawCode() : hs.value;
+    if (validGlobalHsCode(rawHs) && typeof hs.globalHsCommit === "function") hs.globalHsCommit();
+    const url = new URL(location.href);
+    url.searchParams.set("hscode", normalizeGlobalHsCode(rawHs));
+    url.searchParams.set("export", exporter.value);
+    url.searchParams.set("import", importer.value);
+    history.replaceState(null, "", url);
+    render();
+  });
+  render();
+}
 async function wireNewsPage() {
   const target = document.querySelector("[data-news-page]");
   if (!target) return;
@@ -4027,5 +4248,6 @@ document.addEventListener("DOMContentLoaded", () => {
   renderPortWeather();
   wireEuTradeExplorer();
   wireTradeExplorerParams();
+  wireHsClassificationPage();
   wireNewsPage();
 });
