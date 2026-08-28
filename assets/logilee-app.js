@@ -3114,7 +3114,7 @@ function portLocationMapMarkup(port) {
   const zoom = portMapZoom(port);
   const label = `${port.name} ${lang === "ko" ? "위치 지도" : "location map"}`;
   const coordinates = `${port.lat.toFixed(4)}, ${port.lon.toFixed(4)}`;
-  return `<div class="port-map-card port-map-card--leaflet" data-port-map="${escapeAttribute(port.slug)}" data-map-zoom="${zoom}" data-map-min="6" data-map-max="14" data-map-lat="${escapeAttribute(port.lat)}" data-map-lon="${escapeAttribute(port.lon)}" aria-label="${escapeAttribute(label)}"><div class="port-map-leaflet" data-port-leaflet-map></div><button class="port-map-reset" type="button" data-port-map-reset aria-label="${lang === "ko" ? "지도 초기화" : "Reset map"}">${lang === "ko" ? "초기화" : "Reset"}</button><div class="port-map-caption"><strong>${escapeHtml(port.name)}</strong><span>${escapeHtml(coordinates)} · ${lang === "ko" ? "근사 위치" : "Approximate location"}</span></div><p>${lang === "ko" ? "일반 위치 지도입니다. 공식 터미널 배치도는 아래 Official Port Map 링크에서 별도로 확인하세요." : "General location map. Official terminal or port-layout maps are listed separately below when available."} <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors</a></p><div class="port-map-fallback"><strong>${lang === "ko" ? "지도를 불러올 수 없습니다." : "Map could not load."}</strong><span>${escapeHtml(coordinates)}</span><a href="${escapeAttribute(portOsmUrl(port, zoom))}" target="_blank" rel="noopener">OpenStreetMap →</a></div></div>`;
+  return `<div class="port-map-card port-map-card--leaflet" data-port-map="${escapeAttribute(port.slug)}" data-map-zoom="${zoom}" data-map-min="2" data-map-max="14" data-map-lat="${escapeAttribute(port.lat)}" data-map-lon="${escapeAttribute(port.lon)}" aria-label="${escapeAttribute(label)}"><div class="port-map-leaflet" data-port-leaflet-map></div><button class="port-map-reset" type="button" data-port-map-reset aria-label="${lang === "ko" ? "지도 초기화" : "Reset map"}">${lang === "ko" ? "초기화" : "Reset"}</button><div class="port-map-caption"><strong>${escapeHtml(port.name)}</strong><span>${escapeHtml(coordinates)} · ${lang === "ko" ? "근사 위치" : "Approximate location"}</span></div><p>${lang === "ko" ? "일반 위치 지도입니다. 공식 터미널 배치도는 아래 Official Port Map 링크에서 별도로 확인하세요." : "General location map. Official terminal or port-layout maps are listed separately below when available."} <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors</a></p><div class="port-map-fallback"><strong>${lang === "ko" ? "지도를 불러올 수 없습니다." : "Map could not load."}</strong><span>${escapeHtml(coordinates)}</span><a href="${escapeAttribute(portOsmUrl(port, zoom))}" target="_blank" rel="noopener">OpenStreetMap →</a></div></div>`;
 }
 
 function initializePortMapElement(map, port) {
@@ -3132,7 +3132,7 @@ function initializePortMapElement(map, port) {
     const leaflet = L.map(target, {
       center: [port.lat, port.lon],
       zoom,
-      minZoom: Number(map.dataset.mapMin || 6),
+      minZoom: Number(map.dataset.mapMin || 2),
       maxZoom: Number(map.dataset.mapMax || 14),
       zoomSnap: 1,
       zoomDelta: 1,
@@ -3144,6 +3144,7 @@ function initializePortMapElement(map, port) {
       attributionControl: true
     });
     const tileLayer = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      minZoom: 0,
       maxZoom: 19,
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a>'
     }).addTo(leaflet);
@@ -3200,7 +3201,7 @@ function initializePortMaps(root = document) {
 function updatePortMapElement(map, port, zoom = portMapZoom(port)) {
   const leaflet = portLeafletMaps.get(map);
   if (!leaflet || !port) return;
-  const nextZoom = Math.max(Number(map.dataset.mapMin || 9), Math.min(Number(map.dataset.mapMax || 13), Number(zoom || portMapZoom(port))));
+  const nextZoom = Math.max(Number(map.dataset.mapMin || 2), Math.min(Number(map.dataset.mapMax || 14), Number(zoom || portMapZoom(port))));
   const target = map.querySelector("[data-port-leaflet-map]");
   const tileLayer = target?.__logileeLeafletTileLayer;
   map.dataset.mapZoom = String(nextZoom);
