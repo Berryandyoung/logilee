@@ -3597,18 +3597,16 @@ function wireEuTradeExplorer() {
 }
 const GLOBAL_TRADE_ENDPOINT = "https://us-central1-logilee-cms.cloudfunctions.net/globalTradeExplorer";
 const GLOBAL_TRADE_YEARS = Array.from({ length: 16 }, (_, index) => String(2025 - index));
-const GLOBAL_HS_OPTIONS = [
-  ["2613", "Molybdenum ores and concentrates", "몰리브덴 광과 정광"],
-  ["8504", "Electrical transformers, static converters and inductors", "변압기, 정지형 변환기 및 인덕터"],
-  ["8703", "Motor cars and other motor vehicles", "승용차 및 기타 차량"],
-  ["8708", "Parts and accessories of motor vehicles", "자동차 부분품과 부속품"],
-  ["9403", "Other furniture and parts thereof", "기타 가구 및 부분품"],
-  ["8542", "Electronic integrated circuits", "전자집적회로"],
-  ["2710", "Petroleum oils, other than crude", "석유와 역청유 조제품"],
-  ["3004", "Medicaments in measured doses", "소매용 의약품"],
-  ["8471", "Automatic data processing machines", "자동자료처리기계"],
-  ["6204", "Women's suits, jackets, dresses and similar clothing", "여성용 의류"]
+const GLOBAL_HS_REFERENCE_URL = "../assets/comtrade-hs-reference.json";
+const GLOBAL_HS_POPULAR_CODES = ["2613", "8504", "8703", "8708", "9403", "8542", "2710", "3004", "8471", "6204"];
+const GLOBAL_HS_FALLBACK_OPTIONS = [
+  { code: "2613", desc: "Molybdenum ores and concentrates", level: 4, unit: "kg" },
+  { code: "8504", desc: "Electrical transformers, static converters and inductors", level: 4, unit: "u" },
+  { code: "8703", desc: "Motor cars and other motor vehicles", level: 4, unit: "u" },
+  { code: "9403", desc: "Furniture and parts thereof, n.e.c. in chapter 94", level: 4, unit: "u" }
 ];
+let globalHsReferencePromise = null;
+let globalHsReferenceItems = GLOBAL_HS_FALLBACK_OPTIONS;
 
 function globalTradeValueLabel(value, { compact = true } = {}) {
   if (!Number.isFinite(value)) return "N/A";
@@ -3639,9 +3637,169 @@ function globalReporterFlag(code) {
   return /^[A-Z]{2}$/.test(code) ? `<img class="eu-reporter-flag" src="https://flagcdn.com/${code.toLowerCase()}.svg" alt="" loading="lazy">` : `<span class="eu-reporter-flag global-world-flag">World</span>`;
 }
 
+function normalizeGlobalHsCode(value) {
+  return String(value || "").trim().replace(/\D/g, "");
+}
+
+function validGlobalHsCode(value) {
+  return /^(?:\d{2}|\d{4}|\d{6})$/.test(String(value || ""));
+}
+
+function globalHsLevelLabel(code, lang = currentLang()) {
+  const length = String(code || "").length;
+  if (length === 2) return lang === "ko" ? "HS 2-digit Chapter" : "HS 2-digit Chapter";
+  if (length === 4) return lang === "ko" ? "HS 4-digit Heading" : "HS 4-digit Heading";
+  if (length === 6) return lang === "ko" ? "HS 6-digit Subheading" : "HS 6-digit Subheading";
+  return lang === "ko" ? "HS Code" : "HS Code";
+}
+
+async function loadGlobalHsReference() {
+  if (globalHsReferencePromise) return globalHsReferencePromise;
+  globalHsReferencePromise = fetchWithTimeout(GLOBAL_HS_REFERENCE_URL, { cache: "force-cache" }, 15000)
+    .then((response) => {
+      if (!response.ok) throw new Error(`HS reference ${response.status}`);
+      return response.json();
+    })
+    .then((rows) => {
+      const items = Array.isArray(rows) ? rows
+        .map((row) => ({
+          code: normalizeGlobalHsCode(row.code),
+          desc: String(row.desc || "").trim(),
+          level: Number(row.level) || String(row.code || "").length,
+          unit: String(row.unit || "").trim()
+        }))
+        .filter((row) => validGlobalHsCode(row.code)) : [];
+      if (items.length) globalHsReferenceItems = items;
+      return globalHsReferenceItems;
+    })
+    .catch((error) => {
+      console.warn("HS reference unavailable:", error);
+      return globalHsReferenceItems;
+    });
+  return globalHsReferencePromise;
+}
+
+function findGlobalHsItem(code) {
+  const normalized = normalizeGlobalHsCode(code);
+  return globalHsReferenceItems.find((item) => item.code === normalized) || null;
+}
+
 function globalHsLabel(hs, lang = currentLang()) {
-  const item = GLOBAL_HS_OPTIONS.find(([code]) => code === hs);
-  return item ? item[lang === "ko" ? 2 : 1] : (lang === "ko" ? `HS ${hs} 품목` : `HS ${hs} commodity`);
+  const code = normalizeGlobalHsCode(hs);
+  const item = findGlobalHsItem(code);
+  if (item?.desc) return item.desc;
+  return lang === "ko" ? `HS ${code} 품목명 없음` : `HS ${code} description unavailable`;
+}
+
+function globalHsSearchItems(items, rawQuery, labels) {
+  const query = normalizeCountrySearch(rawQuery);
+  const compactQuery = compactCountrySearch(query);
+  const codeQuery = normalizeGlobalHsCode(rawQuery);
+  const ranked = [];
+  const push = (item, score) => ranked.push({ ...item, score });
+  const base = query || codeQuery ? items : GLOBAL_HS_POPULAR_CODES.map((code) => findGlobalHsItem(code)).filter(Boolean);
+  base.forEach((item) => {
+    const desc = normalizeCountrySearch(item.desc);
+    const compactDesc = compactCountrySearch(desc);
+    let score = -1;
+    if (codeQuery && item.code === codeQuery) score = 1000;
+    else if (codeQuery && item.code.startsWith(codeQuery)) score = 900 - item.code.length;
+    else if (query && desc === query) score = 820;
+    else if (query && desc.split(/\W+/).includes(query)) score = 760;
+    else if (query && (desc.includes(query) || compactDesc.includes(compactQuery))) score = 650;
+    else if (!query && !codeQuery) score = 500;
+    if (score >= 0) push(item, score);
+  });
+  const hasExact = codeQuery && ranked.some((item) => item.code === codeQuery);
+  if (validGlobalHsCode(codeQuery) && !hasExact) {
+    ranked.push({ code: codeQuery, desc: labels.direct(codeQuery), level: codeQuery.length, unit: "", score: 1100, direct: true });
+  }
+  return ranked
+    .sort((a, b) => b.score - a.score || a.code.length - b.code.length || a.code.localeCompare(b.code))
+    .slice(0, 40);
+}
+
+function enhanceGlobalHsCombobox(select, items, labels) {
+  if (!select || select.dataset.globalHsComboboxReady === "true") return;
+  const id = `global-hs-combobox-${Math.random().toString(36).slice(2, 9)}`;
+  const listId = `${id}-list`;
+  const wrap = document.createElement("div");
+  wrap.className = "country-combobox simple-combobox global-hs-combobox";
+  wrap.innerHTML = `
+    <label class="sr-only" for="${id}">${labels.label}</label>
+    <div class="country-combobox-control">
+      <i data-lucide="search"></i>
+      <input id="${id}" type="text" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="${listId}" aria-label="${labels.label}" placeholder="${labels.placeholder}">
+      <button type="button" aria-label="${labels.open}"><i data-lucide="chevron-down"></i></button>
+    </div>
+    <div class="country-combobox-list" id="${listId}" role="listbox"></div>
+  `;
+  select.classList.add("visually-hidden-select");
+  select.setAttribute("tabindex", "-1");
+  select.setAttribute("aria-hidden", "true");
+  select.parentElement?.appendChild(wrap);
+  select.dataset.globalHsComboboxReady = "true";
+  const input = wrap.querySelector("input");
+  const button = wrap.querySelector("button");
+  const list = wrap.querySelector(".country-combobox-list");
+  let matches = [];
+  let activeIndex = -1;
+  let open = false;
+  const ensureOption = (code) => {
+    const normalized = normalizeGlobalHsCode(code);
+    if (!validGlobalHsCode(normalized)) return "";
+    let option = [...select.options].find((item) => item.value === normalized);
+    if (!option) {
+      option = document.createElement("option");
+      option.value = normalized;
+      option.textContent = normalized;
+      select.appendChild(option);
+    }
+    select.value = normalized;
+    return normalized;
+  };
+  const setInput = () => {
+    const code = normalizeGlobalHsCode(select.value);
+    const item = findGlobalHsItem(code);
+    input.value = code ? `${code}${item?.desc ? ` - ${item.desc}` : ""}` : "";
+  };
+  const commit = () => {
+    const code = normalizeGlobalHsCode(input.value || select.value);
+    if (!validGlobalHsCode(code)) return "";
+    ensureOption(code);
+    select.dispatchEvent(new Event("change", { bubbles: true }));
+    setInput();
+    return code;
+  };
+  select.globalHsCommit = commit;
+  select.globalHsRawCode = () => normalizeGlobalHsCode(input.value || select.value);
+  const render = () => {
+    list.innerHTML = matches.length ? matches.map((item, index) => `<button type="button" role="option" id="${listId}-${escapeAttribute(item.code)}" data-hs-option="${escapeAttribute(item.code)}" aria-selected="${index === activeIndex}"><span><strong>${escapeHtml(item.code)}</strong> — ${escapeHtml(item.desc || labels.noDescription)}</span><small>${escapeHtml(globalHsLevelLabel(item.code))}${item.direct ? ` · ${escapeHtml(labels.directBadge)}` : ""}</small></button>`).join("") : `<div class="country-combobox-empty">${escapeHtml(labels.empty)}</div>`;
+    input.setAttribute("aria-activedescendant", activeIndex >= 0 && matches[activeIndex] ? `${listId}-${matches[activeIndex].code}` : "");
+  };
+  const filter = () => {
+    matches = globalHsSearchItems(items, input.value, labels);
+    activeIndex = matches.length ? 0 : -1;
+    render();
+  };
+  const show = () => { open = true; wrap.classList.add("is-open"); input.setAttribute("aria-expanded", "true"); filter(); };
+  const close = (commitInput = true) => { if (commitInput) commit(); open = false; wrap.classList.remove("is-open"); input.setAttribute("aria-expanded", "false"); input.removeAttribute("aria-activedescendant"); setInput(); };
+  const choose = (value) => { if (!value) return; ensureOption(value); select.dispatchEvent(new Event("change", { bubbles: true })); setInput(); close(false); };
+  ensureOption(select.value || "2613");
+  setInput();
+  input.addEventListener("focus", show);
+  input.addEventListener("input", show);
+  button.addEventListener("click", () => open ? close() : (input.focus(), show()));
+  list.addEventListener("mousedown", (event) => event.preventDefault());
+  list.addEventListener("click", (event) => { const option = event.target.closest("[data-hs-option]"); if (option) choose(option.dataset.hsOption); });
+  input.addEventListener("keydown", (event) => {
+    if (event.key === "ArrowDown") { event.preventDefault(); if (!open) show(); else activeIndex = Math.min(activeIndex + 1, matches.length - 1); render(); }
+    else if (event.key === "ArrowUp") { event.preventDefault(); if (!open) show(); else activeIndex = Math.max(activeIndex - 1, 0); render(); }
+    else if (event.key === "Enter") { event.preventDefault(); if (!open) show(); else if (matches[activeIndex]) choose(matches[activeIndex].code); else commit(); select.form?.requestSubmit(); }
+    else if (event.key === "Escape") { event.preventDefault(); close(false); }
+  });
+  document.addEventListener("click", (event) => { if (!wrap.contains(event.target)) close(); });
+  select.addEventListener("change", setInput);
 }
 
 function globalTradeSnapshotMarkup(data, context) {
@@ -3703,9 +3861,9 @@ function globalDataClassificationMarkup(data, context) {
   const lang = currentLang();
   const meta = data.metadata || {};
   const rows = lang === "ko"
-    ? [["데이터 출처", "UN Comtrade"], ["Dataset/API", meta.api || "data/v1/get/C/A/HS"], ["품목 분류", meta.classification || "HS combined annual data"], ["통화 / 단위", "USD"], ["기준 연도", context.year], ["Cache", data.cache?.hit ? "hit" : "miss"]]
-    : [["Data Source", "UN Comtrade"], ["Dataset/API", meta.api || "data/v1/get/C/A/HS"], ["Classification", meta.classification || "HS combined annual data"], ["Currency / Unit", "USD"], ["Reference Year", context.year], ["Cache", data.cache?.hit ? "hit" : "miss"]];
-  const note = lang === "ko" ? "UN Comtrade HS combined annual data를 사용합니다. HS 개정판과 전환 데이터가 섞일 수 있으므로 연도별 품목 정의 차이는 원자료 확인이 필요합니다." : "This tool uses UN Comtrade HS combined annual data. HS revisions and converted records can affect year-to-year comparability, so confirm commodity definitions in the source when filing or auditing.";
+    ? [["데이터 출처", "UN Comtrade"], ["Dataset/API", meta.api || "data/v1/get/C/A/HS"], ["품목 분류", meta.classification || "HS combined annual data"], ["선택 HS Level", globalHsLevelLabel(context.hs, lang)], ["HS Reference", "UN Comtrade HS combined reference"], ["통화 / 단위", "USD"], ["기준 연도", context.year], ["Cache", data.cache?.hit ? "hit" : "miss"]]
+    : [["Data Source", "UN Comtrade"], ["Dataset/API", meta.api || "data/v1/get/C/A/HS"], ["Classification", meta.classification || "HS combined annual data"], ["Selected HS Level", globalHsLevelLabel(context.hs, lang)], ["HS Reference", "UN Comtrade HS combined reference"], ["Currency / Unit", "USD"], ["Reference Year", context.year], ["Cache", data.cache?.hit ? "hit" : "miss"]];
+  const note = lang === "ko" ? "품목명은 UN Comtrade HS combined reference를 기준으로 표시합니다. 과거 연도 데이터는 HS 개정에 따라 품목 정의가 달라질 수 있으므로 원자료 확인이 필요합니다." : "Descriptions use the UN Comtrade HS combined reference. Historical data can reflect different HS revisions, so confirm commodity definitions in the source when filing or auditing.";
   return `<section class="eu-dashboard-section eu-classification"><h2>${lang === "ko" ? "데이터 및 분류" : "Data & Classification"}</h2><dl>${rows.map(([label, value]) => `<div><dt>${label}</dt><dd>${escapeHtml(String(value))}</dd></div>`).join("")}</dl><p class="muted">${escapeHtml(note)}</p></section>`;
 }
 
@@ -3749,7 +3907,7 @@ async function fetchGlobalTrade(selected) {
   return data;
 }
 
-function wireTradeExplorerParams() {
+async function wireTradeExplorerParams() {
   const form = document.querySelector("[data-trade-explorer-form]");
   if (!form) return;
   const params = new URLSearchParams(location.search);
@@ -3760,24 +3918,31 @@ function wireTradeExplorerParams() {
   const year = form.querySelector("[name='year']");
   const flow = form.querySelector("[name='flow']");
   const output = document.querySelector("[data-trade-explorer-output]");
+  const hsReference = await loadGlobalHsReference();
   const countryItems = TRADE_COUNTRIES.map(([value, en, ko]) => ({ value, label: lang === "ko" ? ko : en, meta: `${value} · ${en}`, terms: [value, en, ko, ...(COUNTRY_SEARCH_ALIASES[value] || [])].map(normalizeCountrySearch) }));
   const partnerItems = [{ value: "WORLD", label: lang === "ko" ? "전 세계" : "World", meta: "World aggregate", terms: ["world", "전세계", "전 세계", "global"].map(normalizeCountrySearch) }, ...countryItems];
+  const setHsValue = (value) => {
+    const code = normalizeGlobalHsCode(value) || "2613";
+    hs.innerHTML = `<option value="${escapeAttribute(code)}">${escapeHtml(code)}</option>`;
+    hs.value = code;
+  };
   reporter.innerHTML = optionMarkup(TRADE_COUNTRIES);
   partner.innerHTML = `<option value="WORLD">${lang === "ko" ? "전 세계" : "World"}</option>${optionMarkup(TRADE_COUNTRIES)}`;
-  hs.innerHTML = GLOBAL_HS_OPTIONS.map(([code, en, ko]) => `<option value="${code}">${escapeHtml(`${code} - ${lang === "ko" ? ko : en}`)}</option>`).join("");
+  setHsValue(params.get("hs") || "2613");
   year.innerHTML = GLOBAL_TRADE_YEARS.map((item) => `<option value="${item}">${item}</option>`).join("");
   reporter.value = "KR";
   partner.value = "US";
-  hs.value = "2613";
   year.value = GLOBAL_TRADE_YEARS[0];
   flow.value = "export";
-  ["reporter", "partner", "hs", "year", "flow"].forEach((name) => { const field = form.querySelector(`[name='${name}']`); const value = params.get(name); if (value) field.value = name === "partner" || name === "reporter" ? value.toUpperCase() : value; });
+  ["reporter", "partner", "year", "flow"].forEach((name) => { const field = form.querySelector(`[name='${name}']`); const value = params.get(name); if (value) field.value = name === "partner" || name === "reporter" ? value.toUpperCase() : value; });
   enhanceSimpleCombobox(reporter, countryItems, lang === "ko" ? { label: "Reporter 선택", placeholder: "Reporter 국가 검색...", open: "Reporter 목록 열기", empty: "일치하는 reporter가 없습니다." } : { label: "Select reporter", placeholder: "Search reporter country...", open: "Open reporter list", empty: "No matching reporter." });
   enhanceSimpleCombobox(partner, partnerItems, lang === "ko" ? { label: "Partner 선택", placeholder: "Partner 또는 World 검색...", open: "Partner 목록 열기", empty: "일치하는 partner가 없습니다." } : { label: "Select partner", placeholder: "Search partner or World...", open: "Open partner list", empty: "No matching partner." });
-  enhanceSimpleCombobox(hs, GLOBAL_HS_OPTIONS.map(([value, en, ko]) => ({ value, label: `${value} - ${lang === "ko" ? ko : en}`, meta: "HS", terms: [value, en, ko].map(normalizeCountrySearch) })), lang === "ko" ? { label: "HS Code 선택", placeholder: "HS Code 또는 품목명 검색...", open: "HS 목록 열기", empty: "일치하는 HS 예시가 없습니다." } : { label: "Select HS code", placeholder: "Search HS code or product...", open: "Open HS list", empty: "No matching HS example." });
+  enhanceGlobalHsCombobox(hs, hsReference, lang === "ko" ? { label: "HS Code 선택", placeholder: "HS Code 또는 품목명 검색", open: "HS 목록 열기", empty: "검색 결과가 없습니다. 2, 4, 6자리 HS Code는 직접 입력해 조회할 수 있습니다.", direct: (code) => `HS ${code}로 직접 조회`, directBadge: "직접 입력", noDescription: "품목명 없음" } : { label: "Select HS code", placeholder: "Search HS code or product", open: "Open HS list", empty: "No results. You can directly enter a 2, 4, or 6 digit HS code.", direct: (code) => `Search directly with HS ${code}`, directBadge: "direct entry", noDescription: "description unavailable" });
   const render = async () => {
-    const selected = { reporter: reporter.value, partner: partner.value, hs: hs.value, year: year.value, flow: flow.value };
-    const localError = !/^[A-Z]{2}$/.test(selected.reporter) ? "unsupported_reporter" : !/^(WORLD|[A-Z]{2})$/.test(selected.partner) ? "unsupported_partner" : !/^(?:\d{2}|\d{4}|\d{6})$/.test(selected.hs) ? "invalid_hs" : !GLOBAL_TRADE_YEARS.includes(selected.year) ? "invalid_year" : "";
+    const hsInputCode = typeof hs.globalHsRawCode === "function" ? hs.globalHsRawCode() : normalizeGlobalHsCode(hs.value);
+    if (validGlobalHsCode(hsInputCode) && typeof hs.globalHsCommit === "function") hs.globalHsCommit();
+    const selected = { reporter: reporter.value, partner: partner.value, hs: hsInputCode, year: year.value, flow: flow.value };
+    const localError = !/^[A-Z]{2}$/.test(selected.reporter) ? "unsupported_reporter" : !/^(WORLD|[A-Z]{2})$/.test(selected.partner) ? "unsupported_partner" : !validGlobalHsCode(selected.hs) ? "invalid_hs" : !GLOBAL_TRADE_YEARS.includes(selected.year) ? "invalid_year" : "";
     if (localError) { output.innerHTML = globalTradeErrorMarkup(localError, 400); return; }
     output.innerHTML = `<div class="data-empty">${lang === "ko" ? "UN Comtrade 데이터를 조회하는 중입니다..." : "Loading UN Comtrade data..."}</div>`;
     try { renderGlobalTradeDashboard(output, await fetchGlobalTrade(selected)); }
@@ -3785,8 +3950,11 @@ function wireTradeExplorerParams() {
   };
   form.addEventListener("submit", (event) => {
     event.preventDefault();
+    const hsInputCode = typeof hs.globalHsRawCode === "function" ? hs.globalHsRawCode() : normalizeGlobalHsCode(hs.value);
+    if (validGlobalHsCode(hsInputCode) && typeof hs.globalHsCommit === "function") hs.globalHsCommit();
     const url = new URL(location.href);
-    ["reporter", "partner", "hs", "year", "flow"].forEach((name) => { const field = form.querySelector(`[name='${name}']`); if (field.value) url.searchParams.set(name, field.value); else url.searchParams.delete(name); });
+    ["reporter", "partner", "year", "flow"].forEach((name) => { const field = form.querySelector(`[name='${name}']`); if (field.value) url.searchParams.set(name, field.value); else url.searchParams.delete(name); });
+    if (hsInputCode) url.searchParams.set("hs", hsInputCode); else url.searchParams.delete("hs");
     history.replaceState(null, "", url);
     render();
   });

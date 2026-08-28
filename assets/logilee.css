@@ -7443,3 +7443,37 @@ body.sidebar-drawer-active {
     grid-template-columns: 1fr;
   }
 }
+
+.global-hs-combobox .country-combobox-list {
+  min-width: min(520px, calc(100vw - 32px));
+}
+
+.global-hs-combobox .country-combobox-list button {
+  align-items: flex-start;
+}
+
+.global-hs-combobox .country-combobox-list span {
+  min-width: 0;
+  line-height: 1.35;
+}
+
+.global-hs-combobox .country-combobox-list span strong {
+  color: var(--deep-navy);
+  font-weight: 900;
+}
+
+.global-hs-combobox .country-combobox-list small {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+@media (max-width: 760px) {
+  .global-hs-combobox .country-combobox-list {
+    min-width: 100%;
+  }
+
+  .global-hs-combobox .country-combobox-list button {
+    display: grid;
+    gap: 4px;
+  }
+}
