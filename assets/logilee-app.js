@@ -3065,6 +3065,7 @@ const LEAFLET_CSS_INTEGRITY = "sha256-p4NxAoJBhIINfQ8dS/lZ7wG29RGrP31PsyWSgG3JY=
 const LEAFLET_JS_INTEGRITY = "sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=";
 let leafletLoadPromise = null;
 const portLeafletMaps = new WeakMap();
+const portLeafletResizeObservers = new WeakMap();
 
 function loadLeafletForPortMap() {
   if (window.L?.map) return Promise.resolve(window.L);
@@ -3103,7 +3104,7 @@ function portLocationMapMarkup(port) {
   const zoom = portMapZoom(port);
   const label = `${port.name} ${lang === "ko" ? "위치 지도" : "location map"}`;
   const coordinates = `${port.lat.toFixed(4)}, ${port.lon.toFixed(4)}`;
-  return `<div class="port-map-card port-map-card--leaflet" data-port-map="${escapeAttribute(port.slug)}" data-map-zoom="${zoom}" data-map-min="9" data-map-max="13" aria-label="${escapeAttribute(label)}"><div class="port-map-leaflet" data-port-leaflet-map></div><button class="port-map-reset" type="button" data-port-map-reset aria-label="${lang === "ko" ? "지도 초기화" : "Reset map"}">${lang === "ko" ? "초기화" : "Reset"}</button><div class="port-map-caption"><strong>${escapeHtml(port.name)}</strong><span>${escapeHtml(coordinates)} · ${lang === "ko" ? "Approximate location" : "Approximate location"}</span></div><p>${lang === "ko" ? "일반 위치 지도입니다. 공식 터미널 배치도는 아래 Official Port Map 링크에서 별도로 확인하세요." : "General location map. Official terminal or port-layout maps are listed separately below when available."} <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors</a></p><div class="port-map-fallback"><strong>${lang === "ko" ? "지도를 불러올 수 없습니다." : "Map could not load."}</strong><span>${escapeHtml(coordinates)}</span><a href="${escapeAttribute(portOsmUrl(port, zoom))}" target="_blank" rel="noopener">OpenStreetMap →</a></div></div>`;
+  return `<div class="port-map-card port-map-card--leaflet" data-port-map="${escapeAttribute(port.slug)}" data-map-zoom="${zoom}" data-map-min="9" data-map-max="13" data-map-lat="${escapeAttribute(port.lat)}" data-map-lon="${escapeAttribute(port.lon)}" aria-label="${escapeAttribute(label)}"><div class="port-map-leaflet" data-port-leaflet-map></div><button class="port-map-reset" type="button" data-port-map-reset aria-label="${lang === "ko" ? "지도 초기화" : "Reset map"}">${lang === "ko" ? "초기화" : "Reset"}</button><div class="port-map-caption"><strong>${escapeHtml(port.name)}</strong><span>${escapeHtml(coordinates)} · ${lang === "ko" ? "Approximate location" : "Approximate location"}</span></div><p>${lang === "ko" ? "일반 위치 지도입니다. 공식 터미널 배치도는 아래 Official Port Map 링크에서 별도로 확인하세요." : "General location map. Official terminal or port-layout maps are listed separately below when available."} <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors</a></p><div class="port-map-fallback"><strong>${lang === "ko" ? "지도를 불러올 수 없습니다." : "Map could not load."}</strong><span>${escapeHtml(coordinates)}</span><a href="${escapeAttribute(portOsmUrl(port, zoom))}" target="_blank" rel="noopener">OpenStreetMap →</a></div></div>`;
 }
 
 function initializePortMapElement(map, port) {
@@ -3111,8 +3112,13 @@ function initializePortMapElement(map, port) {
   const target = map.querySelector("[data-port-leaflet-map]");
   if (!target) return;
   const zoom = Number(map.dataset.mapZoom || portMapZoom(port));
-  loadLeafletForPortMap().then((L) => {
+  const start = () => loadLeafletForPortMap().then((L) => {
     if (!document.body.contains(map) || portLeafletMaps.has(map)) return;
+    const bounds = target.getBoundingClientRect();
+    if (!bounds.width || !bounds.height) {
+      requestAnimationFrame(() => initializePortMapElement(map, port));
+      return;
+    }
     const leaflet = L.map(target, {
       center: [port.lat, port.lon],
       zoom,
@@ -3134,13 +3140,39 @@ function initializePortMapElement(map, port) {
       iconSize: [76, 48],
       iconAnchor: [38, 21]
     });
-    L.marker([port.lat, port.lon], { icon: marker, keyboard: false }).addTo(leaflet);
+    const leafletMarker = L.marker([port.lat, port.lon], { icon: marker, keyboard: false }).addTo(leaflet);
+    target.__logileeLeafletMap = leaflet;
+    target.__logileeLeafletMarker = leafletMarker;
     portLeafletMaps.set(map, leaflet);
     map.classList.add("is-map-ready");
-    setTimeout(() => leaflet.invalidateSize(), 80);
-  }).catch((error) => {
+    const syncSize = () => requestAnimationFrame(() => leaflet.invalidateSize({ pan: false }));
+    requestAnimationFrame(syncSize);
+    setTimeout(syncSize, 120);
+    setTimeout(syncSize, 360);
+    if (window.ResizeObserver) {
+      let resizeTimer = 0;
+      const resizeObserver = new ResizeObserver(() => {
+        window.clearTimeout(resizeTimer);
+        resizeTimer = window.setTimeout(syncSize, 80);
+      });
+      resizeObserver.observe(map);
+      portLeafletResizeObservers.set(map, resizeObserver);
+    }
+  });
+  requestAnimationFrame(() => start().catch((error) => {
     console.warn("Port map unavailable:", error);
     map.classList.add("is-map-fallback");
+  }));
+}
+
+function destroyPortMaps(root = document) {
+  root.querySelectorAll("[data-port-map]").forEach((map) => {
+    const leaflet = portLeafletMaps.get(map);
+    const resizeObserver = portLeafletResizeObservers.get(map);
+    if (resizeObserver) resizeObserver.disconnect();
+    if (leaflet) leaflet.remove();
+    portLeafletMaps.delete(map);
+    portLeafletResizeObservers.delete(map);
   });
 }
 
@@ -3275,6 +3307,7 @@ function wirePortFinder() {
   };
   const selectPort = (port, { push = true, scroll = true } = {}) => {
     if (!port || !profile) return;
+    destroyPortMaps(profile);
     profile.innerHTML = portProfileMarkup(port);
     if (push) {
       const url = new URL(location.href);
@@ -3295,6 +3328,7 @@ function wirePortFinder() {
       : `<div class="data-empty">${lang === "ko" ? "일치하는 항만을 찾지 못했습니다. 항만명, 별칭, 국가명 또는 UN/LOCODE를 다시 확인하세요." : "No matching ports found. Check the port name, alias, country, or UN/LOCODE."}</div>`;
     if (count) count.textContent = lang === "ko" ? `${results.length}개 항만` : `${results.length} ports`;
     if (!keepProfile && profile) {
+      destroyPortMaps(profile);
       const currentParams = new URLSearchParams(location.search);
       const requestedLocode = currentParams.get("locode");
       const paramPort = findPortFromParams(currentParams);
