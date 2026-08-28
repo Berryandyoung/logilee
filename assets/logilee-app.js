@@ -3051,13 +3051,56 @@ function portOsmUrl(port, zoom = 12) {
   return `https://www.openstreetmap.org/?mlat=${encodeURIComponent(port.lat)}&mlon=${encodeURIComponent(port.lon)}#map=${zoom}/${encodeURIComponent(port.lat)}/${encodeURIComponent(port.lon)}`;
 }
 
-function portStaticMapUrl(port) {
-  const z = 12;
-  const latRad = port.lat * Math.PI / 180;
-  const n = Math.pow(2, z);
-  const x = Math.floor((port.lon + 180) / 360 * n);
-  const y = Math.floor((1 - Math.log(Math.tan(latRad) + 1 / Math.cos(latRad)) / Math.PI) / 2 * n);
-  return `https://tile.openstreetmap.org/${z}/${x}/${y}.png`;
+function portMapZoom(port) {
+  const wideRegion = new Set(["rotterdam", "los-angeles", "long-beach", "new-york-new-jersey", "ningbo-zhoushan", "shanghai", "jebel-ali"]);
+  if (wideRegion.has(port.slug)) return 11;
+  if (["singapore", "hong-kong", "cat-lai"].includes(port.slug)) return 12;
+  return 11;
+}
+
+function portTileXY(lat, lon, zoom) {
+  const latRad = lat * Math.PI / 180;
+  const n = Math.pow(2, zoom);
+  return {
+    x: Math.floor((lon + 180) / 360 * n),
+    y: Math.floor((1 - Math.log(Math.tan(latRad) + 1 / Math.cos(latRad)) / Math.PI) / 2 * n),
+    n
+  };
+}
+
+function portTileUrl(x, y, zoom, n) {
+  const wrappedX = ((x % n) + n) % n;
+  const clampedY = Math.max(0, Math.min(n - 1, y));
+  return `https://tile.openstreetmap.org/${zoom}/${wrappedX}/${clampedY}.png`;
+}
+
+function portMapTilesMarkup(port, zoom = portMapZoom(port)) {
+  if (![port.lat, port.lon].every(Number.isFinite)) return "";
+  const center = portTileXY(port.lat, port.lon, zoom);
+  const tiles = [];
+  for (let dy = -1; dy <= 1; dy += 1) {
+    for (let dx = -1; dx <= 1; dx += 1) {
+      tiles.push(`<img src="${escapeAttribute(portTileUrl(center.x + dx, center.y + dy, zoom, center.n))}" alt="" loading="lazy" data-map-tile style="grid-column:${dx + 2};grid-row:${dy + 2}">`);
+    }
+  }
+  return tiles.join("");
+}
+
+function portLocationMapMarkup(port) {
+  const lang = currentLang();
+  const zoom = portMapZoom(port);
+  const label = `${port.name} ${lang === "ko" ? "위치 지도" : "location map"}`;
+  const coordinates = `${port.lat.toFixed(4)}, ${port.lon.toFixed(4)}`;
+  return `<div class="port-map-card port-map-card--mosaic" data-port-map="${escapeAttribute(port.slug)}" data-map-zoom="${zoom}" data-map-min="9" data-map-max="13" role="img" aria-label="${escapeAttribute(label)}"><div class="port-map-toolbar"><span>${lang === "ko" ? "위치 지도" : "Location Map"}</span><div><button type="button" data-port-map-zoom="out" aria-label="${lang === "ko" ? "지도 축소" : "Zoom out"}">−</button><button type="button" data-port-map-reset aria-label="${lang === "ko" ? "지도 초기화" : "Reset map"}">${lang === "ko" ? "초기화" : "Reset"}</button><button type="button" data-port-map-zoom="in" aria-label="${lang === "ko" ? "지도 확대" : "Zoom in"}">+</button></div></div><div class="port-map-tile-grid" data-port-map-tiles>${portMapTilesMarkup(port, zoom)}</div><span class="port-map-pin" aria-hidden="true"><b>${escapeHtml(port.locode)}</b></span><div class="port-map-caption"><strong>${escapeHtml(port.name)}</strong><span>${escapeHtml(coordinates)} · ${lang === "ko" ? "Approximate location" : "Approximate location"}</span></div><p>${lang === "ko" ? "일반 위치 지도입니다. 공식 터미널 배치도는 아래 Official Port Map 링크에서 별도로 확인하세요." : "General location map. Official terminal or port-layout maps are listed separately below when available."} <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors</a></p></div>`;
+}
+
+function updatePortMapElement(map, port, zoom) {
+  const min = Number(map.dataset.mapMin || 9);
+  const max = Number(map.dataset.mapMax || 13);
+  const nextZoom = Math.max(min, Math.min(max, zoom));
+  map.dataset.mapZoom = String(nextZoom);
+  const tileRoot = map.querySelector("[data-port-map-tiles]");
+  if (tileRoot) tileRoot.innerHTML = portMapTilesMarkup(port, nextZoom);
 }
 
 function portFlag(port) {
@@ -3121,7 +3164,7 @@ function portProfileMarkup(port) {
   const rows = lang === "ko"
     ? [["UN/LOCODE", port.locode], ["국가", `${port.country} (${port.iso})`], ["도시 / 지역", portCity(port)], ["좌표", coordinates], ["시간대", port.timezone], ["현지시간", localTime], ["위치 유형", port.type], ["UN/LOCODE Function", portFunctionLabel(port, lang)]]
     : [["UN/LOCODE", port.locode], ["Country", `${port.country} (${port.iso})`], ["City / Area", portCity(port)], ["Coordinates", coordinates], ["Time Zone", port.timezone], ["Local Time", localTime], ["Location Type", port.type], ["UN/LOCODE Function", portFunctionLabel(port, lang)]];
-  return `<section class="port-profile" id="port-profile" aria-live="polite"><div class="port-profile-hero"><div>${portFlag(port)}<span class="kicker">Port Profile</span><h2>${escapeHtml(port.name)}</h2><p>${escapeHtml(port.locode)} · ${escapeHtml(portCity(port))}, ${escapeHtml(port.country)}</p><p class="port-role-copy">${escapeHtml(portLocalizedRole(port, lang))}</p></div><a class="secondary-btn" href="${escapeAttribute(portOsmUrl(port))}" target="_blank" rel="noopener"><i data-lucide="map"></i>${lang === "ko" ? "OpenStreetMap에서 보기" : "Open in OpenStreetMap"}</a></div><div class="port-profile-grid"><div class="port-map-card"><img src="${escapeAttribute(portStaticMapUrl(port))}" alt="${escapeAttribute(`${port.name} approximate location map`) }" loading="lazy"><span class="port-map-pin" aria-hidden="true"></span><p>${lang === "ko" ? "Location Map · 좌표는 항만 또는 도시권 기준의 근사 위치일 수 있습니다." : "Location Map · Coordinates may represent an approximate port or city-area position."} <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors</a></p></div><dl class="port-core-facts">${rows.filter(([, value]) => value).map(([label, value]) => `<div><dt>${escapeHtml(label)}</dt><dd>${escapeHtml(value)}</dd></div>`).join("")}</dl></div>${portResourceMarkup(port)}${portTerminalsMarkup(port)}${portNearbyMarkup(port)}${portRelatedToolsMarkup(port)}</section>`;
+  return `<section class="port-profile" id="port-profile" aria-live="polite"><div class="port-profile-hero"><div>${portFlag(port)}<span class="kicker">Port Profile</span><h2>${escapeHtml(port.name)}</h2><p>${escapeHtml(port.locode)} · ${escapeHtml(portCity(port))}, ${escapeHtml(port.country)}</p><p class="port-role-copy">${escapeHtml(portLocalizedRole(port, lang))}</p></div><a class="secondary-btn" href="${escapeAttribute(portOsmUrl(port, portMapZoom(port)))}" target="_blank" rel="noopener"><i data-lucide="map"></i>${lang === "ko" ? "OpenStreetMap에서 보기" : "Open in OpenStreetMap"}</a></div><div class="port-profile-grid">${portLocationMapMarkup(port)}<dl class="port-core-facts">${rows.filter(([, value]) => value).map(([label, value]) => `<div><dt>${escapeHtml(label)}</dt><dd>${escapeHtml(value)}</dd></div>`).join("")}</dl></div>${portResourceMarkup(port)}${portTerminalsMarkup(port)}${portNearbyMarkup(port)}${portRelatedToolsMarkup(port)}</section>`;
 }
 
 function portCard(port) {
@@ -3230,6 +3273,16 @@ function wirePortFinder() {
   [output, popular, profile].filter(Boolean).forEach((root) => root.addEventListener("click", (event) => {
     const load = event.target.closest("[data-port-load-more]");
     if (load) { visibleCount += 16; render({ keepProfile: true }); return; }
+    const zoomButton = event.target.closest("[data-port-map-zoom], [data-port-map-reset]");
+    if (zoomButton) {
+      const map = zoomButton.closest("[data-port-map]");
+      const port = map ? ALL_PORTS.find((item) => item.slug === map.dataset.portMap) : null;
+      if (!map || !port) return;
+      const currentZoom = Number(map.dataset.mapZoom || portMapZoom(port));
+      const nextZoom = zoomButton.hasAttribute("data-port-map-reset") ? portMapZoom(port) : currentZoom + (zoomButton.dataset.portMapZoom === "in" ? 1 : -1);
+      updatePortMapElement(map, port, nextZoom);
+      return;
+    }
     const button = event.target.closest("[data-port-view]");
     if (!button) return;
     const port = ALL_PORTS.find((item) => item.slug === button.dataset.portView);
