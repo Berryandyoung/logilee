@@ -1862,7 +1862,7 @@ const TRADE_COUNTRIES = ISO_COUNTRY_CODES
 
 const COUNTRY_CURRENCY = { KR: "KRW", CN: "CNY", US: "USD", JP: "JPY", DE: "EUR", VN: "VND", IN: "INR", MX: "MXN", SG: "SGD", GB: "GBP", NL: "EUR", AE: "AED", HK: "HKD", TH: "THB", MY: "MYR", LK: "LKR", AT: "EUR", BE: "EUR", BG: "EUR", HR: "EUR", CY: "EUR", CZ: "CZK", DK: "DKK", EE: "EUR", FI: "EUR", FR: "EUR", EL: "EUR", ES: "EUR", IT: "EUR", GR: "EUR", HU: "HUF", IE: "EUR", LV: "EUR", LT: "EUR", LU: "EUR", MT: "EUR", PT: "EUR", RO: "RON", SK: "EUR", SI: "EUR", SE: "SEK", TW: "TWD", PL: "PLN", CA: "CAD", BR: "BRL", AR: "ARS", PE: "PEN", CO: "COP", PA: "PAB", ZA: "ZAR", MA: "MAD", EG: "EGP", KE: "KES", TZ: "TZS", NG: "NGN", GH: "GHS", SA: "SAR", OM: "OMR", QA: "QAR", PK: "PKR", BD: "BDT", ID: "IDR", PH: "PHP", ET: "ETB", CG: "XAF", CD: "CDF" };
 const PORTS = [
-  { slug: "busan", name: "Port of Busan", country: "South Korea", iso: "KR", locode: "KRPUS", lat: 35.10, lon: 129.04, timezone: "Asia/Seoul", region: "Northeast Asia", type: "Seaport" },
+  { slug: "busan", name: "Port of Busan", aliases: ["Busan", "Pusan", "부산항"], country: "South Korea", iso: "KR", locode: "KRPUS", lat: 35.10, lon: 129.04, timezone: "Asia/Seoul", region: "Northeast Asia", type: "Seaport" },
   { slug: "shanghai", name: "Port of Shanghai", country: "China", iso: "CN", locode: "CNSHA", lat: 31.23, lon: 121.50, timezone: "Asia/Shanghai", region: "East Asia", type: "Seaport" },
   { slug: "ningbo-zhoushan", name: "Ningbo-Zhoushan Port", aliases: ["Ningbo", "Zhoushan"], country: "China", iso: "CN", locode: "CNNGB", lat: 29.87, lon: 121.55, timezone: "Asia/Shanghai", region: "East Asia", type: "Seaport" },
   { slug: "singapore", name: "Port of Singapore", country: "Singapore", iso: "SG", locode: "SGSIN", lat: 1.26, lon: 103.82, timezone: "Asia/Singapore", region: "Southeast Asia", type: "Seaport" },
@@ -1965,6 +1965,50 @@ const EXTRA_PORTS = [
 ];
 
 const ALL_PORTS = [...PORTS, ...EXTRA_PORTS];
+
+const PORT_DATA_AUDIT = {
+  updated: "2026-08-28",
+  locodeRelease: "UN/LOCODE 2025-1",
+  locodeSource: "UNECE UN/LOCODE",
+  coordinateSource: "LOGILEE curated coordinates cross-checked against UN/LOCODE or official/public geographic references where available",
+  mapSource: "OpenStreetMap",
+  timezoneSource: "IANA time zone identifiers rendered with JavaScript Intl",
+  officialCoverage: "Selected major ports only",
+  terminalCoverage: "Selected verified terminals only",
+  liveData: "Not enabled"
+};
+
+const PORT_RESOURCE_PROFILES = {
+  busan: { city: "Busan", roleKo: "한국의 대표 해상 관문이자 동북아 환적·수출입 라우팅 검토의 기준 항만입니다.", roleEn: "South Korea's primary ocean gateway and a reference port for Northeast Asia routing and transshipment checks.", official: [["Busan Port Authority", "Port Authority", "https://www.busanpa.com/eng/Main.do"], ["Port-MIS", "Vessel / Port Operations", "https://new.portmis.go.kr/"]], maps: [["Busan Port Authority Port Guide", "Official Port Map", "https://www.busanpa.com/eng/Contents.do?mCode=MN0022"]], terminals: [["Busan New Port", "Container", "Multiple terminal operators", "https://www.busanpa.com/eng/Main.do"]] },
+  shanghai: { city: "Shanghai", roleKo: "상하이와 장강삼각주 제조·유통권을 연결하는 중국 동부 핵심 해상 관문입니다.", roleEn: "A major East China seaport serving Shanghai and the Yangtze River Delta manufacturing and distribution region.", official: [["Shanghai International Port Group", "Port Operator", "https://www.portshanghai.com.cn/"]] },
+  "ningbo-zhoushan": { city: "Ningbo / Zhoushan", roleKo: "저장성 제조권과 중국 동부 항로를 검토할 때 상하이와 함께 비교되는 대형 항만입니다.", roleEn: "A large East China port often reviewed with Shanghai for Zhejiang-area sourcing and ocean routing decisions.", official: [["Ningbo Zhoushan Port", "Official Port Website", "https://www.nbport.com.cn/"]] },
+  singapore: { city: "Singapore", roleKo: "동남아 환적, 지역 허브, 장거리 항로 연결을 검토할 때 기준점이 되는 글로벌 항만입니다.", roleEn: "A global hub port used for Southeast Asia transshipment, regional consolidation, and long-haul route comparisons.", official: [["Maritime and Port Authority of Singapore", "Port Authority", "https://www.mpa.gov.sg/"], ["PSA Singapore", "Terminal Operator", "https://www.singaporepsa.com/"]], maps: [["MPA Port Marine Circulars", "Port Notices", "https://www.mpa.gov.sg/port-marine-ops/circulars-and-notices/port-marine-circulars"]], terminals: [["PSA Singapore Terminals", "Container", "PSA Singapore", "https://www.singaporepsa.com/"]] },
+  rotterdam: { city: "Rotterdam", roleKo: "네덜란드와 유럽 내륙시장 진입을 검토할 때 중요한 북유럽 해상 관문입니다.", roleEn: "A key North European gateway for the Netherlands and onward inland distribution into continental Europe.", official: [["Port of Rotterdam Authority", "Port Authority", "https://www.portofrotterdam.com/en"], ["Port Information Guide", "Operational Information", "https://www.portofrotterdam.com/en/sea-shipping/port-information-guide"]], maps: [["Port of Rotterdam Maps", "Official Port Map", "https://www.portofrotterdam.com/en/sea-shipping/port-maps"]] },
+  hamburg: { city: "Hamburg", roleKo: "독일 및 중부 유럽 물류 흐름을 검토할 때 유용한 북유럽 항만 기준점입니다.", roleEn: "A North European port reference for Germany and Central European logistics planning.", official: [["Port of Hamburg", "Official Port Website", "https://www.hafen-hamburg.de/en/"], ["Hamburg Port Authority", "Port Authority", "https://www.hamburg-port-authority.de/en/"]], maps: [["Port of Hamburg Port Map", "Official Port Map", "https://www.hafen-hamburg.de/en/port-map/"]] },
+  "los-angeles": { city: "Los Angeles", roleKo: "태평양 항로와 미국 서부 내륙 물류를 검토할 때 기준이 되는 주요 컨테이너 항만입니다.", roleEn: "A major U.S. West Coast container gateway for Pacific trade lanes and inland distribution planning.", official: [["Port of Los Angeles", "Port Authority", "https://www.portoflosangeles.org/"], ["Port of Los Angeles Tariffs", "Port Tariff", "https://www.portoflosangeles.org/business/tariff"]], maps: [["Port of Los Angeles Map", "Official Port Map", "https://www.portoflosangeles.org/about/maps"]] },
+  "long-beach": { city: "Long Beach", roleKo: "Los Angeles와 함께 남부 캘리포니아 관문 항만으로 drayage와 내륙 운송 검토에 자주 사용됩니다.", roleEn: "A Southern California gateway often reviewed with Los Angeles for drayage and inland movement planning.", official: [["Port of Long Beach", "Port Authority", "https://polb.com/"], ["Port of Long Beach Tariff", "Port Tariff", "https://polb.com/business/tariffs/"]], maps: [["Port of Long Beach Facilities Map", "Official Port Map", "https://polb.com/port-info/maps/"]] },
+  "new-york-new-jersey": { city: "New York / New Jersey", roleKo: "미국 동부 소비시장과 내륙 유통망을 검토할 때 중요한 대서양 관문 항만입니다.", roleEn: "A major Atlantic gateway for U.S. East Coast consumer markets and inland distribution.", official: [["Port of New York and New Jersey", "Port Authority", "https://www.panynj.gov/port/en/index.html"]] },
+  "jebel-ali": { city: "Dubai / Jebel Ali", roleKo: "중동, 아프리카, 남아시아, 유럽을 잇는 걸프 지역 환적·재수출 허브입니다.", roleEn: "A Gulf hub used for transshipment and re-export flows across the Middle East, Africa, South Asia, and Europe.", official: [["DP World Jebel Ali", "Port / Terminal Operator", "https://www.dpworld.com/jebelali"]] },
+  "hong-kong": { city: "Hong Kong", roleKo: "남중국과 국제 해상 네트워크를 연결하는 항만·물류 기준점입니다.", roleEn: "A port and logistics reference point connecting South China with international ocean networks.", official: [["Hong Kong Marine Department", "Port Authority", "https://www.mardep.gov.hk/en/home.html"]] },
+  shenzhen: { city: "Shenzhen", roleKo: "광둥성 제조권과 남중국 수출입 라우팅을 검토할 때 사용하는 주요 항만군입니다.", roleEn: "A South China port cluster used when reviewing Guangdong manufacturing and export/import routings.", official: [["Shenzhen Port", "Official Port Website", "http://www.szport.net/"]] },
+  kaohsiung: { city: "Kaohsiung", roleKo: "대만 남부의 주요 해상 관문으로 동아시아 항로 검토에 자주 사용됩니다.", roleEn: "A major southern Taiwan seaport used for East Asia routing checks.", official: [["Port of Kaohsiung", "Official Port Website", "https://kh.twport.com.tw/en/"]] },
+  tokyo: { city: "Tokyo", roleKo: "일본 수도권 수입·유통 흐름을 검토할 때 사용하는 도쿄만 항만 기준점입니다.", roleEn: "A Tokyo Bay gateway used for Japan capital-region import and distribution planning.", official: [["Port of Tokyo", "Official Port Website", "https://www.kouwan.metro.tokyo.lg.jp/en/"]] },
+  yokohama: { city: "Yokohama", roleKo: "도쿄만 항만군의 주요 항만으로 일본 동부 라우팅 검토에 활용됩니다.", roleEn: "A major Tokyo Bay port used in eastern Japan ocean routing reviews.", official: [["Port of Yokohama", "Official Port Website", "https://www.city.yokohama.lg.jp/lang/overseas/port/"]] },
+  kobe: { city: "Kobe", roleKo: "간사이권 해상 물류와 일본 서부 라우팅 검토에 쓰이는 주요 항만입니다.", roleEn: "A major Kansai-area port used for western Japan logistics and routing checks.", official: [["Port of Kobe", "Official Port Website", "https://www.city.kobe.lg.jp/a44800/business/transport/kowanjigyo/index.html"]] },
+  "cat-lai": { city: "Ho Chi Minh City / Cat Lai", roleKo: "베트남 남부 제조·수출 물류에서 자주 검토되는 호치민권 컨테이너 항만 기준점입니다.", roleEn: "A practical Ho Chi Minh City container-port reference for southern Vietnam sourcing and export workflows.", official: [["Saigon Newport Corporation", "Terminal Operator", "https://saigonnewport.com.vn/en"]], terminals: [["Cat Lai Terminal", "Container", "Saigon Newport Corporation", "https://saigonnewport.com.vn/en"]] },
+  "hai-phong": { city: "Hai Phong", roleKo: "베트남 북부 제조권과 하노이권 물류를 검토할 때 사용하는 주요 해상 관문입니다.", roleEn: "A northern Vietnam gateway for Hanoi-area and northern manufacturing logistics checks.", official: [["Hai Phong Port", "Official Port Website", "https://haiphongport.com.vn/en/"]] },
+  "laem-chabang": { city: "Laem Chabang", roleKo: "태국 동부 해상 물류와 방콕권 수출입을 검토할 때 쓰이는 주요 항만입니다.", roleEn: "A major Thai seaport for eastern Thailand logistics and Bangkok-area export/import checks.", official: [["Port Authority of Thailand", "Port Authority", "https://www.port.co.th/cs/internet/internet/index.html"]] },
+  "port-klang": { city: "Port Klang", roleKo: "말레이시아 서해안과 쿠알라룸푸르권 물류를 검토할 때 쓰이는 대표 항만입니다.", roleEn: "A primary Malaysian west-coast port for Kuala Lumpur-area logistics planning.", official: [["Port Klang Authority", "Port Authority", "https://www.pka.gov.my/"]] },
+  "tanjung-pelepas": { city: "Tanjung Pelepas", roleKo: "말레이시아 남부와 싱가포르 인접 해상 네트워크를 검토할 때 사용하는 컨테이너 항만입니다.", roleEn: "A southern Malaysia container port used for routing checks near Singapore's maritime network.", official: [["Port of Tanjung Pelepas", "Official Port Website", "https://www.ptp.com.my/"]] },
+  colombo: { city: "Colombo", roleKo: "남아시아 환적과 인도양 항로 검토에서 자주 등장하는 스리랑카 주요 항만입니다.", roleEn: "Sri Lanka's major port and a South Asia transshipment reference on Indian Ocean routes.", official: [["Sri Lanka Ports Authority", "Port Authority", "https://www.slpa.lk/"]] },
+  "nhava-sheva": { city: "Mumbai / Nhava Sheva", roleKo: "인도 서부와 뭄바이권 컨테이너 수출입을 검토할 때 자주 사용하는 항만입니다.", roleEn: "A western India container gateway used for Mumbai-area import and export planning.", official: [["Jawaharlal Nehru Port Authority", "Port Authority", "https://www.jnport.gov.in/"]] },
+  "antwerp-bruges": { city: "Antwerp / Bruges", roleKo: "벨기에와 서유럽 내륙 유통망을 검토할 때 중요한 북유럽 복합 항만입니다.", roleEn: "A major North European port complex for Belgium and inland distribution into Western Europe.", official: [["Port of Antwerp-Bruges", "Port Authority", "https://www.portofantwerpbruges.com/en"]], maps: [["Port of Antwerp-Bruges Map", "Official Port Map", "https://www.portofantwerpbruges.com/en/our-port/map"]] },
+  felixstowe: { city: "Felixstowe", roleKo: "영국 주요 컨테이너 관문 중 하나로 UK 수입·유통 검토에 사용됩니다.", roleEn: "A major UK container gateway used for import and distribution planning.", official: [["Port of Felixstowe", "Official Port Website", "https://www.portoffelixstowe.co.uk/"]] },
+  savannah: { city: "Savannah", roleKo: "미국 동남부 소비시장과 내륙 철도 연결을 검토할 때 자주 쓰이는 항만입니다.", roleEn: "A U.S. Southeast gateway often used for consumer-market and inland rail distribution checks.", official: [["Georgia Ports Authority", "Port Authority", "https://gaports.com/"]] },
+  seattle: { city: "Seattle", roleKo: "미국 북서부 태평양 항로와 내륙 연결을 검토할 때 쓰이는 항만입니다.", roleEn: "A Pacific Northwest gateway for ocean routing and inland connection checks.", official: [["Port of Seattle", "Port Authority", "https://www.portseattle.org/"]] },
+  tacoma: { city: "Tacoma", roleKo: "Seattle와 함께 미국 북서부 관문 항만군을 구성하는 항만입니다.", roleEn: "A Pacific Northwest gateway port commonly reviewed with Seattle.", official: [["Port of Tacoma", "Port Authority", "https://www.portoftacoma.com/"]] },
+  vancouver: { city: "Vancouver", roleKo: "캐나다 서부와 북미 태평양 항로를 검토할 때 기준이 되는 주요 항만입니다.", roleEn: "A major western Canada gateway for North Pacific and inland North America logistics checks.", official: [["Port of Vancouver", "Port Authority", "https://www.portvancouver.com/"]] }
+};
 
 function populateCountrySelects() {
   document.querySelectorAll("[data-country-select]").forEach((select) => {
@@ -2972,85 +3016,236 @@ const PORT_SEO_COPY = {
   ]
 };
 
+function portProfileData(port) {
+  return PORT_RESOURCE_PROFILES[port.slug] || {};
+}
+
+function portCity(port) {
+  return portProfileData(port).city || port.city || (port.name || "").replace(/^Port of\s+/i, "").split(" /")[0];
+}
+
+function portLocalizedRole(port, lang = currentLang()) {
+  const profile = portProfileData(port);
+  if (lang === "ko" && profile.roleKo) return profile.roleKo;
+  if (profile.roleEn) return profile.roleEn;
+  return lang === "ko"
+    ? `${port.name}은 ${port.region}의 ${port.type.toLowerCase()}로, 항만 식별자와 국가·시간·위치 정보를 빠르게 확인하기 위한 LOGILEE reference입니다.`
+    : `${port.name} is a ${port.type.toLowerCase()} in ${port.region}, provided as a LOGILEE reference for port identity, country context, time, and location checks.`;
+}
+
+function portFunctionLabel(port, lang = currentLang()) {
+  const code = portProfileData(port).functionCode || "1----";
+  const label = lang === "ko" ? "해상항만 기능 포함" : "Includes seaport function";
+  return `${code} · ${label}`;
+}
+
+function portResourceRows(port, key) {
+  return (portProfileData(port)[key] || []).filter((row) => row && row[0] && row[2]).map(([label, type, url, note]) => ({ label, type, url, note }));
+}
+
+function portTerminalRows(port) {
+  return (portProfileData(port).terminals || []).filter((row) => row && row[0]).map(([name, type, operator, url]) => ({ name, type, operator, url }));
+}
+
+function portOsmUrl(port, zoom = 12) {
+  return `https://www.openstreetmap.org/?mlat=${encodeURIComponent(port.lat)}&mlon=${encodeURIComponent(port.lon)}#map=${zoom}/${encodeURIComponent(port.lat)}/${encodeURIComponent(port.lon)}`;
+}
+
+function portStaticMapUrl(port) {
+  const z = 12;
+  const latRad = port.lat * Math.PI / 180;
+  const n = Math.pow(2, z);
+  const x = Math.floor((port.lon + 180) / 360 * n);
+  const y = Math.floor((1 - Math.log(Math.tan(latRad) + 1 / Math.cos(latRad)) / Math.PI) / 2 * n);
+  return `https://tile.openstreetmap.org/${z}/${x}/${y}.png`;
+}
+
+function portFlag(port) {
+  return /^[A-Z]{2}$/.test(port.iso) ? `<img class="port-profile-flag" src="https://flagcdn.com/${port.iso.toLowerCase()}.svg" alt="" loading="lazy">` : "";
+}
+
+function portDistanceKm(a, b) {
+  if (![a.lat, a.lon, b.lat, b.lon].every(Number.isFinite)) return null;
+  const toRad = (value) => value * Math.PI / 180;
+  const dLat = toRad(b.lat - a.lat);
+  const dLon = toRad(b.lon - a.lon);
+  const lat1 = toRad(a.lat);
+  const lat2 = toRad(b.lat);
+  const h = Math.sin(dLat / 2) ** 2 + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLon / 2) ** 2;
+  return 6371 * 2 * Math.atan2(Math.sqrt(h), Math.sqrt(1 - h));
+}
+
+function nearbyPorts(port, limit = 5) {
+  return ALL_PORTS.filter((item) => item.slug !== port.slug && Number.isFinite(item.lat) && Number.isFinite(item.lon))
+    .map((item) => ({ ...item, distance: portDistanceKm(port, item) }))
+    .filter((item) => Number.isFinite(item.distance))
+    .sort((a, b) => a.distance - b.distance)
+    .slice(0, limit);
+}
+
+function portRelatedToolsMarkup(port) {
+  const lang = currentLang();
+  const currency = COUNTRY_CURRENCY[port.iso] || "USD";
+  const tools = lang === "ko"
+    ? [["국가 무역 프로필", `country-trade-profile.html?country=${port.iso}`, "globe"], ["무역 공휴일", `holidays.html?country=${port.iso}`, "calendar-check"], ["Shipment Tracking", "track.html", "radar"], ["Global Trade Explorer", `global-trade-explorer.html?reporter=${port.iso}`, "chart-column"], ["CBM Calculator", "cbm.html", "calculator"], ["환율 계산기", `currency-converter.html?from=USD&to=${currency}`, "badge-dollar-sign"]]
+    : [["Country Trade Profile", `country-trade-profile.html?country=${port.iso}`, "globe"], ["Trade Holidays", `holidays.html?country=${port.iso}`, "calendar-check"], ["Shipment Tracking", "track.html", "radar"], ["Global Trade Explorer", `global-trade-explorer.html?reporter=${port.iso}`, "chart-column"], ["CBM Calculator", "cbm.html", "calculator"], ["Currency Converter", `currency-converter.html?from=USD&to=${currency}`, "badge-dollar-sign"]];
+  return `<section class="port-intel-section"><h2>${lang === "ko" ? "관련 LOGILEE 도구" : "Related Trade Tools"}</h2><div class="country-tool-grid port-tool-grid">${tools.map(([label, href, icon]) => `<a href="${escapeAttribute(href)}"><i data-lucide="${icon}"></i><strong>${escapeHtml(label)}</strong></a>`).join("")}</div></section>`;
+}
+
+function portResourceMarkup(port) {
+  const lang = currentLang();
+  const official = portResourceRows(port, "official");
+  const maps = portResourceRows(port, "maps");
+  const rows = [...official, ...maps];
+  if (!rows.length) return `<section class="port-intel-section"><h2>${lang === "ko" ? "공식 자료" : "Official Resources"}</h2><div class="data-empty">${lang === "ko" ? "이 항만의 검증된 공식 링크가 아직 LOGILEE reference에 없습니다. 항만명과 UN/LOCODE를 기준으로 공식 기관에서 최종 확인하세요." : "LOGILEE has not added verified official links for this port yet. Use the port name and UN/LOCODE to confirm details with official sources."}</div></section>`;
+  return `<section class="port-intel-section"><h2>${lang === "ko" ? "공식 자료" : "Official Resources"}</h2><div class="port-resource-grid">${rows.map((row) => `<a href="${escapeAttribute(row.url)}" target="_blank" rel="noopener"><i data-lucide="external-link"></i><span>${escapeHtml(row.type)}</span><strong>${escapeHtml(row.label)}</strong>${row.note ? `<small>${escapeHtml(row.note)}</small>` : ""}</a>`).join("")}</div></section>`;
+}
+
+function portTerminalsMarkup(port) {
+  const lang = currentLang();
+  const terminals = portTerminalRows(port);
+  if (!terminals.length) return `<section class="port-intel-section"><h2>${lang === "ko" ? "터미널 정보" : "Terminal Information"}</h2><div class="data-empty">${lang === "ko" ? "LOGILEE에 검증된 터미널 데이터가 아직 없습니다. 이는 터미널이 없다는 뜻이 아니며, booking 전 공식 항만/터미널 자료를 확인하세요." : "No verified terminal data is stored in LOGILEE for this port yet. This does not mean the port has no terminals; check official port or terminal sources before booking."}</div></section>`;
+  return `<section class="port-intel-section"><h2>${lang === "ko" ? "검증된 터미널 정보" : "Selected Verified Terminals"}</h2><div class="port-terminal-list">${terminals.map((item) => `<article><strong>${escapeHtml(item.name)}</strong><span>${escapeHtml(item.type || "Terminal")}</span>${item.operator ? `<small>${escapeHtml(item.operator)}</small>` : ""}${item.url ? `<a href="${escapeAttribute(item.url)}" target="_blank" rel="noopener">${lang === "ko" ? "공식 자료 열기" : "Open official source"}</a>` : ""}</article>`).join("")}</div></section>`;
+}
+
+function portNearbyMarkup(port) {
+  const lang = currentLang();
+  const ports = nearbyPorts(port, 5);
+  return `<section class="port-intel-section"><div class="section-head"><h2>${lang === "ko" ? "주변 항만" : "Nearby Ports"}</h2><span>${lang === "ko" ? "직선거리 기준" : "Approximate straight-line distance"}</span></div><div class="port-nearby-list">${ports.map((item) => `<a href="?locode=${encodeURIComponent(item.locode)}"><strong>${escapeHtml(item.name)}</strong><span>${escapeHtml(item.locode)} · ${Math.round(item.distance)} km</span></a>`).join("")}</div></section>`;
+}
+
+function portProfileMarkup(port) {
+  const lang = currentLang();
+  const localTime = localTimeForPort(port);
+  const coordinates = Number.isFinite(port.lat) && Number.isFinite(port.lon) ? `${port.lat.toFixed(2)}, ${port.lon.toFixed(2)}` : "";
+  const rows = lang === "ko"
+    ? [["UN/LOCODE", port.locode], ["국가", `${port.country} (${port.iso})`], ["도시 / 지역", portCity(port)], ["좌표", coordinates], ["시간대", port.timezone], ["현지시간", localTime], ["위치 유형", port.type], ["UN/LOCODE Function", portFunctionLabel(port, lang)]]
+    : [["UN/LOCODE", port.locode], ["Country", `${port.country} (${port.iso})`], ["City / Area", portCity(port)], ["Coordinates", coordinates], ["Time Zone", port.timezone], ["Local Time", localTime], ["Location Type", port.type], ["UN/LOCODE Function", portFunctionLabel(port, lang)]];
+  return `<section class="port-profile" id="port-profile" aria-live="polite"><div class="port-profile-hero"><div>${portFlag(port)}<span class="kicker">Port Profile</span><h2>${escapeHtml(port.name)}</h2><p>${escapeHtml(port.locode)} · ${escapeHtml(portCity(port))}, ${escapeHtml(port.country)}</p><p class="port-role-copy">${escapeHtml(portLocalizedRole(port, lang))}</p></div><a class="secondary-btn" href="${escapeAttribute(portOsmUrl(port))}" target="_blank" rel="noopener"><i data-lucide="map"></i>${lang === "ko" ? "OpenStreetMap에서 보기" : "Open in OpenStreetMap"}</a></div><div class="port-profile-grid"><div class="port-map-card"><img src="${escapeAttribute(portStaticMapUrl(port))}" alt="${escapeAttribute(`${port.name} approximate location map`) }" loading="lazy"><span class="port-map-pin" aria-hidden="true"></span><p>${lang === "ko" ? "Location Map · 좌표는 항만 또는 도시권 기준의 근사 위치일 수 있습니다." : "Location Map · Coordinates may represent an approximate port or city-area position."} <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors</a></p></div><dl class="port-core-facts">${rows.filter(([, value]) => value).map(([label, value]) => `<div><dt>${escapeHtml(label)}</dt><dd>${escapeHtml(value)}</dd></div>`).join("")}</dl></div>${portResourceMarkup(port)}${portTerminalsMarkup(port)}${portNearbyMarkup(port)}${portRelatedToolsMarkup(port)}</section>`;
+}
+
 function portCard(port) {
-  const countryParam = port.iso;
-  const currency = COUNTRY_CURRENCY[countryParam] || "USD";
-  return `
-    <article class="port-row">
-      <div><strong><a href="${portDetailUrl(port)}">${port.name}</a></strong><small>${port.region} · ${port.type}</small></div>
-      <span>${port.country}</span>
-      <span>${port.locode}</span>
-      <span>${port.timezone}</span>
-      <details>
-        <summary>View</summary>
-        <div class="port-row-detail">
-          <span>Coordinates: ${port.lat.toFixed(2)}, ${port.lon.toFixed(2)}</span>
-          <a href="country-trade-profile.html?country=${countryParam}">${port.country} Profile</a>
-          <a href="holidays.html?country=${countryParam}">Holidays</a>
-          <a href="currency-converter.html?from=USD&to=${currency}">USD/${currency}</a>
-          <a href="eu-trade-explorer.html?reporter=${port.iso}">EU Trade</a>
-        </div>
-      </details>
-    </article>
-  `;
+  const lang = currentLang();
+  return `<article class="port-result-card"><div><strong>${escapeHtml(port.name)}</strong><small>${escapeHtml(portCity(port))}, ${escapeHtml(port.country)} · ${escapeHtml(port.region)}</small></div><span>${escapeHtml(port.locode)}</span><span>${escapeHtml(port.type)}</span><span>${escapeHtml(localTimeForPort(port))}</span><button class="secondary-btn" type="button" data-port-view="${escapeAttribute(port.slug)}">${lang === "ko" ? "보기" : "View"}</button></article>`;
 }
 
 function filterPorts(query, country = "") {
-  const normalized = query.trim().toLowerCase();
+  const normalized = normalizeCountrySearch(query);
+  const compact = compactCountrySearch(query);
   return ALL_PORTS.filter((port) => {
     const countryMatch = !country || port.iso === country;
-    const haystack = `${port.name} ${(port.aliases || []).join(" ")} ${port.city || ""} ${port.country} ${port.iso} ${port.locode} ${port.region}`.toLowerCase();
-    return countryMatch && (!normalized || haystack.includes(normalized));
+    const terms = [port.name, ...(port.aliases || []), portCity(port), port.country, displayCountryName(port.iso, "ko"), displayCountryName(port.iso, "en"), port.iso, port.locode, port.region, port.type].filter(Boolean);
+    const haystack = normalizeCountrySearch(terms.join(" "));
+    const compactHaystack = compactCountrySearch(terms.join(" "));
+    return countryMatch && (!normalized || haystack.includes(normalized) || compactHaystack.includes(compact));
   });
+}
+
+function findPortFromParams(params) {
+  const locode = (params.get("locode") || "").replace(/\s+/g, "").toUpperCase();
+  const slug = params.get("port") || params.get("slug");
+  const query = params.get("query") || params.get("q") || "";
+  if (locode) return ALL_PORTS.find((port) => port.locode === locode) || null;
+  if (slug) return ALL_PORTS.find((port) => port.slug === slug) || null;
+  const normalizedQuery = compactCountrySearch(query);
+  if (!normalizedQuery) return null;
+  return ALL_PORTS.find((port) => compactCountrySearch(port.locode) === normalizedQuery || compactCountrySearch(port.name) === normalizedQuery || (port.aliases || []).some((alias) => compactCountrySearch(alias) === normalizedQuery)) || null;
 }
 
 function wirePortFinder() {
   const form = document.querySelector("[data-port-search-form]");
   const output = document.querySelector("[data-port-results]");
+  const profile = document.querySelector("[data-port-profile]");
   if (!form || !output) return;
-  populateCountrySelects();
+  const lang = currentLang();
   const params = new URLSearchParams(location.search);
   const input = form.querySelector("[data-port-query]");
   const country = form.querySelector("[data-country-select]");
-  if (input && params.get("q")) input.value = params.get("q");
-  if (country && params.get("country")) country.value = params.get("country");
-  let visibleCount = 24;
-  const render = () => {
+  const portCountryOptions = [...new Set(ALL_PORTS.map((port) => port.iso))].sort((a, b) => displayCountryName(a, lang).localeCompare(displayCountryName(b, lang), lang === "ko" ? "ko" : "en"));
+  if (country) country.innerHTML = `<option value="">${lang === "ko" ? "전체 국가" : "All countries"}</option>${portCountryOptions.map((code) => `<option value="${code}">${escapeHtml(displayCountryName(code, lang))}</option>`).join("")}`;
+  const clear = form.querySelector("[data-port-clear]");
+  const count = document.querySelector("[data-port-count]");
+  const popular = document.querySelector("[data-popular-ports]");
+  const featured = ["busan", "shanghai", "singapore", "rotterdam", "los-angeles", "long-beach", "hamburg", "jebel-ali", "cat-lai", "nhava-sheva"];
+  if (input) input.value = params.get("query") || params.get("q") || "";
+  if (country && params.get("country")) country.value = params.get("country").toUpperCase();
+  let visibleCount = 16;
+  const renderPopular = () => {
+    if (!popular) return;
+    popular.innerHTML = featured.map((slug) => ALL_PORTS.find((port) => port.slug === slug)).filter(Boolean).map((port) => `<button type="button" data-port-view="${escapeAttribute(port.slug)}"><strong>${escapeHtml(port.name)}</strong><span>${escapeHtml(port.locode)}</span></button>`).join("");
+  };
+  const selectPort = (port, { push = true, scroll = true } = {}) => {
+    if (!port || !profile) return;
+    profile.innerHTML = portProfileMarkup(port);
+    if (push) {
+      const url = new URL(location.href);
+      url.searchParams.set("locode", port.locode);
+      url.searchParams.set("query", input?.value || port.name);
+      if (country?.value) url.searchParams.set("country", country.value); else url.searchParams.delete("country");
+      history.replaceState({ locode: port.locode }, "", url);
+    }
+    refreshIcons();
+    if (scroll) profile.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+  const render = ({ keepProfile = false } = {}) => {
     const results = filterPorts(input?.value || "", country?.value || "");
     const visibleResults = results.slice(0, visibleCount);
     output.innerHTML = results.length
-      ? `
-        <div class="port-table" role="table" aria-label="Port results">
-          <div class="port-row port-row-head" role="row"><span>Port</span><span>Country</span><span>UN/LOCODE</span><span>Time Zone</span><span>Actions</span></div>
-          ${visibleResults.map(portCard).join("")}
-        </div>
-        ${results.length > visibleCount ? `<button class="secondary-btn port-load-more" type="button" data-port-load-more>Load more</button>` : ""}
-      `
-      : `<div class="data-empty">No matching ports found.</div>`;
-    const count = document.querySelector("[data-port-count]");
-    if (count) count.textContent = `${results.length} ports`;
+      ? `<div class="port-result-list" role="list" aria-label="${lang === "ko" ? "항만 검색 결과" : "Port search results"}"><div class="port-result-head"><span>Port</span><span>UN/LOCODE</span><span>Type</span><span>Local Time</span><span>Action</span></div>${visibleResults.map(portCard).join("")}</div>${results.length > visibleCount ? `<button class="secondary-btn port-load-more" type="button" data-port-load-more>${lang === "ko" ? "더 보기" : "Load more"}</button>` : ""}`
+      : `<div class="data-empty">${lang === "ko" ? "일치하는 항만을 찾지 못했습니다. 항만명, 별칭, 국가명 또는 UN/LOCODE를 다시 확인하세요." : "No matching ports found. Check the port name, alias, country, or UN/LOCODE."}</div>`;
+    if (count) count.textContent = lang === "ko" ? `${results.length}개 항만` : `${results.length} ports`;
+    if (!keepProfile && profile) {
+      const currentParams = new URLSearchParams(location.search);
+      const requestedLocode = currentParams.get("locode");
+      const paramPort = findPortFromParams(currentParams);
+      const preferred = paramPort || results[0] || null;
+      profile.innerHTML = requestedLocode && !paramPort
+        ? `<section class="port-intel-section"><h2>${lang === "ko" ? "UN/LOCODE 확인 필요" : "UN/LOCODE Not Found"}</h2><div class="data-empty">${lang === "ko" ? "입력한 UN/LOCODE가 현재 LOGILEE 항만 reference에 없습니다. 국가 필터와 항만명을 함께 확인하세요." : "The requested UN/LOCODE is not in the current LOGILEE port reference. Check the country filter and port name."}</div></section>`
+        : (preferred ? portProfileMarkup(preferred) : "");
+      refreshIcons();
+    }
+  };
+  const updateUrl = () => {
+    const url = new URL(location.href);
+    if (input?.value) url.searchParams.set("query", input.value); else url.searchParams.delete("query");
+    if (country?.value) url.searchParams.set("country", country.value); else url.searchParams.delete("country");
+    if (!findPortFromParams(url.searchParams)) url.searchParams.delete("locode");
+    history.replaceState(null, "", url);
   };
   form.addEventListener("submit", (event) => {
     event.preventDefault();
-    visibleCount = 24;
-    const url = new URL(location.href);
-    if (input?.value) url.searchParams.set("q", input.value); else url.searchParams.delete("q");
-    if (country?.value) url.searchParams.set("country", country.value); else url.searchParams.delete("country");
-    history.replaceState(null, "", url);
-    render();
+    visibleCount = 16;
+    const match = findPortFromParams(new URLSearchParams(`query=${encodeURIComponent(input?.value || "")}`));
+    updateUrl();
+    render({ keepProfile: Boolean(match) });
+    if (match) selectPort(match);
   });
   form.addEventListener("input", () => {
-    visibleCount = 24;
+    visibleCount = 16;
+    updateUrl();
     render();
   });
-  output.addEventListener("click", (event) => {
-    if (!event.target.closest("[data-port-load-more]")) return;
-    visibleCount += 24;
+  country?.addEventListener("change", () => { visibleCount = 16; updateUrl(); render(); });
+  clear?.addEventListener("click", () => { if (input) input.value = ""; if (country) country.value = ""; country?.updateComboboxLabel?.(); visibleCount = 16; updateUrl(); render(); input?.focus(); });
+  [output, popular, profile].filter(Boolean).forEach((root) => root.addEventListener("click", (event) => {
+    const load = event.target.closest("[data-port-load-more]");
+    if (load) { visibleCount += 16; render({ keepProfile: true }); return; }
+    const button = event.target.closest("[data-port-view]");
+    if (!button) return;
+    const port = ALL_PORTS.find((item) => item.slug === button.dataset.portView);
+    selectPort(port);
+  }));
+  enhanceSimpleCombobox(country, [{ value: "", label: lang === "ko" ? "전체 국가" : "All countries", meta: lang === "ko" ? "모든 등록 항만" : "All registered ports", terms: ["", "all", "전체", "모든"] }, ...portCountryOptions.map((code) => ({ value: code, label: displayCountryName(code, lang), meta: `${code} · ${displayCountryName(code, "en")}`, terms: [code, displayCountryName(code, "en"), displayCountryName(code, "ko"), ...(COUNTRY_SEARCH_ALIASES[code] || [])].map(normalizeCountrySearch) }))], lang === "ko" ? { label: "항만 국가 선택", placeholder: "국가명 또는 ISO 코드 검색...", open: "국가 목록 열기", empty: "일치하는 국가가 없습니다." } : { label: "Select port country", placeholder: "Search country name or ISO code...", open: "Open country list", empty: "No matching countries." });
+  window.addEventListener("popstate", () => {
+    const next = new URLSearchParams(location.search);
+    if (input) input.value = next.get("query") || next.get("q") || "";
+    if (country) country.value = next.get("country")?.toUpperCase() || "";
+    country?.updateComboboxLabel?.();
     render();
   });
+  renderPopular();
   render();
 }
-
 function wirePortDetail() {
   const target = document.querySelector("[data-port-detail]");
   if (!target) return;
@@ -3619,7 +3814,7 @@ function enhanceSimpleCombobox(select, items, labels) {
   };
   const show = () => { open = true; wrap.classList.add("is-open"); input.setAttribute("aria-expanded", "true"); filter(); };
   const close = () => { open = false; wrap.classList.remove("is-open"); input.setAttribute("aria-expanded", "false"); input.removeAttribute("aria-activedescendant"); setInput(); };
-  const choose = (value) => { if (!value) return; select.value = value; select.dispatchEvent(new Event("change", { bubbles: true })); setInput(); close(); };
+  const choose = (value) => { if (value === undefined) return; select.value = value; select.dispatchEvent(new Event("change", { bubbles: true })); setInput(); close(); };
   setInput(); render();
   input.addEventListener("focus", show);
   input.addEventListener("input", show);
