@@ -8854,3 +8854,347 @@ body.sidebar-drawer-active {
     font-size: 10px;
   }
 }
+
+/* Port Intelligence final polish */
+.port-profile {
+  gap: 16px;
+}
+
+.port-profile-hero {
+  box-shadow: 0 10px 24px rgba(7, 26, 43, 0.045);
+}
+
+.port-intel-section {
+  padding: 14px 0 0;
+  border: 0;
+  border-top: 1px solid #e8eef6;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.port-intel-section > h2,
+.port-intel-section .section-head h2 {
+  margin: 0;
+  color: var(--ink-navy);
+  font-size: 18px;
+  line-height: 1.25;
+}
+
+.port-intel-section .section-head {
+  margin-bottom: 8px;
+}
+
+.port-profile-grid {
+  gap: 16px;
+}
+
+.port-core-facts {
+  gap: 8px;
+}
+
+.port-core-facts div {
+  padding: 11px 12px;
+  background: #fff;
+  box-shadow: none;
+}
+
+.port-map-card--leaflet {
+  min-height: 340px;
+  box-shadow: 0 10px 24px rgba(7, 26, 43, 0.045);
+}
+
+.port-map-reset {
+  top: 10px;
+  right: 10px;
+  min-width: 54px;
+  height: 30px;
+  padding: 0 9px;
+  font-size: 12px;
+  box-shadow: 0 6px 14px rgba(7, 26, 43, 0.07);
+}
+
+.port-map-caption {
+  padding: 8px 10px;
+  box-shadow: 0 8px 18px rgba(7, 26, 43, 0.075);
+}
+
+.port-map-card--leaflet p {
+  left: 10px;
+  right: 10px;
+  bottom: 24px;
+  max-width: min(560px, calc(100% - 20px));
+  line-height: 1.35;
+}
+
+.port-resource-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.port-resource-grid a {
+  padding: 11px 12px;
+  border-color: #dfe8f2;
+  background: #fff;
+  box-shadow: none;
+}
+
+.port-resource-grid strong,
+.port-resource-grid small {
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.port-terminal-section.is-compact-empty {
+  padding-top: 12px;
+}
+
+.port-terminal-empty {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  align-items: baseline;
+  margin: 6px 0 0;
+  color: var(--secondary-text);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.port-terminal-empty a {
+  color: var(--signal-blue);
+  font-weight: 850;
+  white-space: nowrap;
+}
+
+.port-terminal-list {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.port-terminal-list article {
+  padding: 11px 12px;
+  border-color: #e5edf6;
+  background: #fff;
+  box-shadow: none;
+}
+
+.port-terminal-list article a {
+  margin-top: 6px;
+}
+
+.port-nearby-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  border-top: 1px solid #edf2f7;
+}
+
+.port-nearby-list a {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(72px, auto) minmax(68px, auto) 16px;
+  gap: 12px;
+  align-items: center;
+  padding: 9px 2px;
+  border: 0;
+  border-bottom: 1px solid #edf2f7;
+  border-radius: 0;
+  background: transparent;
+  color: var(--deep-navy);
+}
+
+.port-nearby-list a:hover,
+.port-nearby-list a:focus-visible {
+  background: #f8fbff;
+}
+
+.port-nearby-list strong {
+  font-size: 14px;
+  font-weight: 850;
+  line-height: 1.35;
+  overflow-wrap: normal;
+}
+
+.port-nearby-list span,
+.port-nearby-list em {
+  color: var(--secondary-text);
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 850;
+  white-space: nowrap;
+}
+
+.port-nearby-list b {
+  color: var(--signal-blue);
+  font-size: 15px;
+  line-height: 1;
+  text-align: right;
+}
+
+.port-related-section {
+  padding-top: 12px;
+}
+
+.port-tool-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.port-tool-grid a {
+  min-width: 0;
+  min-height: 44px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 9px 10px;
+  border: 1px solid #e5edf6;
+  border-radius: 7px;
+  background: #fff;
+  color: var(--main-text);
+  box-shadow: none;
+}
+
+.port-tool-grid a:hover,
+.port-tool-grid a:focus-visible {
+  border-color: #cbdced;
+  background: #f8fbff;
+}
+
+.port-tool-grid svg {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+  color: var(--signal-blue);
+}
+
+.port-tool-grid span {
+  min-width: 0;
+  color: var(--main-text);
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.25;
+  overflow-wrap: normal;
+}
+
+.port-data-coverage {
+  margin-top: 18px;
+  padding: 18px;
+  box-shadow: none;
+}
+
+.port-data-coverage h2 {
+  margin-bottom: 8px;
+}
+
+.port-data-coverage p {
+  max-width: 840px;
+  line-height: 1.65;
+}
+
+.port-data-coverage dl {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  margin-top: 12px;
+  border-top: 1px solid #e8eef6;
+}
+
+.port-data-coverage div {
+  display: grid;
+  grid-template-columns: minmax(160px, 0.28fr) minmax(0, 1fr);
+  gap: 18px;
+  padding: 10px 0;
+  border: 0;
+  border-bottom: 1px solid #e8eef6;
+  border-radius: 0;
+  background: transparent;
+}
+
+.port-data-coverage dt {
+  color: var(--deep-navy);
+  font-size: 13px;
+  font-weight: 850;
+}
+
+.port-data-coverage dd {
+  margin: 0;
+  color: var(--main-text);
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 1.55;
+  text-align: left;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 1120px) {
+  .port-resource-grid,
+  .port-tool-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 820px) {
+  .port-intel-section {
+    padding-top: 13px;
+  }
+
+  .port-resource-grid,
+  .port-terminal-list,
+  .port-tool-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .port-data-coverage div {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+}
+
+@media (max-width: 520px) {
+  .port-intel-section {
+    padding: 12px 0 0;
+  }
+
+  .port-map-card--leaflet {
+    min-height: 286px;
+  }
+
+  .port-map-caption {
+    left: 10px;
+    max-width: calc(100% - 82px);
+  }
+
+  .port-nearby-list a {
+    grid-template-columns: minmax(0, 1fr) 16px;
+    gap: 4px 8px;
+    padding: 10px 0;
+  }
+
+  .port-nearby-list span,
+  .port-nearby-list em {
+    grid-row: 2;
+  }
+
+  .port-nearby-list b {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
+
+  .port-tool-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .port-tool-grid a {
+    min-height: 46px;
+    padding: 9px;
+  }
+
+  .port-tool-grid span,
+  .port-data-coverage dd {
+    word-break: keep-all;
+    overflow-wrap: anywhere;
+  }
+}

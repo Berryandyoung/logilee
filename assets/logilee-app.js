@@ -3052,10 +3052,20 @@ function portOsmUrl(port, zoom = 12) {
 }
 
 function portMapZoom(port) {
-  const wideRegion = new Set(["rotterdam", "los-angeles", "long-beach", "new-york-new-jersey", "ningbo-zhoushan", "shanghai", "jebel-ali"]);
-  if (wideRegion.has(port.slug)) return 11;
-  if (["singapore", "hong-kong", "cat-lai"].includes(port.slug)) return 12;
-  return 11;
+  const contextZoom = {
+    busan: 10,
+    rotterdam: 10,
+    singapore: 11,
+    "los-angeles": 10,
+    "long-beach": 10,
+    "new-york-new-jersey": 10,
+    "ningbo-zhoushan": 10,
+    shanghai: 10,
+    "jebel-ali": 10,
+    "hong-kong": 11,
+    "cat-lai": 11
+  };
+  return contextZoom[port.slug] || 10;
 }
 
 const LEAFLET_VERSION = "1.9.4";
@@ -3104,7 +3114,7 @@ function portLocationMapMarkup(port) {
   const zoom = portMapZoom(port);
   const label = `${port.name} ${lang === "ko" ? "위치 지도" : "location map"}`;
   const coordinates = `${port.lat.toFixed(4)}, ${port.lon.toFixed(4)}`;
-  return `<div class="port-map-card port-map-card--leaflet" data-port-map="${escapeAttribute(port.slug)}" data-map-zoom="${zoom}" data-map-min="9" data-map-max="13" data-map-lat="${escapeAttribute(port.lat)}" data-map-lon="${escapeAttribute(port.lon)}" aria-label="${escapeAttribute(label)}"><div class="port-map-leaflet" data-port-leaflet-map></div><button class="port-map-reset" type="button" data-port-map-reset aria-label="${lang === "ko" ? "지도 초기화" : "Reset map"}">${lang === "ko" ? "초기화" : "Reset"}</button><div class="port-map-caption"><strong>${escapeHtml(port.name)}</strong><span>${escapeHtml(coordinates)} · ${lang === "ko" ? "Approximate location" : "Approximate location"}</span></div><p>${lang === "ko" ? "일반 위치 지도입니다. 공식 터미널 배치도는 아래 Official Port Map 링크에서 별도로 확인하세요." : "General location map. Official terminal or port-layout maps are listed separately below when available."} <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors</a></p><div class="port-map-fallback"><strong>${lang === "ko" ? "지도를 불러올 수 없습니다." : "Map could not load."}</strong><span>${escapeHtml(coordinates)}</span><a href="${escapeAttribute(portOsmUrl(port, zoom))}" target="_blank" rel="noopener">OpenStreetMap →</a></div></div>`;
+  return `<div class="port-map-card port-map-card--leaflet" data-port-map="${escapeAttribute(port.slug)}" data-map-zoom="${zoom}" data-map-min="6" data-map-max="14" data-map-lat="${escapeAttribute(port.lat)}" data-map-lon="${escapeAttribute(port.lon)}" aria-label="${escapeAttribute(label)}"><div class="port-map-leaflet" data-port-leaflet-map></div><button class="port-map-reset" type="button" data-port-map-reset aria-label="${lang === "ko" ? "지도 초기화" : "Reset map"}">${lang === "ko" ? "초기화" : "Reset"}</button><div class="port-map-caption"><strong>${escapeHtml(port.name)}</strong><span>${escapeHtml(coordinates)} · ${lang === "ko" ? "근사 위치" : "Approximate location"}</span></div><p>${lang === "ko" ? "일반 위치 지도입니다. 공식 터미널 배치도는 아래 Official Port Map 링크에서 별도로 확인하세요." : "General location map. Official terminal or port-layout maps are listed separately below when available."} <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors</a></p><div class="port-map-fallback"><strong>${lang === "ko" ? "지도를 불러올 수 없습니다." : "Map could not load."}</strong><span>${escapeHtml(coordinates)}</span><a href="${escapeAttribute(portOsmUrl(port, zoom))}" target="_blank" rel="noopener">OpenStreetMap →</a></div></div>`;
 }
 
 function initializePortMapElement(map, port) {
@@ -3122,15 +3132,18 @@ function initializePortMapElement(map, port) {
     const leaflet = L.map(target, {
       center: [port.lat, port.lon],
       zoom,
-      minZoom: Number(map.dataset.mapMin || 9),
-      maxZoom: Number(map.dataset.mapMax || 13),
+      minZoom: Number(map.dataset.mapMin || 6),
+      maxZoom: Number(map.dataset.mapMax || 14),
+      zoomSnap: 1,
+      zoomDelta: 1,
+      doubleClickZoom: true,
       scrollWheelZoom: true,
       touchZoom: true,
       dragging: true,
       zoomControl: true,
       attributionControl: true
     });
-    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    const tileLayer = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
       maxZoom: 19,
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a>'
     }).addTo(leaflet);
@@ -3143,6 +3156,7 @@ function initializePortMapElement(map, port) {
     const leafletMarker = L.marker([port.lat, port.lon], { icon: marker, keyboard: false }).addTo(leaflet);
     target.__logileeLeafletMap = leaflet;
     target.__logileeLeafletMarker = leafletMarker;
+    target.__logileeLeafletTileLayer = tileLayer;
     portLeafletMaps.set(map, leaflet);
     map.classList.add("is-map-ready");
     const syncSize = () => requestAnimationFrame(() => leaflet.invalidateSize({ pan: false }));
@@ -3230,7 +3244,7 @@ function portRelatedToolsMarkup(port) {
   const tools = lang === "ko"
     ? [["국가 무역 프로필", `country-trade-profile.html?country=${port.iso}`, "globe"], ["무역 공휴일", `holidays.html?country=${port.iso}`, "calendar-check"], ["Shipment Tracking", "track.html", "radar"], ["Global Trade Explorer", `global-trade-explorer.html?reporter=${port.iso}`, "chart-column"], ["CBM Calculator", "cbm.html", "calculator"], ["환율 계산기", `currency-converter.html?from=USD&to=${currency}`, "badge-dollar-sign"]]
     : [["Country Trade Profile", `country-trade-profile.html?country=${port.iso}`, "globe"], ["Trade Holidays", `holidays.html?country=${port.iso}`, "calendar-check"], ["Shipment Tracking", "track.html", "radar"], ["Global Trade Explorer", `global-trade-explorer.html?reporter=${port.iso}`, "chart-column"], ["CBM Calculator", "cbm.html", "calculator"], ["Currency Converter", `currency-converter.html?from=USD&to=${currency}`, "badge-dollar-sign"]];
-  return `<section class="port-intel-section"><h2>${lang === "ko" ? "관련 LOGILEE 도구" : "Related Trade Tools"}</h2><div class="country-tool-grid port-tool-grid">${tools.map(([label, href, icon]) => `<a href="${escapeAttribute(href)}"><i data-lucide="${icon}"></i><strong>${escapeHtml(label)}</strong></a>`).join("")}</div></section>`;
+  return `<section class="port-intel-section port-related-section"><h2>${lang === "ko" ? "관련 LOGILEE 도구" : "Related Trade Tools"}</h2><div class="port-tool-grid">${tools.map(([label, href, icon]) => `<a href="${escapeAttribute(href)}"><i data-lucide="${icon}"></i><span>${escapeHtml(label)}</span></a>`).join("")}</div></section>`;
 }
 
 function portResourceMarkup(port) {
@@ -3245,14 +3259,18 @@ function portResourceMarkup(port) {
 function portTerminalsMarkup(port) {
   const lang = currentLang();
   const terminals = portTerminalRows(port);
-  if (!terminals.length) return `<section class="port-intel-section"><h2>${lang === "ko" ? "터미널 정보" : "Terminal Information"}</h2><div class="data-empty">${lang === "ko" ? "LOGILEE에 검증된 터미널 데이터가 아직 없습니다. 이는 터미널이 없다는 뜻이 아니며, booking 전 공식 항만/터미널 자료를 확인하세요." : "No verified terminal data is stored in LOGILEE for this port yet. This does not mean the port has no terminals; check official port or terminal sources before booking."}</div></section>`;
-  return `<section class="port-intel-section"><h2>${lang === "ko" ? "검증된 터미널 정보" : "Selected Verified Terminals"}</h2><div class="port-terminal-list">${terminals.map((item) => `<article><strong>${escapeHtml(item.name)}</strong><span>${escapeHtml(item.type || "Terminal")}</span>${item.operator ? `<small>${escapeHtml(item.operator)}</small>` : ""}${item.url ? `<a href="${escapeAttribute(item.url)}" target="_blank" rel="noopener">${lang === "ko" ? "공식 자료 열기" : "Open official source"}</a>` : ""}</article>`).join("")}</div></section>`;
+  const fallbackResource = [...portResourceRows(port, "official"), ...portResourceRows(port, "maps")][0];
+  if (!terminals.length) {
+    const link = fallbackResource ? `<a href="${escapeAttribute(fallbackResource.url)}" target="_blank" rel="noopener">${lang === "ko" ? "공식 항만 자료에서 확인" : "Check official port resources"} →</a>` : "";
+    return `<section class="port-intel-section port-terminal-section is-compact-empty"><h2>${lang === "ko" ? "터미널 정보" : "Terminal Information"}</h2><p class="port-terminal-empty"><span>${lang === "ko" ? "LOGILEE에 검증된 터미널 데이터가 아직 없습니다. 터미널이 없다는 의미는 아닙니다." : "No verified terminal data is stored in LOGILEE yet. This does not mean the port has no terminals."}</span>${link}</p></section>`;
+  }
+  return `<section class="port-intel-section port-terminal-section"><h2>${lang === "ko" ? "검증된 터미널 정보" : "Selected Verified Terminals"}</h2><div class="port-terminal-list">${terminals.map((item) => `<article><strong>${escapeHtml(item.name)}</strong><span>${escapeHtml(item.type || "Terminal")}${item.operator ? ` · ${escapeHtml(item.operator)}` : ""}</span>${item.url ? `<a href="${escapeAttribute(item.url)}" target="_blank" rel="noopener">${lang === "ko" ? "공식 자료 열기" : "Open official source"}</a>` : ""}</article>`).join("")}</div></section>`;
 }
 
 function portNearbyMarkup(port) {
   const lang = currentLang();
   const ports = nearbyPorts(port, 5);
-  return `<section class="port-intel-section"><div class="section-head"><h2>${lang === "ko" ? "주변 항만" : "Nearby Ports"}</h2><span>${lang === "ko" ? "직선거리 기준" : "Approximate straight-line distance"}</span></div><div class="port-nearby-list">${ports.map((item) => `<a href="?locode=${encodeURIComponent(item.locode)}"><strong>${escapeHtml(item.name)}</strong><span>${escapeHtml(item.locode)} · ${Math.round(item.distance)} km</span></a>`).join("")}</div></section>`;
+  return `<section class="port-intel-section port-nearby-section"><div class="section-head"><h2>${lang === "ko" ? "주변 항만" : "Nearby Ports"}</h2><span>${lang === "ko" ? "직선거리 기준" : "Approx. straight-line distance"}</span></div><div class="port-nearby-list">${ports.map((item) => `<a href="?locode=${encodeURIComponent(item.locode)}"><strong>${escapeHtml(item.name)}</strong><span>${escapeHtml(item.locode)}</span><em>${Math.round(item.distance)} km</em><b aria-hidden="true">→</b></a>`).join("")}</div></section>`;
 }
 
 function portProfileMarkup(port) {
