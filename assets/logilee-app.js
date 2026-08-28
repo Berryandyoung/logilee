@@ -3183,12 +3183,22 @@ function initializePortMaps(root = document) {
   });
 }
 
-function updatePortMapElement(map, port) {
+function updatePortMapElement(map, port, zoom = portMapZoom(port)) {
   const leaflet = portLeafletMaps.get(map);
   if (!leaflet || !port) return;
-  map.dataset.mapZoom = String(portMapZoom(port));
-  leaflet.setView([port.lat, port.lon], portMapZoom(port), { animate: false });
-  setTimeout(() => leaflet.invalidateSize(), 40);
+  const nextZoom = Math.max(Number(map.dataset.mapMin || 9), Math.min(Number(map.dataset.mapMax || 13), Number(zoom || portMapZoom(port))));
+  const target = map.querySelector("[data-port-leaflet-map]");
+  const tileLayer = target?.__logileeLeafletTileLayer;
+  map.dataset.mapZoom = String(nextZoom);
+  const syncView = () => {
+    leaflet.invalidateSize({ pan: false });
+    leaflet.setView([port.lat, port.lon], nextZoom, { animate: false });
+    if (tileLayer && typeof tileLayer.redraw === "function") tileLayer.redraw();
+  };
+  syncView();
+  requestAnimationFrame(syncView);
+  setTimeout(syncView, 120);
+  setTimeout(syncView, 360);
 }
 
 function portFlag(port) {
