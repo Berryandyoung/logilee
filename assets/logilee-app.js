@@ -1457,76 +1457,147 @@ function trackingCarrierUrl(carrier, reference) {
 
 function trackingResultLabel(type, lang = currentLang()) {
   const labels = {
-    ko: { container: "Container", awb: "AWB / Air Cargo", courier: "Courier", bl: "B/L", booking: "Booking", unsupported: "지원 범위 외", empty: "입력 대기" },
-    en: { container: "Container", awb: "AWB / Air Cargo", courier: "Courier", bl: "B/L", booking: "Booking", unsupported: "Unsupported", empty: "Ready" }
+    ko: { container: "Container Number", awb: "Air Waybill", courier: "Courier Reference", bl: "해상운송 참조번호", unsupported: "번호 유형 미확정", empty: "입력 대기" },
+    en: { container: "Container Number", awb: "Air Waybill", courier: "Courier Reference", bl: "Ocean Carrier Reference", unsupported: "Reference Type Unknown", empty: "Ready" }
   };
   return labels[lang][type] || labels[lang].unsupported;
 }
 
-function inspectTrackingReference(value, manualCarrierId = "") {
+function trackingManualTypeLabel(type, lang = currentLang()) {
+  const labels = {
+    ko: { auto: "자동 감지", container: "Container", bl: "B/L / Booking", awb: "AWB", courier: "Courier" },
+    en: { auto: "Auto detect", container: "Container", bl: "B/L / Booking", awb: "AWB", courier: "Courier" }
+  };
+  return labels[lang][type] || labels[lang].auto;
+}
+
+function trackingBuildResult({ type, status, severity, rows, candidates = [], primaryCarrier = null, reference, note = "" }) {
+  return { type, status, severity, rows, candidates, primaryCarrier, reference, note };
+}
+
+function inspectTrackingReference(value, manualType = "auto") {
   const lang = currentLang();
   const clean = normalizeTrackingReference(value);
-  const manualCarrier = TRACKING_CARRIERS.find((carrier) => carrier.id === manualCarrierId) || null;
-  if (!clean) return { type: "empty", status: "empty", severity: "neutral", rows: [], candidates: [], primaryCarrier: manualCarrier };
+  const selectedType = ["container", "bl", "awb", "courier"].includes(manualType) ? manualType : "auto";
+  if (!clean) return { type: "empty", status: "empty", severity: "neutral", rows: [], candidates: [], primaryCarrier: null, reference: "" };
 
-  const rows = [[lang === "ko" ? "정규화 번호" : "Normalized reference", prettyTrackingReference(clean)]];
-  let result = { type: "unsupported", status: "unsupported", severity: "warning", rows, candidates: [], primaryCarrier: manualCarrier, reference: clean };
+  const rows = [[lang === "ko" ? "Reference number" : "Reference number", prettyTrackingReference(clean)]];
+  const unsupported = (type = "unsupported") => trackingBuildResult({
+    type,
+    status: "unsupported",
+    severity: "warning",
+    rows: [...rows, [lang === "ko" ? "판정" : "Detection", lang === "ko" ? "번호 유형을 자동으로 확인하지 못했습니다." : "We could not confidently identify this reference type."]],
+    reference: clean,
+    note: lang === "ko" ? "번호를 다시 확인하거나 유형을 직접 선택한 뒤 운송사 공식 조회 서비스를 이용하세요." : "Check the number, select a type manually, or use the carrier's official tracking service."
+  });
 
-  if (/^[A-Z]{4}\d{7}$/.test(clean)) {
+  if ((selectedType === "auto" || selectedType === "container") && /^[A-Z]{4}\d{7}$/.test(clean)) {
     const check = containerCheckDigit(clean);
     const owner = clean.slice(0, 4);
     const possible = OCEAN_PREFIX_HINTS.get(owner);
-    result = { type: "container", status: check?.valid ? "valid" : "invalid", severity: check?.valid ? "success" : "danger", rows: [...rows, ["Format", "ISO 6346"], [lang === "ko" ? "Check Digit" : "Check Digit", check?.valid ? (lang === "ko" ? `Valid (${check.actual})` : `Valid (${check.actual})`) : (lang === "ko" ? `Invalid: expected ${check.expected}, got ${check.actual}` : `Invalid: expected ${check.expected}, got ${check.actual}`)], [lang === "ko" ? "Owner Prefix" : "Owner Prefix", owner], [lang === "ko" ? "주의" : "Note", lang === "ko" ? "Owner code는 실제 운송사를 확정하지 않습니다." : "Owner code does not always identify the operating carrier."]], candidates: possible ? [possible] : [], primaryCarrier: manualCarrier || possible || null, reference: clean };
-    return result;
+    return trackingBuildResult({
+      type: "container",
+      status: check?.valid ? "valid" : "invalid",
+      severity: check?.valid ? "success" : "danger",
+      rows: [...rows, ["Format", "ISO 6346"], [lang === "ko" ? "Check digit" : "Check digit", check?.valid ? (lang === "ko" ? `Valid (${check.actual})` : `Valid (${check.actual})`) : (lang === "ko" ? `Invalid: expected ${check.expected}, got ${check.actual}` : `Invalid: expected ${check.expected}, got ${check.actual}`)], [lang === "ko" ? "Owner code" : "Owner code", owner]],
+      candidates: possible ? [possible] : [],
+      primaryCarrier: possible || null,
+      reference: clean,
+      note: lang === "ko" ? "형식 검증은 번호 구조와 check digit만 확인하며, 실제 컨테이너 존재 여부나 운송 상태를 확인하지 않습니다." : "Format validation checks only the number structure and check digit. It does not confirm actual container existence or shipment status."
+    });
   }
+  if (selectedType === "container") return trackingBuildResult({ type: "container", status: "invalid", severity: "danger", rows: [...rows, ["Format", "ISO 6346"], [lang === "ko" ? "판정" : "Detection", lang === "ko" ? "Container 번호 형식과 일치하지 않습니다." : "This does not match the container number format."]], reference: clean, note: lang === "ko" ? "Container 번호는 일반적으로 소유자 코드 4자와 숫자 7자리로 구성됩니다." : "Container numbers normally use a 4-letter owner code plus 7 digits." });
 
-  if (/^\d{11}$/.test(clean)) {
+  if ((selectedType === "auto" || selectedType === "awb") && /^\d{11}$/.test(clean)) {
     const check = awbCheckDigit(clean);
     const prefix = clean.slice(0, 3);
+    const serial = clean.slice(3);
     const carrier = AIR_PREFIX_HINTS.get(prefix);
-    result = { type: "awb", status: check?.valid ? "valid" : "invalid", severity: check?.valid ? "success" : "danger", rows: [...rows, ["Format", "IATA AWB 3+8"], [lang === "ko" ? "Airline Prefix" : "Airline Prefix", prefix], [lang === "ko" ? "AWB Check Digit" : "AWB Check Digit", check?.valid ? (lang === "ko" ? `Valid (${check.actual})` : `Valid (${check.actual})`) : (lang === "ko" ? `Invalid: expected ${check.expected}, got ${check.actual}` : `Invalid: expected ${check.expected}, got ${check.actual}`)]], candidates: carrier ? [carrier] : [], primaryCarrier: manualCarrier || carrier || null, reference: clean };
-    return result;
+    return trackingBuildResult({
+      type: "awb",
+      status: check?.valid ? "valid" : "invalid",
+      severity: check?.valid ? "success" : "danger",
+      rows: [...rows, ["Format", "IATA AWB 3+8"], [lang === "ko" ? "Airline prefix" : "Airline prefix", prefix], ["Serial", serial], [lang === "ko" ? "Check digit" : "Check digit", check?.valid ? (lang === "ko" ? `Valid (${check.actual})` : `Valid (${check.actual})`) : (lang === "ko" ? `Invalid: expected ${check.expected}, got ${check.actual}` : `Invalid: expected ${check.expected}, got ${check.actual}`)]],
+      candidates: carrier ? [carrier] : [],
+      primaryCarrier: carrier || null,
+      reference: clean,
+      note: lang === "ko" ? "AWB 형식 검증은 실제 항공화물 존재 또는 운송 상태를 확인하지 않습니다." : "AWB format validation does not confirm actual cargo existence or shipment status."
+    });
   }
+  if (selectedType === "awb") return trackingBuildResult({ type: "awb", status: "invalid", severity: "danger", rows: [...rows, ["Format", "IATA AWB 3+8"], [lang === "ko" ? "판정" : "Detection", lang === "ko" ? "AWB 번호 형식과 일치하지 않습니다." : "This does not match the AWB number format."]], reference: clean });
 
   const courierCandidates = TRACKING_CARRIERS.filter((carrier) => carrier.category === "courier" && (carrier.patterns || []).some((pattern) => pattern.test(clean)));
-  if (courierCandidates.length) {
-    result = { type: "courier", status: courierCandidates.length === 1 ? "valid" : "multiple", severity: courierCandidates.length === 1 ? "success" : "warning", rows: [...rows, ["Format", lang === "ko" ? "Courier tracking number pattern" : "Courier tracking number pattern"], [lang === "ko" ? "감지 결과" : "Detection", courierCandidates.length === 1 ? courierCandidates[0].name : (lang === "ko" ? "여러 후보" : "Multiple candidates")]], candidates: courierCandidates, primaryCarrier: manualCarrier || (courierCandidates.length === 1 ? courierCandidates[0] : null), reference: clean };
-    return result;
+  if ((selectedType === "auto" || selectedType === "courier") && courierCandidates.length) {
+    return trackingBuildResult({
+      type: "courier",
+      status: courierCandidates.length === 1 ? "valid" : "multiple",
+      severity: courierCandidates.length === 1 ? "success" : "warning",
+      rows: [...rows, ["Format", lang === "ko" ? "Courier tracking number pattern" : "Courier tracking number pattern"], [lang === "ko" ? "판정" : "Detection", courierCandidates.length === 1 ? courierCandidates[0].name : (lang === "ko" ? "여러 운송사 후보" : "Multiple possible carriers")]],
+      candidates: courierCandidates,
+      primaryCarrier: courierCandidates.length === 1 ? courierCandidates[0] : null,
+      reference: clean,
+      note: courierCandidates.length > 1 ? (lang === "ko" ? "숫자형 Courier 번호는 여러 운송사 pattern과 겹칠 수 있습니다." : "Numeric courier references can overlap across carriers.") : ""
+    });
   }
+  if (selectedType === "courier") return trackingBuildResult({ type: "courier", status: "unknown", severity: "warning", rows: [...rows, [lang === "ko" ? "판정" : "Detection", lang === "ko" ? "확인 가능한 Courier pattern과 일치하지 않습니다." : "This does not match a verified courier pattern."]], reference: clean });
 
   const oceanCandidates = TRACKING_CARRIERS.filter((carrier) => carrier.category === "ocean" && (carrier.prefixes || []).some((prefix) => clean.startsWith(prefix)));
-  if (oceanCandidates.length) {
-    result = { type: clean.length <= 12 ? "bl" : "container", status: "possible", severity: "warning", rows: [...rows, [lang === "ko" ? "Prefix" : "Prefix", oceanCandidates.map((carrier) => carrier.prefixes.find((prefix) => clean.startsWith(prefix))).filter(Boolean).join(", ")], [lang === "ko" ? "판정" : "Detection", lang === "ko" ? "Possible carrier only" : "Possible carrier only"]], candidates: oceanCandidates, primaryCarrier: manualCarrier || oceanCandidates[0], reference: clean };
-    return result;
+  if ((selectedType === "auto" || selectedType === "bl") && oceanCandidates.length) {
+    return trackingBuildResult({
+      type: "bl",
+      status: "possible",
+      severity: "warning",
+      rows: [...rows, [lang === "ko" ? "Prefix" : "Prefix", oceanCandidates.map((carrier) => carrier.prefixes.find((prefix) => clean.startsWith(prefix))).filter(Boolean).join(", ")], [lang === "ko" ? "판정" : "Detection", lang === "ko" ? "가능한 해상운송 참조번호" : "Possible ocean carrier reference"]],
+      candidates: oceanCandidates,
+      primaryCarrier: oceanCandidates.length === 1 ? oceanCandidates[0] : null,
+      reference: clean,
+      note: lang === "ko" ? "B/L 또는 Booking 번호 여부는 운송사 공식 조회 페이지에서 확인하세요." : "Confirm whether this is a B/L or Booking reference on the carrier's official tracking page."
+    });
   }
 
-  if (/^[A-Z0-9]{6,18}$/.test(clean)) {
-    result = { type: "bl", status: "unknown", severity: "neutral", rows: [...rows, ["Format", lang === "ko" ? "Carrier-specific reference" : "Carrier-specific reference"], [lang === "ko" ? "판정" : "Detection", lang === "ko" ? "Carrier를 확정할 수 없습니다." : "Carrier cannot be confirmed."]], candidates: [], primaryCarrier: manualCarrier, reference: clean };
+  if ((selectedType === "auto" || selectedType === "bl") && /^[A-Z0-9]{6,24}$/.test(clean)) {
+    return trackingBuildResult({
+      type: "bl",
+      status: "unknown",
+      severity: "neutral",
+      rows: [...rows, ["Format", lang === "ko" ? "Carrier-specific reference" : "Carrier-specific reference"], [lang === "ko" ? "판정" : "Detection", lang === "ko" ? "Carrier를 확정할 수 없습니다." : "Carrier cannot be confirmed."]],
+      candidates: [],
+      primaryCarrier: null,
+      reference: clean,
+      note: lang === "ko" ? "B/L 또는 Booking 번호는 carrier별 규칙이 다르므로 공식 조회 화면에서 확인하세요." : "B/L and Booking references are carrier-specific. Confirm on the official carrier page."
+    });
   }
-  return result;
+
+  return unsupported(selectedType === "auto" ? "unsupported" : selectedType);
 }
 
 function trackingStatusText(result, lang = currentLang()) {
-  if (result.status === "empty") return lang === "ko" ? "번호를 입력해 주세요." : "Enter a reference number.";
+  if (result.status === "empty") return lang === "ko" ? "번호를 입력하세요" : "Enter a reference number";
   if (result.status === "valid") return lang === "ko" ? "형식 검증 완료" : "Format validated";
-  if (result.status === "invalid") return lang === "ko" ? "형식 오류" : "Invalid format";
-  if (result.status === "multiple") return lang === "ko" ? "여러 후보" : "Multiple candidates";
-  if (result.status === "unknown") return lang === "ko" ? "Carrier 미확정" : "Carrier unknown";
-  if (result.status === "unsupported") return lang === "ko" ? "지원하지 않는 번호 형식" : "Unsupported reference type";
-  return lang === "ko" ? "가능성 있음" : "Possible match";
+  if (result.status === "invalid") return lang === "ko" ? "형식 확인 필요" : "Check the format";
+  if (result.status === "multiple") return lang === "ko" ? "여러 운송사 후보" : "Multiple possible carriers";
+  if (result.status === "unknown") return lang === "ko" ? "가능한 참조번호" : "Possible reference";
+  if (result.status === "unsupported") return lang === "ko" ? "번호 유형 미확정" : "Reference type unknown";
+  return lang === "ko" ? "가능한 운송사 후보" : "Possible carrier match";
 }
 
 function renderTrackingResult(target, result) {
   if (!target) return;
   const lang = currentLang();
   if (result.type === "empty") {
-    target.innerHTML = `<div class="tracking-empty-state"><i data-lucide="radar"></i><strong>${trackingStatusText(result, lang)}</strong><p>${lang === "ko" ? "Container, B/L, AWB, Courier 번호를 한 곳에서 검사합니다." : "Inspect container, B/L, AWB, and courier references in one place."}</p></div>`;
-    refreshIcons();
+    target.hidden = true;
+    target.innerHTML = "";
     return;
   }
+  target.hidden = false;
   const primary = result.primaryCarrier;
-  const cta = primary ? `<a class="primary-btn" href="${escapeAttribute(trackingCarrierUrl(primary, result.reference))}" target="_blank" rel="noopener"><i data-lucide="external-link"></i>${lang === "ko" ? "공식 조회 열기" : "Open official tracking"}</a>` : "";
-  target.innerHTML = `<article class="tracking-result-card is-${escapeAttribute(result.severity)}"><div class="tracking-result-head"><div><span class="kicker">${escapeHtml(trackingResultLabel(result.type, lang))}</span><h2>${escapeHtml(trackingStatusText(result, lang))}</h2></div><span class="tracking-status-pill"><i data-lucide="${result.severity === "success" ? "check-circle-2" : result.severity === "danger" ? "x-circle" : "alert-circle"}"></i>${escapeHtml(trackingStatusText(result, lang))}</span></div><dl class="tracking-kv-grid">${result.rows.map(([key, value]) => `<div><dt>${escapeHtml(key)}</dt><dd>${escapeHtml(value)}</dd></div>`).join("")}${primary ? `<div><dt>${lang === "ko" ? "Carrier" : "Carrier"}</dt><dd>${escapeHtml(result.status === "possible" || result.status === "multiple" ? `${lang === "ko" ? "Possible: " : "Possible: "}${primary.name}` : primary.name)}</dd></div>` : `<div><dt>${lang === "ko" ? "Carrier" : "Carrier"}</dt><dd>${lang === "ko" ? "자동 식별 불가" : "Not identified"}</dd></div>`}</dl>${result.candidates.length > 1 ? `<div class="tracking-candidates"><h3>${lang === "ko" ? "Possible carriers" : "Possible carriers"}</h3>${result.candidates.map((carrier) => `<a href="${escapeAttribute(trackingCarrierUrl(carrier, result.reference))}" target="_blank" rel="noopener"><strong>${escapeHtml(carrier.name)}</strong><span>${escapeHtml(carrier.category)}</span></a>`).join("")}</div>` : ""}<div class="tracking-result-actions">${cta}<a class="secondary-btn" href="#carrier-directory">${lang === "ko" ? "Carrier 직접 선택" : "Select carrier manually"}</a></div><p class="muted">${lang === "ko" ? "LOGILEE는 공식 조회 페이지로 연결하며 실시간 shipment status를 생성하지 않습니다." : "LOGILEE opens official tracking services and does not generate live shipment status."}</p></article>`;
+  const canOpenPrimary = primary && result.status !== "invalid";
+  const cta = canOpenPrimary ? `<a class="primary-btn" href="${escapeAttribute(trackingCarrierUrl(primary, result.reference))}" target="_blank" rel="noopener"><i data-lucide="external-link"></i>${lang === "ko" ? "공식 조회 열기" : "Open official tracking"}</a>` : "";
+  const candidateLinks = result.candidates.length ? `<div class="tracking-candidates"><h3>${lang === "ko" ? "가능한 운송사" : "Possible carriers"}</h3>${result.candidates.map((carrier) => `<a href="${escapeAttribute(trackingCarrierUrl(carrier, result.reference))}" target="_blank" rel="noopener"><strong>${escapeHtml(carrier.name)}</strong><span>${carrier.deepLink ? (lang === "ko" ? "번호 전달 지원" : "Prefill supported") : (lang === "ko" ? "공식 페이지" : "Official page")}</span></a>`).join("")}</div>` : "";
+  const carrierValue = result.candidates.length ? result.candidates.map((carrier) => carrier.name).join(", ") : (lang === "ko" ? "자동 식별 불가" : "Not identified");
+  const copyLabel = lang === "ko" ? "복사" : "Copy";
+  const rows = [...result.rows, [lang === "ko" ? "Possible carrier" : "Possible carrier", carrierValue]];
+  target.innerHTML = `<article class="tracking-result-card is-${escapeAttribute(result.severity)}"><div class="tracking-result-head"><div><span class="kicker">${escapeHtml(trackingResultLabel(result.type, lang))}</span><h2>${escapeHtml(trackingStatusText(result, lang))}</h2></div><span class="tracking-status-pill"><i data-lucide="${result.severity === "success" ? "check-circle-2" : result.severity === "danger" ? "x-circle" : "alert-circle"}"></i>${escapeHtml(trackingStatusText(result, lang))}</span></div><div class="tracking-reference-line"><strong>${escapeHtml(prettyTrackingReference(result.reference))}</strong><button type="button" data-copy-track="${escapeAttribute(result.reference)}">${copyLabel}</button><span aria-live="polite"></span></div><dl class="tracking-kv-grid">${rows.map(([key, value]) => `<div><dt>${escapeHtml(key)}</dt><dd>${escapeHtml(value)}</dd></div>`).join("")}</dl>${result.note ? `<p class="tracking-result-note">${escapeHtml(result.note)}</p>` : ""}${candidateLinks}<div class="tracking-result-actions">${cta}<a class="secondary-btn" href="#carrier-directory">${lang === "ko" ? "운송사 공식 조회 보기" : "View carrier directory"}</a></div></article>`;
   refreshIcons();
 }
 
@@ -1534,21 +1605,27 @@ function trackingDirectoryMarkup() {
   const lang = currentLang();
   const groups = ["ocean", "air", "courier"];
   const groupLabels = {
-    ko: { ocean: "Ocean Carrier", air: "Air Cargo", courier: "Courier" },
-    en: { ocean: "Ocean Carrier", air: "Air Cargo", courier: "Courier" }
+    ko: { ocean: "해상 운송", air: "항공 화물", courier: "특송" },
+    en: { ocean: "Ocean Carriers", air: "Air Cargo", courier: "Courier" }
   };
   const helpers = {
-    ko: { ocean: "Container, B/L, Booking reference는 carrier별 공식 화면에서 확인합니다.", air: "AWB는 항공사 cargo portal에서 확인합니다.", courier: "공식 parcel tracking 화면으로 이동합니다." },
+    ko: { ocean: "Container, B/L, Booking reference는 운송사 공식 화면에서 확인합니다.", air: "AWB는 항공사 cargo portal에서 확인합니다.", courier: "공식 parcel tracking 화면으로 이동합니다." },
     en: { ocean: "Use official carrier screens for container, B/L, and booking references.", air: "Use the airline cargo portal for AWB tracking.", courier: "Open official parcel tracking services." }
   };
-  return groups.map((group) => `<section class="tracking-directory-group"><div><h3>${groupLabels[lang][group]}</h3><p>${helpers[lang][group]}</p></div><div class="tracking-directory-list">${TRACKING_CARRIERS.filter((carrier) => carrier.category === group).map((carrier) => `<a href="${escapeAttribute(carrier.url)}" target="_blank" rel="noopener" data-track-carrier-link="${escapeAttribute(carrier.id)}"><strong>${escapeHtml(carrier.name)}</strong><span>${carrier.deepLink ? (lang === "ko" ? "번호 전달 지원" : "Prefill supported") : (lang === "ko" ? "공식 페이지 열기" : "Official page")}</span></a>`).join("")}</div></section>`).join("");
+  return groups.map((group, index) => `<details class="tracking-directory-group" ${index === 0 ? "open" : ""}><summary><span><strong>${groupLabels[lang][group]}</strong><small>${helpers[lang][group]}</small></span><b>${TRACKING_CARRIERS.filter((carrier) => carrier.category === group).length}</b></summary><div class="tracking-directory-list">${TRACKING_CARRIERS.filter((carrier) => carrier.category === group).map((carrier) => `<a href="${escapeAttribute(carrier.url)}" target="_blank" rel="noopener" data-track-carrier-link="${escapeAttribute(carrier.id)}"><strong>${escapeHtml(carrier.name)}</strong><span>${carrier.deepLink ? (lang === "ko" ? "번호 전달 지원" : "Prefill supported") : (lang === "ko" ? "공식 페이지" : "Official page")}</span></a>`).join("")}</div></details>`).join("");
 }
 
 function renderTrackingRecent(target) {
   if (!target) return;
   const lang = currentLang();
   const items = JSON.parse(localStorage.getItem("logilee-recent-track-v2") || "[]");
-  target.innerHTML = `<div class="tracking-recent-head"><h2>${lang === "ko" ? "최근 검사" : "Recent checks"}</h2>${items.length ? `<button type="button" data-clear-track-recent>${lang === "ko" ? "지우기" : "Clear"}</button>` : ""}</div>${items.length ? `<div class="tracking-recent-list">${items.map((item) => `<span>${escapeHtml(item.type)} · ${escapeHtml(item.masked)}</span>`).join("")}</div>` : `<p class="muted">${lang === "ko" ? "개인정보 보호를 위해 전체 번호는 저장하지 않습니다." : "Full reference numbers are not stored for privacy."}</p>`}`;
+  if (!items.length) {
+    target.hidden = true;
+    target.innerHTML = "";
+    return;
+  }
+  target.hidden = false;
+  target.innerHTML = `<div class="tracking-recent-head"><h2>${lang === "ko" ? "최근 검사" : "Recent Checks"}</h2><button type="button" data-clear-track-recent>${lang === "ko" ? "지우기" : "Clear"}</button></div><div class="tracking-recent-list">${items.map((item) => `<span>${escapeHtml(item.type)} · ${escapeHtml(item.masked)}</span>`).join("")}</div>`;
 }
 
 function wireTracking() {
@@ -1556,12 +1633,13 @@ function wireTracking() {
   if (!form) return;
   const lang = currentLang();
   const number = form.querySelector("[data-track-number]");
-  const carrier = form.querySelector("[data-carrier]");
+  const type = form.querySelector("[data-track-type]");
   const output = document.querySelector("[data-track-output]");
   const recent = document.querySelector("[data-recent]");
   const directory = document.querySelector("[data-carrier-directory]");
-  if (carrier) {
-    carrier.innerHTML = `<option value="">${lang === "ko" ? "자동 감지 / 직접 선택" : "Auto detect / manual select"}</option>${TRACKING_CARRIERS.map((item) => `<option value="${escapeAttribute(item.id)}">${escapeHtml(item.name)} · ${escapeHtml(item.category)}</option>`).join("")}`;
+  if (type) {
+    const options = ["auto", "container", "bl", "awb", "courier"];
+    type.innerHTML = options.map((item) => `<option value="${item === "auto" ? "" : item}">${escapeHtml(trackingManualTypeLabel(item, lang))}</option>`).join("");
   }
   if (directory) directory.innerHTML = trackingDirectoryMarkup();
   const saveRecent = (result) => {
@@ -1572,22 +1650,41 @@ function wireTracking() {
     renderTrackingRecent(recent);
   };
   const render = (persist = false) => {
-    const result = inspectTrackingReference(number.value, carrier.value);
+    const result = inspectTrackingReference(number.value, type?.value || "auto");
     renderTrackingResult(output, result);
     if (persist) saveRecent(result);
+    return result;
   };
   number.addEventListener("input", () => render(false));
-  carrier.addEventListener("change", () => render(false));
+  type?.addEventListener("change", () => render(false));
   form.addEventListener("submit", (event) => {
     event.preventDefault();
-    const result = inspectTrackingReference(number.value, carrier.value);
-    renderTrackingResult(output, result);
-    saveRecent(result);
-    if (result.primaryCarrier && result.status !== "invalid") window.open(trackingCarrierUrl(result.primaryCarrier, result.reference), "_blank", "noopener");
+    render(true);
   });
-  document.addEventListener("click", (event) => {
+  document.addEventListener("click", async (event) => {
     const clear = event.target.closest("[data-clear-track-recent]");
-    if (clear) { localStorage.removeItem("logilee-recent-track-v2"); renderTrackingRecent(recent); }
+    if (clear) { localStorage.removeItem("logilee-recent-track-v2"); renderTrackingRecent(recent); return; }
+    const copy = event.target.closest("[data-copy-track]");
+    if (!copy) return;
+    const feedback = copy.nextElementSibling;
+    const text = copy.dataset.copyTrack || "";
+    try {
+      if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(text);
+      else {
+        const area = document.createElement("textarea");
+        area.value = text;
+        area.setAttribute("readonly", "");
+        area.style.position = "fixed";
+        area.style.opacity = "0";
+        document.body.appendChild(area);
+        area.select();
+        document.execCommand("copy");
+        area.remove();
+      }
+      if (feedback) feedback.textContent = lang === "ko" ? "복사됨" : "Copied";
+    } catch (_) {
+      if (feedback) feedback.textContent = lang === "ko" ? "복사 실패" : "Copy failed";
+    }
   });
   renderTrackingRecent(recent);
   render(false);

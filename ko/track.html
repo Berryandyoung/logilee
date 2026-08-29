@@ -9,8 +9,8 @@
   <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="192x192" href="../android-chrome-192x192.png">
   <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
-  <title>Shipment Tracking Hub | LOGILEE</title>
-  <meta name="description" content="운송장, B/L, Container, AWB 번호를 입력해 번호 유형과 형식을 확인하고 가능한 공식 tracking 서비스로 연결하는 LOGILEE Shipment Tracking Hub입니다.">
+  <title>화물 추적 | LOGILEE</title>
+  <meta name="description" content="운송장, B/L, Container, AWB 번호를 입력해 번호 유형과 형식을 확인하고 가능한 공식 tracking 서비스로 연결하는 LOGILEE 화물 추적 도구입니다.">
   <link rel="canonical" href="https://www.logilee.com/ko/track.html">
   <link rel="alternate" hreflang="ko" href="https://www.logilee.com/ko/track.html">
   <link rel="alternate" hreflang="en" href="https://www.logilee.com/en/track.html">
@@ -22,47 +22,42 @@
   <div class="shell">
     <aside class="rail"></aside>
     <main class="main">
-      <header class="topbar"><a class="mobile-logo" href="./">LOGILEE</a><nav data-mobile-nav><a href="./">Home</a><a href="tools.html">Tools</a><a aria-current="page" href="track.html">Track</a><a href="search.html">Search</a></nav><div class="top-actions"><a class="icon-btn" href="../en/track.html">KO / EN</a><button class="menu-btn" data-menu-toggle aria-label="메뉴">Menu</button></div></header>
+      <header class="topbar"><a class="mobile-logo" href="./">LOGILEE</a><nav data-mobile-nav><a href="./">Home</a><a href="tools.html">Tools</a><a aria-current="page" href="track.html">화물 추적</a><a href="search.html">Search</a></nav><div class="top-actions"><a class="icon-btn" href="../en/track.html">KO / EN</a><button class="menu-btn" data-menu-toggle aria-label="메뉴">Menu</button></div></header>
       <div id="main" class="page tracking-hub-page">
         <section class="page-title tracking-hub-title">
-          <span class="eyebrow">Shipment Tracking Hub</span>
-          <h1>Shipment Tracking Hub</h1>
-          <p class="lead">운송장·B/L·Container·AWB 번호를 입력하면 번호 유형과 형식을 확인하고, 가능한 경우 carrier 후보와 공식 조회 페이지를 연결합니다.</p>
-          <p class="muted">LOGILEE는 실시간 shipment status나 ETA를 생성하지 않습니다. 실제 상태는 carrier의 공식 tracking 서비스에서 확인하세요.</p>
+          <span class="eyebrow">SHIPMENT TRACKING</span>
+          <h1>화물 추적</h1>
+          <p class="lead">Container, B/L, AWB 또는 Courier 번호를 입력해 형식을 확인하고 가능한 경우 공식 운송사 조회 페이지로 이동하세요.</p>
         </section>
 
-        <section class="panel tracking-inspector-panel" aria-labelledby="tracking-inspector-title">
-          <div class="tracking-inspector-head"><div><span class="kicker">Inspector</span><h2 id="tracking-inspector-title">번호 검사</h2></div><span>ISO 6346 · IATA AWB · Courier patterns</span></div>
+        <section class="panel tracking-inspector-panel" aria-label="화물 추적 번호 검사">
           <form data-track-form class="tracking-inspector-form">
-            <div class="field tracking-input-field"><label for="track-number">Tracking / B/L / Container / AWB 번호</label><input id="track-number" data-track-number autocomplete="off" placeholder="Tracking / B/L / Container / AWB 번호 입력"></div>
-            <div class="field tracking-carrier-field"><label for="track-carrier">직접 선택</label><select id="track-carrier" data-carrier></select></div>
-            <button class="primary-btn tracking-open-btn" type="submit"><i data-lucide="external-link"></i> 공식 조회 열기</button>
+            <div class="field tracking-input-field"><label for="track-number">Tracking / B/L / Container / AWB 번호</label><input id="track-number" data-track-number autocomplete="off" placeholder="MSCU 123456 6, 180-12345675, 1Z..."></div>
+            <div class="field tracking-carrier-field"><label for="track-type">유형</label><select id="track-type" data-track-type></select></div>
+            <button class="primary-btn tracking-open-btn" type="submit">조회</button>
           </form>
-          <div data-track-output class="tracking-result-area"></div>
-          <div data-recent class="tracking-recent"></div>
         </section>
+        <div data-track-output class="tracking-result-area"></div>
+        <div data-recent class="tracking-recent"></div>
 
         <div class="tracking-anchor-grid" aria-hidden="true"><span id="container"></span><span id="bl"></span><span id="awb"></span><span id="courier"></span><span id="ocean-carrier"></span></div>
 
-        <section class="panel tracking-booking-note" id="booking">
-          <div><span class="kicker">Booking</span><h2>Booking reference</h2></div>
-          <p>Booking 번호는 carrier별 규칙과 조회 방식이 크게 다릅니다. 자동 감지 대상으로 확정하지 않고, 아래 Carrier Directory에서 carrier를 선택해 공식 화면에서 확인하세요.</p>
-        </section>
-
         <section class="page-section tracking-directory-section" id="carrier-directory" aria-labelledby="carrier-directory-title">
-          <div class="section-heading"><span class="eyebrow">Official Services</span><h2 id="carrier-directory-title">Carrier Directory</h2><p>공식 tracking 서비스만 연결합니다. deep-link가 안정적이지 않은 carrier는 공식 조회 페이지를 엽니다.</p></div>
+          <div class="section-heading"><span class="eyebrow">OFFICIAL SERVICES</span><h2 id="carrier-directory-title">운송사 공식 조회</h2><p>공식 tracking 서비스만 연결합니다. 안정적인 deep-link가 없는 경우 운송사의 공식 조회 페이지를 엽니다.</p></div>
           <div data-carrier-directory></div>
         </section>
 
         <section class="panel tracking-source-section">
           <h2>Tracking & Reference Sources</h2>
           <div class="source-note-grid tracking-source-grid">
-            <article><strong>ISO 6346</strong><p>Container 번호 형식과 check digit 검증에 사용합니다.</p></article>
+            <article><strong>ISO 6346</strong><p>Container 번호 구조와 check digit 검증에 사용합니다. 실제 컨테이너 존재 여부나 운송 상태를 확인하지 않습니다.</p></article>
             <article><strong>BIC Register</strong><p>Owner code는 컨테이너 소유자 식별용이며 실제 운송사 확정값으로 보지 않습니다.</p></article>
-            <article><strong>IATA AWB</strong><p>AWB 3-digit airline prefix와 8-digit serial 구조를 기준으로 검사합니다.</p></article>
-            <article><strong>Carrier official sites</strong><p>실제 shipment status는 carrier 공식 tracking 화면에서 확인합니다.</p></article>
+            <article><strong>IATA AWB</strong><p>AWB 3-digit airline prefix와 8-digit serial/check digit 구조를 기준으로 검사합니다.</p></article>
+            <article><strong>실시간 데이터</strong><p>LOGILEE는 번호 형식과 가능한 운송사를 확인하고 공식 조회 서비스를 연결합니다. 실제 상태, ETA, 위치 정보는 각 운송사 공식 서비스에서 확인하세요.</p></article>
           </div>
         </section>
+
+        <section class="panel tracking-related-section"><h2>관련 LOGILEE 도구</h2><div class="tracking-related-grid"><a href="ports.html">항만 검색</a><a href="airports.html">공항 검색</a><a href="cbm.html">CBM 계산기</a></div></section>
 
         <div class="section ad-slot">Advertisement - Reserved ad placement</div>
       </div>
