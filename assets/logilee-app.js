@@ -209,7 +209,9 @@ function workspaceNavMarkup(lang) {
         logistics: "Logistics",
         tracking: "Tracking Launcher",
         ports: "Port Search",
+        airports: "공항 검색",
         cbm: "CBM Calculator",
+
         compliance: "Compliance",
         hub: "Compliance Hub",
         rules: "수출입 규제",
@@ -236,7 +238,9 @@ function workspaceNavMarkup(lang) {
         logistics: "Logistics",
         tracking: "Tracking Launcher",
         ports: "Port Search",
+        airports: "Airport Search",
         cbm: "CBM Calculator",
+
         compliance: "Compliance",
         hub: "Compliance Hub",
         rules: "Import / Export Rules",
@@ -257,7 +261,7 @@ function workspaceNavMarkup(lang) {
     <nav class="workspace-nav" aria-label="${nav.label}">
       <a class="nav-home" href="./"><i data-lucide="home"></i> ${nav.home}</a>
       <section><h2>${nav.trade}</h2><a href="country-trade-profile.html"><i data-lucide="globe"></i>${nav.country}</a><a href="holidays.html"><i data-lucide="calendar-check"></i>${nav.holidays}</a><a href="eu-trade-explorer.html"><i data-lucide="chart-column"></i>${nav.eu}</a><a href="global-trade-explorer.html"><i data-lucide="chart-column"></i>${nav.global}</a><a href="${hsHref}"><i data-lucide="barcode"></i>${nav.hs}</a></section>
-      <section><h2>${nav.logistics}</h2><a href="track.html"><i data-lucide="radar"></i>${nav.tracking}</a><a href="ports.html"><i data-lucide="anchor"></i>${nav.ports}</a><a href="cbm.html"><i data-lucide="calculator"></i>${nav.cbm}</a></section>
+      <section><h2>${nav.logistics}</h2><a href="ports.html"><i data-lucide="anchor"></i>${nav.ports}</a><a href="airports.html"><i data-lucide="plane"></i>${nav.airports}</a><a href="track.html"><i data-lucide="radar"></i>${nav.tracking}</a><a href="cbm.html"><i data-lucide="calculator"></i>${nav.cbm}</a></section>
       <section><h2>${nav.compliance}</h2><a href="dashboard.html"><i data-lucide="shield-check"></i>${nav.hub}</a><a href="dashboard.html"><i data-lucide="shield-alert"></i>${nav.rules}</a></section>
       <section><h2>${nav.market}</h2><a href="freight-market.html"><i data-lucide="chart-no-axes-combined"></i>${nav.freight}</a><a href="currency-converter.html"><i data-lucide="badge-dollar-sign"></i>${nav.fx}</a><a href="business-day.html"><i data-lucide="calendar-clock"></i>${nav.business}</a></section>
       <section><h2>${nav.resources}</h2><a href="templates.html"><i data-lucide="copy"></i>${nav.templates}</a><a href="documents.html"><i data-lucide="file-text"></i>${nav.documents}</a><a href="dictionary.html"><i data-lucide="languages"></i>${nav.dictionary}</a><a href="learn.html"><i data-lucide="graduation-cap"></i>${nav.learn}</a><a href="contact.html"><i data-lucide="building-2"></i>${nav.contact}</a></section>
