@@ -24,20 +24,19 @@
       <section class="page-title port-intel-title">
         <p class="eyebrow">PORT INTELLIGENCE</p>
         <h1>Port Search</h1>
-        <p class="lead">Search global ports and logistics locations by port name, city, country, or UN/LOCODE, then review location, local time, and official port resources.</p>
-        <p class="muted">LOGILEE gives fast operational context and does not generate unverified live congestion, ETA, berth, or vessel status data.</p>
+        <p class="lead">Search major ports by port name, city, country, or UN/LOCODE and check location, local time, and official resources.</p>
       </section>
       <form class="panel port-search-panel" data-port-search-form>
         <div class="field port-search-field"><label for="port-query">Search port</label><input id="port-query" data-port-query placeholder="Busan, Pusan, KRPUS, Nhava Sheva, INNSA" autocomplete="off"></div>
         <div class="field port-country-field"><label>Country</label><select data-country-select><option value="">All countries</option></select></div>
         <button class="primary-btn" type="submit">Search</button>
         <button class="secondary-btn" type="button" data-port-clear>Clear</button>
-        <span class="status" data-port-count>0 ports</span>
+        <span class="status" data-port-count>97 Ports</span>
       </form>
-      <section class="port-popular-panel" aria-label="Popular ports"><div class="section-head"><h2>Popular Ports</h2><span>Profile deep link</span></div><div class="port-popular-grid" data-popular-ports></div></section>
-      <section class="port-results-panel"><div class="section-head"><h2>Search Results</h2><span>Port · UN/LOCODE · Local time</span></div><div data-port-results></div></section>
+      <section class="port-popular-panel" aria-label="Popular ports"><div class="section-head"><h2>Popular Ports</h2><span>Representative ports</span></div><div class="port-popular-grid" data-popular-ports></div></section>
+      <section class="port-results-panel" hidden><div class="section-head"><h2>Search Results</h2><span>Port · UN/LOCODE · Local time</span></div><div data-port-results></div></section>
       <section data-port-profile></section>
-      <section class="panel prose-panel port-data-coverage"><h2>Data & Sources</h2><p>LOGILEE Port Intelligence provides curated port references commonly used in logistics work. Because UN/LOCODE also includes non-port transport locations, LOGILEE limits this search set to verified port locations.</p><dl><div><dt>Primary location reference</dt><dd>UNECE UN/LOCODE 2025-1 format and public port identifiers</dd></div><div><dt>Coordinates</dt><dd>Approximate coordinates cross-checked with UN/LOCODE or official/public geographic references where available</dd></div><div><dt>Map</dt><dd>OpenStreetMap location context with attribution</dd></div><div><dt>Official resources</dt><dd>Verified Port Authority, official site, and map links for major ports</dd></div><div><dt>Photos / live data</dt><dd>Not provided in V1</dd></div></dl></section>
+      <section class="panel prose-panel port-data-coverage"><h2>Data & Sources</h2><p>LOGILEE Port Intelligence provides curated port references commonly used in logistics work. Because UN/LOCODE also includes non-port transport locations, LOGILEE limits this search set to verified port locations.</p><dl><div><dt>Primary location reference</dt><dd>UNECE UN/LOCODE 2025-1 format and public port identifiers</dd></div><div><dt>Coordinates</dt><dd>Approximate coordinates cross-checked with UN/LOCODE or official/public geographic references where available</dd></div><div><dt>Map</dt><dd>OpenStreetMap location context with attribution</dd></div><div><dt>Official resources</dt><dd>Verified Port Authority, official site, and map links for major ports</dd></div><div><dt>Live data</dt><dd>Live congestion, ETA, berth status, port calls, and terminal operating status are not generated unless a verified official data source is available.</dd></div></dl></section>
       <div class="section ad-slot">Advertisement - Reserved ad placement</div>
     </div>
   </main>

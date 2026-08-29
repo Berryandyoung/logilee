@@ -24,20 +24,19 @@
       <section class="page-title port-intel-title">
         <p class="eyebrow">PORT INTELLIGENCE</p>
         <h1>항만 검색</h1>
-        <p class="lead">항만명, 도시, 국가, UN/LOCODE로 글로벌 항만과 물류 거점을 검색하고 위치, 현지시간, 공식 항만 자료를 확인하세요.</p>
-        <p class="muted">LOGILEE는 주요 항만 reference를 빠르게 보여주되, 실시간 혼잡도·ETA·선석 상태처럼 검증된 데이터 소스가 없는 값은 생성하지 않습니다.</p>
+        <p class="lead">항만명, 도시, 국가, UN/LOCODE로 주요 항만을 검색하고 위치, 현지 시간, 공식 자료를 확인하세요.</p>
       </section>
       <form class="panel port-search-panel" data-port-search-form>
-        <div class="field port-search-field"><label for="port-query">Search port</label><input id="port-query" data-port-query placeholder="Busan, Pusan, KRPUS, Nhava Sheva, INNSA" autocomplete="off"></div>
-        <div class="field port-country-field"><label>Country</label><select data-country-select><option value="">전체 국가</option></select></div>
-        <button class="primary-btn" type="submit">Search</button>
-        <button class="secondary-btn" type="button" data-port-clear>Clear</button>
-        <span class="status" data-port-count>0개 항만</span>
+        <div class="field port-search-field"><label for="port-query">항만 검색</label><input id="port-query" data-port-query placeholder="Busan, Pusan, KRPUS, Nhava Sheva, INNSA" autocomplete="off"></div>
+        <div class="field port-country-field"><label>국가</label><select data-country-select><option value="">전체 국가</option></select></div>
+        <button class="primary-btn" type="submit">조회</button>
+        <button class="secondary-btn" type="button" data-port-clear>초기화</button>
+        <span class="status" data-port-count>97개 항만</span>
       </form>
-      <section class="port-popular-panel" aria-label="Popular ports"><div class="section-head"><h2>주요 항만 바로가기</h2><span>Profile deep link</span></div><div class="port-popular-grid" data-popular-ports></div></section>
-      <section class="port-results-panel"><div class="section-head"><h2>검색 결과</h2><span>Port · UN/LOCODE · Local time</span></div><div data-port-results></div></section>
+      <section class="port-popular-panel" aria-label="Popular ports"><div class="section-head"><h2>주요 항만 바로가기</h2><span>대표 항만</span></div><div class="port-popular-grid" data-popular-ports></div></section>
+      <section class="port-results-panel" hidden><div class="section-head"><h2>검색 결과</h2><span>Port · UN/LOCODE · Local time</span></div><div data-port-results></div></section>
       <section data-port-profile></section>
-      <section class="panel prose-panel port-data-coverage"><h2>데이터 및 출처</h2><p>LOGILEE Port Intelligence는 실무에서 자주 확인하는 주요 항만 reference를 제공합니다. UN/LOCODE는 항만 외 여러 운송·물류 location을 포함하므로, LOGILEE는 검증한 port location만 검색 대상으로 사용합니다.</p><dl><div><dt>기본 위치 데이터</dt><dd>UNECE UN/LOCODE 2025-1 기준 형식 및 공개 항만 식별자</dd></div><div><dt>좌표</dt><dd>UN/LOCODE 또는 공식·공개 지리 reference와 대조한 근사 좌표</dd></div><div><dt>지도</dt><dd>OpenStreetMap 위치 context 및 attribution</dd></div><div><dt>공식 자료</dt><dd>검증된 주요 항만의 Port Authority / official site / map 링크</dd></div><div><dt>사진 / 실시간 데이터</dt><dd>V1에서는 제공하지 않음</dd></div></dl></section>
+      <section class="panel prose-panel port-data-coverage"><h2>데이터 및 출처</h2><p>LOGILEE Port Intelligence는 실무에서 자주 확인하는 주요 항만 reference를 제공합니다. UN/LOCODE는 항만 외 여러 운송·물류 location을 포함하므로, LOGILEE는 검증한 port location만 검색 대상으로 사용합니다.</p><dl><div><dt>기본 위치 데이터</dt><dd>UNECE UN/LOCODE 2025-1 기준 형식 및 공개 항만 식별자</dd></div><div><dt>좌표</dt><dd>UN/LOCODE 또는 공식·공개 지리 reference와 대조한 근사 좌표</dd></div><div><dt>지도</dt><dd>OpenStreetMap 위치 context 및 attribution</dd></div><div><dt>공식 자료</dt><dd>검증된 주요 항만의 Port Authority / official site / map 링크</dd></div><div><dt>실시간 데이터</dt><dd>실시간 혼잡도, ETA, 선석 상태, port call, 터미널 운영 상태는 검증된 공식 데이터가 없으면 생성하지 않습니다.</dd></div></dl></section>
       <div class="section ad-slot">Advertisement - Reserved ad placement</div>
     </div>
   </main>

@@ -3468,6 +3468,7 @@ function wirePortFinder() {
   const form = document.querySelector("[data-port-search-form]");
   const output = document.querySelector("[data-port-results]");
   const profile = document.querySelector("[data-port-profile]");
+  const resultsPanel = output?.closest(".port-results-panel");
   if (!form || !output) return;
   const lang = currentLang();
   const params = new URLSearchParams(location.search);
@@ -3502,18 +3503,20 @@ function wirePortFinder() {
     if (scroll) profile.scrollIntoView({ behavior: "smooth", block: "start" });
   };
   const render = ({ keepProfile = false } = {}) => {
+    const activeQuery = Boolean((input?.value || "").trim() || country?.value);
+    const currentParams = new URLSearchParams(location.search);
+    const requestedLocode = currentParams.get("locode");
     const results = filterPorts(input?.value || "", country?.value || "");
     const visibleResults = results.slice(0, visibleCount);
-    output.innerHTML = results.length
+    if (resultsPanel) resultsPanel.hidden = !activeQuery;
+    output.innerHTML = !activeQuery ? "" : results.length
       ? `<div class="port-result-list" role="list" aria-label="${lang === "ko" ? "항만 검색 결과" : "Port search results"}"><div class="port-result-head"><span>Port</span><span>UN/LOCODE</span><span>Type</span><span>Local Time</span><span>Action</span></div>${visibleResults.map(portCard).join("")}</div>${results.length > visibleCount ? `<button class="secondary-btn port-load-more" type="button" data-port-load-more>${lang === "ko" ? "더 보기" : "Load more"}</button>` : ""}`
       : `<div class="data-empty">${lang === "ko" ? "일치하는 항만을 찾지 못했습니다. 항만명, 별칭, 국가명 또는 UN/LOCODE를 다시 확인하세요." : "No matching ports found. Check the port name, alias, country, or UN/LOCODE."}</div>`;
-    if (count) count.textContent = lang === "ko" ? `${results.length}개 항만` : `${results.length} ports`;
+    if (count) count.textContent = lang === "ko" ? `${results.length}개 항만` : `${results.length} ${results.length === 1 ? "Port" : "Ports"}`;
     if (!keepProfile && profile) {
       destroyPortMaps(profile);
-      const currentParams = new URLSearchParams(location.search);
-      const requestedLocode = currentParams.get("locode");
       const paramPort = findPortFromParams(currentParams);
-      const preferred = paramPort || results[0] || null;
+      const preferred = paramPort || (activeQuery ? results[0] : null) || null;
       profile.innerHTML = requestedLocode && !paramPort
         ? `<section class="port-intel-section"><h2>${lang === "ko" ? "UN/LOCODE 확인 필요" : "UN/LOCODE Not Found"}</h2><div class="data-empty">${lang === "ko" ? "입력한 UN/LOCODE가 현재 LOGILEE 항만 reference에 없습니다. 국가 필터와 항만명을 함께 확인하세요." : "The requested UN/LOCODE is not in the current LOGILEE port reference. Check the country filter and port name."}</div></section>`
         : (preferred ? portProfileMarkup(preferred) : "");
