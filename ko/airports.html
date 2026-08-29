@@ -4,9 +4,8 @@
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8548711851361478" crossorigin="anonymous"></script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex,follow">
   <title>Airport Intelligence | LOGILEE</title>
-  <meta name="description" content="전 세계 주요 공항의 IATA·ICAO 코드와 기본 정보를 검색하는 LOGILEE 공항 정보 도구를 준비 중입니다.">
+  <meta name="description" content="공항명, 도시, IATA 코드, ICAO 코드로 전 세계 주요 정기편 공항을 검색하고 공항 프로필, 위치 지도, 현지 시간, 공식 자료와 주변 공항을 확인하세요.">
   <link rel="canonical" href="https://www.logilee.com/ko/airports.html">
   <link rel="alternate" hreflang="ko" href="https://www.logilee.com/ko/airports.html">
   <link rel="alternate" hreflang="en" href="https://www.logilee.com/en/airports.html">
@@ -16,24 +15,51 @@
   <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="192x192" href="../android-chrome-192x192.png">
   <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+  <script defer src="../assets/logilee-airports.js"></script>
   <script defer src="../assets/logilee-app.js"></script>
 </head>
 <body>
 <div class="shell">
   <aside class="rail"></aside>
   <main class="main">
-    <header class="topbar"><a class="mobile-logo" href="./">LOGILEE</a><nav data-mobile-nav><a href="./">Home</a><a href="tools.html">Tools</a><a href="ports.html">항만 검색</a><a aria-current="page" href="airports.html">공항 검색</a><a href="track.html">Tracking</a></nav><div class="top-actions"><a class="icon-btn" href="../en/airports.html">KO / EN</a><button class="menu-btn" data-menu-toggle aria-label="메뉴">Menu</button></div></header>
-    <div class="page">
-      <section class="page-title">
-        <p class="eyebrow">AIRPORT DATABASE</p>
+    <header class="topbar"><a class="mobile-logo" href="./">LOGILEE</a><nav data-mobile-nav><a href="./">Home</a><a href="tools.html">Tools</a><a href="ports.html">항만 검색</a><a aria-current="page" href="airports.html">공항 검색</a><a href="track.html">화물 추적</a></nav><div class="top-actions"><a class="icon-btn" href="../en/airports.html">KO / EN</a><button class="menu-btn" data-menu-toggle aria-label="메뉴">Menu</button></div></header>
+    <div class="page airport-intel-page">
+      <section class="page-title airport-title">
+        <p class="eyebrow">AIRPORT INTELLIGENCE</p>
         <h1>Airport Intelligence</h1>
-        <p class="lead">전 세계 주요 공항의 IATA·ICAO 코드와 기본 정보를 검색하는 LOGILEE 공항 정보 도구입니다.</p>
-        <p class="muted">Airport Intelligence 기능을 준비 중입니다.</p>
+        <p class="lead">공항명, 도시, IATA 코드, ICAO 코드로 주요 공항을 찾고 항공화물·복합운송 실무에 필요한 기준 정보를 확인하세요.</p>
+        <p class="muted">OurAirports 공개 데이터와 LOGILEE 검증 보강 정보를 바탕으로 공항 코드, 위치, 현지 시간, 공식 자료, 주변 공항을 한 화면에 정리합니다.</p>
       </section>
-      <section class="panel prose-panel">
-        <h2>준비 중인 범위</h2>
-        <p>공항명, 도시, IATA 코드, ICAO 코드로 주요 공항을 찾고 공항 프로필과 공식 자료로 이어지는 업무 흐름을 준비하고 있습니다.</p>
-        <p>검증된 공항 데이터셋이 적용되기 전까지는 임의의 공항 코드나 위치 데이터를 표시하지 않습니다.</p>
+
+      <section class="panel airport-search-panel" aria-labelledby="airport-search-title">
+        <div class="airport-search-head">
+          <div><span class="kicker">Search</span><h2 id="airport-search-title">공항 검색</h2></div>
+          <span class="status" data-airport-count>공항 데이터 로딩 중</span>
+        </div>
+        <form class="airport-search-form" data-airport-search-form role="search">
+          <div class="field airport-query-field">
+            <label for="airport-query">공항명 / 도시 / IATA / ICAO</label>
+            <div class="airport-combobox">
+              <input id="airport-query" data-airport-query type="text" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="airport-suggestions" placeholder="예: ICN, RKSI, Incheon, Shanghai">
+              <div class="airport-suggest" id="airport-suggestions" data-airport-suggest role="listbox"></div>
+            </div>
+          </div>
+          <button class="primary-btn" type="submit"><i data-lucide="search"></i>조회</button>
+        </form>
+        <p class="airport-helper">정확한 IATA·ICAO 코드를 우선 검색하고, 이후 공항명·도시명 기준으로 후보를 표시합니다.</p>
+      </section>
+
+      <section class="port-popular-panel airport-popular-panel" aria-labelledby="popular-airports-title">
+        <div class="section-head"><h2 id="popular-airports-title">주요 공항 바로가기</h2><span>대표 테스트 공항</span></div>
+        <div class="port-popular-grid airport-popular-grid" data-popular-airports></div>
+      </section>
+
+      <div data-airport-profile></div>
+
+      <section class="panel prose-panel airport-static-copy">
+        <h2>이 도구에서 확인할 수 있는 정보</h2>
+        <p>Airport Intelligence는 주요 정기편 공항을 대상으로 공항명, 도시, IATA 코드, ICAO 코드 검색을 제공합니다. 선택한 공항에서는 공항 프로필, 좌표 기반 위치 지도, 현지 시간, 공식 자료 링크, 주변 공항과 LOGILEE 물류 도구 연결을 확인할 수 있습니다.</p>
+        <p>실시간 운항, 지연, 게이트, 수하물, 항공권 또는 리뷰 정보는 제공하지 않습니다. 공항 코드와 위치 정보는 업무 참고용이며, 최종 운영 조건은 공식 공항·항공사·포워더 자료에서 확인하세요.</p>
       </section>
       <div class="section ad-slot">Advertisement - Reserved ad placement</div>
     </div>

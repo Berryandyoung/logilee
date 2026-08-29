@@ -4,9 +4,8 @@
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8548711851361478" crossorigin="anonymous"></script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex,follow">
   <title>Airport Intelligence | LOGILEE</title>
-  <meta name="description" content="Search major airports worldwide by airport name, city, IATA code, or ICAO code. Airport Intelligence is being prepared.">
+  <meta name="description" content="Search major scheduled airports worldwide by airport name, city, IATA code, or ICAO code, then review airport profile, location map, local time, official resources, and nearby airports.">
   <link rel="canonical" href="https://www.logilee.com/en/airports.html">
   <link rel="alternate" hreflang="ko" href="https://www.logilee.com/ko/airports.html">
   <link rel="alternate" hreflang="en" href="https://www.logilee.com/en/airports.html">
@@ -16,24 +15,51 @@
   <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="192x192" href="../android-chrome-192x192.png">
   <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+  <script defer src="../assets/logilee-airports.js"></script>
   <script defer src="../assets/logilee-app.js"></script>
 </head>
 <body>
 <div class="shell">
   <aside class="rail"></aside>
   <main class="main">
-    <header class="topbar"><a class="mobile-logo" href="./">LOGILEE</a><nav data-mobile-nav><a href="./">Home</a><a href="tools.html">Tools</a><a href="ports.html">Port Search</a><a aria-current="page" href="airports.html">Airport Search</a><a href="track.html">Tracking</a></nav><div class="top-actions"><a class="icon-btn" href="../ko/airports.html">KO / EN</a><button class="menu-btn" data-menu-toggle aria-label="Menu">Menu</button></div></header>
-    <div class="page">
-      <section class="page-title">
-        <p class="eyebrow">AIRPORT DATABASE</p>
+    <header class="topbar"><a class="mobile-logo" href="./">LOGILEE</a><nav data-mobile-nav><a href="./">Home</a><a href="tools.html">Tools</a><a href="ports.html">Port Search</a><a aria-current="page" href="airports.html">Airport Search</a><a href="track.html">Shipment Tracking</a></nav><div class="top-actions"><a class="icon-btn" href="../ko/airports.html">KO / EN</a><button class="menu-btn" data-menu-toggle aria-label="Menu">Menu</button></div></header>
+    <div class="page airport-intel-page">
+      <section class="page-title airport-title">
+        <p class="eyebrow">AIRPORT INTELLIGENCE</p>
         <h1>Airport Intelligence</h1>
-        <p class="lead">Search major airports worldwide by airport name, city, IATA code, or ICAO code.</p>
-        <p class="muted">Airport Intelligence is being prepared.</p>
+        <p class="lead">Find major airports by airport name, city, IATA code, or ICAO code, then review the reference data needed for air cargo and multimodal logistics checks.</p>
+        <p class="muted">Built from public OurAirports data plus LOGILEE verified enrichments, this tool brings airport codes, location, local time, official resources, and nearby airports into one workflow.</p>
       </section>
-      <section class="panel prose-panel">
-        <h2>Planned scope</h2>
-        <p>LOGILEE is preparing a workflow for finding major airports by airport name, city, IATA code, or ICAO code, then moving into airport profiles and official resources.</p>
-        <p>Until a reliable airport dataset is connected, LOGILEE will not display generated airport codes or unverified location data.</p>
+
+      <section class="panel airport-search-panel" aria-labelledby="airport-search-title">
+        <div class="airport-search-head">
+          <div><span class="kicker">Search</span><h2 id="airport-search-title">Airport Search</h2></div>
+          <span class="status" data-airport-count>Loading airport data</span>
+        </div>
+        <form class="airport-search-form" data-airport-search-form role="search">
+          <div class="field airport-query-field">
+            <label for="airport-query">Airport / City / IATA / ICAO</label>
+            <div class="airport-combobox">
+              <input id="airport-query" data-airport-query type="text" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="airport-suggestions" placeholder="e.g. ICN, RKSI, Incheon, Shanghai">
+              <div class="airport-suggest" id="airport-suggestions" data-airport-suggest role="listbox"></div>
+            </div>
+          </div>
+          <button class="primary-btn" type="submit"><i data-lucide="search"></i>Search</button>
+        </form>
+        <p class="airport-helper">Exact IATA and ICAO matches are prioritized first, followed by airport name and city matches.</p>
+      </section>
+
+      <section class="port-popular-panel airport-popular-panel" aria-labelledby="popular-airports-title">
+        <div class="section-head"><h2 id="popular-airports-title">Featured Airports</h2><span>Representative test airports</span></div>
+        <div class="port-popular-grid airport-popular-grid" data-popular-airports></div>
+      </section>
+
+      <div data-airport-profile></div>
+
+      <section class="panel prose-panel airport-static-copy">
+        <h2>What This Tool Provides</h2>
+        <p>Airport Intelligence searches major scheduled airports by airport name, city, IATA code, or ICAO code. A selected airport profile shows reference codes, coordinate-based location map, local time, official resource links, nearby airports, and related LOGILEE logistics tools.</p>
+        <p>It does not provide live flights, delays, gates, baggage, tickets, reviews, or passenger travel features. Airport codes and location data are workflow references; confirm final operating requirements through official airport, airline, or forwarder sources.</p>
       </section>
       <div class="section ad-slot">Advertisement - Reserved ad placement</div>
     </div>

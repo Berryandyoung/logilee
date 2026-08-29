@@ -22,6 +22,7 @@ const searchIndex = {
     { type: "Tracking", title: "B/L Tracking", summary: "Bill of Lading 번호로 선적 조회를 시작합니다.", url: "track.html", keywords: "bl bill of lading 선하증권 tracking" },
     { type: "Tracking", title: "Air Waybill Tracking", summary: "AWB 번호 기반 항공화물 조회 페이지로 이동합니다.", url: "track.html", keywords: "awb air waybill 항공화물 tracking" },
     { type: "Tool", title: "CBM Calculator", summary: "화물 부피, 수량, 중량을 입력해 총 CBM을 계산합니다.", url: "cbm.html", keywords: "cbm calculator 부피 계산 박스" },
+    { type: "Tool", title: "Airport Intelligence", summary: "공항명, 도시, IATA·ICAO 코드로 주요 공항 프로필을 확인합니다.", url: "airports.html", keywords: "airport search 공항 검색 iata icao 공항 코드 airport intelligence" },
     { type: "Tool", title: "Currency Converter", summary: "Frankfurter 환율 데이터로 주요 통화를 변환합니다.", url: "currency-converter.html", keywords: "currency converter 환율 계산기 exchange rate" },
     { type: "Tool", title: "Business Day Calculator", summary: "주말과 공휴일을 제외해 예상 영업일을 계산합니다.", url: "business-day.html", keywords: "business day working day 영업일 공휴일" },
     { type: "Tool", title: "HS Code Lookup", summary: "품목분류와 HS Code 검색 페이지로 이동합니다.", url: "../hscode.html", keywords: "hs code hscode 품목분류 관세" },
@@ -40,6 +41,7 @@ const searchIndex = {
     { type: "Tracking", title: "B/L Tracking", summary: "Start a shipment lookup by Bill of Lading number.", url: "track.html", keywords: "bl bill of lading tracking" },
     { type: "Tracking", title: "Air Waybill Tracking", summary: "Open the air cargo tracking workflow.", url: "track.html", keywords: "awb air waybill air cargo tracking" },
     { type: "Tool", title: "CBM Calculator", summary: "Calculate cargo volume from dimensions, quantity, and weight.", url: "cbm.html", keywords: "cbm calculator carton volume" },
+    { type: "Tool", title: "Airport Intelligence", summary: "Search major airport profiles by airport name, city, IATA code, or ICAO code.", url: "airports.html", keywords: "airport search iata icao airport code airport intelligence" },
     { type: "Tool", title: "Currency Converter", summary: "Convert major trade currencies using Frankfurter data.", url: "currency-converter.html", keywords: "currency converter exchange rate fx" },
     { type: "Tool", title: "Business Day Calculator", summary: "Calculate dates excluding weekends and public holidays.", url: "business-day.html", keywords: "business day working day holiday calculator" },
     { type: "Tool", title: "HS Code Lookup", summary: "Find HS codes and tariff classifications.", url: "../hscode-en.html", keywords: "hs code hscode tariff classification" },
@@ -134,13 +136,24 @@ function localizedResultUrl(item, lang) {
 }
 
 function alternateLanguageHref(lang, previousLinks = []) {
+  const preservePageState = (href) => {
+    if (!/(?:\/ko\/|\/en\/)airports\.html$/.test(location.pathname) || (!location.search && !location.hash)) return href;
+    try {
+      const url = new URL(href, location.origin);
+      url.search = location.search;
+      url.hash = location.hash;
+      return url.href;
+    } catch {
+      return href;
+    }
+  };
   const alternate = document.querySelector(`link[rel="alternate"][hreflang="${lang}"]`);
-  if (alternate?.href) return alternate.href;
+  if (alternate?.href) return preservePageState(alternate.href);
   const existing = previousLinks.find((href) => href.includes(`/${lang}/`) || href.includes(`../${lang}/`));
-  if (existing) return existing;
+  if (existing) return preservePageState(existing);
   const otherLang = lang === "ko" ? "en" : "ko";
   if (location.pathname.includes(`/${otherLang}/`)) {
-    return `${location.pathname.replace(`/${otherLang}/`, `/${lang}/`)}${location.search}${location.hash}`;
+    return preservePageState(`${location.pathname.replace(`/${otherLang}/`, `/${lang}/`)}${location.search}${location.hash}`);
   }
   return pageUrlForLang(lang);
 }
@@ -207,10 +220,10 @@ function workspaceNavMarkup(lang) {
         global: "Global Trade Explorer",
         hs: "HS Code",
         logistics: "Logistics",
-        tracking: "Tracking Launcher",
-        ports: "Port Search",
+        tracking: "화물 추적",
+        ports: "항만 검색",
         airports: "공항 검색",
-        cbm: "CBM Calculator",
+        cbm: "CBM 계산기",
 
         compliance: "Compliance",
         hub: "Compliance Hub",
@@ -236,7 +249,7 @@ function workspaceNavMarkup(lang) {
         global: "Global Trade Explorer",
         hs: "HS Code",
         logistics: "Logistics",
-        tracking: "Tracking Launcher",
+        tracking: "Shipment Tracking",
         ports: "Port Search",
         airports: "Airport Search",
         cbm: "CBM Calculator",
@@ -3559,6 +3572,432 @@ function wirePortFinder() {
   renderPopular();
   render();
 }
+const airportLeafletMaps = new WeakMap();
+const airportLeafletResizeObservers = new WeakMap();
+
+function airportDataset() {
+  return Array.isArray(window.LOGILEE_AIRPORTS?.airports) ? window.LOGILEE_AIRPORTS.airports : [];
+}
+
+function airportMeta() {
+  return window.LOGILEE_AIRPORTS?.meta || {};
+}
+
+function normalizeAirportText(value) {
+  return String(value || "").toLocaleLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9가-힣\s-]/g, " ").replace(/\s+/g, " ").trim();
+}
+
+function compactAirportCode(value) {
+  return String(value || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+}
+
+function airportCode(airport) {
+  return airport?.icao || airport?.ident || airport?.iata || "";
+}
+
+function airportUrl(airport) {
+  const key = airport?.icao ? "icao" : "ident";
+  return `?${key}=${encodeURIComponent(airportCode(airport))}`;
+}
+
+function airportOsmUrl(airport, zoom = 10) {
+  return `https://www.openstreetmap.org/?mlat=${airport.lat}&mlon=${airport.lon}#map=${zoom}/${airport.lat}/${airport.lon}`;
+}
+
+function airportDisplayCodes(airport) {
+  const lang = currentLang();
+  const unavailable = lang === "ko" ? "확인 불가" : "unavailable";
+  return [airport.iata ? `IATA ${airport.iata}` : `IATA ${unavailable}`, airport.icao ? `ICAO ${airport.icao}` : `IDENT ${airport.ident}`].join(" · ");
+}
+
+function airportFlag(airport) {
+  return /^[A-Z]{2}$/.test(airport.iso) ? `<img class="port-profile-flag airport-profile-flag" src="https://flagcdn.com/${airport.iso.toLowerCase()}.svg" alt="" loading="lazy">` : "";
+}
+
+function airportTypeLabel(airport, lang = currentLang()) {
+  if (lang !== "ko") return airport.typeLabel || airport.type || "Airport";
+  return airport.type === "large_airport" ? "대형 공항" : airport.type === "medium_airport" ? "중형 공항" : "공항";
+}
+
+function airportCity(airport) {
+  return airport.city || (currentLang() === "ko" ? "도시 정보 없음" : "City unavailable");
+}
+
+function localTimeForAirport(airport) {
+  const lang = currentLang();
+  if (!airport?.timezone) return lang === "ko" ? "확인 가능한 시간대 없음" : "Time zone unavailable";
+  try {
+    return new Intl.DateTimeFormat(lang === "ko" ? "ko-KR" : "en-US", {
+      timeZone: airport.timezone,
+      dateStyle: "medium",
+      timeStyle: "short"
+    }).format(new Date());
+  } catch {
+    return lang === "ko" ? "확인 가능한 시간대 없음" : "Time zone unavailable";
+  }
+}
+
+function airportSearchHaystack(airport) {
+  return normalizeAirportText([airport.name, airport.city, airport.country, airport.iso, airport.region, airport.iata, airport.icao, airport.ident, ...(airport.keywords || [])].filter(Boolean).join(" "));
+}
+
+function airportSearchScore(airport, query) {
+  const compact = compactAirportCode(query);
+  const normalized = normalizeAirportText(query);
+  const codes = [airport.iata, airport.icao, airport.ident].filter(Boolean).map(compactAirportCode);
+  if (compact && codes.some((code) => code === compact)) return airport.iata === compact || airport.icao === compact ? 0 : 2;
+  if (compact && codes.some((code) => code.startsWith(compact))) return 10;
+  const name = normalizeAirportText(airport.name);
+  const city = normalizeAirportText(airport.city);
+  const country = normalizeAirportText(airport.country);
+  if (normalized && name.startsWith(normalized)) return 20;
+  if (normalized && city.startsWith(normalized)) return 24;
+  if (normalized && country.startsWith(normalized)) return 32;
+  const haystack = airportSearchHaystack(airport);
+  if (normalized && haystack.includes(normalized)) return 46;
+  return Number.POSITIVE_INFINITY;
+}
+
+function searchAirports(query, limit = 10) {
+  const q = String(query || "").trim();
+  if (!q) return [];
+  return airportDataset()
+    .map((airport) => ({ airport, score: airportSearchScore(airport, q) }))
+    .filter((item) => Number.isFinite(item.score))
+    .sort((a, b) => a.score - b.score || (a.airport.type === "large_airport" ? -1 : 1) || a.airport.name.localeCompare(b.airport.name))
+    .slice(0, limit)
+    .map((item) => item.airport);
+}
+
+function findAirportFromParams(params) {
+  const airports = airportDataset();
+  const icao = compactAirportCode(params.get("icao"));
+  const iata = compactAirportCode(params.get("iata"));
+  const ident = compactAirportCode(params.get("ident"));
+  const query = params.get("q") || params.get("query") || "";
+  if (icao) return airports.find((airport) => compactAirportCode(airport.icao) === icao) || null;
+  if (iata) return airports.find((airport) => compactAirportCode(airport.iata) === iata) || null;
+  if (ident) return airports.find((airport) => compactAirportCode(airport.ident) === ident) || null;
+  return searchAirports(query, 1)[0] || null;
+}
+
+function airportDistanceKm(a, b) {
+  if (![a.lat, a.lon, b.lat, b.lon].every(Number.isFinite)) return null;
+  const toRad = (value) => value * Math.PI / 180;
+  const dLat = toRad(b.lat - a.lat);
+  const dLon = toRad(b.lon - a.lon);
+  const lat1 = toRad(a.lat);
+  const lat2 = toRad(b.lat);
+  const h = Math.sin(dLat / 2) ** 2 + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLon / 2) ** 2;
+  return 6371 * 2 * Math.atan2(Math.sqrt(h), Math.sqrt(1 - h));
+}
+
+function nearbyAirports(airport, limit = 6) {
+  return airportDataset().filter((item) => item.id !== airport.id && Number.isFinite(item.lat) && Number.isFinite(item.lon))
+    .map((item) => ({ ...item, distance: airportDistanceKm(airport, item) }))
+    .filter((item) => Number.isFinite(item.distance))
+    .sort((a, b) => a.distance - b.distance)
+    .slice(0, limit);
+}
+
+function airportMapZoom() {
+  return 10;
+}
+
+function airportLocationMapMarkup(airport) {
+  const lang = currentLang();
+  const zoom = airportMapZoom(airport);
+  const coordinates = `${airport.lat.toFixed(4)}, ${airport.lon.toFixed(4)}`;
+  const label = `${airport.name} ${lang === "ko" ? "위치 지도" : "location map"}`;
+  const markerCode = airport.iata || airport.icao || airport.ident;
+  return `<div class="port-map-card port-map-card--leaflet airport-map-card" data-airport-map="${escapeAttribute(airportCode(airport))}" data-map-zoom="${zoom}" data-map-min="2" data-map-max="14" data-map-lat="${escapeAttribute(airport.lat)}" data-map-lon="${escapeAttribute(airport.lon)}" aria-label="${escapeAttribute(label)}"><div class="port-map-leaflet airport-map-leaflet" data-airport-leaflet-map></div><button class="port-map-reset" type="button" data-airport-map-reset aria-label="${lang === "ko" ? "지도 초기화" : "Reset map"}">${lang === "ko" ? "초기화" : "Reset"}</button><div class="port-map-caption"><strong>${escapeHtml(airport.name)}</strong><span>${escapeHtml(coordinates)} · ${lang === "ko" ? "근사 위치" : "Approximate location"}</span></div><p>${lang === "ko" ? "일반 위치 지도입니다. 활주로·터미널 배치도 또는 공식 운영 정보는 아래 공식 자료에서 별도로 확인하세요." : "General location map. Terminal layouts and official operating information should be checked through the official resources below when available."} <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors</a></p><div class="port-map-fallback"><strong>${lang === "ko" ? "지도를 불러올 수 없습니다." : "Map could not load."}</strong><span>${escapeHtml(coordinates)}</span><a href="${escapeAttribute(airportOsmUrl(airport, zoom))}" target="_blank" rel="noopener">OpenStreetMap →</a></div><template data-airport-marker>${escapeHtml(markerCode)}</template></div>`;
+}
+
+function initializeAirportMapElement(map, airport) {
+  if (!map || !airport || airportLeafletMaps.has(map) || ![airport.lat, airport.lon].every(Number.isFinite)) return;
+  const target = map.querySelector("[data-airport-leaflet-map]");
+  if (!target) return;
+  const zoom = Number(map.dataset.mapZoom || airportMapZoom(airport));
+  const start = () => loadLeafletForPortMap().then((L) => {
+    if (!document.body.contains(map) || airportLeafletMaps.has(map)) return;
+    const bounds = target.getBoundingClientRect();
+    if (!bounds.width || !bounds.height) {
+      requestAnimationFrame(() => initializeAirportMapElement(map, airport));
+      return;
+    }
+    const leaflet = L.map(target, {
+      center: [airport.lat, airport.lon],
+      zoom,
+      minZoom: Number(map.dataset.mapMin || 2),
+      maxZoom: Number(map.dataset.mapMax || 14),
+      zoomSnap: 1,
+      zoomDelta: 1,
+      doubleClickZoom: true,
+      scrollWheelZoom: true,
+      touchZoom: true,
+      dragging: true,
+      zoomControl: true,
+      attributionControl: true
+    });
+    const tileLayer = portOsmRasterLayer(L);
+    target.__logileeLeafletTileLayer = tileLayer;
+    Promise.all([loadMapLibreForPortMap(), loadPortBasemapStyle()])
+      .then(([mapLibreLeaflet, style]) => {
+        if (!document.body.contains(map) || !airportLeafletMaps.has(map)) return;
+        const vectorLayer = mapLibreLeaflet.maplibreGL({ style, interactive: false });
+        tileLayer.remove();
+        vectorLayer.addTo(leaflet);
+        target.__logileeLeafletTileLayer = vectorLayer;
+        target.__logileeAirportBasemapProvider = "openfreemap-vector";
+        map.classList.add("is-vector-basemap");
+        refreshPortBasemapLayer(vectorLayer);
+      })
+      .catch((error) => {
+        console.warn("Airport vector basemap unavailable; using OSM raster fallback:", error);
+        if (!document.body.contains(map) || !airportLeafletMaps.has(map)) return;
+        if (!leaflet.hasLayer(tileLayer)) tileLayer.addTo(leaflet);
+        target.__logileeAirportBasemapProvider = "osm-raster";
+        map.classList.add("is-raster-basemap");
+      });
+    tileLayer.addTo(leaflet);
+    const markerLabel = airport.iata || airport.icao || airport.ident;
+    const marker = L.divIcon({
+      className: "port-leaflet-marker airport-leaflet-marker",
+      html: `<span></span><b>${escapeHtml(markerLabel)}</b>`,
+      iconSize: [76, 48],
+      iconAnchor: [38, 21]
+    });
+    const leafletMarker = L.marker([airport.lat, airport.lon], { icon: marker, keyboard: false }).addTo(leaflet);
+    target.__logileeLeafletMap = leaflet;
+    target.__logileeLeafletMarker = leafletMarker;
+    target.__logileeLeafletTileLayer = tileLayer;
+    airportLeafletMaps.set(map, leaflet);
+    map.classList.add("is-map-ready");
+    const syncSize = () => requestAnimationFrame(() => {
+      leaflet.invalidateSize({ pan: false });
+      refreshPortBasemapLayer(target.__logileeLeafletTileLayer);
+    });
+    requestAnimationFrame(syncSize);
+    setTimeout(syncSize, 120);
+    setTimeout(syncSize, 360);
+    if (window.ResizeObserver) {
+      let resizeTimer = 0;
+      const resizeObserver = new ResizeObserver(() => {
+        window.clearTimeout(resizeTimer);
+        resizeTimer = window.setTimeout(syncSize, 80);
+      });
+      resizeObserver.observe(map);
+      airportLeafletResizeObservers.set(map, resizeObserver);
+    }
+  });
+  requestAnimationFrame(() => start().catch((error) => {
+    console.warn("Airport map unavailable:", error);
+    map.classList.add("is-map-fallback");
+  }));
+}
+
+function destroyAirportMaps(root = document) {
+  root.querySelectorAll("[data-airport-map]").forEach((map) => {
+    const leaflet = airportLeafletMaps.get(map);
+    const resizeObserver = airportLeafletResizeObservers.get(map);
+    if (resizeObserver) resizeObserver.disconnect();
+    if (leaflet) leaflet.remove();
+    airportLeafletMaps.delete(map);
+    airportLeafletResizeObservers.delete(map);
+  });
+}
+
+function initializeAirportMaps(root = document) {
+  root.querySelectorAll("[data-airport-map]").forEach((map) => {
+    const code = compactAirportCode(map.dataset.airportMap);
+    const airport = airportDataset().find((item) => compactAirportCode(airportCode(item)) === code);
+    initializeAirportMapElement(map, airport);
+  });
+}
+
+function updateAirportMapElement(map, airport, zoom = airportMapZoom(airport)) {
+  const leaflet = airportLeafletMaps.get(map);
+  if (!leaflet || !airport) return;
+  const nextZoom = Math.max(Number(map.dataset.mapMin || 2), Math.min(Number(map.dataset.mapMax || 14), Number(zoom || airportMapZoom(airport))));
+  const target = map.querySelector("[data-airport-leaflet-map]");
+  const tileLayer = target?.__logileeLeafletTileLayer;
+  map.dataset.mapZoom = String(nextZoom);
+  const syncView = () => {
+    leaflet.invalidateSize({ pan: false });
+    leaflet.setView([airport.lat, airport.lon], nextZoom, { animate: false });
+    refreshPortBasemapLayer(tileLayer);
+  };
+  syncView();
+  requestAnimationFrame(syncView);
+  setTimeout(syncView, 120);
+}
+
+function airportFactsMarkup(airport) {
+  const lang = currentLang();
+  const coordinates = `${airport.lat.toFixed(4)}, ${airport.lon.toFixed(4)}`;
+  const rows = lang === "ko"
+    ? [["IATA", airport.iata || "확인 불가"], ["ICAO", airport.icao || airport.ident || "확인 불가"], ["국가", `${airport.country} (${airport.iso})`], ["도시 / 지역", airportCity(airport)], ["공항 유형", airportTypeLabel(airport, lang)], ["정기편", airport.scheduled ? "있음" : "확인 불가"], ["좌표", coordinates], ["시간대", airport.timezone || "확인 불가"], ["현지시간", localTimeForAirport(airport)]]
+    : [["IATA", airport.iata || "Unavailable"], ["ICAO", airport.icao || airport.ident || "Unavailable"], ["Country", `${airport.country} (${airport.iso})`], ["City / Area", airportCity(airport)], ["Airport Type", airportTypeLabel(airport, lang)], ["Scheduled Service", airport.scheduled ? "Yes" : "Unavailable"], ["Coordinates", coordinates], ["Time Zone", airport.timezone || "Unavailable"], ["Local Time", localTimeForAirport(airport)]];
+  return `<dl class="port-core-facts airport-core-facts">${rows.map(([label, value]) => `<div><dt>${escapeHtml(label)}</dt><dd>${escapeHtml(value)}</dd></div>`).join("")}</dl>`;
+}
+
+function airportOfficialResourcesMarkup(airport) {
+  const lang = currentLang();
+  const title = lang === "ko" ? "공식 자료" : "Official Resources";
+  if (!airport.official) {
+    return `<section class="port-intel-section airport-resource-section"><h2>${title}</h2><div class="data-empty">${lang === "ko" ? "LOGILEE에 검증된 공식 공항 링크가 아직 없습니다. 공항명과 IATA/ICAO 코드를 기준으로 공식 기관에서 최종 확인하세요." : "No verified official airport resource is available in LOGILEE yet. Use the airport name and IATA/ICAO code when checking with official sources."}</div></section>`;
+  }
+  const note = airport.officialVerified ? (lang === "ko" ? "검증된 공식 공항 웹사이트" : "Verified official airport website") : (lang === "ko" ? "OurAirports 데이터에 등록된 공항 홈페이지" : "Airport home link supplied by OurAirports data");
+  return `<section class="port-intel-section airport-resource-section"><h2>${title}</h2><div class="port-resource-grid"><a href="${escapeAttribute(airport.official)}" target="_blank" rel="noopener"><i data-lucide="external-link"></i><span>${escapeHtml(note)}</span><strong>${escapeHtml(airport.name)}</strong></a><a href="${escapeAttribute(airportOsmUrl(airport, airportMapZoom(airport)))}" target="_blank" rel="noopener"><i data-lucide="map"></i><span>${lang === "ko" ? "공항 위치 확인" : "Airport location reference"}</span><strong>OpenStreetMap</strong></a></div></section>`;
+}
+
+function airportNearbyMarkup(airport) {
+  const lang = currentLang();
+  const rows = nearbyAirports(airport, 6);
+  return `<section class="port-intel-section airport-nearby-section"><div class="section-head"><h2>${lang === "ko" ? "주변 공항" : "Nearby Airports"}</h2><span>${lang === "ko" ? "직선거리 기준" : "Straight-line distance"}</span></div><div class="port-nearby-list airport-nearby-list">${rows.map((item) => `<a href="${escapeAttribute(airportUrl(item))}" data-airport-link="${escapeAttribute(airportCode(item))}"><strong>${escapeHtml(item.name)}</strong><span>${escapeHtml(airportDisplayCodes(item))}</span><em>${Math.round(item.distance)} km</em><b aria-hidden="true">→</b></a>`).join("")}</div></section>`;
+}
+
+function airportRelatedToolsMarkup(airport) {
+  const lang = currentLang();
+  const tools = lang === "ko"
+    ? [["화물 추적", "track.html#awb", "radar"], ["국가별 무역 프로필", `country-trade-profile.html?country=${airport.iso}`, "globe"], ["Global Trade Explorer", `global-trade-explorer.html?reporter=${airport.iso}`, "chart-column"], ["CBM 계산기", "cbm.html", "calculator"]]
+    : [["Shipment Tracking", "track.html#awb", "radar"], ["Country Trade Profile", `country-trade-profile.html?country=${airport.iso}`, "globe"], ["Global Trade Explorer", `global-trade-explorer.html?reporter=${airport.iso}`, "chart-column"], ["CBM Calculator", "cbm.html", "calculator"]];
+  return `<section class="port-intel-section airport-related-section"><h2>${lang === "ko" ? "관련 LOGILEE 도구" : "Related LOGILEE Tools"}</h2><div class="port-tool-grid airport-tool-grid">${tools.map(([label, href, icon]) => `<a href="${escapeAttribute(href)}"><i data-lucide="${icon}"></i><span>${escapeHtml(label)}</span></a>`).join("")}</div></section>`;
+}
+
+function airportDataSourcesMarkup(airport) {
+  const lang = currentLang();
+  const meta = airportMeta();
+  const rows = lang === "ko"
+    ? [["공항 기준 데이터", "OurAirports airports.csv"], ["국가명", "OurAirports countries.csv"], ["라이선스", meta.license || "Public Domain / Unlicense"], ["검색 포함 범위", `${meta.exposedRecords || airportDataset().length}개 주요 정기편 공항`], ["시간대", airport.timezone ? "LOGILEE 검증 보강 데이터" : "이 공항은 확인 가능한 시간대 없음"], ["지도", "OpenFreeMap / OpenStreetMap contributors"]]
+    : [["Airport Reference", "OurAirports airports.csv"], ["Country Names", "OurAirports countries.csv"], ["License", meta.license || "Public Domain / Unlicense"], ["Search Scope", `${meta.exposedRecords || airportDataset().length} major scheduled airports`], ["Time Zone", airport.timezone ? "LOGILEE verified enrichment" : "Unavailable for this airport"], ["Map", "OpenFreeMap / OpenStreetMap contributors"]];
+  return `<section class="port-intel-section port-data-coverage airport-data-coverage"><h2>${lang === "ko" ? "데이터 및 출처" : "Data & Sources"}</h2><dl>${rows.map(([label, value]) => `<div><dt>${escapeHtml(label)}</dt><dd>${escapeHtml(value)}</dd></div>`).join("")}</dl><p class="muted">${lang === "ko" ? "LOGILEE는 공항 코드, 좌표, 기본 분류를 업무 참고용으로 정리합니다. 실제 운항, 터미널, 화물 반입 규정은 공식 공항·항공사·포워더 자료에서 최종 확인하세요." : "LOGILEE organizes airport codes, coordinates, and basic classification for workflow reference. Confirm operating, terminal, and cargo handling details with official airport, airline, or forwarder sources."}</p></section>`;
+}
+
+function airportProfileMarkup(airport) {
+  const lang = currentLang();
+  return `<section class="port-profile airport-profile" id="airport-profile" aria-live="polite"><div class="port-profile-hero airport-profile-hero"><div>${airportFlag(airport)}<span class="kicker">Airport Profile</span><h2>${escapeHtml(airport.name)}</h2><p>${escapeHtml(airportDisplayCodes(airport))} · ${escapeHtml(airportCity(airport))}, ${escapeHtml(airport.country)}</p><p class="port-role-copy">${lang === "ko" ? "공항 코드, 위치, 현지 시간, 공식 자료를 한 화면에서 확인해 항공화물·복합운송 실무 확인의 출발점으로 사용할 수 있습니다." : "Use this profile as a starting point for air cargo and multimodal checks: airport codes, location, local time, and official resources in one place."}</p></div><a class="secondary-btn" href="${escapeAttribute(airportOsmUrl(airport, airportMapZoom(airport)))}" target="_blank" rel="noopener"><i data-lucide="map"></i>${lang === "ko" ? "OpenStreetMap에서 보기" : "Open in OpenStreetMap"}</a></div><div class="port-profile-grid airport-profile-grid">${airportLocationMapMarkup(airport)}${airportFactsMarkup(airport)}</div>${airportOfficialResourcesMarkup(airport)}${airportNearbyMarkup(airport)}${airportRelatedToolsMarkup(airport)}${airportDataSourcesMarkup(airport)}</section>`;
+}
+
+function airportSuggestionMarkup(airport, index, activeIndex) {
+  const meta = [airportDisplayCodes(airport), airportCity(airport), airport.country].filter(Boolean).join(" · ");
+  return `<button type="button" role="option" id="airport-option-${index}" data-airport-option="${escapeAttribute(airportCode(airport))}" aria-selected="${index === activeIndex}"><span>${escapeHtml(airport.name)}</span><small>${escapeHtml(meta)}</small></button>`;
+}
+
+function wireAirportFinder() {
+  const form = document.querySelector("[data-airport-search-form]");
+  const input = form?.querySelector("[data-airport-query]");
+  const suggest = form?.querySelector("[data-airport-suggest]");
+  const profile = document.querySelector("[data-airport-profile]");
+  const popular = document.querySelector("[data-popular-airports]");
+  const count = document.querySelector("[data-airport-count]");
+  if (!form || !input || !profile) return;
+  const lang = currentLang();
+  const airports = airportDataset();
+  let suggestions = [];
+  let activeIndex = -1;
+  const labels = lang === "ko"
+    ? { empty: "일치하는 공항을 찾지 못했습니다. 공항명, 도시명, IATA 또는 ICAO 코드를 다시 확인하세요.", invalid: "요청한 공항이 현재 LOGILEE 공항 reference에 없습니다.", found: "개 공항", intro: "공항명, 도시, IATA, ICAO 코드로 검색하세요.", noData: "공항 데이터가 로드되지 않았습니다." }
+    : { empty: "No matching airport found. Check the airport name, city, IATA code, or ICAO code.", invalid: "The requested airport is not in the current LOGILEE airport reference.", found: "airports", intro: "Search by airport name, city, IATA, or ICAO code.", noData: "Airport data is not loaded." };
+  const setProfile = (html) => {
+    destroyAirportMaps(profile);
+    profile.innerHTML = html;
+    refreshIcons();
+    initializeAirportMaps(profile);
+  };
+  const renderSuggest = () => {
+    if (!suggest) return;
+    input.setAttribute("aria-expanded", suggestions.length ? "true" : "false");
+    suggest.innerHTML = suggestions.length ? suggestions.map((airport, index) => airportSuggestionMarkup(airport, index, activeIndex)).join("") : "";
+  };
+  const selectAirport = (airport, { push = true, scroll = true } = {}) => {
+    if (!airport) return;
+    input.value = airport.iata || airport.icao || airport.name;
+    suggestions = [];
+    activeIndex = -1;
+    renderSuggest();
+    if (push) history.replaceState({ airport: airportCode(airport) }, "", airportUrl(airport));
+    setProfile(airportProfileMarkup(airport));
+    if (scroll) profile.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+  const renderPopular = () => {
+    if (!popular) return;
+    const codes = ["RKSI", "RKPK", "ZSPD", "RJTT", "WSSS", "EHAM", "OMDB", "KLAX"];
+    popular.innerHTML = codes.map((code) => airports.find((airport) => airport.icao === code)).filter(Boolean).map((airport) => `<button type="button" data-airport-view="${escapeAttribute(airportCode(airport))}"><strong>${escapeHtml(airport.name)}</strong><span>${escapeHtml(airportDisplayCodes(airport))}</span></button>`).join("");
+  };
+  const renderInitial = () => {
+    if (!airports.length) {
+      setProfile(`<section class="port-intel-section airport-empty-panel"><h2>${lang === "ko" ? "공항 데이터 없음" : "Airport Data Unavailable"}</h2><div class="data-empty">${labels.noData}</div></section>`);
+      return;
+    }
+    const requested = findAirportFromParams(new URLSearchParams(location.search));
+    if (requested) {
+      input.value = requested.iata || requested.icao || requested.name;
+      selectAirport(requested, { push: false, scroll: false });
+      return;
+    }
+    const hasQuery = Boolean(location.search);
+    setProfile(`<section class="port-intel-section airport-empty-panel"><h2>${hasQuery ? (lang === "ko" ? "공항 확인 필요" : "Airport Not Found") : (lang === "ko" ? "공항을 검색하세요" : "Search an Airport")}</h2><div class="data-empty">${hasQuery ? labels.invalid : labels.intro}</div></section>`);
+  };
+  if (count) count.textContent = lang === "ko" ? `${airports.length}${labels.found}` : `${airports.length} ${labels.found}`;
+  form.addEventListener("input", () => {
+    suggestions = searchAirports(input.value, 10);
+    activeIndex = suggestions.length ? 0 : -1;
+    renderSuggest();
+  });
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const airport = suggestions[activeIndex] || searchAirports(input.value, 1)[0];
+    if (airport) {
+      selectAirport(airport);
+    } else {
+      setProfile(`<section class="port-intel-section airport-empty-panel"><h2>${lang === "ko" ? "검색 결과 없음" : "No Airport Found"}</h2><div class="data-empty">${labels.empty}</div></section>`);
+    }
+  });
+  input.addEventListener("keydown", (event) => {
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      if (suggestions.length) activeIndex = (activeIndex + 1) % suggestions.length;
+      renderSuggest();
+    } else if (event.key === "ArrowUp") {
+      event.preventDefault();
+      if (suggestions.length) activeIndex = (activeIndex - 1 + suggestions.length) % suggestions.length;
+      renderSuggest();
+    } else if (event.key === "Enter" && suggestions[activeIndex]) {
+      event.preventDefault();
+      selectAirport(suggestions[activeIndex]);
+    } else if (event.key === "Escape") {
+      suggestions = [];
+      activeIndex = -1;
+      renderSuggest();
+    }
+  });
+  form.addEventListener("click", (event) => {
+    const option = event.target.closest("[data-airport-option]");
+    if (!option) return;
+    const airport = airports.find((item) => compactAirportCode(airportCode(item)) === compactAirportCode(option.dataset.airportOption));
+    selectAirport(airport);
+  });
+  [popular, profile].filter(Boolean).forEach((root) => root.addEventListener("click", (event) => {
+    const link = event.target.closest("[data-airport-link]");
+    const view = event.target.closest("[data-airport-view]");
+    const zoomButton = event.target.closest("[data-airport-map-reset]");
+    if (zoomButton) {
+      const map = zoomButton.closest("[data-airport-map]");
+      const airport = airports.find((item) => compactAirportCode(airportCode(item)) === compactAirportCode(map?.dataset.airportMap));
+      if (map && airport) updateAirportMapElement(map, airport, airportMapZoom(airport));
+      return;
+    }
+    const code = link?.dataset.airportLink || view?.dataset.airportView;
+    if (!code) return;
+    event.preventDefault();
+    const airport = airports.find((item) => compactAirportCode(airportCode(item)) === compactAirportCode(code));
+    selectAirport(airport);
+  }));
+  window.addEventListener("popstate", () => renderInitial());
+  renderPopular();
+  renderInitial();
+}
 function wirePortDetail() {
   const target = document.querySelector("[data-port-detail]");
   if (!target) return;
@@ -4907,6 +5346,7 @@ document.addEventListener("DOMContentLoaded", () => {
   wireCountryCompare();
   wireFreightMarket();
   wirePortFinder();
+  wireAirportFinder();
   wirePortDetail();
   renderPortWeather();
   wireEuTradeExplorer();
