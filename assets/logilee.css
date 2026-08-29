@@ -8682,6 +8682,26 @@ body.sidebar-drawer-active {
   filter: saturate(0.88) contrast(0.98) brightness(1.03);
 }
 
+.port-map-card--leaflet .maplibregl-map,
+.port-map-card--leaflet .maplibregl-canvas-container {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: inherit;
+}
+
+.port-map-card--leaflet .maplibregl-canvas {
+  max-width: none !important;
+  max-height: none !important;
+  outline: none;
+}
+
+.port-map-card--leaflet .maplibregl-control-container {
+  display: none;
+}
+
 .port-map-card--leaflet .leaflet-control-zoom {
   overflow: hidden;
   border: 1px solid rgba(210, 224, 237, 0.92);

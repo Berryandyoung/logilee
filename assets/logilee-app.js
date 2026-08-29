@@ -3071,9 +3071,20 @@ function portMapZoom(port) {
 const LEAFLET_VERSION = "1.9.4";
 const LEAFLET_CSS_URL = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
 const LEAFLET_JS_URL = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
-const LEAFLET_CSS_INTEGRITY = "sha256-p4NxAoJBhIINfQ8dS/lZ7wG29RGrP31PsyWSgG3JY=";
+const LEAFLET_CSS_INTEGRITY = "sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=";
 const LEAFLET_JS_INTEGRITY = "sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=";
+const MAPLIBRE_VERSION = "5.24.0";
+const MAPLIBRE_CSS_URL = "https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.css";
+const MAPLIBRE_JS_URL = "https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.js";
+const MAPLIBRE_LEAFLET_VERSION = "0.1.4";
+const MAPLIBRE_LEAFLET_JS_URL = "https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.1.4/leaflet-maplibre-gl.js";
+const MAPLIBRE_CSS_INTEGRITY = "sha384-uTttxo/aOKbdE5RlD/SPzSDoDmNvGlUYPjONi2MN/b7c9HPSvW07OIuyP7uL6jxK";
+const MAPLIBRE_JS_INTEGRITY = "sha384-5+cfbwT0iiub6VsQAdn6yz16nr6sDiQoHx6tm4O8OVYXHYOxcffFmCJBL0dgdvGp";
+const MAPLIBRE_LEAFLET_JS_INTEGRITY = "sha384-tXYNKOHx4T02jMP7YYCtBxPIv1B5gaA5mcVPBzqMp6d7VzWzxJgI2aWF/nJLrQdS";
+const OPENFREEMAP_STYLE_URL = "https://tiles.openfreemap.org/styles/bright";
 let leafletLoadPromise = null;
+let mapLibreLoadPromise = null;
+let portBasemapStylePromise = null;
 const portLeafletMaps = new WeakMap();
 const portLeafletResizeObservers = new WeakMap();
 
@@ -3107,6 +3118,111 @@ function loadLeafletForPortMap() {
     document.head.appendChild(script);
   });
   return leafletLoadPromise;
+}
+
+function loadScriptForPortMap({ selector, src, integrity, version, isReady, errorMessage }) {
+  if (isReady()) return Promise.resolve();
+  const existing = document.querySelector(selector);
+  if (existing) {
+    return new Promise((resolve, reject) => {
+      if (isReady()) {
+        resolve();
+        return;
+      }
+      existing.addEventListener("load", () => isReady() ? resolve() : reject(new Error(errorMessage)), { once: true });
+      existing.addEventListener("error", () => reject(new Error(errorMessage)), { once: true });
+    });
+  }
+  return new Promise((resolve, reject) => {
+    const script = document.createElement("script");
+    script.src = src;
+    script.integrity = integrity;
+    script.crossOrigin = "";
+    script.defer = true;
+    script.dataset.logileeMapDependency = version;
+    if (selector.includes("maplibre-gl")) script.dataset.logileeMaplibreGl = version;
+    if (selector.includes("maplibre-leaflet")) script.dataset.logileeMaplibreLeaflet = version;
+    script.onload = () => isReady() ? resolve() : reject(new Error(errorMessage));
+    script.onerror = () => reject(new Error(errorMessage));
+    document.head.appendChild(script);
+  });
+}
+
+function loadMapLibreForPortMap() {
+  if (window.L?.maplibreGL && window.maplibregl?.Map) return Promise.resolve(window.L);
+  if (mapLibreLoadPromise) return mapLibreLoadPromise;
+  mapLibreLoadPromise = loadLeafletForPortMap().then((L) => {
+    if (!document.querySelector("link[data-logilee-maplibre]")) {
+      const link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.href = MAPLIBRE_CSS_URL;
+      link.integrity = MAPLIBRE_CSS_INTEGRITY;
+      link.crossOrigin = "";
+      link.dataset.logileeMaplibre = MAPLIBRE_VERSION;
+      document.head.appendChild(link);
+    }
+    return loadScriptForPortMap({
+      selector: "script[data-logilee-maplibre-gl]",
+      src: MAPLIBRE_JS_URL,
+      integrity: MAPLIBRE_JS_INTEGRITY,
+      version: MAPLIBRE_VERSION,
+      isReady: () => Boolean(window.maplibregl?.Map),
+      errorMessage: "MapLibre failed to load"
+    }).then(() => loadScriptForPortMap({
+      selector: "script[data-logilee-maplibre-leaflet]",
+      src: MAPLIBRE_LEAFLET_JS_URL,
+      integrity: MAPLIBRE_LEAFLET_JS_INTEGRITY,
+      version: MAPLIBRE_LEAFLET_VERSION,
+      isReady: () => Boolean(window.L?.maplibreGL),
+      errorMessage: "MapLibre Leaflet binding failed to load"
+    })).then(() => L);
+  });
+  return mapLibreLoadPromise;
+}
+
+function labelExpressionUsesName(value) {
+  if (typeof value === "string") return value.includes("name");
+  if (!Array.isArray(value)) return false;
+  return value.some((item) => labelExpressionUsesName(item));
+}
+
+function preferLatinPortMapLabels(style) {
+  if (!style?.layers) return style;
+  const latinLabel = ["coalesce", ["get", "name:latin"], ["get", "name_en"], ["get", "name:en"], ["get", "name"]];
+  style.layers.forEach((layer) => {
+    const textField = layer?.layout?.["text-field"];
+    if (textField && labelExpressionUsesName(textField)) {
+      layer.layout["text-field"] = latinLabel;
+    }
+  });
+  style.metadata = {
+    ...(style.metadata || {}),
+    "logilee:label-language": "latin-first"
+  };
+  return style;
+}
+
+function loadPortBasemapStyle() {
+  if (portBasemapStylePromise) return portBasemapStylePromise;
+  portBasemapStylePromise = fetch(OPENFREEMAP_STYLE_URL, { cache: "force-cache" })
+    .then((response) => response.ok ? response.json() : Promise.reject(new Error(`OpenFreeMap style ${response.status}`)))
+    .then((style) => preferLatinPortMapLabels(style));
+  return portBasemapStylePromise;
+}
+
+function portOsmRasterLayer(L) {
+  return L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    minZoom: 0,
+    maxZoom: 19,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a>'
+  });
+}
+
+function refreshPortBasemapLayer(layer) {
+  if (layer && typeof layer.redraw === "function") layer.redraw();
+  const maplibre = layer && typeof layer.getMaplibreMap === "function" ? layer.getMaplibreMap() : null;
+  if (maplibre && typeof maplibre.resize === "function") maplibre.resize();
+  if (maplibre && typeof maplibre.triggerRepaint === "function") maplibre.triggerRepaint();
 }
 
 function portLocationMapMarkup(port) {
@@ -3143,11 +3259,27 @@ function initializePortMapElement(map, port) {
       zoomControl: true,
       attributionControl: true
     });
-    const tileLayer = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      minZoom: 0,
-      maxZoom: 19,
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a>'
-    }).addTo(leaflet);
+    const tileLayer = portOsmRasterLayer(L);
+    target.__logileeLeafletTileLayer = tileLayer;
+    Promise.all([loadMapLibreForPortMap(), loadPortBasemapStyle()])
+      .then(([mapLibreLeaflet, style]) => {
+        if (!document.body.contains(map) || !portLeafletMaps.has(map)) return;
+        const vectorLayer = mapLibreLeaflet.maplibreGL({ style, interactive: false });
+        tileLayer.remove();
+        vectorLayer.addTo(leaflet);
+        target.__logileeLeafletTileLayer = vectorLayer;
+        target.__logileePortBasemapProvider = "openfreemap-vector";
+        map.classList.add("is-vector-basemap");
+        refreshPortBasemapLayer(vectorLayer);
+      })
+      .catch((error) => {
+        console.warn("Port vector basemap unavailable; using OSM raster fallback:", error);
+        if (!document.body.contains(map) || !portLeafletMaps.has(map)) return;
+        if (!leaflet.hasLayer(tileLayer)) tileLayer.addTo(leaflet);
+        target.__logileePortBasemapProvider = "osm-raster";
+        map.classList.add("is-raster-basemap");
+      });
+    tileLayer.addTo(leaflet);
     const marker = L.divIcon({
       className: "port-leaflet-marker",
       html: `<span></span><b>${escapeHtml(port.locode)}</b>`,
@@ -3160,7 +3292,10 @@ function initializePortMapElement(map, port) {
     target.__logileeLeafletTileLayer = tileLayer;
     portLeafletMaps.set(map, leaflet);
     map.classList.add("is-map-ready");
-    const syncSize = () => requestAnimationFrame(() => leaflet.invalidateSize({ pan: false }));
+    const syncSize = () => requestAnimationFrame(() => {
+      leaflet.invalidateSize({ pan: false });
+      refreshPortBasemapLayer(target.__logileeLeafletTileLayer);
+    });
     requestAnimationFrame(syncSize);
     setTimeout(syncSize, 120);
     setTimeout(syncSize, 360);
@@ -3208,7 +3343,7 @@ function updatePortMapElement(map, port, zoom = portMapZoom(port)) {
   const syncView = () => {
     leaflet.invalidateSize({ pan: false });
     leaflet.setView([port.lat, port.lon], nextZoom, { animate: false });
-    if (tileLayer && typeof tileLayer.redraw === "function") tileLayer.redraw();
+    refreshPortBasemapLayer(tileLayer);
   };
   syncView();
   requestAnimationFrame(syncView);
