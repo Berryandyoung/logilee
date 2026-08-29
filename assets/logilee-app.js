@@ -3658,10 +3658,12 @@ function airportSearchScore(airport, query) {
   return Number.POSITIVE_INFINITY;
 }
 
-function searchAirports(query, limit = 10) {
+function searchAirports(query, limit = 10, country = "") {
   const q = String(query || "").trim();
   if (!q) return [];
+  const selectedCountry = String(country || "").trim().toUpperCase();
   return airportDataset()
+    .filter((airport) => !selectedCountry || airport.iso === selectedCountry)
     .map((airport) => ({ airport, score: airportSearchScore(airport, q) }))
     .filter((item) => Number.isFinite(item.score))
     .sort((a, b) => a.score - b.score || (a.airport.type === "large_airport" ? -1 : 1) || a.airport.name.localeCompare(b.airport.name))
@@ -3888,6 +3890,8 @@ function wireAirportFinder() {
   const form = document.querySelector("[data-airport-search-form]");
   const input = form?.querySelector("[data-airport-query]");
   const suggest = form?.querySelector("[data-airport-suggest]");
+  const country = form?.querySelector("[data-airport-country]");
+  const clear = form?.querySelector("[data-airport-clear]");
   const profile = document.querySelector("[data-airport-profile]");
   const popular = document.querySelector("[data-popular-airports]");
   const count = document.querySelector("[data-airport-count]");
@@ -3897,8 +3901,25 @@ function wireAirportFinder() {
   let suggestions = [];
   let activeIndex = -1;
   const labels = lang === "ko"
-    ? { empty: "일치하는 공항을 찾지 못했습니다. 공항명, 도시명, IATA 또는 ICAO 코드를 다시 확인하세요.", invalid: "요청한 공항이 현재 LOGILEE 공항 reference에 없습니다.", found: "개 공항", intro: "공항명, 도시, IATA, ICAO 코드로 검색하세요.", noData: "공항 데이터가 로드되지 않았습니다." }
-    : { empty: "No matching airport found. Check the airport name, city, IATA code, or ICAO code.", invalid: "The requested airport is not in the current LOGILEE airport reference.", found: "airports", intro: "Search by airport name, city, IATA, or ICAO code.", noData: "Airport data is not loaded." };
+    ? { empty: "일치하는 공항을 찾지 못했습니다. 공항명, 도시명, IATA 또는 ICAO 코드를 다시 확인하세요.", invalid: "요청한 공항이 현재 LOGILEE 공항 reference에 없습니다.", found: "개 공항", intro: "공항명, 도시, IATA, ICAO 코드로 검색하세요.", noData: "공항 데이터가 로드되지 않았습니다.", allCountries: "전체 국가" }
+    : { empty: "No matching airport found. Check the airport name, city, IATA code, or ICAO code.", invalid: "The requested airport is not in the current LOGILEE airport reference.", found: "Airports", intro: "Search by airport name, city, IATA, or ICAO code.", noData: "Airport data is not loaded.", allCountries: "All countries" };
+  const airportsForCountry = (countryCode = country?.value || "") => airports.filter((airport) => !countryCode || airport.iso === countryCode);
+  const matchingCount = () => {
+    const countryCode = country?.value || "";
+    const query = input.value.trim();
+    return query ? searchAirports(query, airports.length, countryCode).length : airportsForCountry(countryCode).length;
+  };
+  const updateCount = () => {
+    if (!count) return;
+    const total = matchingCount().toLocaleString(lang === "ko" ? "ko-KR" : "en-US");
+    count.textContent = lang === "ko" ? `${total}${labels.found}` : `${total} ${labels.found}`;
+  };
+  const syncUrlFilters = () => {
+    const url = new URL(location.href);
+    if (input.value.trim()) url.searchParams.set("query", input.value.trim()); else url.searchParams.delete("query");
+    if (country?.value) url.searchParams.set("country", country.value); else url.searchParams.delete("country");
+    history.replaceState(null, "", url);
+  };
   const setProfile = (html) => {
     destroyAirportMaps(profile);
     profile.innerHTML = html;
@@ -3910,13 +3931,25 @@ function wireAirportFinder() {
     input.setAttribute("aria-expanded", suggestions.length ? "true" : "false");
     suggest.innerHTML = suggestions.length ? suggestions.map((airport, index) => airportSuggestionMarkup(airport, index, activeIndex)).join("") : "";
   };
+  const updateSuggestions = () => {
+    suggestions = searchAirports(input.value, 10, country?.value || "");
+    activeIndex = suggestions.length ? 0 : -1;
+    renderSuggest();
+    updateCount();
+  };
   const selectAirport = (airport, { push = true, scroll = true } = {}) => {
     if (!airport) return;
     input.value = airport.iata || airport.icao || airport.name;
     suggestions = [];
     activeIndex = -1;
     renderSuggest();
-    if (push) history.replaceState({ airport: airportCode(airport) }, "", airportUrl(airport));
+    if (push) {
+      const url = new URL(location.href);
+      url.search = airportUrl(airport).slice(1);
+      if (country?.value) url.searchParams.set("country", country.value);
+      history.replaceState({ airport: airportCode(airport) }, "", url);
+    }
+    updateCount();
     setProfile(airportProfileMarkup(airport));
     if (scroll) profile.scrollIntoView({ behavior: "smooth", block: "start" });
   };
@@ -3928,29 +3961,41 @@ function wireAirportFinder() {
   const renderInitial = () => {
     if (!airports.length) {
       setProfile(`<section class="port-intel-section airport-empty-panel"><h2>${lang === "ko" ? "공항 데이터 없음" : "Airport Data Unavailable"}</h2><div class="data-empty">${labels.noData}</div></section>`);
+      updateCount();
       return;
     }
-    const requested = findAirportFromParams(new URLSearchParams(location.search));
+    const params = new URLSearchParams(location.search);
+    const countryParam = (params.get("country") || "").toUpperCase();
+    if (country && countryParam && [...country.options].some((option) => option.value === countryParam)) country.value = countryParam;
+    country?.updateComboboxLabel?.();
+    let requested = findAirportFromParams(params);
+    if (requested && country?.value && requested.iso !== country.value) requested = null;
     if (requested) {
       input.value = requested.iata || requested.icao || requested.name;
       selectAirport(requested, { push: false, scroll: false });
       return;
     }
+    input.value = params.get("query") || params.get("q") || "";
+    updateSuggestions();
     const hasQuery = Boolean(location.search);
     setProfile(`<section class="port-intel-section airport-empty-panel"><h2>${hasQuery ? (lang === "ko" ? "공항 확인 필요" : "Airport Not Found") : (lang === "ko" ? "공항을 검색하세요" : "Search an Airport")}</h2><div class="data-empty">${hasQuery ? labels.invalid : labels.intro}</div></section>`);
   };
-  if (count) count.textContent = lang === "ko" ? `${airports.length}${labels.found}` : `${airports.length} ${labels.found}`;
+  if (country) {
+    const countries = [...new Set(airports.map((airport) => airport.iso).filter(Boolean))].sort((a, b) => displayCountryName(a, lang).localeCompare(displayCountryName(b, lang), lang === "ko" ? "ko" : "en"));
+    country.innerHTML = `<option value="">${labels.allCountries}</option>${countries.map((code) => `<option value="${escapeAttribute(code)}">${escapeHtml(displayCountryName(code, lang))}</option>`).join("")}`;
+    enhanceSimpleCombobox(country, [{ value: "", label: labels.allCountries, meta: lang === "ko" ? "모든 공항" : "All airports", terms: ["", "all", "전체"] }, ...countries.map((code) => ({ value: code, label: displayCountryName(code, lang), meta: `${code} · ${displayCountryName(code, "en")}`, terms: [code, displayCountryName(code, "en"), displayCountryName(code, "ko"), ...(COUNTRY_SEARCH_ALIASES[code] || [])].map(normalizeCountrySearch) }))], lang === "ko" ? { label: "공항 국가 선택", placeholder: "국가명 또는 ISO 코드 검색...", open: "국가 목록 열기", empty: "일치하는 국가가 없습니다." } : { label: "Select airport country", placeholder: "Search country name or ISO code...", open: "Open country list", empty: "No matching countries." });
+  }
   form.addEventListener("input", () => {
-    suggestions = searchAirports(input.value, 10);
-    activeIndex = suggestions.length ? 0 : -1;
-    renderSuggest();
+    updateSuggestions();
+    syncUrlFilters();
   });
   form.addEventListener("submit", (event) => {
     event.preventDefault();
-    const airport = suggestions[activeIndex] || searchAirports(input.value, 1)[0];
+    const airport = suggestions[activeIndex] || searchAirports(input.value, 1, country?.value || "")[0];
     if (airport) {
       selectAirport(airport);
     } else {
+      updateCount();
       setProfile(`<section class="port-intel-section airport-empty-panel"><h2>${lang === "ko" ? "검색 결과 없음" : "No Airport Found"}</h2><div class="data-empty">${labels.empty}</div></section>`);
     }
   });
@@ -3971,6 +4016,22 @@ function wireAirportFinder() {
       activeIndex = -1;
       renderSuggest();
     }
+  });
+  country?.addEventListener("change", () => {
+    updateSuggestions();
+    syncUrlFilters();
+  });
+  clear?.addEventListener("click", () => {
+    input.value = "";
+    if (country) country.value = "";
+    country?.updateComboboxLabel?.();
+    suggestions = [];
+    activeIndex = -1;
+    renderSuggest();
+    updateCount();
+    history.replaceState(null, "", location.pathname);
+    setProfile(`<section class="port-intel-section airport-empty-panel"><h2>${lang === "ko" ? "공항을 검색하세요" : "Search an Airport"}</h2><div class="data-empty">${labels.intro}</div></section>`);
+    input.focus();
   });
   form.addEventListener("click", (event) => {
     const option = event.target.closest("[data-airport-option]");

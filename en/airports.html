@@ -31,23 +31,13 @@
         <p class="muted">Built from public OurAirports data plus LOGILEE verified enrichments, this tool brings airport codes, location, local time, official resources, and nearby airports into one workflow.</p>
       </section>
 
-      <section class="panel airport-search-panel" aria-labelledby="airport-search-title">
-        <div class="airport-search-head">
-          <div><span class="kicker">Search</span><h2 id="airport-search-title">Airport Search</h2></div>
-          <span class="status" data-airport-count>Loading airport data</span>
-        </div>
-        <form class="airport-search-form" data-airport-search-form role="search">
-          <div class="field airport-query-field">
-            <label for="airport-query">Airport / City / IATA / ICAO</label>
-            <div class="airport-combobox">
-              <input id="airport-query" data-airport-query type="text" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="airport-suggestions" placeholder="e.g. ICN, RKSI, Incheon, Shanghai">
-              <div class="airport-suggest" id="airport-suggestions" data-airport-suggest role="listbox"></div>
-            </div>
-          </div>
-          <button class="primary-btn" type="submit"><i data-lucide="search"></i>Search</button>
-        </form>
-        <p class="airport-helper">Exact IATA and ICAO matches are prioritized first, followed by airport name and city matches.</p>
-      </section>
+      <form class="panel port-search-panel airport-search-panel" data-airport-search-form role="search">
+        <div class="field port-search-field airport-search-field"><label for="airport-query">Search airport</label><div class="airport-combobox"><input id="airport-query" data-airport-query type="text" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="airport-suggestions" placeholder="ICN, RKSI, Incheon, Shanghai"><div class="airport-suggest" id="airport-suggestions" data-airport-suggest role="listbox"></div></div></div>
+        <div class="field port-country-field airport-country-field"><label>Country</label><select data-airport-country><option value="">All countries</option></select></div>
+        <button class="primary-btn" type="submit">Search</button>
+        <button class="secondary-btn" type="button" data-airport-clear>Clear</button>
+        <span class="status" data-airport-count>0 Airports</span>
+      </form>
 
       <section class="port-popular-panel airport-popular-panel" aria-labelledby="popular-airports-title">
         <div class="section-head"><h2 id="popular-airports-title">Featured Airports</h2><span>Representative test airports</span></div>

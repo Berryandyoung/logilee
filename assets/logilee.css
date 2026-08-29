@@ -9228,34 +9228,11 @@ body.sidebar-drawer-active {
 }
 
 .airport-search-panel {
-  display: grid;
-  gap: 14px;
-  padding: 18px;
-  border-radius: 8px;
+  overflow: visible;
 }
 
-.airport-search-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-}
-
-.airport-search-head h2 {
-  margin: 3px 0 0;
-  color: var(--ink-navy);
-  font-size: 22px;
-  line-height: 1.2;
-}
-
-.airport-search-form {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 12px;
-  align-items: end;
-}
-
-.airport-query-field {
+.airport-search-field,
+.airport-country-field {
   min-width: 0;
 }
 
@@ -9265,21 +9242,7 @@ body.sidebar-drawer-active {
 
 .airport-combobox input {
   width: 100%;
-  height: 46px;
-  padding: 0 14px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: #fff;
-  color: var(--ink-navy);
-  font: inherit;
-  font-weight: 760;
-  box-shadow: 0 8px 18px rgba(7, 26, 43, 0.04);
-}
-
-.airport-search-form .primary-btn {
-  min-width: 112px;
-  height: 46px;
-  white-space: nowrap;
+  min-height: 48px;
 }
 
 .airport-suggest {
@@ -9288,7 +9251,8 @@ body.sidebar-drawer-active {
   right: 0;
   top: calc(100% + 6px);
   z-index: 900;
-  overflow: hidden;
+  max-height: min(340px, 56vh);
+  overflow-y: auto;
   border: 1px solid #d8e4f0;
   border-radius: 8px;
   background: #fff;
@@ -9328,16 +9292,10 @@ body.sidebar-drawer-active {
   overflow-wrap: anywhere;
 }
 
-.airport-suggest small,
-.airport-helper {
+.airport-suggest small {
   color: var(--secondary-text);
   font-size: 12px;
   line-height: 1.45;
-}
-
-.airport-helper {
-  margin: 0;
-  font-weight: 760;
 }
 
 .airport-popular-panel {
@@ -9411,27 +9369,15 @@ body.sidebar-drawer-active {
   }
 }
 
-@media (max-width: 720px) {
-  .airport-search-form,
-  .airport-search-head,
+@media (max-width: 820px) {
   .airport-profile-grid,
   .airport-core-facts,
   .airport-tool-grid {
     grid-template-columns: 1fr;
   }
-
-  .airport-search-head {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .airport-search-form .primary-btn {
-    width: 100%;
-  }
 }
 
 @media (max-width: 520px) {
-  .airport-search-panel,
   .airport-popular-panel {
     padding: 14px;
   }
