@@ -1668,23 +1668,28 @@ function wireTracking() {
     if (!copy) return;
     const feedback = copy.nextElementSibling;
     const text = copy.dataset.copyTrack || "";
+    let copied = false;
     try {
-      if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(text);
-      else {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(text);
+        copied = true;
+      }
+    } catch (_) {}
+    if (!copied) {
+      try {
         const area = document.createElement("textarea");
         area.value = text;
         area.setAttribute("readonly", "");
         area.style.position = "fixed";
         area.style.opacity = "0";
         document.body.appendChild(area);
+        area.focus();
         area.select();
-        document.execCommand("copy");
+        copied = document.execCommand("copy");
         area.remove();
-      }
-      if (feedback) feedback.textContent = lang === "ko" ? "복사됨" : "Copied";
-    } catch (_) {
-      if (feedback) feedback.textContent = lang === "ko" ? "복사 실패" : "Copy failed";
+      } catch (_) {}
     }
+    if (feedback) feedback.textContent = copied ? (lang === "ko" ? "복사됨" : "Copied") : (lang === "ko" ? "복사 실패" : "Copy failed");
   });
   renderTrackingRecent(recent);
   render(false);
