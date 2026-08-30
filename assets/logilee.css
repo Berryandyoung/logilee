@@ -9531,3 +9531,285 @@ body.sidebar-drawer-active {
     grid-template-columns: 1fr;
   }
 }
+
+/* CBM Calculator V2 */
+.cbm-calculator {
+  align-items: start;
+}
+
+.cbm-input-panel,
+.cbm-result-panel,
+.cbm-notes {
+  overflow: visible;
+}
+
+.cbm-unit-toolbar {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(130px, 1fr));
+  gap: 10px;
+  align-items: end;
+  margin-bottom: 14px;
+}
+
+.cbm-custom-divisor[hidden] {
+  display: none;
+}
+
+.cbm-cargo-row {
+  position: relative;
+  grid-template-columns: minmax(130px, 1.15fr) minmax(76px, .55fr) repeat(3, minmax(82px, .7fr)) minmax(110px, .85fr) auto;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: #fff;
+}
+
+.cbm-cargo-row.is-invalid {
+  border-color: #d97706;
+  background: #fffaf4;
+}
+
+.cbm-row-tools {
+  display: flex;
+  gap: 6px;
+  align-items: end;
+}
+
+.cbm-row-tools .secondary-btn {
+  min-height: 38px;
+  padding: 0 10px;
+  font-size: 12px;
+}
+
+.cbm-row-error {
+  grid-column: 1 / -1;
+  margin: 2px 0 0;
+  color: #9a3412;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.cbm-actions .primary-btn {
+  order: 0;
+}
+
+.subtle-btn {
+  color: var(--secondary-text);
+}
+
+.cbm-kpi-grid,
+.cbm-mini-grid,
+.cbm-container-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.cbm-kpi-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 8px;
+}
+
+.cbm-mini-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.cbm-kpi-grid article,
+.cbm-mini-grid article,
+.cbm-container-grid article {
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: #fff;
+}
+
+.cbm-kpi-grid span,
+.cbm-mini-grid span,
+.cbm-container-grid span {
+  display: block;
+  color: var(--secondary-text);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.cbm-kpi-grid strong,
+.cbm-mini-grid strong,
+.cbm-container-grid strong {
+  display: block;
+  margin-top: 5px;
+  color: var(--ink-navy);
+  font-size: clamp(19px, 2vw, 28px);
+  line-height: 1.08;
+}
+
+.cbm-mini-grid strong,
+.cbm-container-grid strong {
+  font-size: 18px;
+}
+
+.cbm-kpi-grid small,
+.cbm-mini-grid small {
+  display: block;
+  margin-top: 6px;
+  color: var(--secondary-text);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.cbm-reference-section {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.cbm-reference-section h2,
+.cbm-notes h2 {
+  margin: 0 0 10px;
+  font-size: 18px;
+}
+
+.cbm-reference-section .muted {
+  margin-top: 10px;
+  line-height: 1.55;
+}
+
+.cbm-container-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.cbm-container-grid article span {
+  margin-top: 6px;
+  text-transform: none;
+}
+
+.cbm-compact-notice {
+  margin-top: 12px;
+}
+
+.cbm-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.cbm-total-row td {
+  color: var(--ink-navy);
+  font-weight: 850;
+}
+
+.cbm-export-actions {
+  align-items: center;
+}
+
+.cbm-notes {
+  margin-top: 18px;
+}
+
+.cbm-notes-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 280px;
+  gap: 18px;
+}
+
+.cbm-notes ul {
+  margin: 0;
+  padding-left: 20px;
+  color: var(--secondary-text);
+  line-height: 1.6;
+}
+
+.cbm-related-tools {
+  display: grid;
+  gap: 8px;
+  align-content: start;
+}
+
+.cbm-related-tools h3 {
+  margin: 0 0 4px;
+  font-size: 16px;
+}
+
+.cbm-related-tools a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 38px;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--deep-navy);
+  font-weight: 800;
+}
+
+@media (max-width: 1180px) {
+  .cbm-cargo-row {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .cbm-row-tools {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 900px) {
+  .cbm-unit-toolbar,
+  .cbm-kpi-grid,
+  .cbm-mini-grid,
+  .cbm-container-grid,
+  .cbm-notes-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .cbm-unit-toolbar,
+  .cbm-cargo-row,
+  .cbm-kpi-grid,
+  .cbm-mini-grid,
+  .cbm-container-grid,
+  .cbm-notes-grid {
+    grid-template-columns: 1fr;
+  }
+  .cbm-export-actions .primary-btn,
+  .cbm-export-actions .secondary-btn,
+  .cbm-actions .primary-btn,
+  .cbm-actions .secondary-btn {
+    width: 100%;
+  }
+}
+
+@media print {
+  .rail,
+  .topbar,
+  .ad-slot,
+  .cbm-actions,
+  .cbm-export-actions,
+  .cbm-row-tools,
+  .cbm-unit-toolbar,
+  .field input,
+  .field select {
+    display: none !important;
+  }
+  .shell,
+  .main,
+  .page,
+  .calculator {
+    display: block !important;
+    padding: 0 !important;
+  }
+  .panel,
+  .cbm-notes {
+    border: 0 !important;
+    box-shadow: none !important;
+    padding: 12px 0 !important;
+    overflow: visible !important;
+  }
+  .cbm-input-panel {
+    display: none !important;
+  }
+  .cbm-kpi-grid,
+  .cbm-mini-grid,
+  .cbm-container-grid,
+  .cbm-notes-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}

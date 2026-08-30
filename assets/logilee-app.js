@@ -1286,99 +1286,279 @@ function setupPostsArchive() {
 
   render();
 }
-function rowTemplate(lang) {
-  const labels = lang === "ko"
-    ? ["화물명", "수량", "길이", "너비", "높이", "중량"]
-    : ["Cargo", "Qty", "Length", "Width", "Height", "Weight"];
+const CBM_DIMENSION_UNITS = {
+  mm: { label: "mm", toM: 0.001, toCm: 0.1, fromM: 1000 },
+  cm: { label: "cm", toM: 0.01, toCm: 1, fromM: 100 },
+  m: { label: "m", toM: 1, toCm: 100, fromM: 1 },
+  in: { label: "in", toM: 0.0254, toCm: 2.54, fromM: 39.3700787402 },
+  ft: { label: "ft", toM: 0.3048, toCm: 30.48, fromM: 3.280839895 }
+};
+
+const CBM_WEIGHT_UNITS = {
+  kg: { label: "kg", toKg: 1, fromKg: 1 },
+  lb: { label: "lb", toKg: 0.45359237, fromKg: 2.2046226218 }
+};
+
+const CBM_CONTAINER_REFERENCES = [
+  { code: "20GP", volume: 33.2, payload: 28130 },
+  { code: "40GP", volume: 67.7, payload: 28750 },
+  { code: "40HC", volume: 76.3, payload: 28600 }
+];
+
+function cbmText(lang) {
+  return lang === "ko" ? {
+    cargo: "화물명", qty: "수량", length: "길이", width: "너비", height: "높이", unitWeight: "개당 중량",
+    duplicate: "복제", delete: "삭제", rowFallback: "Cargo",
+    rowError: "치수와 수량은 0보다 커야 하며, 중량은 비워두거나 0 이상이어야 합니다.",
+    tooLarge: "입력값이 너무 큽니다. 화물 치수, 수량, 중량을 다시 확인하세요.",
+    totalCbm: "TOTAL CBM", totalWeight: "TOTAL WEIGHT", density: "DENSITY", qtyTotal: "총 수량",
+    noWeight: "중량을 입력하면 Density와 중량 기준 참고값을 계산합니다.",
+    airTitle: "AIR FREIGHT REFERENCE", actualWeight: "Actual Weight", volumetricWeight: "Volumetric Weight",
+    chargeableWeight: "예상 과금 중량", divisor: "Divisor",
+    airNote: "실제 적용 기준은 항공사, 특송사, 포워더 및 서비스 조건에 따라 달라질 수 있으므로 최종 운임 기준을 확인하세요.",
+    lclTitle: "LCL W/M REFERENCE", volumeRt: "Volume", weightRt: "Weight", wmReference: "Reference W/M",
+    lclNote: "실제 LCL 운임의 W/M 기준, 최소 과금 단위 및 반올림 방식은 포워더·운송사·항로별 tariff를 확인하세요.",
+    containerTitle: "CONTAINER NOMINAL VOLUME REFERENCE", nominalVolume: "Nominal volume", referencePayload: "Reference payload",
+    cbmVsNominal: "Cargo CBM / nominal volume",
+    containerNote: "컨테이너 비교값은 명목 내부 용적 기준의 참고값입니다. 실제 적재 가능 여부는 화물 형상, 포장, 팔레트, 중량 배분 및 장비 사양에 따라 달라집니다.",
+    breakdown: "Cargo Breakdown", unitWeightShort: "Unit weight", rowWeight: "Row total weight", total: "TOTAL",
+    copyAlert: "결과가 복사되었습니다.", csvName: "logilee-cbm-summary.csv",
+    notesTitle: "Calculation Notes / Sources", relatedTitle: "관련 LOGILEE 도구",
+    sources: "20GP, 40GP, 40HC 기준값은 Hapag-Lloyd Container Specification의 dry container fleet 예시를 대표 nominal reference로 사용했습니다. 컨테이너 사양은 제조사, 선사, 장비 시리즈별로 달라질 수 있습니다.",
+    notes: ["CBM = 길이 x 너비 x 높이 x 수량, 치수는 내부적으로 meters로 변환합니다.", "Density = 총중량 / 총 CBM이며 중량이 입력된 경우에만 계산합니다.", "Air volumetric weight는 cm 기준 L x W x H x 수량 / divisor로 계산합니다.", "Estimated chargeable weight는 총중량과 부피중량 중 큰 값을 참고값으로 표시합니다.", "LCL W/M reference는 CBM과 총중량/1,000 중 큰 RT 값을 보여주며 실제 운임은 계산하지 않습니다."],
+    related: [["항만 검색", "ports.html", "anchor"], ["공항 검색", "airports.html", "plane"], ["화물 추적", "track.html", "radar"]]
+  } : {
+    cargo: "Cargo name", qty: "Qty", length: "Length", width: "Width", height: "Height", unitWeight: "Unit Weight",
+    duplicate: "Duplicate", delete: "Delete", rowFallback: "Cargo",
+    rowError: "Dimensions and quantity must be greater than 0. Weight may be blank or 0 and above.",
+    tooLarge: "The input value is too large. Check cargo dimensions, quantity, and weight.",
+    totalCbm: "TOTAL CBM", totalWeight: "TOTAL WEIGHT", density: "DENSITY", qtyTotal: "Total quantity",
+    noWeight: "Enter cargo weight to calculate density and weight-based reference values.",
+    airTitle: "AIR FREIGHT REFERENCE", actualWeight: "Actual Weight", volumetricWeight: "Volumetric Weight",
+    chargeableWeight: "Estimated Chargeable Weight", divisor: "Divisor",
+    airNote: "Actual rules may vary by airline, courier, forwarder, service level, and trade lane. Confirm the final rating basis before using it for freight cost.",
+    lclTitle: "LCL W/M REFERENCE", volumeRt: "Volume", weightRt: "Weight", wmReference: "Reference W/M",
+    lclNote: "Actual LCL W/M rules, minimum charges, and rounding may vary by forwarder, carrier, and trade lane.",
+    containerTitle: "CONTAINER NOMINAL VOLUME REFERENCE", nominalVolume: "Nominal volume", referencePayload: "Reference payload",
+    cbmVsNominal: "Cargo CBM / nominal volume",
+    containerNote: "Container comparison values are nominal internal-volume references. Actual loading feasibility depends on cargo shape, packing, pallets, weight distribution, and equipment specification.",
+    breakdown: "Cargo Breakdown", unitWeightShort: "Unit weight", rowWeight: "Row total weight", total: "TOTAL",
+    copyAlert: "Result copied.", csvName: "logilee-cbm-summary.csv",
+    notesTitle: "Calculation Notes / Sources", relatedTitle: "Related LOGILEE Tools",
+    sources: "20GP, 40GP, and 40HC values use Hapag-Lloyd Container Specification dry-container fleet examples as representative nominal references. Container specifications can vary by manufacturer, carrier, and equipment series.",
+    notes: ["CBM = length x width x height x quantity, with dimensions converted internally to meters.", "Density = total weight / total CBM and is calculated only when weight is entered.", "Air volumetric weight uses centimeter dimensions: L x W x H x quantity / divisor.", "Estimated chargeable weight shows the greater of actual weight and volumetric weight as a reference value.", "LCL W/M reference shows the greater of CBM and total weight / 1,000 in RT. It does not calculate freight charges."],
+    related: [["Port Search", "ports.html", "anchor"], ["Airport Search", "airports.html", "plane"], ["Shipment Tracking", "track.html", "radar"]]
+  };
+}
+
+function cbmFormat(value, digits = 3) {
+  if (!Number.isFinite(value)) return "-";
+  return Number(value).toLocaleString(undefined, { minimumFractionDigits: digits, maximumFractionDigits: digits });
+}
+function cbmTrim(value, digits = 3) { return Number.isFinite(value) ? String(Number(value.toFixed(digits))) : ""; }
+function cbmWeight(value, unit = "kg", digits = 1) {
+  if (!Number.isFinite(value)) return "-";
+  return `${cbmFormat(value * CBM_WEIGHT_UNITS[unit].fromKg, digits)} ${CBM_WEIGHT_UNITS[unit].label}`;
+}
+function cbmPercent(value) { return Number.isFinite(value) ? `${cbmFormat(value, 1)}%` : "-"; }
+function cbmNum(input) { const value = Number(String(input ?? "").trim()); return Number.isFinite(value) ? value : NaN; }
+
+function cbmRowTemplate(lang, values = {}) {
+  const t = cbmText(lang);
   return `
-    <div class="form-grid cargo-row">
-      <div class="field"><label>${labels[0]}</label><input value="Box" data-cargo></div>
-      <div class="field"><label>${labels[1]}</label><input type="number" min="1" value="10" data-qty></div>
-      <div class="field"><label>${labels[2]}</label><input type="number" min="0" value="50" data-length></div>
-      <div class="field"><label>${labels[3]}</label><input type="number" min="0" value="40" data-width></div>
-      <div class="field"><label>${labels[4]}</label><input type="number" min="0" value="30" data-height></div>
-      <div class="field"><label>${labels[5]} kg</label><input type="number" min="0" value="0" data-weight></div>
-    </div>
-  `;
+    <div class="form-grid cargo-row cbm-cargo-row">
+      <div class="field"><label>${t.cargo}</label><input value="${escapeAttribute(values.cargo ?? "Box")}" data-cargo></div>
+      <div class="field"><label>${t.qty}</label><input type="number" inputmode="decimal" min="0" step="any" value="${escapeAttribute(values.qty ?? "10")}" data-qty></div>
+      <div class="field"><label>${t.length}</label><input type="number" inputmode="decimal" min="0" step="any" value="${escapeAttribute(values.length ?? "50")}" data-length></div>
+      <div class="field"><label>${t.width}</label><input type="number" inputmode="decimal" min="0" step="any" value="${escapeAttribute(values.width ?? "40")}" data-width></div>
+      <div class="field"><label>${t.height}</label><input type="number" inputmode="decimal" min="0" step="any" value="${escapeAttribute(values.height ?? "30")}" data-height></div>
+      <div class="field"><label>${t.unitWeight}</label><input type="number" inputmode="decimal" min="0" step="any" value="${escapeAttribute(values.weight ?? "")}" data-weight></div>
+      <div class="cbm-row-tools"><button class="secondary-btn" type="button" data-duplicate-row>${t.duplicate}</button><button class="secondary-btn" type="button" data-delete-row>${t.delete}</button></div>
+      <p class="cbm-row-error" data-row-error hidden></p>
+    </div>`;
+}
+
+function cbmReadRow(row, lang) {
+  const t = cbmText(lang);
+  const dimUnit = document.querySelector("[data-dim-unit]")?.value || "cm";
+  const weightUnit = document.querySelector("[data-weight-unit]")?.value || "kg";
+  const qty = cbmNum(row.querySelector("[data-qty]")?.value);
+  const lengthInput = cbmNum(row.querySelector("[data-length]")?.value);
+  const widthInput = cbmNum(row.querySelector("[data-width]")?.value);
+  const heightInput = cbmNum(row.querySelector("[data-height]")?.value);
+  const weightRaw = row.querySelector("[data-weight]")?.value || "";
+  const unitWeightInput = String(weightRaw).trim() === "" ? null : cbmNum(weightRaw);
+  const errors = [];
+  if (!(qty > 0) || !(lengthInput > 0) || !(widthInput > 0) || !(heightInput > 0) || (unitWeightInput !== null && !(unitWeightInput >= 0))) errors.push(t.rowError);
+  if (qty > 1000000 || lengthInput > 1000000 || widthInput > 1000000 || heightInput > 1000000 || unitWeightInput > 10000000) errors.push(t.tooLarge);
+  const errorEl = row.querySelector("[data-row-error]");
+  if (errors.length) {
+    row.classList.add("is-invalid");
+    if (errorEl) { errorEl.textContent = [...new Set(errors)].join(" "); errorEl.hidden = false; }
+    return null;
+  }
+  row.classList.remove("is-invalid");
+  if (errorEl) { errorEl.textContent = ""; errorEl.hidden = true; }
+  const lengthM = lengthInput * CBM_DIMENSION_UNITS[dimUnit].toM;
+  const widthM = widthInput * CBM_DIMENSION_UNITS[dimUnit].toM;
+  const heightM = heightInput * CBM_DIMENSION_UNITS[dimUnit].toM;
+  const lengthCm = lengthInput * CBM_DIMENSION_UNITS[dimUnit].toCm;
+  const widthCm = widthInput * CBM_DIMENSION_UNITS[dimUnit].toCm;
+  const heightCm = heightInput * CBM_DIMENSION_UNITS[dimUnit].toCm;
+  const unitWeightKg = unitWeightInput === null ? null : unitWeightInput * CBM_WEIGHT_UNITS[weightUnit].toKg;
+  const rowWeightKg = unitWeightKg === null ? null : unitWeightKg * qty;
+  return { cargo: row.querySelector("[data-cargo]")?.value.trim() || t.rowFallback, qty, lengthInput, widthInput, heightInput, dimUnit, weightUnit, unitWeightKg, rowWeightKg, cbm: lengthM * widthM * heightM * qty, volumetricBase: lengthCm * widthCm * heightCm * qty };
+}
+
+function cbmSelectedDivisor() {
+  const select = document.querySelector("[data-air-divisor]");
+  if (!select || select.value !== "custom") return Number(select?.value || 6000);
+  const custom = Number(document.querySelector("[data-custom-air-divisor]")?.value || "");
+  return Number.isFinite(custom) && custom > 0 ? custom : null;
 }
 
 function calculateRows(lang) {
-  const unit = document.querySelector("[data-unit]")?.value || "cm";
-  const rows = [...document.querySelectorAll(".cargo-row")].map((row) => {
-    const qty = Number(row.querySelector("[data-qty]").value);
-    let length = Number(row.querySelector("[data-length]").value);
-    let width = Number(row.querySelector("[data-width]").value);
-    let height = Number(row.querySelector("[data-height]").value);
-    const weight = Number(row.querySelector("[data-weight]").value || 0);
-    if (!qty || length < 0 || width < 0 || height < 0 || weight < 0) return null;
-    if (unit === "cm") {
-      length /= 100; width /= 100; height /= 100;
-    } else {
-      length *= 0.0254; width *= 0.0254; height *= 0.0254;
-    }
-    const cbm = length * width * height * qty;
-    return { cargo: row.querySelector("[data-cargo]").value || "Cargo", qty, weight: weight * qty, cbm };
-  }).filter(Boolean);
+  const rows = [...document.querySelectorAll(".cargo-row")].map((row) => cbmReadRow(row, lang)).filter(Boolean);
   const totalCbm = rows.reduce((sum, row) => sum + row.cbm, 0);
   const totalQty = rows.reduce((sum, row) => sum + row.qty, 0);
-  const totalWeight = rows.reduce((sum, row) => sum + row.weight, 0);
-  const utilization20 = Math.min(100, totalCbm / 28 * 100);
-  return { rows, totalCbm, totalQty, totalWeight, utilization20 };
+  const weightedRows = rows.filter((row) => row.rowWeightKg !== null);
+  const totalWeight = weightedRows.length ? weightedRows.reduce((sum, row) => sum + row.rowWeightKg, 0) : null;
+  const density = totalWeight !== null && totalCbm > 0 ? totalWeight / totalCbm : null;
+  const divisor = cbmSelectedDivisor();
+  const volumetricWeight = divisor ? rows.reduce((sum, row) => sum + row.volumetricBase / divisor, 0) : null;
+  const chargeableWeight = totalWeight !== null && volumetricWeight !== null ? Math.max(totalWeight, volumetricWeight) : null;
+  const volumeRt = totalCbm;
+  const weightRt = totalWeight !== null ? totalWeight / 1000 : null;
+  const wmReference = weightRt !== null ? Math.max(volumeRt, weightRt) : null;
+  return { rows, totalCbm, totalQty, totalWeight, density, divisor, volumetricWeight, chargeableWeight, volumeRt, weightRt, wmReference };
+}
+
+function cbmKpi(label, value, note = "") {
+  return `<article><span>${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong>${note ? `<small>${escapeHtml(note)}</small>` : ""}</article>`;
 }
 
 function renderCbm(lang) {
   const output = document.querySelector("[data-cbm-output]");
   if (!output) return;
+  const t = cbmText(lang);
+  const weightUnit = document.querySelector("[data-weight-unit]")?.value || "kg";
   const data = calculateRows(lang);
+  const noWeight = data.totalWeight === null;
+  const rowsHtml = data.rows.map((row) => `<tr><td>${escapeHtml(row.cargo)}</td><td>${cbmFormat(row.qty, row.qty % 1 ? 2 : 0)}</td><td>${cbmFormat(row.cbm, 3)}</td><td>${row.unitWeightKg === null ? "-" : cbmWeight(row.unitWeightKg, weightUnit)}</td><td>${row.rowWeightKg === null ? "-" : cbmWeight(row.rowWeightKg, weightUnit)}</td></tr>`).join("");
+  const totalRow = `<tr class="cbm-total-row"><td>${t.total}</td><td>${cbmFormat(data.totalQty, data.totalQty % 1 ? 2 : 0)}</td><td>${cbmFormat(data.totalCbm, 3)}</td><td>-</td><td>${noWeight ? "-" : cbmWeight(data.totalWeight, weightUnit)}</td></tr>`;
   output.innerHTML = `
-    <span class="summary-number">${data.totalCbm.toFixed(3)}</span>
-    <strong>CBM</strong>
-    <p class="muted">${lang === "ko" ? "총 수량" : "Total quantity"} ${data.totalQty} · ${lang === "ko" ? "총 중량" : "Total weight"} ${data.totalWeight.toFixed(1)} kg</p>
-    <p class="muted">20GP ${lang === "ko" ? "예상 부피 사용률" : "estimated volume use"} ${util(data.utilization20)}</p>
-    <table class="result-table">
-      <thead><tr><th>${lang === "ko" ? "화물" : "Cargo"}</th><th>Qty</th><th>CBM</th><th>kg</th></tr></thead>
-      <tbody>${data.rows.map((row) => `<tr><td>${row.cargo}</td><td>${row.qty}</td><td>${row.cbm.toFixed(3)}</td><td>${row.weight.toFixed(1)}</td></tr>`).join("")}</tbody>
-    </table>
-  `;
+    <div class="cbm-kpi-grid">${cbmKpi(t.totalCbm, `${cbmFormat(data.totalCbm, 3)} m³`, `${t.qtyTotal}: ${cbmFormat(data.totalQty, data.totalQty % 1 ? 2 : 0)}`)}${cbmKpi(t.totalWeight, noWeight ? "-" : cbmWeight(data.totalWeight, weightUnit), noWeight ? t.noWeight : "")}${cbmKpi(t.density, data.density === null ? "-" : `${cbmFormat(data.density, 1)} kg/m³`, data.density === null ? t.noWeight : "")}</div>
+    <section class="cbm-reference-section"><h2>${t.airTitle}</h2><div class="cbm-mini-grid">${cbmKpi(t.actualWeight, noWeight ? "-" : cbmWeight(data.totalWeight, weightUnit))}${cbmKpi(t.volumetricWeight, data.volumetricWeight === null ? "-" : `${cbmFormat(data.volumetricWeight, 1)} kg`)}${cbmKpi(t.chargeableWeight, data.chargeableWeight === null ? "-" : `${cbmFormat(data.chargeableWeight, 1)} kg`)}${cbmKpi(t.divisor, data.divisor === null ? "-" : String(data.divisor), data.divisor === null ? (lang === "ko" ? "1보다 큰 divisor를 입력하세요." : "Enter a divisor greater than 1.") : "")}</div><p class="muted">${t.airNote}</p></section>
+    <section class="cbm-reference-section"><h2>${t.lclTitle}</h2><div class="cbm-mini-grid">${cbmKpi(t.volumeRt, `${cbmFormat(data.volumeRt, 3)} RT`)}${cbmKpi(t.weightRt, data.weightRt === null ? "-" : `${cbmFormat(data.weightRt, 3)} RT`)}${cbmKpi(t.wmReference, data.wmReference === null ? "-" : `${cbmFormat(data.wmReference, 3)} RT`)}</div><p class="muted">${noWeight ? t.noWeight : t.lclNote}</p></section>
+    <section class="cbm-reference-section"><h2>${t.containerTitle}</h2><div class="cbm-container-grid">${CBM_CONTAINER_REFERENCES.map((item) => `<article><strong>${item.code}</strong><span>${t.nominalVolume}: ${cbmFormat(item.volume, 1)} m³</span><span>${t.referencePayload}: ${cbmFormat(item.payload, 0)} kg</span><span>${t.cbmVsNominal}: ${cbmPercent(data.totalCbm / item.volume * 100)}</span></article>`).join("")}</div><div class="notice cbm-compact-notice">${t.containerNote}</div></section>
+    <section class="cbm-reference-section cbm-breakdown-section"><h2>${t.breakdown}</h2><div class="cbm-table-wrap"><table class="result-table"><thead><tr><th>${t.cargo}</th><th>${t.qty}</th><th>CBM</th><th>${t.unitWeightShort}</th><th>${t.rowWeight}</th></tr></thead><tbody>${rowsHtml || `<tr><td colspan="5">-</td></tr>`}${totalRow}</tbody></table></div></section>`;
+  renderCbmNotes(lang);
 }
 
-function util(value) {
-  return `${Math.round(value)}%`;
+function renderCbmNotes(lang) {
+  const target = document.querySelector("[data-cbm-notes]");
+  if (!target) return;
+  const t = cbmText(lang);
+  target.innerHTML = `<h2>${t.notesTitle}</h2><div class="cbm-notes-grid"><div><ul>${t.notes.map((note) => `<li>${escapeHtml(note)}</li>`).join("")}</ul><p class="muted">${escapeHtml(t.sources)}</p></div><div class="cbm-related-tools"><h3>${t.relatedTitle}</h3>${t.related.map(([label, href, icon]) => `<a href="${escapeAttribute(href)}"><i data-lucide="${icon}"></i><span>${escapeHtml(label)}</span></a>`).join("")}</div></div>`;
+}
+
+function cbmConvertDimensions(fromUnit, toUnit) {
+  if (fromUnit === toUnit) return;
+  document.querySelectorAll(".cargo-row").forEach((row) => ["length", "width", "height"].forEach((name) => {
+    const input = row.querySelector(`[data-${name}]`);
+    const current = cbmNum(input?.value);
+    if (input && Number.isFinite(current)) input.value = cbmTrim(current * CBM_DIMENSION_UNITS[fromUnit].toM * CBM_DIMENSION_UNITS[toUnit].fromM, 4);
+  }));
+}
+function cbmConvertWeights(fromUnit, toUnit) {
+  if (fromUnit === toUnit) return;
+  document.querySelectorAll(".cargo-row").forEach((row) => {
+    const input = row.querySelector("[data-weight]");
+    const current = cbmNum(input?.value);
+    if (input && String(input.value).trim() !== "" && Number.isFinite(current)) input.value = cbmTrim(current * CBM_WEIGHT_UNITS[fromUnit].toKg * CBM_WEIGHT_UNITS[toUnit].fromKg, 3);
+  });
+}
+
+function cbmCopyText(lang, data) {
+  const t = cbmText(lang);
+  const weightUnit = document.querySelector("[data-weight-unit]")?.value || "kg";
+  const lines = lang === "ko" ? ["화물 요약"] : ["Cargo Summary"];
+  lines.push(`${t.qtyTotal}: ${cbmFormat(data.totalQty, data.totalQty % 1 ? 2 : 0)}`);
+  lines.push(`${t.totalCbm}: ${cbmFormat(data.totalCbm, 3)} m³`);
+  if (data.totalWeight !== null) lines.push(`${t.totalWeight}: ${cbmWeight(data.totalWeight, weightUnit)}`);
+  if (data.density !== null) lines.push(`${t.density}: ${cbmFormat(data.density, 1)} kg/m³`);
+  lines.push("", t.airTitle, `${t.volumetricWeight}: ${data.volumetricWeight === null ? "-" : `${cbmFormat(data.volumetricWeight, 1)} kg`}`);
+  if (data.chargeableWeight !== null) lines.push(`${t.chargeableWeight}: ${cbmFormat(data.chargeableWeight, 1)} kg`);
+  if (data.divisor) lines.push(`${t.divisor}: ${data.divisor}`);
+  if (data.wmReference !== null) lines.push("", t.lclTitle, `${t.volumeRt}: ${cbmFormat(data.volumeRt, 3)} RT`, `${t.weightRt}: ${cbmFormat(data.weightRt, 3)} RT`, `${t.wmReference}: ${cbmFormat(data.wmReference, 3)} RT`);
+  return lines.join("\n");
+}
+
+function cbmDownloadCsv(lang, data) {
+  const dimUnit = document.querySelector("[data-dim-unit]")?.value || "cm";
+  const weightUnit = document.querySelector("[data-weight-unit]")?.value || "kg";
+  const t = cbmText(lang);
+  const escapeCsv = (value) => `"${String(value ?? "").replace(/"/g, '""')}"`;
+  const lines = [["Cargo Name", "Quantity", "Length", "Width", "Height", "Dimension Unit", "Unit Weight", "Weight Unit", "Row Total Weight", "CBM"].map(escapeCsv).join(",")];
+  data.rows.forEach((row) => lines.push([row.cargo, row.qty, row.lengthInput, row.widthInput, row.heightInput, dimUnit, row.unitWeightKg === null ? "" : cbmTrim(row.unitWeightKg * CBM_WEIGHT_UNITS[weightUnit].fromKg, 3), weightUnit, row.rowWeightKg === null ? "" : cbmTrim(row.rowWeightKg * CBM_WEIGHT_UNITS[weightUnit].fromKg, 3), cbmTrim(row.cbm, 3)].map(escapeCsv).join(",")));
+  lines.push([t.total, data.totalQty, "", "", "", "", "", weightUnit, data.totalWeight === null ? "" : cbmTrim(data.totalWeight * CBM_WEIGHT_UNITS[weightUnit].fromKg, 3), cbmTrim(data.totalCbm, 3)].map(escapeCsv).join(","));
+  const blob = new Blob(["\ufeff" + lines.join("\n")], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url; link.download = t.csvName; document.body.appendChild(link); link.click(); link.remove(); URL.revokeObjectURL(url);
+}
+
+function cbmCurrentRowValues(row) {
+  return { cargo: row.querySelector("[data-cargo]")?.value || "", qty: row.querySelector("[data-qty]")?.value || "", length: row.querySelector("[data-length]")?.value || "", width: row.querySelector("[data-width]")?.value || "", height: row.querySelector("[data-height]")?.value || "", weight: row.querySelector("[data-weight]")?.value || "" };
 }
 
 function wireCbm() {
   const lang = currentLang();
   const rows = document.querySelector("[data-cargo-rows]");
   if (!rows) return;
-  rows.innerHTML = rowTemplate(lang);
+  const t = cbmText(lang);
+  const dimSelect = document.querySelector("[data-dim-unit]");
+  const weightSelect = document.querySelector("[data-weight-unit]");
+  const divisorSelect = document.querySelector("[data-air-divisor]");
+  const customDivisor = document.querySelector("[data-custom-air-divisor]");
+  let currentDimUnit = dimSelect?.value || "cm";
+  let currentWeightUnit = weightSelect?.value || "kg";
+  rows.innerHTML = cbmRowTemplate(lang);
   renderCbm(lang);
-  document.querySelector("[data-add-row]")?.addEventListener("click", () => {
-    rows.insertAdjacentHTML("beforeend", rowTemplate(lang));
-    renderCbm(lang);
-  });
+  document.querySelector("[data-add-row]")?.addEventListener("click", () => { rows.insertAdjacentHTML("beforeend", cbmRowTemplate(lang, { cargo: "", qty: "1", length: "", width: "", height: "", weight: "" })); rows.lastElementChild?.querySelector("[data-cargo]")?.focus(); renderCbm(lang); });
   document.querySelector("[data-sample]")?.addEventListener("click", () => {
-    rows.innerHTML = rowTemplate(lang) + rowTemplate(lang);
-    const second = rows.querySelectorAll(".cargo-row")[1];
-    second.querySelector("[data-cargo]").value = "Carton";
-    second.querySelector("[data-qty]").value = "24";
-    second.querySelector("[data-length]").value = "60";
-    second.querySelector("[data-width]").value = "45";
-    second.querySelector("[data-height]").value = "40";
-    second.querySelector("[data-weight]").value = "12";
+    if (dimSelect) { dimSelect.value = "cm"; currentDimUnit = "cm"; }
+    if (weightSelect) { weightSelect.value = "kg"; currentWeightUnit = "kg"; }
+    if (divisorSelect) divisorSelect.value = "6000";
+    if (customDivisor) customDivisor.closest(".field").hidden = true;
+    rows.innerHTML = cbmRowTemplate(lang, { cargo: lang === "ko" ? "카톤 A" : "Carton A", qty: "10", length: "50", width: "40", height: "30", weight: "35" }) + cbmRowTemplate(lang, { cargo: lang === "ko" ? "카톤 B" : "Carton B", qty: "20", length: "60", width: "45", height: "40", weight: "24" });
     renderCbm(lang);
   });
-  document.querySelector("[data-reset]")?.addEventListener("click", () => {
-    rows.innerHTML = rowTemplate(lang);
-    renderCbm(lang);
+  document.querySelector("[data-reset]")?.addEventListener("click", () => { rows.innerHTML = cbmRowTemplate(lang); renderCbm(lang); });
+  rows.addEventListener("click", (event) => {
+    const duplicate = event.target.closest("[data-duplicate-row]");
+    const del = event.target.closest("[data-delete-row]");
+    if (duplicate) { const row = duplicate.closest(".cargo-row"); row.insertAdjacentHTML("afterend", cbmRowTemplate(lang, cbmCurrentRowValues(row))); renderCbm(lang); }
+    if (del) { const row = del.closest(".cargo-row"); if (rows.querySelectorAll(".cargo-row").length > 1) row.remove(); else row.querySelectorAll("input").forEach((input) => { input.value = ""; }); renderCbm(lang); }
   });
+  dimSelect?.addEventListener("change", () => { cbmConvertDimensions(currentDimUnit, dimSelect.value); currentDimUnit = dimSelect.value; renderCbm(lang); });
+  weightSelect?.addEventListener("change", () => { cbmConvertWeights(currentWeightUnit, weightSelect.value); currentWeightUnit = weightSelect.value; renderCbm(lang); });
+  divisorSelect?.addEventListener("change", () => { if (customDivisor) customDivisor.closest(".field").hidden = divisorSelect.value !== "custom"; renderCbm(lang); });
+  customDivisor?.addEventListener("input", () => renderCbm(lang));
   document.querySelector("[data-copy]")?.addEventListener("click", async () => {
-    const data = calculateRows(lang);
-    await navigator.clipboard?.writeText(`LOGILEE CBM: ${data.totalCbm.toFixed(3)} CBM / ${data.totalQty} pcs / ${data.totalWeight.toFixed(1)} kg`);
-    alert(LOGILEE[lang].copied);
+    const text = cbmCopyText(lang, calculateRows(lang));
+    let copied = false;
+    try { if (navigator.clipboard?.writeText) { await navigator.clipboard.writeText(text); copied = true; } } catch (_) {}
+    if (!copied) {
+      const area = document.createElement("textarea");
+      area.value = text; area.setAttribute("readonly", ""); area.style.position = "fixed"; area.style.opacity = "0"; document.body.appendChild(area); area.focus(); area.select();
+      try { copied = document.execCommand("copy"); } catch (_) {}
+      area.remove();
+    }
+    alert(copied ? t.copyAlert : (lang === "ko" ? "복사 권한이 차단되었습니다." : "Copy permission was blocked."));
   });
-  document.addEventListener("input", (event) => {
-    if (event.target.closest(".cargo-row") || event.target.matches("[data-unit]")) renderCbm(lang);
-  });
+  document.querySelector("[data-csv]")?.addEventListener("click", () => cbmDownloadCsv(lang, calculateRows(lang)));
+  document.addEventListener("input", (event) => { if (event.target.closest(".cargo-row")) renderCbm(lang); });
 }
 
 const TRACKING_CARRIERS = [
