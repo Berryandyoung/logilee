@@ -1307,42 +1307,42 @@ const CBM_CONTAINER_REFERENCES = [
 
 function cbmText(lang) {
   return lang === "ko" ? {
-    cargo: "화물명", qty: "수량", length: "길이", width: "너비", height: "높이", unitWeight: "개당 중량",
+    cargo: "화물명", qty: "수량", length: "길이", width: "너비", height: "높이", unitWeight: "개당 중량 (선택)",
     duplicate: "복제", delete: "삭제", rowFallback: "Cargo",
     rowError: "치수와 수량은 0보다 커야 하며, 중량은 비워두거나 0 이상이어야 합니다.",
     tooLarge: "입력값이 너무 큽니다. 화물 치수, 수량, 중량을 다시 확인하세요.",
-    totalCbm: "TOTAL CBM", totalWeight: "TOTAL WEIGHT", density: "DENSITY", qtyTotal: "총 수량",
+    totalCbm: "총 CBM", totalWeight: "총 중량", density: "Density", qtyTotal: "총 수량",
     noWeight: "중량을 입력하면 Density와 중량 기준 참고값을 계산합니다.",
-    airTitle: "AIR FREIGHT REFERENCE", actualWeight: "Actual Weight", volumetricWeight: "Volumetric Weight",
-    chargeableWeight: "예상 과금 중량", divisor: "Divisor",
+    airTitle: "항공 화물 참고 계산", actualWeight: "실제 중량", volumetricWeight: "부피중량",
+    chargeableWeight: "예상 과금중량", divisor: "Divisor",
     airNote: "실제 적용 기준은 항공사, 특송사, 포워더 및 서비스 조건에 따라 달라질 수 있으므로 최종 운임 기준을 확인하세요.",
-    lclTitle: "LCL W/M REFERENCE", volumeRt: "Volume", weightRt: "Weight", wmReference: "Reference W/M",
+    lclTitle: "LCL W/M 참고 계산", volumeRt: "부피 기준", weightRt: "중량 기준", wmReference: "W/M 참고값",
     lclNote: "실제 LCL 운임의 W/M 기준, 최소 과금 단위 및 반올림 방식은 포워더·운송사·항로별 tariff를 확인하세요.",
-    containerTitle: "CONTAINER NOMINAL VOLUME REFERENCE", nominalVolume: "Nominal volume", referencePayload: "Reference payload",
-    cbmVsNominal: "Cargo CBM / nominal volume",
+    containerTitle: "컨테이너 용적 비교", nominalVolume: "명목 내부 용적", referencePayload: "참고 payload",
+    cbmVsNominal: "명목 용적 대비",
     containerNote: "컨테이너 비교값은 명목 내부 용적 기준의 참고값입니다. 실제 적재 가능 여부는 화물 형상, 포장, 팔레트, 중량 배분 및 장비 사양에 따라 달라집니다.",
-    breakdown: "Cargo Breakdown", unitWeightShort: "Unit weight", rowWeight: "Row total weight", total: "TOTAL",
+    breakdown: "화물별 계산 내역", unitWeightShort: "개당 중량", rowWeight: "행 총중량", total: "합계",
     copyAlert: "결과가 복사되었습니다.", csvName: "logilee-cbm-summary.csv",
-    notesTitle: "Calculation Notes / Sources", relatedTitle: "관련 LOGILEE 도구",
+    notesTitle: "계산 기준 및 출처", relatedTitle: "관련 LOGILEE 도구",
     sources: "20GP, 40GP, 40HC 기준값은 Hapag-Lloyd Container Specification의 dry container fleet 예시를 대표 nominal reference로 사용했습니다. 컨테이너 사양은 제조사, 선사, 장비 시리즈별로 달라질 수 있습니다.",
     notes: ["CBM = 길이 x 너비 x 높이 x 수량, 치수는 내부적으로 meters로 변환합니다.", "Density = 총중량 / 총 CBM이며 중량이 입력된 경우에만 계산합니다.", "Air volumetric weight는 cm 기준 L x W x H x 수량 / divisor로 계산합니다.", "Estimated chargeable weight는 총중량과 부피중량 중 큰 값을 참고값으로 표시합니다.", "LCL W/M reference는 CBM과 총중량/1,000 중 큰 RT 값을 보여주며 실제 운임은 계산하지 않습니다."],
     related: [["항만 검색", "ports.html", "anchor"], ["공항 검색", "airports.html", "plane"], ["화물 추적", "track.html", "radar"]]
   } : {
-    cargo: "Cargo name", qty: "Qty", length: "Length", width: "Width", height: "Height", unitWeight: "Unit Weight",
+    cargo: "Cargo", qty: "Quantity", length: "Length", width: "Width", height: "Height", unitWeight: "Unit Weight (optional)",
     duplicate: "Duplicate", delete: "Delete", rowFallback: "Cargo",
     rowError: "Dimensions and quantity must be greater than 0. Weight may be blank or 0 and above.",
     tooLarge: "The input value is too large. Check cargo dimensions, quantity, and weight.",
-    totalCbm: "TOTAL CBM", totalWeight: "TOTAL WEIGHT", density: "DENSITY", qtyTotal: "Total quantity",
+    totalCbm: "Total CBM", totalWeight: "Total Weight", density: "Density", qtyTotal: "Total Quantity",
     noWeight: "Enter cargo weight to calculate density and weight-based reference values.",
-    airTitle: "AIR FREIGHT REFERENCE", actualWeight: "Actual Weight", volumetricWeight: "Volumetric Weight",
+    airTitle: "Air Freight Reference", actualWeight: "Actual Weight", volumetricWeight: "Volumetric Weight",
     chargeableWeight: "Estimated Chargeable Weight", divisor: "Divisor",
     airNote: "Actual rules may vary by airline, courier, forwarder, service level, and trade lane. Confirm the final rating basis before using it for freight cost.",
-    lclTitle: "LCL W/M REFERENCE", volumeRt: "Volume", weightRt: "Weight", wmReference: "Reference W/M",
+    lclTitle: "LCL W/M Reference", volumeRt: "Volume basis", weightRt: "Weight basis", wmReference: "W/M Reference",
     lclNote: "Actual LCL W/M rules, minimum charges, and rounding may vary by forwarder, carrier, and trade lane.",
-    containerTitle: "CONTAINER NOMINAL VOLUME REFERENCE", nominalVolume: "Nominal volume", referencePayload: "Reference payload",
-    cbmVsNominal: "Cargo CBM / nominal volume",
+    containerTitle: "Container Volume Comparison", nominalVolume: "Nominal internal volume", referencePayload: "Reference payload",
+    cbmVsNominal: "Against nominal volume",
     containerNote: "Container comparison values are nominal internal-volume references. Actual loading feasibility depends on cargo shape, packing, pallets, weight distribution, and equipment specification.",
-    breakdown: "Cargo Breakdown", unitWeightShort: "Unit weight", rowWeight: "Row total weight", total: "TOTAL",
+    breakdown: "Cargo Breakdown", unitWeightShort: "Unit Weight", rowWeight: "Row Total Weight", total: "TOTAL",
     copyAlert: "Result copied.", csvName: "logilee-cbm-summary.csv",
     notesTitle: "Calculation Notes / Sources", relatedTitle: "Related LOGILEE Tools",
     sources: "20GP, 40GP, and 40HC values use Hapag-Lloyd Container Specification dry-container fleet examples as representative nominal references. Container specifications can vary by manufacturer, carrier, and equipment series.",
@@ -1437,24 +1437,125 @@ function cbmKpi(label, value, note = "") {
   return `<article><span>${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong>${note ? `<small>${escapeHtml(note)}</small>` : ""}</article>`;
 }
 
+function cbmOpenStates() {
+  return {
+    air: document.querySelector('[data-cbm-ref="air"]')?.open || false,
+    lcl: document.querySelector('[data-cbm-ref="lcl"]')?.open || false,
+    container: document.querySelector('[data-cbm-ref="container"]')?.open || false
+  };
+}
+
+function cbmBasicLabels(lang) {
+  return lang === "ko" ? {
+    basicNote: "CBM은 화물이 차지하는 부피를 세제곱미터(m³)로 나타낸 값입니다.",
+    weightHint: "중량을 입력하면 추가 계산을 확인할 수 있습니다.",
+    breakdownStep: "화물별 계산 내역",
+    breakdownHelp: "각 행이 총 CBM과 총중량에 어떻게 반영되었는지 확인하세요.",
+    referencesStep: "③ 어떤 운송을 준비하고 있나요?",
+    referencesHelp: "운송 방식에 따라 필요한 참고 계산을 선택해서 확인하세요.",
+    airOption: "항공 운송",
+    airOptionHelp: "화물의 부피중량과 예상 과금중량을 확인합니다.",
+    airHeading: "항공 화물 참고 계산",
+    airIntro: "항공 화물은 실제 중량과 화물이 차지하는 부피를 중량으로 환산한 값을 비교해 운임 기준을 정하는 경우가 있습니다.",
+    divisorLabel: "부피중량 계산 기준",
+    divisorHelp: "항공사·특송사·포워더 및 서비스 조건에 따라 기준이 달라질 수 있습니다.",
+    customDivisor: "직접 입력",
+    volumetricTitle: "부피중량이란?",
+    volumetricHelp: "화물이 차지하는 공간을 중량으로 환산한 참고값입니다.",
+    chargeableHelp: "실제 중량과 부피중량 중 큰 값을 기준으로 표시한 참고값입니다. 실제 운임 적용 기준은 운송사 또는 포워더에 확인하세요.",
+    lclOption: "LCL 해상운송",
+    lclOptionHelp: "소량 해상화물의 부피와 중량 기준 참고값을 확인합니다.",
+    lclHeading: "LCL W/M 참고 계산",
+    lclIntro: "LCL 운임은 화물의 부피와 중량을 비교해 과금 기준을 정하는 경우가 있습니다.",
+    wmTitle: "W/M이란?",
+    wmHelp: "LCL 운임에서 화물의 부피(Measurement)와 중량(Weight)을 비교하는 방식입니다.",
+    rtTitle: "RT는?",
+    rtHelp: "이 계산기에서는 참고용으로 1 CBM = 1 RT, 1,000 kg = 1 RT 기준을 사용합니다.",
+    lclMissing: "중량을 입력하면 부피와 중량을 비교한 W/M 참고값을 계산합니다.",
+    containerOption: "컨테이너 운송",
+    containerOptionHelp: "화물 CBM을 20GP, 40GP, 40HC 명목 용적과 비교합니다.",
+    containerHeading: "컨테이너 용적 비교",
+    cargoCbm: "내 화물",
+    nominalRatio: "명목 용적 대비",
+    payloadDetail: "참고 payload",
+    containerSafety: "이 값은 화물 CBM과 컨테이너 명목 내부 용적을 단순 비교한 참고값이며 실제 적재 가능률을 의미하지 않습니다. 실제 적재 가능 여부는 화물 형상, 포장, 팔레트, 중량 배분 및 장비 사양에 따라 달라집니다."
+  } : {
+    basicNote: "CBM is cargo volume measured in cubic meters (m³).",
+    weightHint: "Add weight to unlock additional reference calculations.",
+    breakdownStep: "Cargo Breakdown",
+    breakdownHelp: "Check how each cargo row contributes to total CBM and total weight.",
+    referencesStep: "3. Choose Your Shipping Method",
+    referencesHelp: "Select a shipping method to see relevant freight reference calculations.",
+    airOption: "Air Freight",
+    airOptionHelp: "Check volumetric weight and estimated chargeable weight.",
+    airHeading: "Air Freight Reference",
+    airIntro: "Air cargo rating often compares actual weight with a weight converted from the space occupied by the cargo.",
+    divisorLabel: "Volumetric weight basis",
+    divisorHelp: "The basis can vary by airline, courier, forwarder, service level, and trade lane.",
+    customDivisor: "Custom",
+    volumetricTitle: "What is volumetric weight?",
+    volumetricHelp: "A reference weight calculated from the space occupied by the cargo.",
+    chargeableHelp: "This reference uses the greater of actual weight and volumetric weight. Confirm the final rating basis with the carrier or forwarder.",
+    lclOption: "LCL Ocean Freight",
+    lclOptionHelp: "Compare volume and weight reference values for LCL cargo.",
+    lclHeading: "LCL W/M Reference",
+    lclIntro: "LCL freight may compare cargo volume and cargo weight to decide the charging basis.",
+    wmTitle: "What is W/M?",
+    wmHelp: "A method that compares Measurement volume and Weight for LCL freight.",
+    rtTitle: "What is RT?",
+    rtHelp: "This calculator uses 1 CBM = 1 RT and 1,000 kg = 1 RT as reference values.",
+    lclMissing: "Enter weight to calculate the W/M reference by comparing volume and weight.",
+    containerOption: "Container Shipping",
+    containerOptionHelp: "Compare cargo CBM with nominal 20GP, 40GP, and 40HC volume.",
+    containerHeading: "Container Volume Comparison",
+    cargoCbm: "My cargo",
+    nominalRatio: "Against nominal volume",
+    payloadDetail: "Reference payload",
+    containerSafety: "This is a simple comparison between cargo CBM and nominal internal container volume. It does not mean actual loading utilization. Actual feasibility depends on cargo shape, packing, pallets, weight distribution, and equipment specification."
+  };
+}
+
+function cbmBreakdownMarkup(lang, data, weightUnit) {
+  const t = cbmText(lang);
+  const b = cbmBasicLabels(lang);
+  const noWeight = data.totalWeight === null;
+  const rowsHtml = data.rows.map((row) => `<tr><td>${escapeHtml(row.cargo)}</td><td>${cbmFormat(row.qty, row.qty % 1 ? 2 : 0)}</td><td>${cbmFormat(row.cbm, 3)}</td><td>${row.unitWeightKg === null ? "-" : cbmWeight(row.unitWeightKg, weightUnit)}</td><td>${row.rowWeightKg === null ? "-" : cbmWeight(row.rowWeightKg, weightUnit)}</td></tr>`).join("");
+  const totalRow = `<tr class="cbm-total-row"><td>${t.total}</td><td>${cbmFormat(data.totalQty, data.totalQty % 1 ? 2 : 0)}</td><td>${cbmFormat(data.totalCbm, 3)}</td><td>-</td><td>${noWeight ? "-" : cbmWeight(data.totalWeight, weightUnit)}</td></tr>`;
+  return `<div class="cbm-section-heading"><h2>${b.breakdownStep}</h2><p>${b.breakdownHelp}</p></div><div class="cbm-table-wrap"><table class="result-table"><thead><tr><th>${t.cargo}</th><th>${t.qty}</th><th>CBM</th><th>${t.unitWeightShort}</th><th>${t.rowWeight}</th></tr></thead><tbody>${rowsHtml || `<tr><td colspan="5">-</td></tr>`}${totalRow}</tbody></table></div>`;
+}
+
+function cbmReferencesMarkup(lang, data, weightUnit, open = cbmOpenStates()) {
+  const t = cbmText(lang);
+  const b = cbmBasicLabels(lang);
+  const noWeight = data.totalWeight === null;
+  const divisorValue = data.divisor || 6000;
+  const selectedDivisor = document.querySelector("[data-air-divisor]")?.value || "6000";
+  const customDivisor = document.querySelector("[data-custom-air-divisor]")?.value || String(divisorValue);
+  const divisorControls = `<div class="cbm-air-settings"><div class="field"><label for="air-divisor">${b.divisorLabel}</label><select id="air-divisor" data-air-divisor><option value="6000" ${selectedDivisor === "6000" ? "selected" : ""}>6000</option><option value="5000" ${selectedDivisor === "5000" ? "selected" : ""}>5000</option><option value="custom" ${selectedDivisor === "custom" ? "selected" : ""}>${b.customDivisor}</option></select><small>${b.divisorHelp}</small></div><div class="field cbm-custom-divisor" ${selectedDivisor === "custom" ? "" : "hidden"}><label for="custom-air-divisor">Divisor</label><input id="custom-air-divisor" type="number" inputmode="decimal" min="1" value="${escapeAttribute(customDivisor)}" data-custom-air-divisor></div></div>`;
+  const containerRows = CBM_CONTAINER_REFERENCES.map((item) => `<article><strong>${item.code}</strong><span>${t.nominalVolume}</span><b>${cbmFormat(item.volume, 1)} m³</b><span>${b.cargoCbm}: ${cbmFormat(data.totalCbm, 3)} m³</span><span>${b.nominalRatio}: ${cbmPercent(data.totalCbm / item.volume * 100)}</span><small>${b.payloadDetail}: ${cbmFormat(item.payload, 0)} kg</small></article>`).join("");
+  return `<div class="cbm-section-heading"><h2>${b.referencesStep}</h2><p>${b.referencesHelp}</p></div><div class="cbm-reference-accordions">
+    <details class="cbm-method" data-cbm-ref="air" ${open.air ? "open" : ""}><summary><span><strong>${b.airOption}</strong><small>${b.airOptionHelp}</small></span></summary><div class="cbm-method-body"><h3>${b.airHeading}</h3><p>${b.airIntro}</p>${divisorControls}<div class="cbm-mini-grid">${cbmKpi(t.actualWeight, noWeight ? "-" : cbmWeight(data.totalWeight, weightUnit))}${cbmKpi(t.volumetricWeight, data.volumetricWeight === null ? "-" : `${cbmFormat(data.volumetricWeight, 1)} kg`)}${cbmKpi(t.chargeableWeight, data.chargeableWeight === null ? "-" : `${cbmFormat(data.chargeableWeight, 1)} kg`)}</div><div class="cbm-help-grid"><p><strong>${b.volumetricTitle}</strong><br>${b.volumetricHelp}</p><p><strong>${t.chargeableWeight}</strong><br>${b.chargeableHelp}</p></div></div></details>
+    <details class="cbm-method" data-cbm-ref="lcl" ${open.lcl ? "open" : ""}><summary><span><strong>${b.lclOption}</strong><small>${b.lclOptionHelp}</small></span></summary><div class="cbm-method-body"><h3>${b.lclHeading}</h3><p>${b.lclIntro}</p><div class="cbm-mini-grid">${cbmKpi(t.volumeRt, `${cbmFormat(data.volumeRt, 3)} RT`)}${cbmKpi(t.weightRt, data.weightRt === null ? "-" : `${cbmFormat(data.weightRt, 3)} RT`)}${cbmKpi(t.wmReference, data.wmReference === null ? "-" : `${cbmFormat(data.wmReference, 3)} RT`)}</div><div class="cbm-help-grid"><p><strong>${b.wmTitle}</strong><br>${b.wmHelp}</p><p><strong>${b.rtTitle}</strong><br>${b.rtHelp}</p></div><p class="muted">${noWeight ? b.lclMissing : t.lclNote}</p></div></details>
+    <details class="cbm-method" data-cbm-ref="container" ${open.container ? "open" : ""}><summary><span><strong>${b.containerOption}</strong><small>${b.containerOptionHelp}</small></span></summary><div class="cbm-method-body"><h3>${b.containerHeading}</h3><div class="cbm-container-grid">${containerRows}</div><div class="notice cbm-compact-notice">${b.containerSafety}</div></div></details>
+  </div>`;
+}
+
 function renderCbm(lang) {
   const output = document.querySelector("[data-cbm-output]");
   if (!output) return;
   const t = cbmText(lang);
+  const b = cbmBasicLabels(lang);
   const weightUnit = document.querySelector("[data-weight-unit]")?.value || "kg";
+  const open = cbmOpenStates();
   const data = calculateRows(lang);
   const noWeight = data.totalWeight === null;
-  const rowsHtml = data.rows.map((row) => `<tr><td>${escapeHtml(row.cargo)}</td><td>${cbmFormat(row.qty, row.qty % 1 ? 2 : 0)}</td><td>${cbmFormat(row.cbm, 3)}</td><td>${row.unitWeightKg === null ? "-" : cbmWeight(row.unitWeightKg, weightUnit)}</td><td>${row.rowWeightKg === null ? "-" : cbmWeight(row.rowWeightKg, weightUnit)}</td></tr>`).join("");
-  const totalRow = `<tr class="cbm-total-row"><td>${t.total}</td><td>${cbmFormat(data.totalQty, data.totalQty % 1 ? 2 : 0)}</td><td>${cbmFormat(data.totalCbm, 3)}</td><td>-</td><td>${noWeight ? "-" : cbmWeight(data.totalWeight, weightUnit)}</td></tr>`;
-  output.innerHTML = `
-    <div class="cbm-kpi-grid">${cbmKpi(t.totalCbm, `${cbmFormat(data.totalCbm, 3)} m³`, `${t.qtyTotal}: ${cbmFormat(data.totalQty, data.totalQty % 1 ? 2 : 0)}`)}${cbmKpi(t.totalWeight, noWeight ? "-" : cbmWeight(data.totalWeight, weightUnit), noWeight ? t.noWeight : "")}${cbmKpi(t.density, data.density === null ? "-" : `${cbmFormat(data.density, 1)} kg/m³`, data.density === null ? t.noWeight : "")}</div>
-    <section class="cbm-reference-section"><h2>${t.airTitle}</h2><div class="cbm-mini-grid">${cbmKpi(t.actualWeight, noWeight ? "-" : cbmWeight(data.totalWeight, weightUnit))}${cbmKpi(t.volumetricWeight, data.volumetricWeight === null ? "-" : `${cbmFormat(data.volumetricWeight, 1)} kg`)}${cbmKpi(t.chargeableWeight, data.chargeableWeight === null ? "-" : `${cbmFormat(data.chargeableWeight, 1)} kg`)}${cbmKpi(t.divisor, data.divisor === null ? "-" : String(data.divisor), data.divisor === null ? (lang === "ko" ? "1보다 큰 divisor를 입력하세요." : "Enter a divisor greater than 1.") : "")}</div><p class="muted">${t.airNote}</p></section>
-    <section class="cbm-reference-section"><h2>${t.lclTitle}</h2><div class="cbm-mini-grid">${cbmKpi(t.volumeRt, `${cbmFormat(data.volumeRt, 3)} RT`)}${cbmKpi(t.weightRt, data.weightRt === null ? "-" : `${cbmFormat(data.weightRt, 3)} RT`)}${cbmKpi(t.wmReference, data.wmReference === null ? "-" : `${cbmFormat(data.wmReference, 3)} RT`)}</div><p class="muted">${noWeight ? t.noWeight : t.lclNote}</p></section>
-    <section class="cbm-reference-section"><h2>${t.containerTitle}</h2><div class="cbm-container-grid">${CBM_CONTAINER_REFERENCES.map((item) => `<article><strong>${item.code}</strong><span>${t.nominalVolume}: ${cbmFormat(item.volume, 1)} m³</span><span>${t.referencePayload}: ${cbmFormat(item.payload, 0)} kg</span><span>${t.cbmVsNominal}: ${cbmPercent(data.totalCbm / item.volume * 100)}</span></article>`).join("")}</div><div class="notice cbm-compact-notice">${t.containerNote}</div></section>
-    <section class="cbm-reference-section cbm-breakdown-section"><h2>${t.breakdown}</h2><div class="cbm-table-wrap"><table class="result-table"><thead><tr><th>${t.cargo}</th><th>${t.qty}</th><th>CBM</th><th>${t.unitWeightShort}</th><th>${t.rowWeight}</th></tr></thead><tbody>${rowsHtml || `<tr><td colspan="5">-</td></tr>`}${totalRow}</tbody></table></div></section>`;
+  output.innerHTML = `<div class="cbm-kpi-grid cbm-basic-kpis">${cbmKpi(t.totalCbm, `${cbmFormat(data.totalCbm, 3)} m³`)}${cbmKpi(t.qtyTotal, cbmFormat(data.totalQty, data.totalQty % 1 ? 2 : 0))}${cbmKpi(t.totalWeight, noWeight ? "-" : cbmWeight(data.totalWeight, weightUnit))}${data.density === null ? "" : cbmKpi(t.density, `${cbmFormat(data.density, 1)} kg/m³`)}</div><p class="cbm-microcopy">${b.basicNote}</p>${noWeight ? `<p class="cbm-microcopy">${b.weightHint}</p>` : ""}`;
+  const breakdown = document.querySelector("[data-cbm-breakdown]");
+  if (breakdown) breakdown.innerHTML = cbmBreakdownMarkup(lang, data, weightUnit);
+  const references = document.querySelector("[data-cbm-references]");
+  if (references) references.innerHTML = cbmReferencesMarkup(lang, data, weightUnit, open);
   renderCbmNotes(lang);
 }
-
 function renderCbmNotes(lang) {
   const target = document.querySelector("[data-cbm-notes]");
   if (!target) return;
@@ -1519,8 +1620,7 @@ function wireCbm() {
   const t = cbmText(lang);
   const dimSelect = document.querySelector("[data-dim-unit]");
   const weightSelect = document.querySelector("[data-weight-unit]");
-  const divisorSelect = document.querySelector("[data-air-divisor]");
-  const customDivisor = document.querySelector("[data-custom-air-divisor]");
+  const referencesPanel = document.querySelector("[data-cbm-references]");
   let currentDimUnit = dimSelect?.value || "cm";
   let currentWeightUnit = weightSelect?.value || "kg";
   rows.innerHTML = cbmRowTemplate(lang);
@@ -1529,8 +1629,10 @@ function wireCbm() {
   document.querySelector("[data-sample]")?.addEventListener("click", () => {
     if (dimSelect) { dimSelect.value = "cm"; currentDimUnit = "cm"; }
     if (weightSelect) { weightSelect.value = "kg"; currentWeightUnit = "kg"; }
-    if (divisorSelect) divisorSelect.value = "6000";
-    if (customDivisor) customDivisor.closest(".field").hidden = true;
+    const activeDivisor = document.querySelector("[data-air-divisor]");
+    const activeCustomDivisor = document.querySelector("[data-custom-air-divisor]");
+    if (activeDivisor) activeDivisor.value = "6000";
+    if (activeCustomDivisor) activeCustomDivisor.closest(".field").hidden = true;
     rows.innerHTML = cbmRowTemplate(lang, { cargo: lang === "ko" ? "카톤 A" : "Carton A", qty: "10", length: "50", width: "40", height: "30", weight: "35" }) + cbmRowTemplate(lang, { cargo: lang === "ko" ? "카톤 B" : "Carton B", qty: "20", length: "60", width: "45", height: "40", weight: "24" });
     renderCbm(lang);
   });
@@ -1543,8 +1645,9 @@ function wireCbm() {
   });
   dimSelect?.addEventListener("change", () => { cbmConvertDimensions(currentDimUnit, dimSelect.value); currentDimUnit = dimSelect.value; renderCbm(lang); });
   weightSelect?.addEventListener("change", () => { cbmConvertWeights(currentWeightUnit, weightSelect.value); currentWeightUnit = weightSelect.value; renderCbm(lang); });
-  divisorSelect?.addEventListener("change", () => { if (customDivisor) customDivisor.closest(".field").hidden = divisorSelect.value !== "custom"; renderCbm(lang); });
-  customDivisor?.addEventListener("input", () => renderCbm(lang));
+  referencesPanel?.addEventListener("change", (event) => {
+    if (event.target.matches("[data-air-divisor], [data-custom-air-divisor]")) renderCbm(lang);
+  });
   document.querySelector("[data-copy]")?.addEventListener("click", async () => {
     const text = cbmCopyText(lang, calculateRows(lang));
     let copied = false;
