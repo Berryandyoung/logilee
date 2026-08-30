@@ -226,7 +226,7 @@ function workspaceNavMarkup(lang) {
         cbm: "CBM 계산기",
 
         compliance: "Compliance",
-        hub: "Compliance Hub",
+        hub: "무역 규제 허브",
         rules: "수출입 규제",
         market: "Market",
         freight: "Freight Market",
@@ -256,7 +256,7 @@ function workspaceNavMarkup(lang) {
 
         compliance: "Compliance",
         hub: "Compliance Hub",
-        rules: "Import / Export Rules",
+        rules: "Import & Export Regulations",
         market: "Market",
         freight: "Freight Market",
         fx: "Currency Converter",
@@ -275,7 +275,7 @@ function workspaceNavMarkup(lang) {
       <a class="nav-home" href="./"><i data-lucide="home"></i> ${nav.home}</a>
       <section><h2>${nav.trade}</h2><a href="country-trade-profile.html"><i data-lucide="globe"></i>${nav.country}</a><a href="holidays.html"><i data-lucide="calendar-check"></i>${nav.holidays}</a><a href="eu-trade-explorer.html"><i data-lucide="chart-column"></i>${nav.eu}</a><a href="global-trade-explorer.html"><i data-lucide="chart-column"></i>${nav.global}</a><a href="${hsHref}"><i data-lucide="barcode"></i>${nav.hs}</a></section>
       <section><h2>${nav.logistics}</h2><a href="ports.html"><i data-lucide="anchor"></i>${nav.ports}</a><a href="airports.html"><i data-lucide="plane"></i>${nav.airports}</a><a href="track.html"><i data-lucide="radar"></i>${nav.tracking}</a><a href="cbm.html"><i data-lucide="calculator"></i>${nav.cbm}</a></section>
-      <section><h2>${nav.compliance}</h2><a href="dashboard.html"><i data-lucide="shield-check"></i>${nav.hub}</a><a href="dashboard.html"><i data-lucide="shield-alert"></i>${nav.rules}</a></section>
+      <section><h2>${nav.compliance}</h2><a href="compliance.html" data-nav-key="compliance-hub"><i data-lucide="shield-check"></i>${nav.hub}</a><a href="compliance.html#reference-areas" data-nav-key="compliance-rules"><i data-lucide="shield-alert"></i>${nav.rules}</a></section>
       <section><h2>${nav.market}</h2><a href="freight-market.html"><i data-lucide="chart-no-axes-combined"></i>${nav.freight}</a><a href="currency-converter.html"><i data-lucide="badge-dollar-sign"></i>${nav.fx}</a><a href="business-day.html"><i data-lucide="calendar-clock"></i>${nav.business}</a></section>
       <section><h2>${nav.resources}</h2><a href="templates.html"><i data-lucide="copy"></i>${nav.templates}</a><a href="documents.html"><i data-lucide="file-text"></i>${nav.documents}</a><a href="dictionary.html"><i data-lucide="languages"></i>${nav.dictionary}</a><a href="learn.html"><i data-lucide="graduation-cap"></i>${nav.learn}</a><a href="contact.html"><i data-lucide="building-2"></i>${nav.contact}</a></section>
     </nav>
@@ -355,10 +355,20 @@ function enhanceSidebar() {
   });
 
   const currentFile = location.pathname.split("/").pop() || "index.html";
+  const currentHash = location.hash || "";
+  const currentNavKey = (() => {
+    if (["compliance.html", "dashboard.html"].includes(currentFile)) {
+      return currentHash === "#reference-areas" ? "compliance-rules" : "compliance-hub";
+    }
+    return "";
+  })();
   let activeGroupId = "";
   nav.querySelectorAll("a").forEach((link) => {
+    const navKey = link.dataset.navKey || "";
     const hrefFile = (link.getAttribute("href") || "").split("#")[0].split("?")[0].split("/").pop() || "index.html";
-    const isActive = currentFile === hrefFile || (currentFile === "index.html" && link.classList.contains("nav-home"));
+    const isActive = currentNavKey
+      ? navKey === currentNavKey
+      : currentFile === hrefFile || (currentFile === "index.html" && link.classList.contains("nav-home"));
     link.classList.toggle("is-active", isActive);
   });
 
