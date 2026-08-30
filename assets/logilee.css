@@ -9819,6 +9819,12 @@ body.sidebar-drawer-active {
   grid-template-columns: minmax(0, 1.25fr) minmax(320px, .75fr);
 }
 
+.cbm-left-stack {
+  display: grid;
+  gap: 18px;
+  min-width: 0;
+}
+
 .cbm-step-heading {
   display: flex;
   gap: 12px;
@@ -9888,6 +9894,10 @@ body.sidebar-drawer-active {
 .cbm-notes {
   margin-top: 18px;
   overflow: visible;
+}
+
+.cbm-left-stack .cbm-breakdown-panel {
+  margin-top: 0;
 }
 
 .cbm-section-heading {
@@ -10021,9 +10031,18 @@ body.sidebar-drawer-active {
   font-size: 12px;
 }
 
-@media (max-width: 1100px) {
+@media (max-width: 900px) {
   .cbm-workflow-top {
     grid-template-columns: 1fr;
+  }
+  .cbm-left-stack {
+    display: contents;
+  }
+  .cbm-workflow-top .cbm-result-panel {
+    order: 2;
+  }
+  .cbm-workflow-top .cbm-breakdown-panel {
+    order: 3;
   }
 }
 
