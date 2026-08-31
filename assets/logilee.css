@@ -10801,3 +10801,128 @@ body.sidebar-drawer-active {
     max-height: 270px;
   }
 }
+
+/* Compliance Hub V1.1 final polish */
+.compliance-source-group {
+  display: grid;
+  gap: 10px;
+}
+
+.compliance-source-group h4,
+.compliance-source-tier h5 {
+  margin: 0;
+  color: var(--ink-navy);
+}
+
+.compliance-source-group h4 {
+  font-size: 16px;
+}
+
+.compliance-source-tier {
+  display: grid;
+  gap: 8px;
+}
+
+.compliance-source-tier h5 {
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.compliance-source-tier p {
+  margin: 0;
+  color: var(--secondary-text);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.compliance-check-item label {
+  min-width: 0;
+}
+
+.compliance-check-item button {
+  border: 0;
+  background: transparent;
+  color: var(--signal-blue);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.compliance-check-item button:hover,
+.compliance-check-item button:focus-visible {
+  text-decoration: underline;
+}
+
+.compliance-selected-source-card {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.compliance-all-sources {
+  border: 1px solid #dbe8f5;
+  border-radius: 8px;
+  background: #f8fbff;
+}
+
+.compliance-source-accordion summary,
+.compliance-all-sources > summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  min-height: 58px;
+  padding: 12px 14px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.compliance-source-accordion summary::-webkit-details-marker,
+.compliance-all-sources > summary::-webkit-details-marker {
+  display: none;
+}
+
+.compliance-source-accordion summary span,
+.compliance-all-sources > summary span {
+  display: grid;
+  gap: 3px;
+}
+
+.compliance-source-accordion summary strong,
+.compliance-all-sources > summary strong {
+  color: var(--ink-navy);
+  font-size: 15px;
+}
+
+.compliance-source-accordion summary small,
+.compliance-all-sources > summary small {
+  color: var(--secondary-text);
+  font-size: 12px;
+}
+
+.compliance-source-accordion summary b,
+.compliance-all-sources > summary b {
+  width: 9px;
+  height: 9px;
+  border-right: 2px solid var(--signal-blue);
+  border-bottom: 2px solid var(--signal-blue);
+  transform: rotate(45deg);
+  transition: transform .18s ease;
+}
+
+.compliance-source-accordion[open] summary b,
+.compliance-all-sources[open] > summary b {
+  transform: rotate(225deg);
+}
+
+.compliance-all-sources .compliance-source-accordions {
+  padding: 0 12px 12px;
+}
+
+@media (max-width: 520px) {
+  .compliance-check-item button {
+    grid-column: 2;
+    justify-self: start;
+  }
+}

@@ -17,27 +17,31 @@
       marketNeeded: "목적지 시장을 선택하세요.",
       bothNeeded: "1. 확인할 업무를 선택하고 2. 목적지 시장을 선택하세요.",
       selected: "선택됨",
-      destination: "Destination",
-      framework: "Regulatory framework",
-      coverage: "Coverage",
-      area: "Selected compliance area",
+      destination: "목적지",
+      framework: "적용 규제 체계",
+      coverage: "자료 범위",
+      area: "확인 분야",
       euWide: "EU 공통 자료",
       national: "국가별 자료",
       gateway: "공식 확인처",
+      coreSources: "기본 확인처",
+      conditionalSources: "제품·거래에 따라 추가 확인",
+      conditionalHint: "아래 자료는 품목 유형, 재질, 용도, 최종사용자 또는 거래 조건에 따라 관련성이 달라질 수 있습니다.",
+      noNationalSources: "확인된 국가별 자료는 아직 연결되어 있지 않습니다. EU 공통 자료와 해당 국가 공식기관 확인을 병행하세요.",
       official: "공식 자료 제공",
       partial: "일부 자료 제공",
       regionOnly: "권역 공통 자료 제공",
       gatewayOnly: "공식 확인처 중심",
       noDetermination: "자동 판정하지 않음",
       additional: "추가 확인 필요",
-      sourceLanguage: "Source language",
+      sourceLanguage: "자료 언어",
       what: "확인할 내용",
       when: "언제 유용한가",
       timing: "확인 시점",
       parties: "일반적으로 확인에 참여하는 담당",
       cta: "공식 자료 확인 ->",
       ctaHs: "HS Code ->",
-      ctaSource: "공식 확인처 ->",
+      ctaSource: "규제 탐색 ->",
       ctaGuide: "가이드 ->",
       ctaExplorer: "탐색하기 ->",
       reset: "체크리스트 초기화",
@@ -45,10 +49,14 @@
       fallbackTitle: "상세 규제 자료 미구축 시장",
       fallbackCopy: "LOGILEE는 아직 {country}의 상세 규제 source를 큐레이션하지 않았습니다. 다른 국가의 규제를 재사용하지 않으며, 아래의 일반 실무 경로와 국가 프로필에서 추가 확인을 시작하세요.",
       sourcesTitle: "전체 공식 출처",
-      curated: "Curated coverage",
-      other: "Additional markets",
+      selectedSourcesTitle: "현재 선택 시장",
+      allSourcesTitle: "전체 시장 출처 보기",
+      sourceCountSuffix: "개",
+      curated: "주요 구축 시장",
+      other: "그 외 시장",
       limitationTitle: "참고 범위와 한계",
-      limitation: "이 페이지는 참고용 탐색 허브입니다. 규정은 변경될 수 있고, 제품의 성분·용도·기술사양·원산지·거래 상대방에 따라 확인 범위가 달라질 수 있습니다. 실제 거래 전 공식기관, 수입자, 관세사, 인증기관 또는 법률 전문가를 통해 최신 요건을 확인하세요."
+      limitation: "이 페이지는 참고용 탐색 허브입니다. 규정은 변경될 수 있고, 제품의 성분·용도·기술사양·원산지·거래 상대방에 따라 확인 범위가 달라질 수 있습니다. 실제 거래 전 공식기관, 수입자, 관세사, 인증기관 또는 법률 전문가를 통해 최신 요건을 확인하세요.",
+      guidanceReady: "선택하면 목적지, 적용 규제 체계, 자료 범위, 공식 자료가 표시됩니다."
     },
     en: {
       categoryTitle: "1. What do you need to check?",
@@ -66,6 +74,10 @@
       euWide: "EU-wide sources",
       national: "National sources",
       gateway: "Official gateway",
+      coreSources: "Core official sources",
+      conditionalSources: "Additional sources depending on product or transaction",
+      conditionalHint: "These sources may become relevant depending on product type, material, intended use, end user, or transaction context.",
+      noNationalSources: "No verified national source has been added yet. Use EU-wide sources and verify with the relevant national authority when needed.",
       official: "Official coverage",
       partial: "Partial coverage",
       regionOnly: "Regional coverage",
@@ -87,10 +99,14 @@
       fallbackTitle: "Detailed regulatory sources not yet curated",
       fallbackCopy: "LOGILEE has not yet curated detailed regulatory sources for {country}. It does not reuse another market's rules. Start with general trade checks and the country profile while verifying with official authorities.",
       sourcesTitle: "All Official Sources",
+      selectedSourcesTitle: "Selected market",
+      allSourcesTitle: "View all market sources",
+      sourceCountSuffix: "official sources",
       curated: "Curated coverage",
       other: "Additional markets",
       limitationTitle: "Scope and Limitations",
-      limitation: "This page is an informational navigation hub. Regulations can change, and product composition, use, technical specifications, origin, and transaction parties can change what must be checked. Before an actual transaction, verify current requirements with official authorities, the importer, a customs broker, certification body, or qualified legal professional."
+      limitation: "This page is an informational navigation hub. Regulations can change, and product composition, use, technical specifications, origin, and transaction parties can change what must be checked. Before an actual transaction, verify current requirements with official authorities, the importer, a customs broker, certification body, or qualified legal professional.",
+      guidanceReady: "After selection, this area shows destination, regulatory framework, coverage, and official sources."
     }
   }[lang];
 
@@ -103,12 +119,25 @@
   };
 
   const parties = {
-    exporter: { ko: "Exporter", en: "Exporter" },
-    importer: { ko: "Importer / Buyer", en: "Importer / Buyer" },
-    broker: { ko: "Customs Broker", en: "Customs Broker" },
-    qa: { ko: "Product Compliance / QA", en: "Product Compliance / QA" },
-    cert: { ko: "Certification / Testing Body", en: "Certification / Testing Body" },
-    legal: { ko: "Legal / Trade Compliance Specialist", en: "Legal / Trade Compliance Specialist" }
+    exporter: { ko: "수출자", en: "Exporter" },
+    importer: { ko: "수입자 / 구매자", en: "Importer / Buyer" },
+    broker: { ko: "관세사·통관대리인", en: "Customs Broker" },
+    qa: { ko: "제품 컴플라이언스 / 품질 담당", en: "Product Compliance / QA" },
+    cert: { ko: "인증·시험기관", en: "Certification / Testing Body" },
+    legal: { ko: "법무·무역 컴플라이언스 담당", en: "Legal / Trade Compliance Specialist" }
+  };
+
+  const languageLabels = {
+    English: { ko: "영어", en: "English" },
+    Korean: { ko: "한국어", en: "Korean" },
+    Chinese: { ko: "중국어", en: "Chinese" },
+    Japanese: { ko: "일본어", en: "Japanese" },
+    French: { ko: "프랑스어", en: "French" },
+    Hindi: { ko: "힌디어", en: "Hindi" },
+    Vietnamese: { ko: "베트남어", en: "Vietnamese" },
+    Thai: { ko: "태국어", en: "Thai" },
+    Indonesian: { ko: "인도네시아어", en: "Indonesian" },
+    Spanish: { ko: "스페인어", en: "Spanish" }
   };
 
   const categories = {
@@ -226,6 +255,24 @@
   };
 
   const priorityMarkets = ["US", "EU", "CN", "KR", "JP", "GB", "CA", "AU", "IN", "VN", "TH", "ID", "SG", "MX"];
+  const sourcePriority = {
+    US: {
+      import: { core: ["cbp", "htsus"], conditional: ["fda", "usda"] },
+      export: { core: ["bisEar"], conditional: ["csl"] },
+      product: { core: ["cpsc"], conditional: ["fcc", "fda", "nhtsa"] },
+      restricted: { core: ["cbp"], conditional: ["fda", "usda", "epa"] },
+      chemical: { core: ["epa"], conditional: ["fda"] },
+      sanctions: { core: ["ofac", "csl"], conditional: [] }
+    },
+    EU: {
+      import: { core: ["taric", "a2m"], conditional: [] },
+      export: { core: ["euDual"], conditional: ["euSanctions"] },
+      product: { core: ["euReq", "euProduct"], conditional: ["a2m"] },
+      restricted: { core: ["taric", "a2m"], conditional: ["euSanctions"] },
+      chemical: { core: ["echa"], conditional: ["euReq"] },
+      sanctions: { core: ["euSanctions"], conditional: [] }
+    }
+  };
   const categoryKeys = Object.keys(categories);
   let selectedCategory = "";
   let selectedMarket = "";
@@ -235,6 +282,18 @@
 
   function local(value) {
     return value?.[lang] || value || "";
+  }
+
+  function sourceCountLabel(count) {
+    return lang === "ko" ? `공식 자료 ${count}${t.sourceCountSuffix}` : `${count} ${count === 1 ? "official source" : t.sourceCountSuffix}`;
+  }
+
+  function languageLabel(value) {
+    return String(value || "").split("/").map((part) => local(languageLabels[part.trim()] || part.trim())).join(" / ");
+  }
+
+  function unique(values) {
+    return [...new Set((values || []).filter(Boolean))];
   }
 
   function countryName(code, useLang = lang) {
@@ -257,11 +316,36 @@
 
   function marketRecord(code) {
     const key = String(code || "").toUpperCase();
-    if (key === "EU") return { iso2: "EU", countryName: countryName("EU"), framework: "European Union", coverage: "official", regionalSources: [], nationalSources: marketCoverage.EU.sources[selectedCategory] || [] };
-    if (EU_MEMBERS.has(key)) return { iso2: key, countryName: countryName(key), framework: "European Union", coverage: "region-only", regionalSources: marketCoverage.EU.sources[selectedCategory] || [], nationalSources: [] };
+    if (key === "EU") return { iso2: "EU", frameworkCode: "EU", countryName: countryName("EU"), framework: "European Union", coverage: "official", regionalSources: [], nationalSources: marketCoverage.EU.sources[selectedCategory] || [] };
+    if (EU_MEMBERS.has(key)) return { iso2: key, frameworkCode: "EU", countryName: countryName(key), framework: "European Union", coverage: "region-only", regionalSources: marketCoverage.EU.sources[selectedCategory] || [], nationalSources: [] };
     const curated = marketCoverage[key];
-    if (curated) return { iso2: key, countryName: countryName(key), framework: curated.framework, coverage: curated.coverage, note: curated.note, regionalSources: [], nationalSources: curated.sources[selectedCategory] || [] };
-    return { iso2: key, countryName: countryName(key), framework: countryName(key), coverage: "gateway-only", regionalSources: [], nationalSources: [] };
+    if (curated) return { iso2: key, frameworkCode: key, countryName: countryName(key), framework: curated.framework, coverage: curated.coverage, note: curated.note, regionalSources: [], nationalSources: curated.sources[selectedCategory] || [] };
+    return { iso2: key, frameworkCode: key, countryName: countryName(key), framework: countryName(key), coverage: "gateway-only", regionalSources: [], nationalSources: [] };
+  }
+
+  function frameworkName(market) {
+    if (market.frameworkCode === "EU") return "European Union";
+    if (market.frameworkCode === market.iso2) return countryName(market.iso2);
+    return market.framework;
+  }
+
+  function allMarketSourceKeys(code) {
+    const key = String(code || "").toUpperCase();
+    const frameworkCode = key === "EU" || EU_MEMBERS.has(key) ? "EU" : key;
+    const coverage = marketCoverage[frameworkCode];
+    return coverage ? unique(Object.values(coverage.sources).flat()) : [];
+  }
+
+  function sourceBuckets(frameworkCode, keys) {
+    const sourceKeys = unique(keys);
+    const priority = sourcePriority[frameworkCode]?.[selectedCategory];
+    if (priority) {
+      const core = unique(priority.core).filter((key) => sourceKeys.includes(key));
+      const conditional = unique(priority.conditional).filter((key) => sourceKeys.includes(key));
+      const rest = sourceKeys.filter((key) => !core.includes(key) && !conditional.includes(key));
+      return { core: core.concat(rest.length && !core.length ? rest.slice(0, 1) : []), conditional: conditional.concat(core.length ? rest : rest.slice(1)) };
+    }
+    return { core: sourceKeys.slice(0, 1), conditional: sourceKeys.slice(1) };
   }
 
   function sourceCard(key) {
@@ -275,21 +359,28 @@
         <div><dt>${safeHtml(t.what)}</dt><dd>${safeHtml(local(item.what))}</dd></div>
         <div><dt>${safeHtml(t.when)}</dt><dd>${safeHtml(local(item.when))}</dd></div>
       </dl>
-      <div class="compliance-source-meta"><span>${safeHtml(t.timing)}: ${safeHtml(cat.timing.map((key) => local(timing[key])).join(" / "))}</span><span>${safeHtml(t.sourceLanguage)}: ${safeHtml(item.language)}</span></div>
+      <div class="compliance-source-meta"><span>${safeHtml(t.timing)}: ${safeHtml(cat.timing.map((key) => local(timing[key])).join(" / "))}</span><span>${safeHtml(t.sourceLanguage)}: ${safeHtml(languageLabel(item.language))}</span></div>
       <a class="secondary-btn" href="${safeAttr(item.url)}" target="_blank" rel="noopener noreferrer"><i data-lucide="external-link"></i>${safeHtml(t.cta)}</a>
     </article>`;
   }
 
-  function sourceGroup(title, keys) {
+  function sourceTier(title, keys, hint = "") {
     if (!keys.length) return "";
-    return `<section class="compliance-source-group"><h4>${safeHtml(title)}</h4><div class="compliance-source-grid">${keys.map(sourceCard).join("")}</div></section>`;
+    return `<div class="compliance-source-tier"><h5>${safeHtml(title)}</h5>${hint ? `<p>${safeHtml(hint)}</p>` : ""}<div class="compliance-source-grid">${keys.map(sourceCard).join("")}</div></div>`;
   }
 
-  function updateUrl() {
+  function sourceGroup(title, keys, frameworkCode) {
+    const sourceKeys = unique(keys);
+    if (!sourceKeys.length) return "";
+    const buckets = sourceBuckets(frameworkCode, sourceKeys);
+    return `<section class="compliance-source-group"><h4>${safeHtml(title)}</h4>${sourceTier(t.coreSources, buckets.core)}${sourceTier(t.conditionalSources, buckets.conditional, t.conditionalHint)}</section>`;
+  }
+
+  function updateUrl(mode = "replace") {
     const url = new URL(location.href);
     selectedCategory ? url.searchParams.set("category", selectedCategory) : url.searchParams.delete("category");
     selectedMarket ? url.searchParams.set("market", selectedMarket.toLowerCase()) : url.searchParams.delete("market");
-    history.replaceState(null, "", url);
+    history[mode === "push" ? "pushState" : "replaceState"](null, "", url);
   }
 
   function selectedSummary() {
@@ -304,25 +395,25 @@
     if (!target) return;
     if (!selectedCategory || !selectedMarket) {
       const message = selectedCategory ? `${local(categories[selectedCategory].label)} ${t.selected}. ${t.marketNeeded}` : selectedMarket ? `${countryName(selectedMarket)} ${t.selected}. ${t.categoryNeeded}` : t.bothNeeded;
-      target.innerHTML = `<div class="data-empty compliance-empty"><strong>${safeHtml(message)}</strong><span>${safeHtml(lang === "ko" ? "선택하면 Destination, regulatory framework, coverage, official source가 표시됩니다." : "After selection, this area shows destination, regulatory framework, coverage, and official sources.")}</span></div>`;
+      target.innerHTML = `<div class="data-empty compliance-empty"><strong>${safeHtml(message)}</strong><span>${safeHtml(t.guidanceReady)}</span></div>`;
       return;
     }
     const market = marketRecord(selectedMarket);
     const cat = categories[selectedCategory];
     const allSourceKeys = [...market.regionalSources, ...market.nationalSources];
-    const summaryRows = [[t.destination, market.countryName], [t.framework, market.framework], [t.coverage, coverageLabel[market.coverage]], [t.area, local(cat.label)]];
+    const summaryRows = [[t.destination, market.countryName], [t.framework, frameworkName(market)], [t.coverage, coverageLabel[market.coverage]], [t.area, local(cat.label)]];
     const partyText = cat.parties.map((key) => local(parties[key])).join(" / ");
     const timingText = cat.timing.map((key) => local(timing[key])).join(" / ");
     target.innerHTML = `<div class="compliance-guidance">
       <div class="compliance-guidance-intro">
         <span class="status ${coverageClass[market.coverage] || ""}">${safeHtml(coverageLabel[market.coverage])}</span>
-        <h3>${safeHtml(market.countryName)} / ${safeHtml(local(cat.label))}</h3>
+        <h3 tabindex="-1">${safeHtml(market.countryName)} / ${safeHtml(local(cat.label))}</h3>
         <p>${safeHtml(local(cat.desc))}</p>
         ${market.note ? `<p class="notice">${safeHtml(local(market.note))}</p>` : ""}
         <dl class="compliance-guidance-facts">${summaryRows.map(([label, value]) => `<div><dt>${safeHtml(label)}</dt><dd>${safeHtml(value)}</dd></div>`).join("")}</dl>
         <div class="compliance-practitioner"><span>${safeHtml(t.timing)}: ${safeHtml(timingText)}</span><span>${safeHtml(t.parties)}: ${safeHtml(partyText)}</span></div>
       </div>
-      ${allSourceKeys.length ? `${sourceGroup(t.euWide, market.regionalSources)}${sourceGroup(market.iso2 === "EU" ? t.euWide : t.national, market.nationalSources)}` : `<div class="data-empty compliance-empty"><strong>${safeHtml(t.fallbackTitle)}</strong><span>${safeHtml(t.fallbackCopy.replace("{country}", market.countryName))}</span></div>`}
+      ${allSourceKeys.length ? `${sourceGroup(t.euWide, market.regionalSources, market.frameworkCode)}${sourceGroup(market.iso2 === "EU" ? t.euWide : t.national, market.nationalSources, market.frameworkCode)}${market.frameworkCode === "EU" && market.iso2 !== "EU" ? `<p class="notice">${safeHtml(t.noNationalSources)}</p>` : ""}` : `<div class="data-empty compliance-empty"><strong>${safeHtml(t.fallbackTitle)}</strong><span>${safeHtml(t.fallbackCopy.replace("{country}", market.countryName))}</span></div>`}
     </div>`;
     if (window.refreshIcons) window.refreshIcons();
   }
@@ -352,10 +443,11 @@
     selectedMarket = String(code || "").toUpperCase();
     query = "";
     comboOpen = false;
-    updateUrl();
+    updateUrl("push");
     renderWorkflow();
     renderGuidance();
     renderRelated();
+    renderSources();
   }
 
   function renderWorkflow(restoreMarketFocus = false) {
@@ -402,9 +494,10 @@
       const insideCombo = event.target.closest("[data-compliance-combobox]");
       if (category) {
         selectedCategory = category.dataset.complianceCategory || "";
-        updateUrl();
+        updateUrl("push");
         renderWorkflow();
         renderGuidance();
+        renderSources();
         return;
       }
       if (option) {
@@ -456,11 +549,52 @@
   }
 
   const checklist = [
-    { id: "product", title: { ko: "제품 정보", en: "Product" }, items: [["hs", "HS Code 확인", "Confirm HS Code", "quote", "../hscode.html", "../hscode-en.html", t.ctaHs], ["use", "제품 용도 확인", "Confirm product use", "quote"], ["material", "주요 성분/재질 확인", "Confirm main ingredients/materials", "order"], ["spec", "기술사양 확인", "Confirm technical specifications", "order"]] },
-    { id: "market", title: { ko: "수입국 요건", en: "Market Requirements" }, items: [["import", "일반 수입요건 확인", "Check general import requirements", "quote", "#reference-areas", "#reference-areas", t.ctaExplorer], ["restricted", "금지·제한 품목 여부 확인", "Check prohibited/restricted goods sources", "quote", "#reference-areas", "#reference-areas", t.ctaSource], ["cert", "제품 인증/등록 요건 확인", "Check product certification/registration sources", "production", "#reference-areas", "#reference-areas", t.ctaSource], ["label", "라벨링/마킹 요건 확인", "Check labelling/marking requirements", "production"], ["chemical", "필요 시 화학·환경 규제 확인", "Check chemical/environmental rules if needed", "order", "#reference-areas", "#reference-areas", t.ctaSource]] },
-    { id: "transaction", title: { ko: "거래 확인", en: "Transaction" }, items: [["export", "수출통제 관련 확인", "Check export-control sources", "quote", "#reference-areas", "#reference-areas", t.ctaSource], ["enduse", "최종사용자/최종용도 확인", "Confirm end user/end use", "quote"], ["screening", "거래제한/제재 목록 확인", "Check sanctions/restricted-party sources", "shipment", "https://www.trade.gov/consolidated-screening-list", "https://www.trade.gov/consolidated-screening-list", t.ctaSource], ["license", "필요 시 수출허가 관련 확인", "Check export-license sources if needed", "shipment", "#reference-areas", "#reference-areas", t.ctaSource]] },
-    { id: "documents", title: { ko: "서류", en: "Documents" }, items: [["invoice", "Commercial Invoice 확인", "Check Commercial Invoice", "shipment", "posts/commercial-invoice-common-mistakes/", "posts/commercial-invoice-common-mistakes/", t.ctaGuide], ["packing", "Packing List 확인", "Check Packing List", "shipment"], ["origin", "Certificate of Origin 필요 여부 확인", "Check whether Certificate of Origin is needed", "shipment"], ["permit", "License / Permit / Certificate 필요 여부 확인", "Check whether a license, permit, or certificate is needed", "clearance"]] }
+    { id: "product", title: { ko: "제품 정보", en: "Product" }, items: [
+      { id: "hs", label: { ko: "HS Code 확인", en: "Confirm HS Code" }, timing: "quote", href: { ko: "../hscode.html", en: "../hscode-en.html" }, cta: t.ctaHs },
+      { id: "use", label: { ko: "제품 용도 확인", en: "Confirm product use" }, timing: "quote" },
+      { id: "material", label: { ko: "주요 성분/재질 확인", en: "Confirm main ingredients/materials" }, timing: "order" },
+      { id: "spec", label: { ko: "기술사양 확인", en: "Confirm technical specifications" }, timing: "order" }
+    ] },
+    { id: "market", title: { ko: "수입국 요건", en: "Market Requirements" }, items: [
+      { id: "import", label: { ko: "일반 수입요건 확인", en: "Check general import requirements" }, timing: "quote", category: "import", cta: t.ctaSource },
+      { id: "restricted", label: { ko: "금지·제한 품목 여부 확인", en: "Check prohibited/restricted goods sources" }, timing: "quote", category: "restricted", cta: t.ctaSource },
+      { id: "cert", label: { ko: "제품 인증/등록 요건 확인", en: "Check product certification/registration sources" }, timing: "production", category: "product", cta: t.ctaSource },
+      { id: "label", label: { ko: "라벨링/마킹 요건 확인", en: "Check labelling/marking requirements" }, timing: "production", category: "product", cta: t.ctaSource },
+      { id: "chemical", label: { ko: "필요 시 화학·환경 규제 확인", en: "Check chemical/environmental rules if needed" }, timing: "order", category: "chemical", cta: t.ctaSource }
+    ] },
+    { id: "transaction", title: { ko: "거래 확인", en: "Transaction" }, items: [
+      { id: "export", label: { ko: "수출통제 관련 확인", en: "Check export-control sources" }, timing: "quote", category: "export", cta: t.ctaSource },
+      { id: "enduse", label: { ko: "최종사용자/최종용도 확인", en: "Confirm end user/end use" }, timing: "quote" },
+      { id: "screening", label: { ko: "거래제한/제재 목록 확인", en: "Check sanctions/restricted-party sources" }, timing: "shipment", category: "sanctions", cta: t.ctaSource },
+      { id: "license", label: { ko: "필요 시 수출허가 관련 확인", en: "Check export-license sources if needed" }, timing: "shipment", category: "export", cta: t.ctaSource }
+    ] },
+    { id: "documents", title: { ko: "서류", en: "Documents" }, items: [
+      { id: "invoice", label: { ko: "Commercial Invoice 확인", en: "Check Commercial Invoice" }, timing: "shipment", href: { ko: "posts/commercial-invoice-common-mistakes/", en: "posts/commercial-invoice-common-mistakes/" }, cta: t.ctaGuide },
+      { id: "packing", label: { ko: "Packing List 확인", en: "Check Packing List" }, timing: "shipment" },
+      { id: "origin", label: { ko: "Certificate of Origin 필요 여부 확인", en: "Check whether Certificate of Origin is needed" }, timing: "shipment" },
+      { id: "permit", label: { ko: "License / Permit / Certificate 필요 여부 확인", en: "Check whether a license, permit, or certificate is needed" }, timing: "clearance" }
+    ] }
   ];
+
+  function scrollToGuidance() {
+    const section = page.querySelector("#reference-areas");
+    const heading = page.querySelector(".compliance-guidance-intro h3") || page.querySelector("#reference-title");
+    const smooth = !window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    section?.scrollIntoView({ behavior: smooth ? "smooth" : "auto", block: "start" });
+    requestAnimationFrame(() => heading?.focus({ preventScroll: true }));
+  }
+
+  function navigateChecklistCategory(category) {
+    if (!own(categories, category)) return;
+    selectedCategory = category;
+    query = "";
+    comboOpen = false;
+    updateUrl("push");
+    renderWorkflow();
+    renderGuidance();
+    renderSources();
+    scrollToGuidance();
+  }
 
   function renderChecklist() {
     const target = page.querySelector("[data-compliance-checklist]");
@@ -468,10 +602,13 @@
     const storageKey = `logilee:compliance-checklist:${lang}`;
     let saved = {};
     try { saved = JSON.parse(localStorage.getItem(storageKey) || "{}"); } catch { saved = {}; }
-    target.innerHTML = `<div class="compliance-checklist-grid">${checklist.map((group) => `<fieldset class="compliance-checklist-group"><legend>${safeHtml(local(group.title))}</legend>${group.items.map(([id, koLabel, enLabel, timeKey, koHref, enHref, label]) => {
-      const itemId = `${group.id}-${id}`;
-      const href = lang === "ko" ? koHref : enHref;
-      return `<label class="compliance-check-item" for="${safeAttr(itemId)}"><input id="${safeAttr(itemId)}" type="checkbox" data-compliance-check="${safeAttr(itemId)}" ${saved[itemId] ? "checked" : ""}><span><strong>${safeHtml(lang === "ko" ? koLabel : enLabel)}</strong><small>${safeHtml(local(timing[timeKey]))}</small></span>${href ? `<a href="${safeAttr(href)}" ${/^https?:/.test(href) ? 'target="_blank" rel="noopener noreferrer"' : ""}>${safeHtml(label)}</a>` : ""}</label>`;
+    target.innerHTML = `<div class="compliance-checklist-grid">${checklist.map((group) => `<fieldset class="compliance-checklist-group"><legend>${safeHtml(local(group.title))}</legend>${group.items.map((item) => {
+      const itemId = `${group.id}-${item.id}`;
+      const href = item.href ? local(item.href) : "";
+      const action = item.category
+        ? `<button type="button" data-check-category="${safeAttr(item.category)}">${safeHtml(item.cta || t.ctaSource)}</button>`
+        : href ? `<a href="${safeAttr(href)}" ${/^https?:/.test(href) ? 'target="_blank" rel="noopener noreferrer"' : ""}>${safeHtml(item.cta || t.ctaGuide)}</a>` : "";
+      return `<div class="compliance-check-item"><input id="${safeAttr(itemId)}" type="checkbox" data-compliance-check="${safeAttr(itemId)}" ${saved[itemId] ? "checked" : ""}><label for="${safeAttr(itemId)}"><span><strong>${safeHtml(local(item.label))}</strong><small>${safeHtml(local(timing[item.timing]))}</small></span></label>${action}</div>`;
     }).join("")}</fieldset>`).join("")}</div><button class="secondary-btn compliance-reset" type="button" data-compliance-reset><i data-lucide="rotate-ccw"></i>${safeHtml(t.reset)}</button>`;
     target.addEventListener("change", (event) => {
       const input = event.target.closest("[data-compliance-check]");
@@ -482,6 +619,9 @@
     target.querySelector("[data-compliance-reset]")?.addEventListener("click", () => {
       localStorage.removeItem(storageKey);
       target.querySelectorAll("[data-compliance-check]").forEach((input) => { input.checked = false; });
+    });
+    target.querySelectorAll("[data-check-category]").forEach((button) => {
+      button.addEventListener("click", () => navigateChecklistCategory(button.dataset.checkCategory));
     });
     if (window.refreshIcons) window.refreshIcons();
   }
@@ -503,16 +643,26 @@
     const selected = selectedMarket ? marketRecord(selectedMarket) : null;
     const groups = priorityMarkets.map((code) => {
       const cov = code === "EU" ? marketCoverage.EU : marketCoverage[code];
-      const keys = [...new Set(Object.values(cov.sources).flat())];
+      const keys = unique(Object.values(cov.sources).flat());
       return { code, name: countryName(code), coverage: cov.coverage, keys };
     });
-    target.innerHTML = `${selected ? `<div class="compliance-selected-source-note"><strong>${safeHtml(selected.countryName)}</strong><span>${safeHtml(coverageLabel[selected.coverage])}</span></div>` : ""}
-    <div class="compliance-source-accordions">${groups.map((group) => `<details class="compliance-source-accordion" ${selected?.iso2 === group.code ? "open" : ""}>
-      <summary aria-expanded="${selected?.iso2 === group.code ? "true" : "false"}"><span><strong>${safeHtml(group.name)}</strong><small>${group.keys.length} ${safeHtml(lang === "ko" ? "official sources" : "official sources")}${group.coverage !== "official" ? ` / ${safeHtml(coverageLabel[group.coverage])}` : ""}</small></span><b aria-hidden="true"></b></summary>
+    const directory = groups.map((group) => `<details class="compliance-source-accordion">
+      <summary aria-expanded="false"><span><strong>${safeHtml(group.name)}</strong><small>${safeHtml(sourceCountLabel(group.keys.length))}${group.coverage !== "official" ? ` / ${safeHtml(coverageLabel[group.coverage])}` : ""}</small></span><b aria-hidden="true"></b></summary>
       <ul>${group.keys.map((key) => `<li><a href="${safeAttr(S[key].url)}" target="_blank" rel="noopener noreferrer">${safeHtml(S[key].agency)} - ${safeHtml(S[key].name)}</a><span>${safeHtml(local(S[key].what))}</span></li>`).join("")}</ul>
-    </details>`).join("")}</div>
+    </details>`).join("");
+    const selectedKeys = selected ? allMarketSourceKeys(selected.iso2) : [];
+    const selectedMarkup = selected ? `<section class="compliance-selected-source-card">
+      <div class="compliance-selected-source-note"><strong>${safeHtml(selected.countryName)}</strong><span>${safeHtml(sourceCountLabel(selectedKeys.length))}</span><span>${safeHtml(coverageLabel[selected.coverage])}</span></div>
+      ${selected.frameworkCode === "EU" && selected.iso2 !== "EU" ? `<p class="muted">${safeHtml(selected.countryName)} ${safeHtml(lang === "ko" ? "목적지는 European Union 규제 체계를 우선 표시합니다." : "is shown through the European Union regulatory framework.")}</p>` : ""}
+      ${selectedKeys.length ? `<details class="compliance-source-accordion" open>
+        <summary aria-expanded="true"><span><strong>${safeHtml(t.selectedSourcesTitle)}</strong><small>${safeHtml(frameworkName(selected))}</small></span><b aria-hidden="true"></b></summary>
+        <ul>${selectedKeys.map((key) => `<li><a href="${safeAttr(S[key].url)}" target="_blank" rel="noopener noreferrer">${safeHtml(S[key].agency)} - ${safeHtml(S[key].name)}</a><span>${safeHtml(local(S[key].what))}</span></li>`).join("")}</ul>
+      </details>` : `<div class="data-empty compliance-empty"><strong>${safeHtml(t.fallbackTitle)}</strong><span>${safeHtml(t.fallbackCopy.replace("{country}", selected.countryName))}</span></div>`}
+    </section>` : "";
+    target.innerHTML = `${selectedMarkup}
+    <details class="compliance-all-sources"><summary aria-expanded="false"><span><strong>${safeHtml(t.allSourcesTitle)}</strong><small>${safeHtml(sourceCountLabel(unique(groups.flatMap((group) => group.keys)).length))}</small></span><b aria-hidden="true"></b></summary><div class="compliance-source-accordions">${directory}</div></details>
     <div class="panel compliance-limitations"><h3>${safeHtml(t.limitationTitle)}</h3><p>${safeHtml(t.limitation)}</p><p><strong>${safeHtml(t.curated)}:</strong> ${safeHtml(priorityMarkets.map(countryName).join(", "))}. <strong>${safeHtml(t.other)}:</strong> ${safeHtml(lang === "ko" ? "상세 source 미구축 국가는 공식 gateway 중심으로 안내합니다." : "Non-curated countries are shown as official-gateway-only or general guidance.")}</p></div>`;
-    target.querySelectorAll(".compliance-source-accordion").forEach((details) => {
+    target.querySelectorAll(".compliance-source-accordion, .compliance-all-sources").forEach((details) => {
       details.addEventListener("toggle", () => {
         details.querySelector("summary")?.setAttribute("aria-expanded", details.open ? "true" : "false");
       });
@@ -532,6 +682,16 @@
     selectedMarket = market && allMarkets().some((item) => item.code === market) ? market : "";
     selectedCategory = own(categories, category) ? category : "";
   }
+
+  window.addEventListener("popstate", () => {
+    readInitialState();
+    query = "";
+    comboOpen = false;
+    renderWorkflow();
+    renderGuidance();
+    renderRelated();
+    renderSources();
+  });
 
   readInitialState();
   renderWorkflow();
