@@ -661,7 +661,7 @@
     </section>` : "";
     target.innerHTML = `${selectedMarkup}
     <details class="compliance-all-sources"><summary aria-expanded="false"><span><strong>${safeHtml(t.allSourcesTitle)}</strong><small>${safeHtml(sourceCountLabel(unique(groups.flatMap((group) => group.keys)).length))}</small></span><b aria-hidden="true"></b></summary><div class="compliance-source-accordions">${directory}</div></details>
-    <div class="panel compliance-limitations"><h3>${safeHtml(t.limitationTitle)}</h3><p>${safeHtml(t.limitation)}</p><p><strong>${safeHtml(t.curated)}:</strong> ${safeHtml(priorityMarkets.map(countryName).join(", "))}. <strong>${safeHtml(t.other)}:</strong> ${safeHtml(lang === "ko" ? "상세 source 미구축 국가는 공식 gateway 중심으로 안내합니다." : "Non-curated countries are shown as official-gateway-only or general guidance.")}</p></div>`;
+    <div class="panel compliance-limitations"><h3>${safeHtml(t.limitationTitle)}</h3><p>${safeHtml(t.limitation)}</p><p><strong>${safeHtml(t.curated)}:</strong> ${safeHtml(lang === "ko" ? "미국, 유럽연합(EU), 중국, 한국, 일본, 영국, 캐나다, 호주, 인도, 베트남, 태국, 인도네시아, 싱가포르, 멕시코" : priorityMarkets.map(countryName).join(", "))}. <strong>${safeHtml(t.other)}:</strong> ${safeHtml(lang === "ko" ? "상세 자료가 아직 구축되지 않은 국가는 확인 가능한 공식 기관·정부 포털을 중심으로 안내합니다." : "Non-curated countries are shown as official-gateway-only or general guidance.")}</p></div>`;
     target.querySelectorAll(".compliance-source-accordion, .compliance-all-sources").forEach((details) => {
       details.addEventListener("toggle", () => {
         details.querySelector("summary")?.setAttribute("aria-expanded", details.open ? "true" : "false");
