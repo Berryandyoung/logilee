@@ -1,5 +1,21 @@
 window.LOGILEE_POSTS = [
   {
+    "slug": "eu-korea-terephthalic-acid-antidumping-duty-2026",
+    "language": "ko",
+    "status": "published",
+    "title": "EU, 한국산 테레프탈산에 최대 13.3% 반덤핑관세…수출기업이 확인할 것",
+    "description": "EU가 한국산 고순도 테레프탈산에 최대 13.3%의 확정 반덤핑관세를 부과했습니다. 적용 품목과 업체별 세율, TARIC·Invoice 요건과 수출기업 체크포인트를 정리합니다.",
+    "category": "customs",
+    "date": "2026-08-31",
+    "publishedAt": "2026-08-31T02:30:00.341Z",
+    "readingTime": "4遺??쎄린",
+    "path": "ko/posts/eu-korea-terephthalic-acid-antidumping-duty-2026/",
+    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_61f6f7d6-b50b-48e2-9168-784ca1f2861f-ChatGPT%20Image%202026%EB%85%84%208%EC%9B%94%2031%EC%9D%BC%20%EC%98%A4%EC%A0%84%2011_25_05%20(1).png?alt=media&token=429ea8c3-3778-4fe4-8b14-d6033a6604ec",
+    "imageAlt": "유럽향 수출화물이 처리되는 대형 국제 컨테이너 항만을 점검하는 물류 담당자",
+    "imageCredit": "LOGILEE",
+    "imageLicense": "AI Generated"
+  },
+  {
     "slug": "logilee-connector-dry-run-diagnostic",
     "language": "en",
     "status": "published",
