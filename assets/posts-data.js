@@ -1,5 +1,21 @@
 window.LOGILEE_POSTS = [
   {
+    "slug": "eu-customs-data-model-7-0-11-what-customs-and-logistics-teams-need-to-update-eucdm",
+    "language": "en",
+    "status": "published",
+    "title": "EU Customs Data Model 7.0.11: What Customs and Logistics Teams Need to Update",
+    "description": "EUCDM 7.0.11 updates EU customs data requirements for low-value e-commerce imports and corrects legal mappings. Learn what customs and logistics teams should review.",
+    "category": "customs",
+    "date": "2026-08-31",
+    "publishedAt": "2026-08-31T02:33:45.028Z",
+    "readingTime": "6 min read",
+    "path": "en/posts/eu-customs-data-model-7-0-11-what-customs-and-logistics-teams-need-to-update-eucdm/",
+    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_54eb280b-9291-49ef-a67c-419ca4b12f3d-ChatGPT%20Image%202026%EB%85%84%208%EC%9B%94%2031%EC%9D%BC%20%EC%98%A4%EC%A0%84%2011_25_05%20(2).png?alt=media&token=ec6ea19c-cc07-4452-b31d-37de12b78756",
+    "imageAlt": "Workers processing international parcels and customs data inside a modern European logistics warehouse",
+    "imageCredit": "LOGILEE",
+    "imageLicense": "AI Generated"
+  },
+  {
     "slug": "eu-cbam-2026-non-eu-manufacturer-guidance",
     "language": "ko",
     "status": "published",

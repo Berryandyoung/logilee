@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8548711851361478" crossorigin="anonymous"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>EUCDM 7.0.11: EU Customs Data Model Update Guide | LOGILEE</title>
+    <meta name="description" content="EUCDM 7.0.11 updates EU customs data requirements for low-value e-commerce imports and corrects legal mappings. Learn what customs and logistics teams should review.">
+    <meta name="logilee:status" content="published">
+    <meta name="logilee:published-at" content="2026-08-31T02:33:45.028Z">
+    <meta name="logilee:category" content="customs">
+    <meta name="logilee:reading-time" content="6 min read">
+    <link rel="canonical" href="https://logilee.com/en/posts/eu-customs-data-model-eucdm-7-0-11-guide/">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="EUCDM 7.0.11: EU Customs Data Model Update Guide">
+    <meta property="og:description" content="EUCDM 7.0.11 updates EU customs data requirements for low-value e-commerce imports and corrects legal mappings. Learn what customs and logistics teams should review.">
+    <meta property="og:url" content="https://logilee.com/en/posts/eu-customs-data-model-eucdm-7-0-11-guide/">
+    <meta property="og:image" content="https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_54eb280b-9291-49ef-a67c-419ca4b12f3d-ChatGPT%20Image%202026%EB%85%84%208%EC%9B%94%2031%EC%9D%BC%20%EC%98%A4%EC%A0%84%2011_25_05%20(2).png?alt=media&amp;token=ec6ea19c-cc07-4452-b31d-37de12b78756">
+    <meta property="article:published_time" content="2026-08-31T02:33:45.028Z">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="alternate" hreflang="en" href="https://logilee.com/en/posts/eu-customs-data-model-eucdm-7-0-11-guide/">
+    <link rel="stylesheet" href="../../../assets/logilee.css">
+    <script defer src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script defer src="../../../assets/posts-data.js"></script>
+    <script defer src="../../../assets/logilee-app.js"></script>
+    <style>
+      body[data-page="post-detail"] { background: #f5f7fa; overflow-x: hidden; }
+      .article-page { width: min(100%, 1240px); padding: 28px clamp(20px, 2.4vw, 32px) 48px; }
+      .article-breadcrumb { display: flex; align-items: center; gap: 8px; margin: 0 0 16px; color: #64748b; font-size: 13px; font-weight: 750; }
+      .article-breadcrumb a:hover { color: var(--signal-blue); }
+      .article-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, 290px); gap: clamp(32px, 3.6vw, 48px); align-items: start; }
+      .article-detail { min-width: 0; overflow: hidden; padding: clamp(26px, 3vw, 44px); border: 1px solid #dbe3ec; border-radius: 16px; background: #fff; box-shadow: 0 16px 38px rgba(15, 23, 42, 0.06); }
+      .article-header { display: grid; gap: 16px; margin-bottom: clamp(28px, 3vw, 42px); }
+      .article-header .eyebrow { width: fit-content; margin: 0; padding: 6px 10px; border: 1px solid rgba(23, 107, 255, 0.18); border-radius: 999px; background: #eef5ff; color: var(--signal-blue); font-size: 12px; letter-spacing: 0; }
+      .article-header h1 { max-width: 820px; font-size: clamp(32px, 3.2vw, 43px); line-height: 1.24; }
+      .article-summary { max-width: 760px; margin: 0; color: #475569; font-size: clamp(18px, 1.5vw, 20px); line-height: 1.62; }
+      .article-meta { display: flex; flex-wrap: wrap; gap: 8px 14px; color: #64748b; font-size: 13px; font-weight: 750; }
+      .article-meta span + span::before, .article-meta a::before { content: "·"; margin-right: 14px; color: #94a3b8; }
+      .article-meta a { color: var(--signal-blue); }
+      .article-hero-figure { min-width: 0; margin: 8px 0 0; }
+      .article-hero { display: block; width: 100%; max-width: 100%; max-height: 460px; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 14px; }
+      .image-attribution { margin: 8px 2px 0; color: #667085; font-size: 12px; line-height: 1.45; overflow-wrap: anywhere; }
+      .image-attribution a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+      .post-content, .article-body { min-width: 0; color: #1f2937; font-size: 17px; line-height: 1.82; overflow-wrap: anywhere; }
+      .article-body > *:first-child { margin-top: 0; } .article-body > *:last-child { margin-bottom: 0; }
+      .article-body p { margin: 0 0 18px; }
+      .article-body h2, .article-body h3, .article-body h4 { color: var(--ink-navy); letter-spacing: 0; }
+      .article-body h2 { margin: 42px 0 14px; padding-top: 4px; font-size: clamp(25px, 2.1vw, 30px); line-height: 1.3; }
+      .article-body h3 { margin: 30px 0 10px; font-size: clamp(20px, 1.7vw, 23px); line-height: 1.34; }
+      .article-body h4 { margin: 24px 0 8px; font-size: 18px; line-height: 1.38; }
+      .article-body strong, .article-body b { color: #0f2742; font-weight: 750; }
+      .article-body a { color: var(--signal-blue); text-decoration: underline; text-underline-offset: 3px; }
+      .article-body ul, .article-body ol { margin: 0 0 20px; padding-left: 1.35em; }
+      .article-body li + li { margin-top: 7px; }
+      .article-body blockquote { margin: 26px 0; padding: 18px 20px; border-left: 4px solid var(--signal-blue); border-radius: 0 12px 12px 0; background: #eef5ff; color: #23364d; }
+      .article-body hr { height: 1px; margin: 34px 0; border: 0; background: #dbe3ec; }
+      .article-body figure { margin: 26px 0; } .article-body figcaption { margin-top: 8px; color: #64748b; font-size: 13px; }
+      .article-body img { display: block; max-width: 100%; height: auto; border-radius: 12px; }
+      .article-table-wrap { max-width: 100%; margin: 24px 0; overflow-x: auto; border: 1px solid #dbe3ec; border-radius: 12px; }
+      .article-table-wrap table { width: 100%; min-width: 560px; border-collapse: collapse; background: #fff; }
+      .article-table-wrap th, .article-table-wrap td { padding: 12px 14px; border-bottom: 1px solid #e5ebf1; text-align: left; vertical-align: top; font-size: 14px; line-height: 1.55; }
+      .article-table-wrap th { background: #f5f8fc; color: #0f2742; font-weight: 800; }
+      .article-aside { min-width: 0; display: grid; gap: 16px; position: sticky; top: 96px; }
+      .article-aside-card { padding: 18px; border: 1px solid #dbe3ec; border-radius: 14px; background: #fff; box-shadow: 0 12px 30px rgba(15, 23, 42, 0.05); }
+      .article-aside-card h2 { margin: 0 0 14px; color: var(--ink-navy); font-size: 15px; line-height: 1.35; }
+      .article-resource-list, .article-related-list { display: grid; gap: 10px; }
+      .article-resource-list a { min-width: 0; display: flex; align-items: center; gap: 9px; padding: 9px 10px; border-radius: 10px; color: #1f3651; font-size: 14px; font-weight: 750; }
+      .article-resource-list a:hover { background: #eef5ff; color: var(--signal-blue); }
+      .article-resource-list svg { width: 16px; height: 16px; flex: 0 0 auto; }
+      .article-related-post { min-width: 0; display: grid; grid-template-columns: 58px minmax(0, 1fr); gap: 10px; align-items: center; }
+      .article-related-post img, .article-related-fallback { width: 58px; height: 48px; border-radius: 10px; object-fit: cover; background: #eef5ff; }
+      .article-related-fallback { display: grid; place-items: center; color: var(--signal-blue); font-size: 10px; font-weight: 850; text-align: center; }
+      .article-related-post strong { display: -webkit-box; overflow: hidden; color: #1f3651; font-size: 13px; line-height: 1.35; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+      .article-related-post small, .article-aside-empty { color: #64748b; font-size: 12px; }
+      .article-ad { min-height: 250px; }
+      @media (max-width: 1180px) { .article-layout { grid-template-columns: 1fr; } .article-aside { position: static; grid-template-columns: repeat(2, minmax(0, 1fr)); } .article-ad { grid-column: 1 / -1; } }
+      @media (max-width: 760px) { .article-page { padding: 18px 14px 32px; } .article-detail { padding: 22px 18px; border-radius: 14px; } .article-header h1 { font-size: 30px; } .post-content, .article-body { font-size: 16px; line-height: 1.78; } .article-aside { grid-template-columns: 1fr; } .article-meta span + span::before, .article-meta a::before { margin-right: 8px; } }
+    </style>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "EU Customs Data Model 7.0.11: What Customs and Logistics Teams Need to Update",
+  "description": "EUCDM 7.0.11 updates EU customs data requirements for low-value e-commerce imports and corrects legal mappings. Learn what customs and logistics teams should review.",
+  "datePublished": "2026-08-31",
+  "dateModified": "2026-08-31",
+  "inLanguage": "en",
+  "author": {
+    "@type": "Organization",
+    "name": "LOGILEE"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "LOGILEE"
+  },
+  "mainEntityOfPage": "https://logilee.com/en/posts/eu-customs-data-model-eucdm-7-0-11-guide/",
+  "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_54eb280b-9291-49ef-a67c-419ca4b12f3d-ChatGPT%20Image%202026%EB%85%84%208%EC%9B%94%2031%EC%9D%BC%20%EC%98%A4%EC%A0%84%2011_25_05%20(2).png?alt=media&token=ec6ea19c-cc07-4452-b31d-37de12b78756"
+}
+    </script>
+  </head>
+  <body data-page="post-detail" data-lang="en">
+    <div class="shell workspace-shell article-workspace-shell">
+      
+    <aside class="rail workspace-rail" aria-label="LOGILEE workspace menu">
+      <a class="brand compact-brand" href="../../"><strong>LOGILEE</strong><span>Global Trade Workspace</span></a>
+      <nav class="workspace-nav">
+        <a class="nav-home" href="../../"><i data-lucide="home"></i> Home</a>
+        <section><h2>Trade</h2><a href="../../countries.html"><i data-lucide="globe"></i>My Countries</a><a href="../../../hscode-en.html"><i data-lucide="barcode"></i>HS Code</a><a href="../../dashboard.html"><i data-lucide="globe-lock"></i>FTA & Tariff</a><a href="../../countries.html"><i data-lucide="shield-alert"></i>Import Regulation</a><a href="../../countries.html"><i data-lucide="send"></i>Export Regulation</a><a href="../../dashboard.html"><i data-lucide="chart-column"></i>Trade Statistics</a><a href="../../contact.html"><i data-lucide="building-2"></i>Embassy & Office</a></section>
+        <section><h2>Logistics</h2><a href="../../track.html"><i data-lucide="radar"></i>Tracking</a><a href="../../ports.html"><i data-lucide="ship"></i>Carrier & Airline</a><a href="../../ports.html"><i data-lucide="anchor"></i>Ports & Airports</a><a href="../../tools.html"><i data-lucide="container"></i>Container</a><a href="../../dashboard.html"><i data-lucide="calendar-days"></i>Schedule</a><a href="../../cbm.html"><i data-lucide="calculator"></i>CBM Calculator</a></section>
+        <section><h2>Compliance</h2><a href="../../dashboard.html"><i data-lucide="shield-check"></i>FDA</a><a href="../../dashboard.html"><i data-lucide="badge-check"></i>BIS</a><a href="../../dashboard.html"><i data-lucide="leaf"></i>REACH</a><a href="../../dashboard.html"><i data-lucide="circle-check"></i>RoHS / CE</a><a href="../../dashboard.html"><i data-lucide="circle-x"></i>CCC</a><a href="../../dashboard.html"><i data-lucide="shield"></i>KC / TSCA</a></section>
+        <section><h2>Market</h2><a href="../../dashboard.html"><i data-lucide="chart-no-axes-combined"></i>Freight Index</a><a href="../../dashboard.html"><i data-lucide="gem"></i>Metals & Energy</a><a href="../../weather.html"><i data-lucide="badge-dollar-sign"></i>Exchange Rate</a><a href="../../dashboard.html"><i data-lucide="calendar-clock"></i>Economic Calendar</a></section>
+        <section><h2>Resources</h2><a href="../../templates.html"><i data-lucide="copy"></i>Templates</a><a href="../../documents.html"><i data-lucide="file-text"></i>Documents</a><a href="../../dictionary.html"><i data-lucide="languages"></i>Dictionary</a><a href="../../learn.html"><i data-lucide="graduation-cap"></i>Learn</a><a class="is-active" href="../"><i data-lucide="newspaper"></i>Latest Posts</a></section>
+      </nav>
+    </aside>
+    <main class="main">
+      <header class="topbar workspace-topbar">
+        <a class="mobile-logo" href="../../">LOGILEE</a>
+        <form class="header-search" action="../../search.html" method="get" role="search">
+          <i data-lucide="search"></i>
+          <input name="q" autocomplete="off" placeholder="Search LOGILEE..." aria-label="Search LOGILEE">
+          <button type="submit" aria-label="Search"><i data-lucide="arrow-right"></i></button>
+        </form>
+        <div class="top-actions">
+          <div class="language-menu" data-language-menu>
+            <button class="icon-btn language-button" type="button" aria-expanded="false"><i data-lucide="globe-2"></i> Language <i data-lucide="chevron-down"></i></button>
+            <div class="language-dropdown">
+              <span>Language</span>
+              <a class="" href="../../../ko/" data-lang-choice="ko">Korean</a>
+              <a class="is-active" href="../../" data-lang-choice="en">English</a>
+            </div>
+          </div>
+          <button class="menu-btn" data-menu-toggle aria-expanded="false" aria-label="Open menu"><i data-lucide="menu"></i></button>
+        </div>
+      </header>
+        <div class="page workspace-page article-page">
+          <nav class="article-breadcrumb" aria-label="Breadcrumb">
+            <a href="../../">Home</a>
+            <span>/</span>
+            <a href="../">Latest Posts</a>
+          </nav>
+          <div class="article-layout">
+            <article class="article-detail">
+              <header class="article-header">
+                <p class="eyebrow">customs</p>
+                <h1>EU Customs Data Model 7.0.11: What Customs and Logistics Teams Need to Update</h1>
+                <p class="article-summary">EUCDM 7.0.11 updates EU customs data requirements for low-value e-commerce imports and corrects legal mappings. Learn what customs and logistics teams should review.</p>
+                <div class="article-meta">
+                  <span>2026-08-31</span>
+                  <span>6 min read</span>
+                  <a href="https://berryandyoung.github.io/logilee/en/posts/eu-customs-data-model-7-0-11-what-customs-and-logistics-teams-need-to-update-eucdm/">Share</a>
+                </div>
+                <figure class="article-hero-figure"><img class="article-hero" src="https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_54eb280b-9291-49ef-a67c-419ca4b12f3d-ChatGPT%20Image%202026%EB%85%84%208%EC%9B%94%2031%EC%9D%BC%20%EC%98%A4%EC%A0%84%2011_25_05%20(2).png?alt=media&amp;token=ec6ea19c-cc07-4452-b31d-37de12b78756" alt="Workers processing international parcels and customs data inside a modern European logistics warehouse" loading="eager"><p class="image-attribution">Photo: LOGILEE &middot; AI Generated</p></figure>
+              </header>
+              <article class="post-content article-body">
+                <h2>Key Takeaways</h2>
+
+<p>The European Commission has published version <strong>7.0.11 of the EU Customs Data Model (EUCDM)</strong>.</p>
+
+<p>The August 2026 release updates the harmonised customs data model used across EU customs systems and incorporates recent legal changes affecting low-value e-commerce imports.</p>
+
+<p>For customs brokers, software providers, freight forwarders and companies maintaining customs interfaces, the update is a reminder that customs compliance increasingly depends on structured data as much as traditional documents.</p>
+
+<p>Businesses using automated customs systems should review whether their internal data mappings, code lists and declaration logic remain aligned with the current EU model.</p>
+
+<h2>What Is the EU Customs Data Model?</h2>
+
+<p>The EU Customs Data Model provides a common framework for customs information requirements across the European Union.</p>
+
+<p>Its purpose is to translate legal customs data requirements into a structured model that can be used across EU and national customs systems.</p>
+
+<p>The model supports major trans-European systems including:</p>
+
+<ul>
+<li>New Computerised Transit System (NCTS)</li>
+<li>Automated Export System (AES)</li>
+<li>Import Control System</li>
+<li>Customs Decisions System (CDS)</li>
+<li>Economic Operators System (EOS)</li>
+</ul>
+
+<p>National customs clearance systems also rely on harmonised data requirements derived from the same Union Customs Code framework.</p>
+
+<h2>What Changed in EUCDM 7.0.11?</h2>
+
+<p>The European Commission highlighted three main areas in the August 2026 release.</p>
+
+<h3>1. Legal Update for Low-Value E-Commerce Imports</h3>
+
+<p>The model incorporates amended customs provisions linked to the temporary customs duty applicable to distance sales of imported goods in consignments with an intrinsic value not exceeding €150.</p>
+
+<p>From 1 July 2026, the EU introduced a temporary €3 customs duty per item for qualifying low-value e-commerce imports after removing the previous customs-duty exemption.</p>
+
+<p>EUCDM 7.0.11 reflects the related legal changes introduced through Commission Delegated Regulation (EU) 2026/1022 and Commission Implementing Regulation (EU) 2026/1200.</p>
+
+<h3>2. Usability Improvements</h3>
+
+<p>The Commission also introduced minor improvements intended to make customs data requirements clearer and easier to navigate.</p>
+
+<p>For teams implementing automated customs processes, clearer representation of data elements can reduce interpretation differences between legal, compliance and IT teams.</p>
+
+<h3>3. Corrections to Existing Content</h3>
+
+<p>The release corrects several minor inconsistencies between previous EUCDM content and the published legal texts.</p>
+
+<p>Companies maintaining their own customs data dictionaries should therefore avoid assuming that an older data mapping remains correct simply because no major customs procedure has changed.</p>
+
+<h2>Why the Update Matters to Customs IT Teams</h2>
+
+<p>A customs declaration is increasingly a structured electronic dataset rather than a paper document converted into digital form.</p>
+
+<p>A business may have the correct commercial information but still experience filing errors if the information is mapped to the wrong customs data element or uses an outdated code.</p>
+
+<p>For companies with direct customs interfaces, every EUCDM release should therefore trigger a structured change review.</p>
+
+<h2>Which Data Areas Does EUCDM Cover?</h2>
+
+<p>The current EUCDM scope includes datasets relating to:</p>
+
+<ul>
+<li>Applications and customs decisions</li>
+<li>Customs declarations</li>
+<li>Notifications</li>
+<li>Proof of customs status</li>
+<li>EORI and economic-operator information</li>
+<li>Surveillance datasets</li>
+<li>Additional customs datasets and code lists</li>
+</ul>
+
+<p>This makes the model relevant well beyond ordinary import declarations.</p>
+
+<h2>Alignment With the WCO Data Model</h2>
+
+<p>EUCDM also maps EU customs requirements against the World Customs Organization Data Model.</p>
+
+<p>According to the Commission, Union Customs Code Annex A and Annex B requirements are mapped against WCO Data Model version 4.1.</p>
+
+<p>This international alignment helps customs administrations and businesses structure data in a more consistent way across different customs environments.</p>
+
+<h2>Structured XML Downloads</h2>
+
+<p>One practical feature of EUCDM is the availability of structured downloadable data.</p>
+
+<p>Datasets and code lists covering Annex A, Annex B and Annex 12-01 are available in XML format.</p>
+
+<p>For customs-software vendors and larger companies, structured files can be more useful than manually reading regulatory annexes because they support automated comparison and validation.</p>
+
+<h2>The Simulation-Date Function</h2>
+
+<p>The model also provides an experimental simulation-date function.</p>
+
+<p>This allows users to view upcoming changes to certain Annex B legal data requirements based on the selected date.</p>
+
+<p>For implementation teams, this can help identify future data changes before they become operational.</p>
+
+<h2>What Companies Should Review</h2>
+
+<h3>1. Customs Data Dictionaries</h3>
+
+<p>Compare internal data definitions with the current EUCDM release.</p>
+
+<h3>2. Declaration Mapping</h3>
+
+<p>Check whether ERP, transport-management or customs software fields are mapped to the correct customs data elements.</p>
+
+<h3>3. Code Lists</h3>
+
+<p>Confirm that customs reference-data and code lists are current.</p>
+
+<h3>4. E-Commerce Logic</h3>
+
+<p>Systems processing low-value distance sales should review changes connected with the €3 temporary customs-duty regime.</p>
+
+<h3>5. Vendor Versions</h3>
+
+<p>If customs declarations are generated through third-party software, ask the provider which EUCDM release the current production version supports.</p>
+
+<h2>A Practical Update Workflow</h2>
+
+<ol>
+<li>Record the current EUCDM version used internally.</li>
+<li>Review the Commission's release notes.</li>
+<li>Identify affected declaration datasets.</li>
+<li>Compare changed data elements and code lists.</li>
+<li>Assess impacts on interfaces and validation rules.</li>
+<li>Update test environments first.</li>
+<li>Run sample declarations through affected workflows.</li>
+<li>Coordinate production deployment with customs brokers or software providers.</li>
+<li>Document the change for compliance and audit purposes.</li>
+</ol>
+
+<h2>EUCDM Is Not a Replacement for Customs Law</h2>
+
+<p>The EU Customs Data Model is an implementation and data-standardisation tool.</p>
+
+<p>It does not replace the Union Customs Code, delegated and implementing acts or other binding customs legislation.</p>
+
+<p>Businesses should therefore use EUCDM together with the underlying legal text rather than treating the model as an independent source of customs obligations.</p>
+
+<h2>Why Customs Teams and IT Teams Need to Work Together</h2>
+
+<p>Modern customs compliance sits between legal interpretation and software implementation.</p>
+
+<p>The compliance team may know which information must be declared, while the IT team controls how that information is stored, transformed and transmitted.</p>
+
+<p>An effective EUCDM update process therefore requires both teams to review the same change.</p>
+
+<p>This is particularly important when a small change to a data element can create automated rejection even though the underlying commercial transaction has not changed.</p>
+
+<h2>Practical Checklist</h2>
+
+<ul>
+<li>Confirm the EUCDM version used by your customs system.</li>
+<li>Review the 7.0.11 release notes.</li>
+<li>Check updated e-commerce declaration requirements.</li>
+<li>Review internal customs field mappings.</li>
+<li>Update relevant code lists.</li>
+<li>Check XML datasets where automated integration is used.</li>
+<li>Test affected declaration workflows.</li>
+<li>Confirm software-provider compatibility.</li>
+<li>Monitor future EUCDM releases.</li>
+</ul>
+
+<h2>Conclusion</h2>
+
+<p>EUCDM 7.0.11 is not a dramatic new customs regime, but it is operationally important for organisations that rely on automated EU customs data.</p>
+
+<p>The release incorporates recent legal changes for low-value e-commerce imports, improves usability and corrects several data-model inconsistencies.</p>
+
+<p>For customs and logistics teams, the main action is simple: <strong>confirm that customs systems, field mappings and reference data remain aligned with the current EU model rather than relying on an older implementation.</strong></p>
+
+<p>As EU customs processes become increasingly data-driven, maintaining the customs data model should become part of routine compliance change management.</p>
+
+<h2>FAQ</h2>
+
+<h3>What is EUCDM?</h3>
+<p>EUCDM is the European Union Customs Data Model, which standardises customs data requirements derived from EU customs legislation across trans-European and national customs systems.</p>
+
+<h3>What is the latest EUCDM version?</h3>
+<p>The European Commission announced EUCDM version 7.0.11 in August 2026.</p>
+
+<h3>Does EUCDM 7.0.11 change customs law?</h3>
+<p>No. The model reflects and structures existing legal requirements. Binding obligations continue to come from the Union Customs Code and the relevant delegated and implementing legislation.</p>
+
+<h3>What major legal update is reflected in version 7.0.11?</h3>
+<p>The release incorporates provisions connected with the temporary customs duty for distance sales of imported goods in consignments not exceeding €150 in intrinsic value.</p>
+
+<h3>Who should review EUCDM releases?</h3>
+<p>Customs brokers, customs software providers, logistics operators and businesses operating direct or integrated EU customs interfaces should review releases relevant to their declaration workflows.</p>
+
+<h3>Are structured EUCDM files available?</h3>
+<p>Yes. The Commission makes several datasets and code lists available in structured XML format.</p>
+
+<h2>Official References</h2>
+
+<ul>
+<li><a href="https://taxation-customs.ec.europa.eu/news/eucdm-701-here-whats-new-updated-european-customs-data-model-2026-08-27_en" target="_blank" rel="noopener noreferrer">European Commission — EUCDM 7.0.11 Update</a></li>
+<li><a href="https://taxation-customs.ec.europa.eu/customs-4/union-customs-code/eu-customs-data-model-eucdm_en" target="_blank" rel="noopener noreferrer">European Commission — EU Customs Data Model</a></li>
+</ul>
+
+<p>This article provides general customs and technology information and does not constitute legal or customs advice. Customs data requirements depend on the procedure, Member State implementation and legislation in force. Businesses should verify current EUCDM documentation, customs legislation and software-provider specifications before making system changes.</p>
+              </article>
+            </article>
+            
+    <aside class="article-aside" aria-label="Article resources">
+      <section class="article-aside-card">
+        <h2>Related Resources</h2>
+        <div class="article-resource-list">
+    <a href="../../ports.html"><i data-lucide="anchor"></i><span>Ports &amp; Airports</span></a>
+  
+    <a href="../../track.html"><i data-lucide="radar"></i><span>Shipment Tracking</span></a>
+  
+    <a href="../../../hscode-en.html"><i data-lucide="barcode"></i><span>HS Code</span></a>
+  
+    <a href="../../documents.html"><i data-lucide="file-text"></i><span>Documents</span></a>
+  
+    <a href="../../dictionary.html"><i data-lucide="languages"></i><span>Dictionary</span></a>
+  
+    <a href="../../cbm.html"><i data-lucide="calculator"></i><span>CBM Calculator</span></a>
+  
+    <a href="../../../incoterms-2020-en.html"><i data-lucide="git-compare-arrows"></i><span>Incoterms</span></a>
+  </div>
+      </section>
+      <section class="article-aside-card">
+        <h2>Related Posts</h2>
+        <div class="article-related-list">
+      <a class="article-related-post" href="../../../en/posts/us-de-minimis-2026/">
+        <img src="https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_951c23d0-d6b0-44da-af51-855f9ef2e377-ChatGPT%20Image%202026%EB%85%84%208%EC%9B%94%2020%EC%9D%BC%20%EC%98%A4%ED%9B%84%2002_29_30.png?alt=media&amp;token=ac2fe179-443d-4f00-807e-6619028c8589" alt="International logistics image representing U.S. small-value exports and De Minimis customs changes" loading="lazy">
+        <span><strong>End of $800 De Minimis Exemption: What Korean Exporters Need to Know About U.S. Customs Changes</strong><small>2026-08-20</small></span>
+      </a>
+    
+      <a class="article-related-post" href="../../../en/posts/logilee-connector-dry-run-diagnostic/">
+        <img src="https://www.logilee.com/assets/trade-hero-port.jpg" alt="LOGILEE Connector Dry Run Diagnostic - LOGILEE Website" loading="lazy">
+        <span><strong>LOGILEE Connector Dry Run Diagnostic - LOGILEE Website</strong><small>2026-08-31</small></span>
+      </a>
+    
+      <a class="article-related-post" href="../../../en/posts/eu-deforestation-regulation-eudr-guide-2026/">
+        <img src="https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_653848e7-31a9-4d9d-abcc-ff6421aa17ce-ChatGPT%20Image%202026%EB%85%84%208%EC%9B%94%2023%EC%9D%BC%20%EC%98%A4%ED%9B%84%2001_13_44.png?alt=media&amp;token=141fa149-8daa-4bc0-95f6-94bffb307ab3" alt="Supply chain professional inspecting timber at an international cargo terminal" loading="lazy">
+        <span><strong>EU Deforestation Regulation (EUDR): What Importers and Exporters Need to Know in 2026</strong><small>2026-08-23</small></span>
+      </a>
+    </div>
+      </section>
+      <div class="ad-slot ad-slot--rectangle article-ad"><span>Advertisement</span><small>Reserved ad placement</small></div>
+    </aside>
+          </div>
+        </div>
+      </main>
+    </div>
+    <script>
+      (() => {
+        const view = {"endpoint":"https://us-central1-logilee-cms.cloudfunctions.net/trackLogileePostView","slug":"eu-customs-data-model-7-0-11-what-customs-and-logistics-teams-need-to-update-eucdm","language":"en","ttlMs":21600000};
+        if (!view.slug || !view.language || !view.endpoint) return;
+        const key = ["logilee", "post-view", view.language, view.slug].join(":");
+        const now = Date.now();
+        try {
+          const previous = Number(localStorage.getItem(key) || 0);
+          if (previous && now - previous < view.ttlMs) return;
+          localStorage.setItem(key, String(now));
+        } catch {
+          return;
+        }
+        fetch(view.endpoint, {
+          method: "POST",
+          mode: "cors",
+          keepalive: true,
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ slug: view.slug, language: view.language })
+        }).then((response) => {
+          if (!response.ok) localStorage.removeItem(key);
+        }).catch(() => {
+          try { localStorage.removeItem(key); } catch {}
+        });
+      })();
+    </script>
+  </body>
+</html>
