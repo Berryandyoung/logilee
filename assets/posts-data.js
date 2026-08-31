@@ -1,5 +1,22 @@
 window.LOGILEE_POSTS = [
   {
+    "slug": "logilee-connector-final-aggregate-qa-a-20260831-080215",
+    "language": "en",
+    "status": "published",
+    "title": "LOGILEE Connector Final Aggregate QA A 20260831-080215 - LOGILEE Website",
+    "description": "Harmless LOGILEE final aggregate preservation QA A.",
+    "category": "guides",
+    "date": "2026-08-31",
+    "publishedAt": "2026-08-31T08:02:17Z",
+    "readingTime": "1 min read",
+    "path": "en/posts/logilee-connector-final-aggregate-qa-a-20260831-080215/",
+    "image": "https://www.logilee.com/assets/trade-hero-port.jpg",
+    "imageAlt": "LOGILEE Connector Final Aggregate QA A 20260831-080215 - LOGILEE Website",
+    "imageCredit": "LOGILEE",
+    "imageLicense": "Automation Foundation",
+    "publicationId": "pub_a3e08929275a461d"
+  },
+  {
     "slug": "logilee-connector-aggregate-qa-b-20260831-073741",
     "language": "en",
     "status": "published",
