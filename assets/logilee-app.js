@@ -137,7 +137,7 @@ function localizedResultUrl(item, lang) {
 
 function alternateLanguageHref(lang, previousLinks = []) {
   const preservePageState = (href) => {
-    if (!/(?:\/ko\/|\/en\/)airports\.html$/.test(location.pathname) || (!location.search && !location.hash)) return href;
+    if (!/(?:\/ko\/|\/en\/)(?:airports|compliance)\.html$/.test(location.pathname) || (!location.search && !location.hash)) return href;
     try {
       const url = new URL(href, location.origin);
       url.search = location.search;
@@ -457,6 +457,15 @@ function wireSidebarAccordion(activeGroupId) {
   });
 
   render();
+}
+
+function updateComplianceSidebarActiveState() {
+  const currentFile = location.pathname.split("/").pop() || "index.html";
+  if (!["compliance.html", "dashboard.html"].includes(currentFile)) return;
+  const activeKey = location.hash === "#reference-areas" ? "compliance-rules" : "compliance-hub";
+  document.querySelectorAll(".workspace-nav a[data-nav-key]").forEach((link) => {
+    link.classList.toggle("is-active", link.dataset.navKey === activeKey);
+  });
 }
 
 function wireMenu() {
@@ -5782,6 +5791,7 @@ document.addEventListener("DOMContentLoaded", () => {
   ensureGlobalSidebar();
   ensureGlobalHeader();
   enhanceSidebar();
+  updateComplianceSidebarActiveState();
   refreshIcons();
   wireMenu();
   wireSidebarCollapse();
@@ -5813,3 +5823,5 @@ document.addEventListener("DOMContentLoaded", () => {
   wireHsClassificationPage();
   wireNewsPage();
 });
+
+window.addEventListener("hashchange", updateComplianceSidebarActiveState);
