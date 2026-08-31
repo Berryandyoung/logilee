@@ -1,5 +1,22 @@
 window.LOGILEE_POSTS = [
   {
+    "slug": "logilee-connector-real-qa-dry-run-20260831-021313",
+    "language": "en",
+    "status": "published",
+    "title": "LOGILEE Connector Real QA Dry Run 20260831-021313 - LOGILEE Website",
+    "description": "Diagnostic dry run article for LOGILEE GitHub website connector QA. No GitHub write has been approved.",
+    "category": "guides",
+    "date": "2026-08-31",
+    "publishedAt": "2026-08-31T02:23:13Z",
+    "readingTime": "1 min read",
+    "path": "en/posts/logilee-connector-real-qa-dry-run-20260831-021313/",
+    "image": "https://www.logilee.com/assets/trade-hero-port.jpg",
+    "imageAlt": "LOGILEE Connector Real QA Dry Run 20260831-021313 - LOGILEE Website",
+    "imageCredit": "LOGILEE",
+    "imageLicense": "Automation Foundation",
+    "publicationId": "pub_15b997168f7742d9"
+  },
+  {
     "slug": "korea-exports-august-2026-semiconductor",
     "language": "ko",
     "status": "published",
