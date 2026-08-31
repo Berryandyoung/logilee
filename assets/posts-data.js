@@ -1,20 +1,20 @@
 window.LOGILEE_POSTS = [
   {
-    "slug": "logilee-connector-real-qa-dry-run-20260831-021313",
+    "slug": "logilee-connector-dry-run-diagnostic",
     "language": "en",
     "status": "published",
-    "title": "LOGILEE Connector Real QA Dry Run 20260831-021313 - LOGILEE Website",
-    "description": "Diagnostic dry run article for LOGILEE GitHub website connector QA. No GitHub write has been approved.",
+    "title": "LOGILEE Connector Dry Run Diagnostic - LOGILEE Website",
+    "description": "Dry run diagnostic summary.",
     "category": "guides",
     "date": "2026-08-31",
-    "publishedAt": "2026-08-31T02:23:13Z",
+    "publishedAt": "2026-08-31T01:43:09Z",
     "readingTime": "1 min read",
-    "path": "en/posts/logilee-connector-real-qa-dry-run-20260831-021313/",
+    "path": "en/posts/logilee-connector-dry-run-diagnostic/",
     "image": "https://www.logilee.com/assets/trade-hero-port.jpg",
-    "imageAlt": "LOGILEE Connector Real QA Dry Run 20260831-021313 - LOGILEE Website",
+    "imageAlt": "LOGILEE Connector Dry Run Diagnostic - LOGILEE Website",
     "imageCredit": "LOGILEE",
     "imageLicense": "Automation Foundation",
-    "publicationId": "pub_15b997168f7742d9"
+    "publicationId": "pub_8d85eb5672bb42b4"
   },
   {
     "slug": "korea-exports-august-2026-semiconductor",
