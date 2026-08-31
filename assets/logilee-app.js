@@ -275,7 +275,7 @@ function workspaceNavMarkup(lang) {
       <a class="nav-home" href="./"><i data-lucide="home"></i> ${nav.home}</a>
       <section><h2>${nav.trade}</h2><a href="country-trade-profile.html"><i data-lucide="globe"></i>${nav.country}</a><a href="holidays.html"><i data-lucide="calendar-check"></i>${nav.holidays}</a><a href="eu-trade-explorer.html"><i data-lucide="chart-column"></i>${nav.eu}</a><a href="global-trade-explorer.html"><i data-lucide="chart-column"></i>${nav.global}</a><a href="${hsHref}"><i data-lucide="barcode"></i>${nav.hs}</a></section>
       <section><h2>${nav.logistics}</h2><a href="ports.html"><i data-lucide="anchor"></i>${nav.ports}</a><a href="airports.html"><i data-lucide="plane"></i>${nav.airports}</a><a href="track.html"><i data-lucide="radar"></i>${nav.tracking}</a><a href="cbm.html"><i data-lucide="calculator"></i>${nav.cbm}</a></section>
-      <section><h2>${nav.compliance}</h2><a href="compliance.html" data-nav-key="compliance-hub"><i data-lucide="shield-check"></i>${nav.hub}</a><a href="compliance.html#reference-areas" data-nav-key="compliance-rules"><i data-lucide="shield-alert"></i>${nav.rules}</a></section>
+      <section><h2>${nav.compliance}</h2><a href="compliance.html" data-nav-key="compliance-hub"><i data-lucide="shield-check"></i>${nav.hub}</a></section>
       <section><h2>${nav.market}</h2><a href="freight-market.html"><i data-lucide="chart-no-axes-combined"></i>${nav.freight}</a><a href="currency-converter.html"><i data-lucide="badge-dollar-sign"></i>${nav.fx}</a><a href="business-day.html"><i data-lucide="calendar-clock"></i>${nav.business}</a></section>
       <section><h2>${nav.resources}</h2><a href="templates.html"><i data-lucide="copy"></i>${nav.templates}</a><a href="documents.html"><i data-lucide="file-text"></i>${nav.documents}</a><a href="dictionary.html"><i data-lucide="languages"></i>${nav.dictionary}</a><a href="learn.html"><i data-lucide="graduation-cap"></i>${nav.learn}</a><a href="contact.html"><i data-lucide="building-2"></i>${nav.contact}</a></section>
     </nav>
@@ -357,9 +357,7 @@ function enhanceSidebar() {
   const currentFile = location.pathname.split("/").pop() || "index.html";
   const currentHash = location.hash || "";
   const currentNavKey = (() => {
-    if (["compliance.html", "dashboard.html"].includes(currentFile)) {
-      return currentHash === "#reference-areas" ? "compliance-rules" : "compliance-hub";
-    }
+    if (["compliance.html", "dashboard.html"].includes(currentFile)) return "compliance-hub";
     return "";
   })();
   let activeGroupId = "";
@@ -462,9 +460,8 @@ function wireSidebarAccordion(activeGroupId) {
 function updateComplianceSidebarActiveState() {
   const currentFile = location.pathname.split("/").pop() || "index.html";
   if (!["compliance.html", "dashboard.html"].includes(currentFile)) return;
-  const activeKey = location.hash === "#reference-areas" ? "compliance-rules" : "compliance-hub";
   document.querySelectorAll(".workspace-nav a[data-nav-key]").forEach((link) => {
-    link.classList.toggle("is-active", link.dataset.navKey === activeKey);
+    link.classList.toggle("is-active", link.dataset.navKey === "compliance-hub");
   });
 }
 
@@ -2280,6 +2277,11 @@ const TRADE_COUNTRIES = ISO_COUNTRY_CODES
     if (priorityA >= 0 || priorityB >= 0) return (priorityA >= 0 ? priorityA : 999) - (priorityB >= 0 ? priorityB : 999);
     return a[1].localeCompare(b[1], "en");
   });
+
+if (typeof window !== "undefined") {
+  window.LOGILEE_COUNTRY_OPTIONS = TRADE_COUNTRIES;
+  window.LOGILEE_COUNTRY_ALIASES = COUNTRY_SEARCH_ALIASES;
+}
 
 const COUNTRY_CURRENCY = { KR: "KRW", CN: "CNY", US: "USD", JP: "JPY", DE: "EUR", VN: "VND", IN: "INR", MX: "MXN", SG: "SGD", GB: "GBP", NL: "EUR", AE: "AED", HK: "HKD", TH: "THB", MY: "MYR", LK: "LKR", AT: "EUR", BE: "EUR", BG: "EUR", HR: "EUR", CY: "EUR", CZ: "CZK", DK: "DKK", EE: "EUR", FI: "EUR", FR: "EUR", EL: "EUR", ES: "EUR", IT: "EUR", GR: "EUR", HU: "HUF", IE: "EUR", LV: "EUR", LT: "EUR", LU: "EUR", MT: "EUR", PT: "EUR", RO: "RON", SK: "EUR", SI: "EUR", SE: "SEK", TW: "TWD", PL: "PLN", CA: "CAD", BR: "BRL", AR: "ARS", PE: "PEN", CO: "COP", PA: "PAB", ZA: "ZAR", MA: "MAD", EG: "EGP", KE: "KES", TZ: "TZS", NG: "NGN", GH: "GHS", SA: "SAR", OM: "OMR", QA: "QAR", PK: "PKR", BD: "BDT", ID: "IDR", PH: "PHP", ET: "ETB", CG: "XAF", CD: "CDF" };
 const PORTS = [
