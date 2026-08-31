@@ -1,20 +1,20 @@
 window.LOGILEE_POSTS = [
   {
-    "slug": "logilee-connector-aggregate-qa-a-20260831-073709",
+    "slug": "logilee-connector-aggregate-qa-b-20260831-073741",
     "language": "en",
     "status": "published",
-    "title": "LOGILEE Connector Aggregate QA A 20260831-073709 - LOGILEE Website",
-    "description": "Harmless LOGILEE aggregate preservation QA A.",
+    "title": "LOGILEE Connector Aggregate QA B 20260831-073741 - LOGILEE Website",
+    "description": "Harmless LOGILEE aggregate preservation QA B.",
     "category": "guides",
     "date": "2026-08-31",
-    "publishedAt": "2026-08-31T07:37:10Z",
+    "publishedAt": "2026-08-31T07:37:42Z",
     "readingTime": "1 min read",
-    "path": "en/posts/logilee-connector-aggregate-qa-a-20260831-073709/",
+    "path": "en/posts/logilee-connector-aggregate-qa-b-20260831-073741/",
     "image": "https://www.logilee.com/assets/trade-hero-port.jpg",
-    "imageAlt": "LOGILEE Connector Aggregate QA A 20260831-073709 - LOGILEE Website",
+    "imageAlt": "LOGILEE Connector Aggregate QA B 20260831-073741 - LOGILEE Website",
     "imageCredit": "LOGILEE",
     "imageLicense": "Automation Foundation",
-    "publicationId": "pub_133e8814faea48c1"
+    "publicationId": "pub_3707151901ed4149"
   },
   {
     "slug": "eu-customs-data-model-7-0-11-what-customs-and-logistics-teams-need-to-update-eucdm",
