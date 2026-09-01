@@ -1,5 +1,21 @@
 window.LOGILEE_POSTS = [
   {
+    "slug": "uk-canada-cptpp-tca-trade-guide-2026",
+    "language": "en",
+    "status": "published",
+    "title": "UK–Canada CPTPP Starts Today: How Traders Should Choose Between CPTPP and the TCA",
+    "description": "CPTPP now applies between the UK and Canada alongside the existing TCA. Learn how to compare tariff preferences, rules of origin and cumulation before choosing an agreement.",
+    "category": "trade",
+    "date": "2026-09-01",
+    "publishedAt": "2026-09-01T01:53:46.441Z",
+    "readingTime": "6 min read",
+    "path": "en/posts/uk-canada-cptpp-tca-trade-guide-2026/",
+    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_2e88ff28-c77f-481b-a846-ec2e2ba570d8-ChatGPT%20Image%202026%EB%85%84%209%EC%9B%94%201%EC%9D%BC%20%EC%98%A4%EC%A0%84%2010_49_50.png?alt=media&token=84d37079-3227-4f04-a8f3-f2f091982db5",
+    "imageAlt": "International parcels and export shipments being processed inside a large logistics facility",
+    "imageCredit": "LOGILEE",
+    "imageLicense": "AI Generated"
+  },
+  {
     "slug": "kita-trade-promotion-fund-september-2026",
     "language": "ko",
     "status": "published",
