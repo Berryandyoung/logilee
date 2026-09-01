@@ -1,0 +1,264 @@
+{
+  "version": "global-freight-v2-mvp-20260901",
+  "builtAt": "2026-09-01",
+  "gscpi": {
+    "source": "Federal Reserve Bank of New York",
+    "dataset": "Global Supply Chain Pressure Index (GSCPI)",
+    "sourceUrl": "https://www.newyorkfed.org/research/policy/gscpi",
+    "dataUrl": "https://www.newyorkfed.org/medialibrary/research/interactives/data/gscpi/gscpi_interactive_data.csv",
+    "release": "Aug-26",
+    "current": {
+      "date": "31-Jul-2026",
+      "value": 0.79
+    },
+    "previous": {
+      "date": "30-Jun-2026",
+      "value": 1.19
+    },
+    "change": -0.4
+  },
+  "unctad": {
+    "source": "UNCTADstat Data Centre",
+    "license": "CC BY 3.0 IGO",
+    "sourceUrl": "https://unctadstat.unctad.org/insights/theme/246",
+    "bulkSourceUrl": "https://unctadstat-api.unctad.org/api/reportMetadata/US.LSCI/bulkfiles/en",
+    "lsci": {
+      "AU": {
+        "m49": "036",
+        "label": "Australia",
+        "period": "2026Q02",
+        "periodLabel": "Q2 2026",
+        "value": 145.12094,
+        "previousPeriod": "2026Q01",
+        "previousValue": 143.71904,
+        "qoq": 0.9754,
+        "yoy": 1.9331,
+        "rank": 36
+      },
+      "CN": {
+        "m49": "156",
+        "label": "China",
+        "period": "2026Q02",
+        "periodLabel": "Q2 2026",
+        "value": 1319.45744,
+        "previousPeriod": "2026Q01",
+        "previousValue": 1322.62681,
+        "qoq": -0.2396,
+        "yoy": 2.1818,
+        "rank": 1
+      },
+      "DE": {
+        "m49": "276",
+        "label": "Germany",
+        "period": "2026Q02",
+        "periodLabel": "Q2 2026",
+        "value": 325.46961,
+        "previousPeriod": "2026Q01",
+        "previousValue": 320.72205,
+        "qoq": 1.4803,
+        "yoy": 1.195,
+        "rank": 14
+      },
+      "GB": {
+        "m49": "826",
+        "label": "United Kingdom",
+        "period": "2026Q02",
+        "periodLabel": "Q2 2026",
+        "value": 387.62645,
+        "previousPeriod": "2026Q01",
+        "previousValue": 393.99508,
+        "qoq": -1.6164,
+        "yoy": -1.323,
+        "rank": 9
+      },
+      "JP": {
+        "m49": "392",
+        "label": "Japan",
+        "period": "2026Q02",
+        "periodLabel": "Q2 2026",
+        "value": 415.70808,
+        "previousPeriod": "2026Q01",
+        "previousValue": 421.9084,
+        "qoq": -1.4696,
+        "yoy": -1.4547,
+        "rank": 8
+      },
+      "KR": {
+        "m49": "410",
+        "label": "Republic of Korea",
+        "period": "2026Q02",
+        "periodLabel": "Q2 2026",
+        "value": 637.15206,
+        "previousPeriod": "2026Q01",
+        "previousValue": 635.72043,
+        "qoq": 0.2252,
+        "yoy": 1.8019,
+        "rank": 2
+      },
+      "NL": {
+        "m49": "528",
+        "label": "Netherlands (Kingdom of the)",
+        "period": "2026Q02",
+        "periodLabel": "Q2 2026",
+        "value": 380.79994,
+        "previousPeriod": "2026Q01",
+        "previousValue": 380.95919,
+        "qoq": -0.0418,
+        "yoy": -0.9704,
+        "rank": 11
+      },
+      "SG": {
+        "m49": "702",
+        "label": "Singapore",
+        "period": "2026Q02",
+        "periodLabel": "Q2 2026",
+        "value": 617.63366,
+        "previousPeriod": "2026Q01",
+        "previousValue": 629.66513,
+        "qoq": -1.9108,
+        "yoy": 0.4982,
+        "rank": 3
+      },
+      "US": {
+        "m49": "840",
+        "label": "United States",
+        "period": "2026Q02",
+        "periodLabel": "Q2 2026",
+        "value": 503.88767,
+        "previousPeriod": "2026Q01",
+        "previousValue": 510.75946,
+        "qoq": -1.3454,
+        "yoy": -2.9076,
+        "rank": 5
+      },
+      "VN": {
+        "m49": "704",
+        "label": "Viet Nam",
+        "period": "2026Q02",
+        "periodLabel": "Q2 2026",
+        "value": 489.8358,
+        "previousPeriod": "2026Q01",
+        "previousValue": 478.8203,
+        "qoq": 2.3005,
+        "yoy": 6.7308,
+        "rank": 6
+      }
+    },
+    "bilateral": {
+      "KR-US": {
+        "period": "2026Q01",
+        "periodLabel": "Q1 2026",
+        "value": 0.6687,
+        "previousPeriod": "2025Q01",
+        "previousValue": 0.6389,
+        "originLabel": "Republic of Korea",
+        "destinationLabel": "United States"
+      },
+      "CN-DE": {
+        "period": "2026Q01",
+        "periodLabel": "Q1 2026",
+        "value": 0.6819,
+        "previousPeriod": "2025Q01",
+        "previousValue": 0.6832,
+        "originLabel": "China",
+        "destinationLabel": "Germany"
+      },
+      "SG-NL": {
+        "period": "2026Q01",
+        "periodLabel": "Q1 2026",
+        "value": 0.689,
+        "previousPeriod": "2025Q01",
+        "previousValue": 0.6948,
+        "originLabel": "Singapore",
+        "destinationLabel": "Netherlands (Kingdom of the)"
+      },
+      "JP-AU": {
+        "period": "2026Q01",
+        "periodLabel": "Q1 2026",
+        "value": 0.4551,
+        "previousPeriod": "2025Q01",
+        "previousValue": 0.4599,
+        "originLabel": "Japan",
+        "destinationLabel": "Australia"
+      },
+      "US-GB": {
+        "period": "2026Q01",
+        "periodLabel": "Q1 2026",
+        "value": 0.6989,
+        "previousPeriod": "2025Q01",
+        "previousValue": 0.682,
+        "originLabel": "United States",
+        "destinationLabel": "United Kingdom"
+      },
+      "VN-US": {
+        "period": "2026Q01",
+        "periodLabel": "Q1 2026",
+        "value": 0.6131,
+        "previousPeriod": "2025Q01",
+        "previousValue": 0.5702,
+        "originLabel": "Viet Nam",
+        "destinationLabel": "United States"
+      },
+      "US-KR": {
+        "period": "2026Q01",
+        "periodLabel": "Q1 2026",
+        "value": 0.6687,
+        "previousPeriod": "2025Q01",
+        "previousValue": 0.6389,
+        "originLabel": "United States",
+        "destinationLabel": "Republic of Korea"
+      },
+      "DE-CN": {
+        "period": "2026Q01",
+        "periodLabel": "Q1 2026",
+        "value": 0.6819,
+        "previousPeriod": "2025Q01",
+        "previousValue": 0.6832,
+        "originLabel": "Germany",
+        "destinationLabel": "China"
+      },
+      "NL-SG": {
+        "period": "2026Q01",
+        "periodLabel": "Q1 2026",
+        "value": 0.689,
+        "previousPeriod": "2025Q01",
+        "previousValue": 0.6948,
+        "originLabel": "Netherlands (Kingdom of the)",
+        "destinationLabel": "Singapore"
+      },
+      "AU-JP": {
+        "period": "2026Q01",
+        "periodLabel": "Q1 2026",
+        "value": 0.4551,
+        "previousPeriod": "2025Q01",
+        "previousValue": 0.4599,
+        "originLabel": "Australia",
+        "destinationLabel": "Japan"
+      },
+      "GB-US": {
+        "period": "2026Q01",
+        "periodLabel": "Q1 2026",
+        "value": 0.6989,
+        "previousPeriod": "2025Q01",
+        "previousValue": 0.682,
+        "originLabel": "United Kingdom",
+        "destinationLabel": "United States"
+      },
+      "US-VN": {
+        "period": "2026Q01",
+        "periodLabel": "Q1 2026",
+        "value": 0.6131,
+        "previousPeriod": "2025Q01",
+        "previousValue": 0.5702,
+        "originLabel": "United States",
+        "destinationLabel": "Viet Nam"
+      }
+    }
+  },
+  "eia": {
+    "source": "U.S. Energy Information Administration",
+    "sourceUrl": "https://www.eia.gov/opendata/",
+    "selectedProxy": "Brent crude oil spot price, weekly",
+    "status": "api_key_required"
+  }
+}

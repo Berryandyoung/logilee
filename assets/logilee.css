@@ -5804,6 +5804,137 @@ body.sidebar-drawer-active {
   font-size: 12px;
 }
 
+.freight-v2-section {
+  display: grid;
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+.freight-v2-section:last-child {
+  margin-bottom: 0;
+}
+
+.freight-pulse-grid,
+.freight-signal-grid,
+.freight-concept-grid,
+.freight-resource-grid,
+.freight-explorer-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.freight-explorer-form {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: end;
+}
+
+.freight-metric-card,
+.freight-concept-grid div,
+.freight-resource-grid a,
+.freight-next-actions,
+.freight-selected-head {
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid #e2ebf6;
+  border-radius: 8px;
+  background: linear-gradient(180deg, #fff, #fbfdff);
+}
+
+.freight-metric-card {
+  display: grid;
+  gap: 12px;
+}
+
+.freight-metric-card h3,
+.freight-port-links h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.freight-metric-card > strong {
+  color: var(--ink-navy);
+  font-size: 34px;
+  line-height: 1;
+}
+
+.freight-metric-card dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0;
+}
+
+.freight-metric-card dl div {
+  display: grid;
+  gap: 4px;
+  padding: 10px;
+  border-radius: 8px;
+  background: #f5f8fc;
+}
+
+.freight-metric-card dt,
+.freight-metric-card dd {
+  margin: 0;
+}
+
+.freight-metric-card dt,
+.freight-metric-card p,
+.freight-resource-grid small,
+.freight-source-notes small,
+.freight-concept-grid span,
+.freight-next-actions {
+  color: var(--secondary-text);
+  font-size: 13px;
+}
+
+.freight-resource-grid a {
+  display: grid;
+  gap: 8px;
+  color: var(--deep-navy);
+}
+
+.freight-resource-grid span,
+.freight-resource-grid em {
+  color: var(--signal-blue);
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 800;
+}
+
+.freight-concept-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.freight-concept-grid div {
+  display: grid;
+  gap: 8px;
+}
+
+.freight-port-links {
+  display: grid;
+  gap: 12px;
+}
+
+.freight-source-strip {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (max-width: 900px) {
+  .freight-pulse-grid,
+  .freight-signal-grid,
+  .freight-concept-grid,
+  .freight-resource-grid,
+  .freight-explorer-form,
+  .freight-source-strip {
+    grid-template-columns: 1fr;
+  }
+
+  .freight-metric-card > strong {
+    font-size: 30px;
+  }
+}
+
 .home-page .home-latest-panel {
   padding: 0;
   border: 0;
