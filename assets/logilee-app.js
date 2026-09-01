@@ -845,24 +845,55 @@ async function loadHomeMarket() {
 async function wireFreightMarket() {
   const target = document.querySelector("[data-freight-market]");
   if (!target) return;
+  const lang = currentLang();
+  const labels = lang === "ko"
+    ? {
+        kicker: "최신 운송 활동 스냅샷",
+        title: "미국 BTS 화물 운송 활동 지표",
+        note: "이 지표는 미국 화물 운송 활동의 흐름을 보여주는 참고 자료이며, 실제 운송 견적, 특정 항로의 컨테이너 운임 또는 선사별 운임을 의미하지 않습니다.",
+        latestObservation: "최신 관측월",
+        source: "출처",
+        dataset: "데이터셋",
+        updateBasis: "업데이트 기준",
+        monthly: "월별 공개 통계, 지표별 공표 지연 및 수정 가능",
+        sourceNote: "출처: Bureau of Transportation Statistics (BTS). 데이터셋: Transportation Services Index and Seasonally-Adjusted Transportation Data. 지표별 공표 주기와 수정 가능성이 다를 수 있습니다."
+      }
+    : {
+        kicker: "Latest Freight Snapshot",
+        title: "U.S. BTS freight transportation activity indicators",
+        note: "These indicators show U.S. freight transportation activity trends. They are not shipment quotations, lane-specific container rates, or carrier-specific freight rates.",
+        latestObservation: "Latest observation",
+        source: "Source",
+        dataset: "Dataset",
+        updateBasis: "Update basis",
+        monthly: "Monthly public statistics, with series-specific publication lag and revisions",
+        sourceNote: "Source: Bureau of Transportation Statistics (BTS). Dataset: Transportation Services Index and Seasonally-Adjusted Transportation Data. Update cycles vary by series and may be revised."
+      };
   target.innerHTML = `<div class="data-empty">Loading latest available freight data...</div>`;
   try {
     const rows = await getFreightData();
     const summary = rows.filter((item) => ["tsi_freight", "truck_d11", "rail_frt_intermodal"].includes(item.key));
+    const latestObservation = rows.map((item) => item.period).filter(Boolean).sort().at(-1);
     target.innerHTML = `
       <div class="data-summary-head">
         <div>
-          <span class="kicker">Latest Freight Snapshot</span>
-          <h2>Latest available public transportation indicators</h2>
-          <p class="muted">These are BTS statistical indicators, not real-time freight quotes.</p>
+          <span class="kicker">${labels.kicker}</span>
+          <h2>${labels.title}</h2>
+          <p class="muted">${labels.note}</p>
         </div>
+      </div>
+      <div class="data-status-list compact-fx-meta">
+        <div><strong>${labels.latestObservation}</strong><span>${formatPeriod(latestObservation, lang)}</span></div>
+        <div><strong>${labels.source}</strong><span><a href="${BTS_FREIGHT_SOURCE}" target="_blank" rel="noopener noreferrer">Bureau of Transportation Statistics (BTS)</a></span></div>
+        <div><strong>${labels.dataset}</strong><span>Transportation Services Index and Seasonally-Adjusted Transportation Data</span></div>
+        <div><strong>${labels.updateBasis}</strong><span>${labels.monthly}</span></div>
       </div>
       <div class="stat-grid freight-summary-grid">
         ${summary.map((item) => {
           const digits = item.latest > 1000 ? 0 : 1;
           const change = Number.isFinite(item.change) ? `${item.change >= 0 ? "↑ +" : "↓ "}${formatRate(item.change, 1)}%` : "";
           const cls = Number.isFinite(item.change) ? `trend-${item.change >= 0 ? "up" : "down"}` : "";
-          return `<div class="stat-block"><span>${item.label}</span><strong>${Number.isFinite(item.latest) ? formatRate(item.latest, digits) : "N/A"}</strong>${change ? `<em class="${cls}">${change}</em>` : ""}<small>${formatPeriod(item.period)}</small></div>`;
+          return `<div class="stat-block"><span>${item.label}</span><strong>${Number.isFinite(item.latest) ? formatRate(item.latest, digits) : "N/A"}</strong>${change ? `<em class="${cls}">${change}</em>` : ""}<small>${formatPeriod(item.period, lang)}</small></div>`;
         }).join("")}
       </div>
       <div class="responsive-table">
@@ -871,7 +902,7 @@ async function wireFreightMarket() {
           <tbody>${rows.map((item) => freightRowMarkup(item)).join("")}</tbody>
         </table>
       </div>
-      <p class="muted">Source: U.S. Bureau of Transportation Statistics. Dataset: Transportation Services Index and Seasonally-Adjusted Transportation Data. Update cycles vary by series and may be revised.</p>
+      <p class="muted">${labels.sourceNote}</p>
     `;
   } catch (error) {
     console.warn("Freight Market unavailable:", error);
@@ -2078,10 +2109,20 @@ const FREIGHT_SERIES = [
   ["Waterborne Freight", "waterborne_d11", "Million short tons"]
 ];
 
-function formatPeriod(dateValue) {
-  const date = new Date(dateValue);
-  if (Number.isNaN(date.getTime())) return "N/A";
-  return new Intl.DateTimeFormat("en-US", { month: "short", year: "numeric", timeZone: "UTC" }).format(date);
+function freightPeriodKey(dateValue) {
+  const match = String(dateValue || "").match(/^(\d{4})-(\d{2})-\d{2}/);
+  return match ? `${match[1]}-${match[2]}` : "";
+}
+
+function formatPeriod(dateValue, lang = currentLang()) {
+  const match = String(dateValue || "").match(/^(\d{4})-(\d{2})-\d{2}/);
+  if (!match) return "—";
+  const year = match[1];
+  const month = Number(match[2]);
+  if (!Number.isInteger(month) || month < 1 || month > 12) return "—";
+  if (lang === "ko") return `${year}년 ${month}월`;
+  const monthName = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][month - 1];
+  return `${monthName} ${year}`;
 }
 
 async function getFreightData() {
@@ -2095,9 +2136,10 @@ async function getFreightData() {
     ttl: 6 * 60 * 60 * 1000
   });
   if (!Array.isArray(rows) || rows.length < 2) throw new Error("Invalid BTS freight response");
+  const sortedRows = rows.slice().sort((a, b) => freightPeriodKey(b.obs_date).localeCompare(freightPeriodKey(a.obs_date)));
   return FREIGHT_SERIES.map(([label, key, unit]) => {
-    const latest = rows.find((row) => Number.isFinite(Number(row[key])));
-    const previous = rows.find((row) => row !== latest && Number.isFinite(Number(row[key])));
+    const latest = sortedRows.find((row) => Number.isFinite(Number(row[key])));
+    const previous = sortedRows.find((row) => row !== latest && Number.isFinite(Number(row[key])));
     const latestValue = Number(latest?.[key]);
     const previousValue = Number(previous?.[key]);
     const change = Number.isFinite(latestValue) && Number.isFinite(previousValue) && previousValue !== 0
@@ -2126,6 +2168,7 @@ function freightRowMarkup(item, compact = false) {
     <div class="market-data-row market-data-row--freight">
       <strong>${item.label}</strong>
       <span>${Number.isFinite(item.latest) ? formatRate(item.latest, digits) : "N/A"}${changeText ? ` · <em class="${changeClass.trim()}">${changeText}</em>` : ""}</span>
+      <small>${formatPeriod(item.period)}</small>
     </div>
   ` : `
     <tr>
