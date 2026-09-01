@@ -1,5 +1,21 @@
 window.LOGILEE_POSTS = [
   {
+    "slug": "kita-trade-promotion-fund-september-2026",
+    "language": "ko",
+    "status": "published",
+    "title": "수출기업 최대 3억원 저리 융자…KITA 무역진흥자금 9월 신청 시작",
+    "description": "KITA 무역진흥자금 9월 접수가 시작됐습니다. 수출 2천만 달러 이하 기업을 대상으로 최대 3억원, 연 2.5~3.0% 고정금리로 지원하는 자격과 신청절차를 정리합니다.",
+    "category": "guides",
+    "date": "2026-09-01",
+    "publishedAt": "2026-09-01T01:52:10.625Z",
+    "readingTime": "4遺??쎄린",
+    "path": "ko/posts/kita-trade-promotion-fund-september-2026/",
+    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_83cce549-3f89-4ec2-84d9-4b011b0ee60e-ChatGPT%20Image%202026%EB%85%84%209%EC%9B%94%201%EC%9D%BC%20%EC%98%A4%EC%A0%84%2010_51_01.png?alt=media&token=766b3eb4-d21d-4842-878c-3d4e51c51f79",
+    "imageAlt": "국제 컨테이너 항만에서 수출화물 운영 상황을 점검하는 물류 담당자",
+    "imageCredit": "LOGILEE",
+    "imageLicense": "AI Generated"
+  },
+  {
     "slug": "eu-customs-data-model-7-0-11-what-customs-and-logistics-teams-need-to-update-eucdm",
     "language": "en",
     "status": "published",
