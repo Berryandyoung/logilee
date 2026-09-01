@@ -227,7 +227,6 @@ function workspaceNavMarkup(lang) {
 
         compliance: "Compliance",
         hub: "무역 규제 허브",
-        rules: "수출입 규제",
         market: "Market",
         freight: "Freight Market",
         fx: "환율 계산기",
@@ -256,7 +255,6 @@ function workspaceNavMarkup(lang) {
 
         compliance: "Compliance",
         hub: "Compliance Hub",
-        rules: "Import & Export Regulations",
         market: "Market",
         freight: "Freight Market",
         fx: "Currency Converter",
