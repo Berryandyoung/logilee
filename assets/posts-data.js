@@ -1,5 +1,21 @@
 window.LOGILEE_POSTS = [
   {
+    "slug": "china-kfood-overseas-food-manufacturer-registration2026",
+    "language": "ko",
+    "status": "published",
+    "title": "중국 K-푸드 수출 규정 바뀌었다…해외생산기업 등록 5년 자동연장까지",
+    "description": "중국이 6월 1일부터 수입식품 해외생산기업 등록제를 개편했습니다. 5년 등록·자동연장, 국가추천 대상, Cifer 신청과 등록번호 표시 등 K-푸드 수출 실무를 정리합니다.",
+    "category": "countries",
+    "date": "2026-09-02",
+    "publishedAt": "2026-09-02T03:36:19.520Z",
+    "readingTime": "5遺??쎄린",
+    "path": "ko/posts/china-kfood-overseas-food-manufacturer-registration2026/",
+    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_83c09817-8db5-4258-bdda-0cf5bcec9798-ChatGPT%20Image%202026%EB%85%84%209%EC%9B%94%202%EC%9D%BC%20%EC%98%A4%ED%9B%84%2012_33_50.png?alt=media&token=118e4300-6689-43d0-90cd-bdf8af9db17b",
+    "imageAlt": "식품 검사 컨베이어 벨트",
+    "imageCredit": "LOGILEE",
+    "imageLicense": "AI Generated"
+  },
+  {
     "slug": "uk-canada-cptpp-tca-trade-guide-2026",
     "language": "en",
     "status": "published",
