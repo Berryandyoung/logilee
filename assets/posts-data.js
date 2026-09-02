@@ -1,5 +1,21 @@
 window.LOGILEE_POSTS = [
   {
+    "slug": "canada-us-counter-tariffs-september-2026",
+    "language": "en",
+    "status": "published",
+    "title": "Canada’s New Counter-Tariffs Start September 8: What Importers Should Check Now",
+    "description": "Canada Counter-Tariffs September 8: Importer Guide",
+    "category": "customs",
+    "date": "2026-09-02",
+    "publishedAt": "2026-09-02T03:41:23.998Z",
+    "readingTime": "7 min read",
+    "path": "en/posts/canada-us-counter-tariffs-september-2026/",
+    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_936de8e1-42f2-489b-8d4f-78b67ed08537-ChatGPT%20Image%202026%EB%85%84%209%EC%9B%94%202%EC%9D%BC%20%EC%98%A4%ED%9B%84%2012_41_04%20(1).png?alt=media&token=8dec98b5-db6c-4802-8f26-be31f22aa435",
+    "imageAlt": "Imported shipments being scanned and processed inside a large North American logistics warehouse",
+    "imageCredit": "LOGILEE",
+    "imageLicense": "AI Generated"
+  },
+  {
     "slug": "china-kfood-overseas-food-manufacturer-registration2026",
     "language": "ko",
     "status": "published",
