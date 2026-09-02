@@ -848,11 +848,19 @@ async function wireFreightMarket() {
   const lang = currentLang();
   const labels = lang === "ko"
     ? {
-        loading: "글로벌 화물운송 시장 지표를 불러오는 중입니다...",
+        loading: "화물운송 시장 브리프를 준비하는 중입니다...",
         unavailable: "공식 시장 데이터를 일시적으로 표시할 수 없습니다. 잠시 후 다시 시도해 주세요.",
-        globalPulse: "Global Pulse",
-        gscpiTitle: "Supply Chain Pressure",
-        fuelTitle: "Fuel Pressure Proxy",
+        marketBrief: "시장 브리프",
+        briefEyebrow: "MARKET BRIEF",
+        routeQuestion: "어디에서 어디로 보내시나요?",
+        relevantSignals: "관련 시장 신호",
+        nextActionsTitle: "이 거래 계속 준비하기",
+        globalSignal: "GLOBAL",
+        originSignal: "ORIGIN",
+        routeSignal: "ROUTE",
+        destinationSignal: "DESTINATION",
+        regionalSignal: "REGIONAL",
+        gscpiTitle: "공급망 압력",
         current: "현재",
         previous: "이전",
         change: "변화",
@@ -861,44 +869,47 @@ async function wireFreightMarket() {
         purpose: "용도",
         limitation: "한계",
         gscpiNote: "0보다 높으면 역사적 평균보다 공급망 압력이 높은 상태, 0보다 낮으면 평균보다 낮은 상태를 뜻합니다. 운임 지수나 견적이 아닙니다.",
-        fuelNote: "EIA Open Data API는 API key가 필요합니다. 이번 MVP에서는 해운 bunker quote가 아닌 연료비 압력 참고 지표의 공식 연결 상태만 표시합니다.",
-        exploreTitle: "Explore Your Market",
-        exploreLead: "출발국, 도착국, 운송 모드를 선택하면 확보된 공식 데이터와 LOGILEE 도구만 연결합니다.",
+        exploreTitle: "내 시장 살펴보기",
+        exploreLead: "출발국과 도착국, 운송 모드를 선택하면 관련 시장 신호와 다음 업무를 한 화면에 정리합니다.",
         origin: "출발국",
         destination: "도착국",
         mode: "운송 모드",
         ocean: "Ocean",
         air: "Air",
         roadRail: "Road / Rail",
+        viewMarket: "시장 확인",
         selectCountry: "국가 검색...",
         selectOrigin: "출발국을 선택하세요.",
         selectDestination: "도착국을 선택하세요.",
-        noSelection: "출발국과 도착국을 선택하면 관련 지표가 표시됩니다.",
-        resultsTitle: "선택 시장 신호",
-        countryConnectivity: "Country Connectivity",
-        bilateralConnectivity: "Bilateral Connectivity",
-        portConnectivity: "Port Connectivity",
+        noSelection: "출발국과 도착국을 선택하면 관련 시장 신호와 다음 업무를 정리해드립니다.",
+        latestOfficial: "최신 이용 가능 공식 데이터",
+        countryConnectivity: "정기선 연결성",
+        bilateralConnectivity: "양국 정기선 연결성",
+        portConnectivity: "Port Intelligence",
         originLsci: "출발국 LSCI",
         destinationLsci: "도착국 LSCI",
-        relevantPorts: "관련 Port Intelligence",
-        unavailableSignal: "Not available",
+        relevantPorts: "항만 확인",
+        unavailableSignal: "이용 가능한 공식 지표 없음",
         usActivity: "U.S. Freight Activity",
         airNotice: "항공 운임 시장 지수 값은 라이선스 없이 표시하지 않습니다. 공항 정보와 글로벌 공급망 압력만 참고하세요.",
-        roadNotice: "글로벌 도로/철도 운임 데이터는 제공하지 않습니다. 미국이 포함된 경우 BTS 지역 지표를 함께 확인하세요.",
-        connectivityTitle: "Connectivity Signals",
+        roadNotice: "글로벌 도로/철도 운임 데이터는 제공하지 않습니다. 미국이 포함된 경우에만 BTS 지역 지표를 함께 보여줍니다.",
+        rateNoticeTitle: "실제 운임 확인",
+        rateNotice: "LOGILEE는 라이선스형 운임 지수 값을 복제하지 않습니다. 실제 견적과 spot rate는 공식 거래소, 운임 플랫폼 또는 포워더 견적으로 확인하세요.",
+        connectivityTitle: "연결성 신호",
         connectivityLead: "연결성은 운임 가격이 아니라 정기선 네트워크의 상대적 참고 신호입니다.",
-        regionalTitle: "Regional Indicators",
+        regionalTitle: "미국 운송 지표 상세",
         regionalSubtitle: "North America · U.S. Freight Activity",
         regionalNote: "이 지표는 미국 화물 운송 활동의 흐름을 보여주는 참고 자료이며, 실제 운송 견적, 특정 항로의 컨테이너 운임 또는 선사별 운임을 의미하지 않습니다.",
-        latestObservation: "최신 관측월",
+        latestObservation: "최신 관측 기간",
         updateBasis: "업데이트 기준",
         monthly: "월별 공개 통계, 지표별 공표 지연 및 수정 가능",
         sourceNote: "출처: Bureau of Transportation Statistics (BTS). 데이터셋: Transportation Services Index and Seasonally-Adjusted Transportation Data. 지표별 공표 주기와 수정 가능성이 다를 수 있습니다.",
-        resourcesTitle: "Official Freight Market Resources",
+        detailSummary: "상세 지표 보기",
+        resourcesTitle: "공식 운임·시장 자료",
         resourcesLead: "라이선스형 운임 지수는 숫자를 복제하지 않고 공식 리소스로 연결합니다.",
         sourceCta: "공식 출처 열기",
-        relatedTitle: "Related LOGILEE Tools",
-        sourcesTitle: "Data & Sources",
+        relatedTitle: "다음 업무",
+        sourcesTitle: "데이터 및 출처",
         tableIndicator: "지표",
         tableLatest: "최신 값",
         tablePrevious: "이전 값",
@@ -907,34 +918,43 @@ async function wireFreightMarket() {
         tablePeriod: "기간",
         tableSource: "출처",
         allPorts: "국가 항만 보기",
+        allAirports: "국가 공항 보기",
         noPorts: "등록된 Port Intelligence 항목 없음"
       }
     : {
-        loading: "Loading global freight market signals...",
+        loading: "Preparing your freight market brief...",
         unavailable: "Official market data is temporarily unavailable. Please retry later.",
-        globalPulse: "Global Pulse",
+        marketBrief: "Market Brief",
+        briefEyebrow: "MARKET BRIEF",
+        routeQuestion: "Where are you shipping?",
+        relevantSignals: "Relevant Market Signals",
+        nextActionsTitle: "Continue Your Shipment",
+        globalSignal: "GLOBAL",
+        originSignal: "ORIGIN",
+        routeSignal: "ROUTE",
+        destinationSignal: "DESTINATION",
+        regionalSignal: "REGIONAL",
         gscpiTitle: "Supply Chain Pressure",
-        fuelTitle: "Fuel Pressure Proxy",
         current: "Current",
         previous: "Previous",
         change: "Change",
         purpose: "Purpose",
         limitation: "Limitation",
         gscpiNote: "Readings above 0 indicate higher pressure than the historical average; readings below 0 indicate lower pressure. This is not a freight rate index or quote.",
-        fuelNote: "The EIA Open Data API requires an API key. This MVP shows the official source-ready state for a fuel pressure proxy, not a marine bunker quote.",
         exploreTitle: "Explore Your Market",
-        exploreLead: "Choose an origin, destination, and mode to connect only official data and relevant LOGILEE tools.",
+        exploreLead: "Choose an origin, destination, and mode to organize relevant market signals and practical next actions.",
         origin: "Origin Country",
         destination: "Destination Country",
         mode: "Mode",
         ocean: "Ocean",
         air: "Air",
         roadRail: "Road / Rail",
+        viewMarket: "View Market",
         selectCountry: "Search country...",
         selectOrigin: "Select origin country.",
         selectDestination: "Select destination country.",
-        noSelection: "Select origin and destination countries to see relevant signals.",
-        resultsTitle: "Selected Market Signals",
+        noSelection: "Select an origin and destination to build a route-specific market brief.",
+        latestOfficial: "Latest available official data",
         countryConnectivity: "Country Connectivity",
         bilateralConnectivity: "Bilateral Connectivity",
         portConnectivity: "Port Connectivity",
@@ -944,22 +964,25 @@ async function wireFreightMarket() {
         unavailableSignal: "Not available",
         usActivity: "U.S. Freight Activity",
         airNotice: "Licensed air freight market rate values are not displayed. Use airport intelligence and global supply-chain pressure as context.",
-        roadNotice: "Global road/rail freight rates are not provided. If the U.S. is involved, review BTS regional indicators as context.",
+        roadNotice: "Global road/rail freight rates are not provided. BTS regional indicators are shown only when the U.S. is involved.",
+        rateNoticeTitle: "Check Actual Freight Rates",
+        rateNotice: "LOGILEE does not reproduce licensed freight index values. Confirm live quotes and spot rates through official exchanges, freight platforms, or forwarder quotations.",
         connectivityTitle: "Connectivity Signals",
         connectivityLead: "Connectivity is a network reference signal, not a freight price or quote.",
-        regionalTitle: "Regional Indicators",
+        regionalTitle: "U.S. Freight Details",
         regionalSubtitle: "North America · U.S. Freight Activity",
         regionalNote: "These indicators show U.S. freight transportation activity trends. They are not shipment quotations, lane-specific container rates, or carrier-specific freight rates.",
-        latestObservation: "Latest observation",
+        latestObservation: "Latest observation period",
         source: "Source",
         dataset: "Dataset",
         updateBasis: "Update basis",
         monthly: "Monthly public statistics, with series-specific publication lag and revisions",
         sourceNote: "Source: Bureau of Transportation Statistics (BTS). Dataset: Transportation Services Index and Seasonally-Adjusted Transportation Data. Update cycles vary by series and may be revised.",
+        detailSummary: "View detailed indicators",
         resourcesTitle: "Official Freight Market Resources",
         resourcesLead: "Licensed freight indices are linked to official resources without reproducing current values.",
         sourceCta: "Open official source",
-        relatedTitle: "Related LOGILEE Tools",
+        relatedTitle: "Next Actions",
         sourcesTitle: "Data & Sources",
         tableIndicator: "Indicator",
         tableLatest: "Latest Value",
@@ -969,6 +992,7 @@ async function wireFreightMarket() {
         tablePeriod: "Data Period",
         tableSource: "Source",
         allPorts: "View country ports",
+        allAirports: "View country airports",
         noPorts: "No registered Port Intelligence entries"
       };
   target.innerHTML = `<div class="data-empty">${labels.loading}</div>`;
@@ -2257,8 +2281,8 @@ function freightRowMarkup(item, compact = false) {
 }
 
 async function getGlobalFreightData() {
-  return fetchJson(new URL("../assets/logilee-freight-data.json?v=global-freight-v2-mvp-20260901", location.href).toString(), {
-    cacheKey: "logilee:global-freight:v2-mvp-20260901",
+  return fetchJson(new URL("../assets/logilee-freight-data.json?v=global-freight-v2-1-20260902", location.href).toString(), {
+    cacheKey: "logilee:global-freight:v2-1-20260902",
     ttl: 24 * 60 * 60 * 1000
   });
 }
@@ -2303,41 +2327,12 @@ function freightMetricCard(title, current, previous, change, period, note, label
 }
 
 function renderGlobalFreightMarket(snapshot, btsRows, labels, lang) {
-  const gscpi = snapshot.gscpi || {};
-  const gscpiChange = Number(gscpi.change);
-  const btsLatestObservation = btsRows.map((item) => item.period).filter(Boolean).sort().at(-1);
   return `
-    <section class="freight-v2-section freight-global-pulse">
-      <div class="data-summary-head">
-        <div>
-          <span class="kicker">${labels.globalPulse}</span>
-          <h2>${labels.globalPulse}</h2>
-          <p class="muted">${lang === "ko" ? "공급망 압력과 연료비 압력 proxy를 분리해서 보여줍니다." : "Supply-chain pressure and fuel pressure proxy are presented as separate signals."}</p>
-        </div>
-      </div>
-      <div class="freight-pulse-grid">
-        ${freightMetricCard(labels.gscpiTitle, Number(gscpi.current?.value), Number(gscpi.previous?.value), gscpiChange, formatFreightDate(gscpi.current?.date, lang), labels.gscpiNote, labels)}
-        <article class="freight-metric-card freight-source-card">
-          <div>
-            <span class="kicker">EIA Open Data</span>
-            <h3>${labels.fuelTitle}</h3>
-          </div>
-          <strong>${lang === "ko" ? "API key 필요" : "API key required"}</strong>
-          <p>${labels.fuelNote}</p>
-          <a class="text-link" href="${escapeAttribute(snapshot.eia?.sourceUrl || "https://www.eia.gov/opendata/")}" target="_blank" rel="noopener noreferrer">${labels.sourceCta}</a>
-        </article>
-      </div>
-      <div class="data-status-list freight-source-strip">
-        <div><strong>${labels.latestObservation}</strong><span>GSCPI ${formatFreightDate(gscpi.current?.date, lang)} · LSCI ${formatQuarterLabel(snapshot.unctad?.lsci?.KR?.period, lang)} · BTS ${formatPeriod(btsLatestObservation, lang)}</span></div>
-        <div><strong>${labels.source}</strong><span><a href="${escapeAttribute(gscpi.sourceUrl)}" target="_blank" rel="noopener noreferrer">Federal Reserve Bank of New York</a> · <a href="${escapeAttribute(snapshot.unctad?.sourceUrl)}" target="_blank" rel="noopener noreferrer">UNCTAD</a> · <a href="${BTS_FREIGHT_SOURCE}" target="_blank" rel="noopener noreferrer">BTS</a></span></div>
-      </div>
-    </section>
-
-    <section class="freight-v2-section freight-explorer-panel">
+    <section class="freight-v2-section freight-explorer-panel freight-explorer-primary">
       <div class="data-summary-head">
         <div>
           <span class="kicker">${labels.exploreTitle}</span>
-          <h2>${labels.exploreTitle}</h2>
+          <h2>${labels.routeQuestion}</h2>
           <p class="muted">${labels.exploreLead}</p>
         </div>
       </div>
@@ -2345,44 +2340,19 @@ function renderGlobalFreightMarket(snapshot, btsRows, labels, lang) {
         <div class="field"><label for="freight-origin">${labels.origin}</label><select id="freight-origin" name="origin" data-freight-origin><option value="">${labels.selectOrigin}</option></select></div>
         <div class="field"><label for="freight-destination">${labels.destination}</label><select id="freight-destination" name="destination" data-freight-destination><option value="">${labels.selectDestination}</option></select></div>
         <div class="field"><label for="freight-mode">${labels.mode}</label><select id="freight-mode" name="mode"><option value="ocean">${labels.ocean}</option><option value="air">${labels.air}</option><option value="road-rail">${labels.roadRail}</option></select></div>
+        <button class="btn primary" type="submit">${labels.viewMarket}</button>
       </form>
       <div data-freight-explorer-output class="freight-explorer-output"><div class="data-empty">${labels.noSelection}</div></div>
     </section>
-
-    <section class="freight-v2-section">
-      <div class="data-summary-head">
-        <div>
-          <span class="kicker">${labels.connectivityTitle}</span>
-          <h2>${labels.connectivityTitle}</h2>
-          <p class="muted">${labels.connectivityLead}</p>
-        </div>
-      </div>
-      <div class="freight-concept-grid">
-        <div><strong>${labels.countryConnectivity}</strong><span>Liner Shipping Connectivity Index (LSCI)</span></div>
-        <div><strong>${labels.bilateralConnectivity}</strong><span>Bilateral Liner Shipping Connectivity Index</span></div>
-        <div><strong>${labels.portConnectivity}</strong><span>Port Intelligence links; PLSCI mapping is reserved for Phase 2.</span></div>
-      </div>
-    </section>
-
-    ${renderBtsRegionalSection(btsRows, labels, lang)}
     ${renderOfficialFreightResources(labels)}
-    ${renderFreightRelatedTools(labels, lang)}
-    ${renderFreightSources(snapshot, labels)}
+    ${renderFreightSources(snapshot, labels, lang)}
   `;
 }
 
-function renderBtsRegionalSection(rows, labels, lang) {
+function renderBtsRegionalSection(rows, labels, lang, options = {}) {
   const summary = rows.filter((item) => ["tsi_freight", "truck_d11", "rail_frt_intermodal"].includes(item.key));
   const latestObservation = rows.map((item) => item.period).filter(Boolean).sort().at(-1);
-  return `
-    <section class="freight-v2-section freight-regional-section">
-      <div class="data-summary-head">
-        <div>
-          <span class="kicker">${labels.regionalSubtitle}</span>
-          <h2>${labels.regionalTitle}</h2>
-          <p class="muted">${labels.regionalNote}</p>
-        </div>
-      </div>
+  const body = `
       <div class="data-status-list compact-fx-meta">
         <div><strong>${labels.latestObservation}</strong><span>${formatPeriod(latestObservation, lang)}</span></div>
         <div><strong>${labels.source}</strong><span><a href="${BTS_FREIGHT_SOURCE}" target="_blank" rel="noopener noreferrer">Bureau of Transportation Statistics (BTS)</a></span></div>
@@ -2404,6 +2374,25 @@ function renderBtsRegionalSection(rows, labels, lang) {
         </table>
       </div>
       <p class="muted">${labels.sourceNote}</p>
+  `;
+  if (options.collapsed) {
+    return `
+      <details class="freight-detail-disclosure">
+        <summary>${labels.detailSummary}</summary>
+        <div class="freight-detail-body">${body}</div>
+      </details>
+    `;
+  }
+  return `
+    <section class="freight-v2-section freight-regional-section">
+      <div class="data-summary-head">
+        <div>
+          <span class="kicker">${labels.regionalSubtitle}</span>
+          <h2>${labels.regionalTitle}</h2>
+          <p class="muted">${labels.regionalNote}</p>
+        </div>
+      </div>
+      ${body}
     </section>
   `;
 }
@@ -2437,6 +2426,10 @@ function setupFreightExplorer(target, snapshot, btsRows, labels, lang) {
     }
     refreshIcons();
   };
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    render(true);
+  });
   form.addEventListener("change", () => render(true));
   window.addEventListener("popstate", () => {
     const nextParams = new URLSearchParams(location.search);
@@ -2468,50 +2461,156 @@ function updateFreightLanguageSwitch() {
 }
 
 function renderFreightExplorerResult(origin, destination, mode, snapshot, btsRows, labels, lang) {
-  if (!origin || !destination) return `<div class="data-empty">${labels.noSelection}</div>`;
+  if (!origin || !destination) return `<div class="data-empty freight-brief-empty">${labels.noSelection}</div>`;
   const gscpi = snapshot.gscpi || {};
   const originLsci = snapshot.unctad?.lsci?.[origin];
   const destinationLsci = snapshot.unctad?.lsci?.[destination];
   const bilateral = mode === "ocean" ? snapshot.unctad?.bilateral?.[`${origin}-${destination}`] : null;
   const ports = mode === "ocean" ? ALL_PORTS.filter((port) => [origin, destination].includes(port.iso)).slice(0, 6) : [];
   const involvesUs = origin === "US" || destination === "US";
+  const originName = displayCountryName(origin, lang);
+  const destinationName = displayCountryName(destination, lang);
+  const modeLabel = mode === "ocean" ? labels.ocean : mode === "air" ? labels.air : labels.roadRail;
+  const periodParts = [
+    `GSCPI ${formatFreightDate(gscpi.current?.date, lang)}`
+  ];
+  if (mode === "ocean") periodParts.push(`LSCI ${formatQuarterLabel(originLsci?.period || destinationLsci?.period || bilateral?.period, lang)}`);
+  if (involvesUs) periodParts.push(`BTS ${formatPeriod(btsRows.map((item) => item.period).filter(Boolean).sort().at(-1), lang)}`);
   return `
-    <div class="freight-selected-head">
-      <div>
-        <span class="kicker">${labels.resultsTitle}</span>
-        <h3>${escapeHtml(displayCountryName(origin, lang))} - ${escapeHtml(displayCountryName(destination, lang))} · ${mode === "ocean" ? labels.ocean : mode === "air" ? labels.air : labels.roadRail}</h3>
+    <article class="freight-market-brief">
+      <div class="freight-brief-head">
+        <div>
+          <span class="kicker">${labels.briefEyebrow}</span>
+          <h3>${labels.marketBrief}</h3>
+          <p>${escapeHtml(originName)} <span aria-hidden="true">→</span> ${escapeHtml(destinationName)}</p>
+        </div>
+        <span class="freight-mode-pill">${escapeHtml(modeLabel)}</span>
       </div>
-    </div>
-    <div class="freight-signal-grid">
-      ${freightMetricCard(labels.gscpiTitle, Number(gscpi.current?.value), Number(gscpi.previous?.value), Number(gscpi.change), formatFreightDate(gscpi.current?.date, lang), labels.gscpiNote, labels)}
-      ${renderLsciCard(labels.originLsci, originLsci, labels, lang)}
-      ${renderLsciCard(labels.destinationLsci, destinationLsci, labels, lang)}
-      ${mode === "ocean" ? renderBilateralCard(bilateral, labels, lang) : `<article class="freight-metric-card"><h3>${labels.bilateralConnectivity}</h3><strong>${labels.unavailableSignal}</strong><p>${mode === "air" ? labels.airNotice : labels.roadNotice}</p></article>`}
-      ${involvesUs ? renderUsActivityCard(btsRows, labels, lang) : ""}
-    </div>
-    ${mode === "ocean" ? renderPortLinks(ports, origin, destination, labels, lang) : ""}
-    <div class="freight-next-actions">
-      <p>${mode === "air" ? labels.airNotice : mode === "road-rail" ? labels.roadNotice : labels.connectivityLead}</p>
-    </div>
+      <div class="data-status-list compact-fx-meta freight-brief-meta">
+        <div><strong>${labels.latestOfficial}</strong><span>${periodParts.join(" · ")}</span></div>
+      </div>
+      <h4>${labels.relevantSignals}</h4>
+      <div class="freight-signal-grid">
+        ${renderGscpiBriefCard(gscpi, labels, lang)}
+        ${mode === "ocean" ? renderLsciCard(labels.originLsci, originLsci, labels, lang, labels.originSignal) : renderModeContextCard(mode, labels, lang)}
+        ${mode === "ocean" ? renderBilateralCard(bilateral, labels, lang) : ""}
+        ${mode === "ocean" ? renderLsciCard(labels.destinationLsci, destinationLsci, labels, lang, labels.destinationSignal) : ""}
+        ${involvesUs ? renderUsActivityCard(btsRows, labels, lang) : ""}
+      </div>
+      ${mode === "ocean" ? renderPortLinks(ports, origin, destination, labels, lang) : ""}
+      ${renderRateNotice(mode, labels)}
+      ${renderFreightRelatedTools(labels, lang, origin, destination, mode)}
+      ${involvesUs ? renderBtsRegionalSection(btsRows, labels, lang, { collapsed: true }) : ""}
+    </article>
   `;
 }
 
-function renderLsciCard(title, data, labels, lang) {
-  if (!data) return `<article class="freight-metric-card"><h3>${title}</h3><strong>${labels.unavailableSignal}</strong><p>${labels.countryConnectivity}</p></article>`;
-  const change = Number(data.qoq);
-  return freightMetricCard(title, Number(data.value), Number(data.previousValue), change, formatQuarterLabel(data.period, lang), `${labels.countryConnectivity} · Rank ${data.rank ?? "N/A"} · YoY ${formatSignedValue(Number(data.yoy), 1)}%`, labels, { digits: 1 });
+function renderSignalCard(scope, title, value, previous, change, period, note, labels, options = {}) {
+  const digits = options.digits ?? 2;
+  const changeClass = Number.isFinite(change) ? `trend-${change >= 0 ? "up" : "down"}` : "";
+  return `
+    <article class="freight-signal-card">
+      <span class="kicker">${escapeHtml(scope)}</span>
+      <h5>${escapeHtml(title)}</h5>
+      <strong>${Number.isFinite(value) ? formatRate(value, digits) : labels.unavailableSignal}</strong>
+      <dl>
+        <div><dt>${labels.previous}</dt><dd>${Number.isFinite(previous) ? formatRate(previous, digits) : "N/A"}</dd></div>
+        <div><dt>${labels.change}</dt><dd class="${changeClass}">${formatSignedValue(change, digits)}</dd></div>
+      </dl>
+      <small>${escapeHtml(period || labels.latestObservation)}</small>
+      <p>${escapeHtml(note)}</p>
+    </article>
+  `;
+}
+
+function gscpiBriefNote(gscpi, lang) {
+  const value = Number(gscpi.current?.value);
+  const change = Number(gscpi.change);
+  const level = value >= 0
+    ? (lang === "ko" ? "역사적 평균보다 높은 공급망 압력입니다." : "Supply-chain pressure is above its historical average.")
+    : (lang === "ko" ? "역사적 평균보다 낮은 공급망 압력입니다." : "Supply-chain pressure is below its historical average.");
+  const movement = Number.isFinite(change)
+    ? change < 0
+      ? (lang === "ko" ? `전월보다 ${formatRate(Math.abs(change), 2)} 완화되었습니다.` : `It eased by ${formatRate(Math.abs(change), 2)} from the previous month.`)
+      : (lang === "ko" ? `전월보다 ${formatRate(change, 2)} 높아졌습니다.` : `It increased by ${formatRate(change, 2)} from the previous month.`)
+    : "";
+  return `${level} ${movement} ${lang === "ko" ? "운임 가격이나 견적은 아닙니다." : "This is not a freight price or quote."}`;
+}
+
+function renderGscpiBriefCard(gscpi, labels, lang) {
+  return renderSignalCard(labels.globalSignal, labels.gscpiTitle, Number(gscpi.current?.value), Number(gscpi.previous?.value), Number(gscpi.change), formatFreightDate(gscpi.current?.date, lang), gscpiBriefNote(gscpi, lang), labels);
+}
+
+function lsciNote(data, labels, lang) {
+  if (!data) return labels.connectivityLead;
+  const qoq = Number(data.qoq);
+  const yoy = Number(data.yoy);
+  const rank = data.rank ? `Rank ${data.rank}. ` : "";
+  const movement = Number.isFinite(qoq)
+    ? qoq > 0
+      ? (lang === "ko" ? `전분기보다 ${formatRate(qoq, 1)}% 높습니다.` : `${formatRate(qoq, 1)}% higher than the previous quarter.`)
+      : qoq < 0
+        ? (lang === "ko" ? `전분기보다 ${formatRate(Math.abs(qoq), 1)}% 낮습니다.` : `${formatRate(Math.abs(qoq), 1)}% lower than the previous quarter.`)
+        : (lang === "ko" ? "전분기와 같은 수준입니다." : "Flat versus the previous quarter.")
+    : "";
+  const yoyText = Number.isFinite(yoy) ? ` YoY ${formatSignedValue(yoy, 1)}%.` : "";
+  return `${rank}${movement}${yoyText} ${labels.connectivityLead}`;
+}
+
+function renderLsciCard(title, data, labels, lang, scope = labels.originSignal) {
+  if (!data) return `<article class="freight-signal-card"><span class="kicker">${escapeHtml(scope)}</span><h5>${escapeHtml(title)}</h5><strong>${labels.unavailableSignal}</strong><p>${labels.connectivityLead}</p></article>`;
+  return renderSignalCard(scope, title, Number(data.value), Number(data.previousValue), Number(data.qoq), formatQuarterLabel(data.period, lang), lsciNote(data, labels, lang), labels, { digits: 1 });
 }
 
 function renderBilateralCard(data, labels, lang) {
-  if (!data) return `<article class="freight-metric-card"><h3>${labels.bilateralConnectivity}</h3><strong>${labels.unavailableSignal}</strong><p>${labels.connectivityLead}</p></article>`;
+  if (!data) return `<article class="freight-signal-card"><span class="kicker">${labels.routeSignal}</span><h5>${labels.bilateralConnectivity}</h5><strong>${labels.unavailableSignal}</strong><p>${labels.connectivityLead}</p></article>`;
   const change = Number.isFinite(Number(data.value)) && Number.isFinite(Number(data.previousValue)) ? Number(data.value) - Number(data.previousValue) : null;
-  return freightMetricCard(labels.bilateralConnectivity, Number(data.value), Number(data.previousValue), change, formatQuarterLabel(data.period, lang), labels.connectivityLead, labels, { digits: 3 });
+  const note = `${labels.connectivityLead} ${lang === "ko" ? "선택 국가 간 해운 네트워크의 상대적 연결성만 보여줍니다." : "It shows relative maritime network connectivity between the selected countries."}`;
+  return renderSignalCard(labels.routeSignal, labels.bilateralConnectivity, Number(data.value), Number(data.previousValue), change, formatQuarterLabel(data.period, lang), note, labels, { digits: 3 });
+}
+
+function renderModeContextCard(mode, labels, lang) {
+  const isAir = mode === "air";
+  return `
+    <article class="freight-signal-card freight-mode-context">
+      <span class="kicker">${labels.routeSignal}</span>
+      <h5>${isAir ? labels.air : labels.roadRail}</h5>
+      <strong>${labels.unavailableSignal}</strong>
+      <p>${isAir ? labels.airNotice : labels.roadNotice}</p>
+      <a class="text-link" href="${isAir ? "airports.html" : "country-trade-profile.html"}">${isAir ? labels.allAirports : (lang === "ko" ? "국가 프로필 보기" : "View country profiles")}</a>
+    </article>
+  `;
 }
 
 function renderUsActivityCard(rows, labels, lang) {
-  const item = rows.find((row) => row.key === "tsi_freight");
-  if (!item) return "";
-  return freightMetricCard(labels.usActivity, Number(item.latest), Number(item.previous), Number(item.change), formatPeriod(item.period, lang), labels.regionalNote, labels, { digits: 1 });
+  const summary = rows.filter((row) => ["tsi_freight", "truck_d11", "rail_frt_intermodal"].includes(row.key));
+  if (!summary.length) return "";
+  const latestObservation = summary.map((item) => item.period).filter(Boolean).sort().at(-1);
+  return `
+    <article class="freight-signal-card freight-us-summary">
+      <span class="kicker">${labels.regionalSignal}</span>
+      <h5>${labels.usActivity}</h5>
+      <strong>${formatPeriod(latestObservation, lang)}</strong>
+      <div class="freight-mini-metrics">
+        ${summary.map((item) => {
+          const digits = item.latest > 1000 ? 0 : 1;
+          const change = Number.isFinite(item.change) ? `${item.change >= 0 ? "↑ +" : "↓ "}${formatRate(item.change, 1)}%` : "";
+          const cls = Number.isFinite(item.change) ? `trend-${item.change >= 0 ? "up" : "down"}` : "";
+          return `<div><span>${escapeHtml(item.label)}</span><b>${Number.isFinite(item.latest) ? formatRate(item.latest, digits) : "N/A"}</b>${change ? `<em class="${cls}">${change}</em>` : ""}</div>`;
+        }).join("")}
+      </div>
+      <p>${labels.regionalNote}</p>
+    </article>
+  `;
+}
+
+function renderRateNotice(mode, labels) {
+  return `
+    <div class="freight-rate-notice">
+      <strong>${labels.rateNoticeTitle}</strong>
+      <p>${labels.rateNotice}</p>
+    </div>
+  `;
 }
 
 function renderPortLinks(ports, origin, destination, labels, lang) {
@@ -2537,36 +2636,58 @@ function renderOfficialFreightResources(labels) {
     ["Air Cargo", "IATA Air Cargo Market Analysis", "Official IATA air cargo analysis resource.", "https://www.iata.org/en/publications/economics/"]
   ];
   return `
-    <section class="freight-v2-section">
-      <div class="data-summary-head"><div><span class="kicker">${labels.resourcesTitle}</span><h2>${labels.resourcesTitle}</h2><p class="muted">${labels.resourcesLead}</p></div></div>
+    <details class="freight-v2-section freight-compact-details">
+      <summary><span>${labels.resourcesTitle}</span><small>${labels.resourcesLead}</small></summary>
       <div class="freight-resource-grid">
         ${resources.map(([category, name, text, href]) => `<a href="${escapeAttribute(href)}" target="_blank" rel="noopener noreferrer"><span>${escapeHtml(category)}</span><strong>${escapeHtml(name)}</strong><small>${escapeHtml(text)}</small><em>${labels.sourceCta}</em></a>`).join("")}
       </div>
-    </section>
+    </details>
   `;
 }
 
-function renderFreightRelatedTools(labels, lang) {
-  const tools = lang === "ko"
-    ? [["Port Intelligence", "ports.html", "anchor"], ["Airport Intelligence", "airports.html", "plane"], ["무역 공휴일", "holidays.html", "calendar-check"], ["국가 무역 프로필", "country-trade-profile.html", "globe"], ["Global Trade Explorer", "trade-explorer.html", "bar-chart-3"], ["CBM Calculator", "cbm.html", "box"], ["Compliance Hub", "compliance.html", "shield-check"]]
-    : [["Port Intelligence", "ports.html", "anchor"], ["Airport Intelligence", "airports.html", "plane"], ["Trade Holidays", "holidays.html", "calendar-check"], ["Country Trade Profile", "country-trade-profile.html", "globe"], ["Global Trade Explorer", "trade-explorer.html", "bar-chart-3"], ["CBM Calculator", "cbm.html", "box"], ["Compliance Hub", "compliance.html", "shield-check"]];
-  return `<section class="freight-v2-section"><h2>${labels.relatedTitle}</h2><div class="country-tool-grid">${tools.map(([label, href, icon]) => `<a href="${href}"><i data-lucide="${icon}"></i><strong>${escapeHtml(label)}</strong></a>`).join("")}</div></section>`;
+function renderFreightRelatedTools(labels, lang, origin, destination, mode) {
+  const originParam = `country=${encodeURIComponent(origin)}`;
+  const destinationParam = `country=${encodeURIComponent(destination)}`;
+  const tools = mode === "air"
+    ? [
+        [lang === "ko" ? "출발 공항 확인" : "Check origin airports", `airports.html?${originParam}`, "plane"],
+        [lang === "ko" ? "도착 공항 확인" : "Check destination airports", `airports.html?${destinationParam}`, "plane-landing"],
+        [lang === "ko" ? "무역 공휴일 확인" : "Check trade holidays", `holidays.html?${destinationParam}`, "calendar-check"],
+        ["CBM Calculator", "cbm.html", "box"],
+        ["Compliance Hub", "compliance.html", "shield-check"]
+      ]
+    : mode === "road-rail"
+      ? [
+          [lang === "ko" ? "출발국 프로필" : "Origin country profile", `country-trade-profile.html?${originParam}`, "globe"],
+          [lang === "ko" ? "도착국 프로필" : "Destination country profile", `country-trade-profile.html?${destinationParam}`, "globe-2"],
+          [lang === "ko" ? "영업일 확인" : "Check business days", "business-day.html", "calendar-clock"],
+          ["CBM Calculator", "cbm.html", "box"],
+          ["Compliance Hub", "compliance.html", "shield-check"]
+        ]
+      : [
+          [lang === "ko" ? "출발 항만 확인" : "Check origin ports", `ports.html?${originParam}`, "anchor"],
+          [lang === "ko" ? "도착 항만 확인" : "Check destination ports", `ports.html?${destinationParam}`, "ship"],
+          [lang === "ko" ? "무역 데이터 확인" : "Review trade data", `global-trade-explorer.html?reporter=${encodeURIComponent(origin)}&partner=${encodeURIComponent(destination)}`, "bar-chart-3"],
+          [lang === "ko" ? "무역 공휴일 확인" : "Check trade holidays", `holidays.html?${destinationParam}`, "calendar-check"],
+          ["CBM Calculator", "cbm.html", "box"],
+          ["Compliance Hub", "compliance.html", "shield-check"]
+        ];
+  return `<section class="freight-next-actions"><h4>${labels.nextActionsTitle}</h4><div class="country-tool-grid freight-action-grid">${tools.map(([label, href, icon]) => `<a href="${href}"><i data-lucide="${icon}"></i><strong>${escapeHtml(label)}</strong></a>`).join("")}</div></section>`;
 }
 
-function renderFreightSources(snapshot, labels) {
+function renderFreightSources(snapshot, labels, lang) {
   const rows = [
     ["New York Fed", "Global Supply Chain Pressure Index (GSCPI)", "Monthly", snapshot.gscpi?.sourceUrl, labels.gscpiNote],
     ["UNCTAD", "Liner Shipping Connectivity Index; Bilateral LSCI", "Quarterly", snapshot.unctad?.sourceUrl, labels.connectivityLead],
-    ["BTS / USDOT", "Transportation Services Index and seasonally adjusted freight data", "Monthly", BTS_FREIGHT_SOURCE, labels.regionalNote],
-    ["U.S. EIA", snapshot.eia?.selectedProxy || "Fuel price proxy", "Source-ready", snapshot.eia?.sourceUrl, labels.fuelNote]
+    ["BTS / USDOT", "Transportation Services Index and seasonally adjusted freight data", "Monthly", BTS_FREIGHT_SOURCE, labels.regionalNote]
   ];
   return `
-    <section class="freight-v2-section">
-      <div class="data-summary-head"><div><span class="kicker">${labels.sourcesTitle}</span><h2>${labels.sourcesTitle}</h2></div></div>
+    <details class="freight-v2-section freight-compact-details freight-sources-compact">
+      <summary><span>${labels.sourcesTitle}</span><small>${lang === "ko" ? "공식 공개 데이터와 표시 한계" : "Official public data and display limits"}</small></summary>
       <div class="source-note-grid freight-source-notes">
         ${rows.map(([source, dataset, frequency, href, note]) => `<div><strong>${escapeHtml(source)}</strong><span>${escapeHtml(dataset)}</span><span>${escapeHtml(frequency)}</span><a href="${escapeAttribute(href)}" target="_blank" rel="noopener noreferrer">${labels.sourceCta}</a><small>${escapeHtml(note)}</small></div>`).join("")}
       </div>
-    </section>
+    </details>
   `;
 }
 

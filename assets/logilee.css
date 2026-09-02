@@ -5825,15 +5825,37 @@ body.sidebar-drawer-active {
 }
 
 .freight-explorer-form {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
   align-items: end;
+}
+
+.freight-explorer-primary {
+  padding: 4px 0 0;
+}
+
+.freight-explorer-primary .data-summary-head {
+  padding-bottom: 8px;
+}
+
+.freight-explorer-primary .data-summary-head h2 {
+  margin-bottom: 8px;
+}
+
+.freight-explorer-form .btn {
+  min-height: 46px;
+  white-space: nowrap;
 }
 
 .freight-metric-card,
 .freight-concept-grid div,
 .freight-resource-grid a,
 .freight-next-actions,
-.freight-selected-head {
+.freight-selected-head,
+.freight-market-brief,
+.freight-signal-card,
+.freight-rate-notice,
+.freight-compact-details,
+.freight-detail-disclosure {
   min-width: 0;
   padding: 16px;
   border: 1px solid #e2ebf6;
@@ -5916,6 +5938,173 @@ body.sidebar-drawer-active {
   gap: 12px;
 }
 
+.freight-explorer-output {
+  min-width: 0;
+}
+
+.freight-brief-empty {
+  min-height: 118px;
+  display: grid;
+  align-content: center;
+}
+
+.freight-market-brief {
+  display: grid;
+  gap: 16px;
+  background: #ffffff;
+}
+
+.freight-brief-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: start;
+}
+
+.freight-brief-head h3 {
+  margin: 0;
+  color: var(--ink-navy);
+  font-size: 24px;
+  line-height: 1.25;
+}
+
+.freight-brief-head p {
+  margin: 6px 0 0;
+  color: var(--secondary-text);
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.freight-mode-pill {
+  padding: 7px 10px;
+  border: 1px solid #c7d7ea;
+  border-radius: 999px;
+  color: var(--ink-navy);
+  background: #f3f8fd;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.freight-brief-meta {
+  grid-template-columns: 1fr;
+}
+
+.freight-market-brief h4,
+.freight-next-actions h4 {
+  margin: 4px 0 0;
+  color: var(--ink-navy);
+  font-size: 18px;
+}
+
+.freight-signal-card {
+  display: grid;
+  gap: 10px;
+}
+
+.freight-signal-card h5 {
+  margin: 0;
+  color: var(--ink-navy);
+  font-size: 17px;
+}
+
+.freight-signal-card > strong {
+  color: var(--ink-navy);
+  font-size: 28px;
+  line-height: 1;
+}
+
+.freight-signal-card dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+}
+
+.freight-signal-card dl div,
+.freight-mini-metrics div {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+  padding: 9px;
+  border-radius: 8px;
+  background: #f5f8fc;
+}
+
+.freight-signal-card dt,
+.freight-signal-card dd {
+  margin: 0;
+}
+
+.freight-signal-card dt,
+.freight-signal-card small,
+.freight-signal-card p,
+.freight-rate-notice p,
+.freight-compact-details summary small {
+  color: var(--secondary-text);
+  font-size: 13px;
+}
+
+.freight-mini-metrics {
+  display: grid;
+  gap: 8px;
+}
+
+.freight-mini-metrics span {
+  color: var(--secondary-text);
+  font-size: 12px;
+}
+
+.freight-mini-metrics b {
+  color: var(--ink-navy);
+  font-size: 17px;
+}
+
+.freight-mini-metrics em {
+  font-size: 12px;
+  font-style: normal;
+}
+
+.freight-rate-notice {
+  display: grid;
+  gap: 6px;
+  border-color: #c9ded9;
+  background: #f7fbf8;
+}
+
+.freight-rate-notice p {
+  margin: 0;
+}
+
+.freight-next-actions {
+  display: grid;
+  gap: 12px;
+}
+
+.freight-action-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.freight-detail-disclosure,
+.freight-compact-details {
+  display: block;
+}
+
+.freight-detail-disclosure summary,
+.freight-compact-details summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 4px;
+  color: var(--ink-navy);
+  cursor: pointer;
+  font-weight: 900;
+}
+
+.freight-detail-body,
+.freight-compact-details .freight-resource-grid,
+.freight-compact-details .freight-source-notes {
+  margin-top: 14px;
+}
+
 .freight-source-strip {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
@@ -5926,12 +6115,21 @@ body.sidebar-drawer-active {
   .freight-concept-grid,
   .freight-resource-grid,
   .freight-explorer-form,
-  .freight-source-strip {
+  .freight-source-strip,
+  .freight-action-grid {
     grid-template-columns: 1fr;
   }
 
   .freight-metric-card > strong {
     font-size: 30px;
+  }
+
+  .freight-brief-head {
+    grid-template-columns: 1fr;
+  }
+
+  .freight-signal-card > strong {
+    font-size: 25px;
   }
 }
 
