@@ -853,7 +853,10 @@ async function wireFreightMarket() {
         marketBrief: "시장 브리프",
         briefEyebrow: "MARKET BRIEF",
         routeQuestion: "어디에서 어디로 보내시나요?",
-        relevantSignals: "관련 시장 신호",
+        summaryTitle: "시장 요약",
+        relevantSignals: "핵심 시장 신호",
+        coverageTitle: "데이터 범위",
+        noCoverageGap: "선택 시장의 핵심 신호가 모두 표시됩니다.",
         nextActionsTitle: "이 거래 계속 준비하기",
         globalSignal: "GLOBAL",
         originSignal: "ORIGIN",
@@ -881,20 +884,21 @@ async function wireFreightMarket() {
         selectCountry: "국가 검색...",
         selectOrigin: "출발국을 선택하세요.",
         selectDestination: "도착국을 선택하세요.",
-        noSelection: "출발국과 도착국을 선택하면 관련 시장 신호와 다음 업무를 정리해드립니다.",
+        noSelection: "출발국과 도착국을 선택하면 시장 요약과 다음 업무가 표시됩니다.",
         latestOfficial: "최신 이용 가능 공식 데이터",
         countryConnectivity: "정기선 연결성",
         bilateralConnectivity: "양국 정기선 연결성",
         portConnectivity: "Port Intelligence",
         originLsci: "출발국 LSCI",
         destinationLsci: "도착국 LSCI",
-        relevantPorts: "항만 확인",
+        relevantPorts: "관련 항만",
+        relevantAirports: "관련 공항",
         unavailableSignal: "이용 가능한 공식 지표 없음",
         usActivity: "U.S. Freight Activity",
         airNotice: "항공 운임 시장 지수 값은 라이선스 없이 표시하지 않습니다. 공항 정보와 글로벌 공급망 압력만 참고하세요.",
         roadNotice: "글로벌 도로/철도 운임 데이터는 제공하지 않습니다. 미국이 포함된 경우에만 BTS 지역 지표를 함께 보여줍니다.",
-        rateNoticeTitle: "실제 운임 확인",
-        rateNotice: "LOGILEE는 라이선스형 운임 지수 값을 복제하지 않습니다. 실제 견적과 spot rate는 공식 거래소, 운임 플랫폼 또는 포워더 견적으로 확인하세요.",
+        rateNoticeTitle: "실제 운임·시장 지수 확인",
+        rateNotice: "LOGILEE는 라이선스가 필요한 운임지수 값을 재게시하지 않습니다. 실제 운임 및 시장 지수는 공식 제공처에서 확인하세요.",
         connectivityTitle: "연결성 신호",
         connectivityLead: "연결성은 운임 가격이 아니라 정기선 네트워크의 상대적 참고 신호입니다.",
         regionalTitle: "미국 운송 지표 상세",
@@ -905,8 +909,8 @@ async function wireFreightMarket() {
         monthly: "월별 공개 통계, 지표별 공표 지연 및 수정 가능",
         sourceNote: "출처: Bureau of Transportation Statistics (BTS). 데이터셋: Transportation Services Index and Seasonally-Adjusted Transportation Data. 지표별 공표 주기와 수정 가능성이 다를 수 있습니다.",
         detailSummary: "상세 지표 보기",
-        resourcesTitle: "공식 운임·시장 자료",
-        resourcesLead: "라이선스형 운임 지수는 숫자를 복제하지 않고 공식 리소스로 연결합니다.",
+        resourcesTitle: "공식 자료 및 데이터 출처",
+        resourcesLead: "공식 공개 데이터와 라이선스형 시장 자료 링크를 한곳에 모았습니다.",
         sourceCta: "공식 출처 열기",
         relatedTitle: "다음 업무",
         sourcesTitle: "데이터 및 출처",
@@ -917,8 +921,8 @@ async function wireFreightMarket() {
         tableUnit: "단위",
         tablePeriod: "기간",
         tableSource: "출처",
-        allPorts: "국가 항만 보기",
-        allAirports: "국가 공항 보기",
+        allPorts: "항만 보기",
+        allAirports: "공항 보기",
         noPorts: "등록된 Port Intelligence 항목 없음"
       }
     : {
@@ -927,7 +931,10 @@ async function wireFreightMarket() {
         marketBrief: "Market Brief",
         briefEyebrow: "MARKET BRIEF",
         routeQuestion: "Where are you shipping?",
-        relevantSignals: "Relevant Market Signals",
+        summaryTitle: "Market Summary",
+        relevantSignals: "Key Market Signals",
+        coverageTitle: "Data Coverage",
+        noCoverageGap: "All key signals for the selected market are displayed.",
         nextActionsTitle: "Continue Your Shipment",
         globalSignal: "GLOBAL",
         originSignal: "ORIGIN",
@@ -953,7 +960,7 @@ async function wireFreightMarket() {
         selectCountry: "Search country...",
         selectOrigin: "Select origin country.",
         selectDestination: "Select destination country.",
-        noSelection: "Select an origin and destination to build a route-specific market brief.",
+        noSelection: "Select an origin and destination to show a market summary and next actions.",
         latestOfficial: "Latest available official data",
         countryConnectivity: "Country Connectivity",
         bilateralConnectivity: "Bilateral Connectivity",
@@ -961,12 +968,13 @@ async function wireFreightMarket() {
         originLsci: "Origin LSCI",
         destinationLsci: "Destination LSCI",
         relevantPorts: "Relevant Port Intelligence",
+        relevantAirports: "Relevant Airport Intelligence",
         unavailableSignal: "Not available",
         usActivity: "U.S. Freight Activity",
         airNotice: "Licensed air freight market rate values are not displayed. Use airport intelligence and global supply-chain pressure as context.",
         roadNotice: "Global road/rail freight rates are not provided. BTS regional indicators are shown only when the U.S. is involved.",
-        rateNoticeTitle: "Check Actual Freight Rates",
-        rateNotice: "LOGILEE does not reproduce licensed freight index values. Confirm live quotes and spot rates through official exchanges, freight platforms, or forwarder quotations.",
+        rateNoticeTitle: "Check Actual Freight Rates and Market Indices",
+        rateNotice: "LOGILEE does not republish licensed freight index values. Confirm actual rates and market indices through the official providers.",
         connectivityTitle: "Connectivity Signals",
         connectivityLead: "Connectivity is a network reference signal, not a freight price or quote.",
         regionalTitle: "U.S. Freight Details",
@@ -979,8 +987,8 @@ async function wireFreightMarket() {
         monthly: "Monthly public statistics, with series-specific publication lag and revisions",
         sourceNote: "Source: Bureau of Transportation Statistics (BTS). Dataset: Transportation Services Index and Seasonally-Adjusted Transportation Data. Update cycles vary by series and may be revised.",
         detailSummary: "View detailed indicators",
-        resourcesTitle: "Official Freight Market Resources",
-        resourcesLead: "Licensed freight indices are linked to official resources without reproducing current values.",
+        resourcesTitle: "Official Resources and Data Sources",
+        resourcesLead: "Official public data and licensed market-resource links in one compact reference.",
         sourceCta: "Open official source",
         relatedTitle: "Next Actions",
         sourcesTitle: "Data & Sources",
@@ -2281,8 +2289,8 @@ function freightRowMarkup(item, compact = false) {
 }
 
 async function getGlobalFreightData() {
-  return fetchJson(new URL("../assets/logilee-freight-data.json?v=global-freight-v2-1-20260902", location.href).toString(), {
-    cacheKey: "logilee:global-freight:v2-1-20260902",
+  return fetchJson(new URL("../assets/logilee-freight-data.json?v=global-freight-brief-polish-20260902", location.href).toString(), {
+    cacheKey: "logilee:global-freight:brief-polish-20260902",
     ttl: 24 * 60 * 60 * 1000
   });
 }
@@ -2342,10 +2350,10 @@ function renderGlobalFreightMarket(snapshot, btsRows, labels, lang) {
         <div class="field"><label for="freight-mode">${labels.mode}</label><select id="freight-mode" name="mode"><option value="ocean">${labels.ocean}</option><option value="air">${labels.air}</option><option value="road-rail">${labels.roadRail}</option></select></div>
         <button class="btn primary" type="submit">${labels.viewMarket}</button>
       </form>
-      <div data-freight-explorer-output class="freight-explorer-output"><div class="data-empty">${labels.noSelection}</div></div>
+      <p class="freight-selector-helper" data-freight-empty-helper>${labels.noSelection}</p>
+      <div data-freight-explorer-output class="freight-explorer-output"></div>
     </section>
-    ${renderOfficialFreightResources(labels)}
-    ${renderFreightSources(snapshot, labels, lang)}
+    ${renderFreightResourceAccordion(snapshot, labels, lang)}
   `;
 }
 
@@ -2404,6 +2412,7 @@ function setupFreightExplorer(target, snapshot, btsRows, labels, lang) {
   const destination = form.querySelector("[name='destination']");
   const mode = form.querySelector("[name='mode']");
   const output = target.querySelector("[data-freight-explorer-output]");
+  const helper = target.querySelector("[data-freight-empty-helper]");
   const countryItems = TRADE_COUNTRIES.map(([value, en, ko]) => ({ value, label: lang === "ko" ? ko : en, meta: `${value} · ${en}`, terms: [value, en, ko, ...(COUNTRY_SEARCH_ALIASES[value] || [])].map(normalizeCountrySearch) }));
   origin.innerHTML = `<option value="">${labels.selectOrigin}</option>` + optionMarkup(TRADE_COUNTRIES);
   destination.innerHTML = `<option value="">${labels.selectDestination}</option>` + optionMarkup(TRADE_COUNTRIES);
@@ -2416,6 +2425,7 @@ function setupFreightExplorer(target, snapshot, btsRows, labels, lang) {
   let syncingHistory = false;
   const render = (push = false) => {
     output.innerHTML = renderFreightExplorerResult(origin.value, destination.value, mode.value, snapshot, btsRows, labels, lang);
+    if (helper) helper.hidden = Boolean(origin.value && destination.value);
     if (push && !syncingHistory) {
       const next = new URL(location.href);
       origin.value ? next.searchParams.set("origin", origin.value) : next.searchParams.delete("origin");
@@ -2426,6 +2436,13 @@ function setupFreightExplorer(target, snapshot, btsRows, labels, lang) {
     }
     refreshIcons();
   };
+  target.querySelector("[data-freight-resource-toggle]")?.addEventListener("click", (event) => {
+    const button = event.currentTarget;
+    const panel = target.querySelector(`#${button.getAttribute("aria-controls")}`);
+    const expanded = button.getAttribute("aria-expanded") === "true";
+    button.setAttribute("aria-expanded", String(!expanded));
+    if (panel) panel.hidden = expanded;
+  });
   form.addEventListener("submit", (event) => {
     event.preventDefault();
     render(true);
@@ -2461,16 +2478,16 @@ function updateFreightLanguageSwitch() {
 }
 
 function renderFreightExplorerResult(origin, destination, mode, snapshot, btsRows, labels, lang) {
-  if (!origin || !destination) return `<div class="data-empty freight-brief-empty">${labels.noSelection}</div>`;
+  if (!origin || !destination) return "";
   const gscpi = snapshot.gscpi || {};
   const originLsci = snapshot.unctad?.lsci?.[origin];
   const destinationLsci = snapshot.unctad?.lsci?.[destination];
   const bilateral = mode === "ocean" ? snapshot.unctad?.bilateral?.[`${origin}-${destination}`] : null;
-  const ports = mode === "ocean" ? ALL_PORTS.filter((port) => [origin, destination].includes(port.iso)).slice(0, 6) : [];
   const involvesUs = origin === "US" || destination === "US";
   const originName = displayCountryName(origin, lang);
   const destinationName = displayCountryName(destination, lang);
   const modeLabel = mode === "ocean" ? labels.ocean : mode === "air" ? labels.air : labels.roadRail;
+  const coverageNotes = freightCoverageNotes({ originName, destinationName, originLsci, destinationLsci, bilateral, mode, labels, lang });
   const periodParts = [
     `GSCPI ${formatFreightDate(gscpi.current?.date, lang)}`
   ];
@@ -2489,19 +2506,105 @@ function renderFreightExplorerResult(origin, destination, mode, snapshot, btsRow
       <div class="data-status-list compact-fx-meta freight-brief-meta">
         <div><strong>${labels.latestOfficial}</strong><span>${periodParts.join(" · ")}</span></div>
       </div>
+      <section class="freight-market-summary">
+        <h4>${labels.summaryTitle}</h4>
+        ${renderMarketSummary({ gscpi, originName, destinationName, originLsci, destinationLsci, bilateral, mode, modeLabel, labels, lang })}
+      </section>
       <h4>${labels.relevantSignals}</h4>
-      <div class="freight-signal-grid">
+      <div class="freight-signal-list">
         ${renderGscpiBriefCard(gscpi, labels, lang)}
-        ${mode === "ocean" ? renderLsciCard(labels.originLsci, originLsci, labels, lang, labels.originSignal) : renderModeContextCard(mode, labels, lang)}
-        ${mode === "ocean" ? renderBilateralCard(bilateral, labels, lang) : ""}
-        ${mode === "ocean" ? renderLsciCard(labels.destinationLsci, destinationLsci, labels, lang, labels.destinationSignal) : ""}
+        ${mode === "ocean" && originLsci ? renderLsciCard(`${originName} LSCI`, originLsci, labels, lang, labels.originSignal) : ""}
+        ${mode === "ocean" && bilateral ? renderBilateralCard(bilateral, labels, lang) : ""}
+        ${mode === "ocean" && destinationLsci ? renderLsciCard(`${destinationName} LSCI`, destinationLsci, labels, lang, labels.destinationSignal) : ""}
         ${involvesUs ? renderUsActivityCard(btsRows, labels, lang) : ""}
       </div>
-      ${mode === "ocean" ? renderPortLinks(ports, origin, destination, labels, lang) : ""}
-      ${renderRateNotice(mode, labels)}
+      ${coverageNotes.length ? renderCoverageNote(coverageNotes, labels) : ""}
+      ${mode === "ocean" || mode === "air" ? renderLocationLinks(origin, destination, mode, labels, lang) : ""}
+      ${renderRateResources(mode, labels, lang)}
       ${renderFreightRelatedTools(labels, lang, origin, destination, mode)}
       ${involvesUs ? renderBtsRegionalSection(btsRows, labels, lang, { collapsed: true }) : ""}
     </article>
+  `;
+}
+
+function renderMarketSummary(context) {
+  const { gscpi, originName, destinationName, originLsci, destinationLsci, bilateral, mode, modeLabel, labels, lang } = context;
+  const sentences = [gscpiSummarySentence(gscpi, lang)];
+  if (mode === "ocean") {
+    if (originLsci) sentences.push(lsciSummarySentence(originName, originLsci, lang));
+    if (bilateral) sentences.push(bilateralSummarySentence(originName, destinationName, bilateral, lang));
+    if (destinationLsci) sentences.push(lsciSummarySentence(destinationName, destinationLsci, lang));
+  } else if (mode === "air") {
+    sentences.push(lang === "ko" ? "항공 운임 지수 값은 라이선스 없이 표시하지 않고, 공항 정보와 공급망 압력 지표만 연결합니다." : "Licensed air freight index values are not displayed; this brief links airport intelligence and supply-chain pressure context only.");
+  } else {
+    sentences.push(lang === "ko" ? "도로/철도 운임 지수 값은 제공하지 않고, 미국이 포함된 경우에만 BTS 운송 활동 지표를 연결합니다." : "Road/rail freight-rate values are not provided; BTS activity indicators are linked only when the U.S. is involved.");
+  }
+  return `
+    <p class="freight-route-summary">${escapeHtml(originName)} → ${escapeHtml(destinationName)} · ${escapeHtml(modeLabel)}</p>
+    <ul>${sentences.map((sentence) => `<li>${escapeHtml(sentence)}</li>`).join("")}</ul>
+  `;
+}
+
+function gscpiSummarySentence(gscpi, lang) {
+  const value = Number(gscpi.current?.value);
+  const change = Number(gscpi.change);
+  const level = value === 0
+    ? (lang === "ko" ? "역사적 평균 수준" : "near its historical average")
+    : value > 0
+      ? (lang === "ko" ? "역사적 평균보다 높은 수준" : "above its historical average")
+      : (lang === "ko" ? "역사적 평균보다 낮은 수준" : "below its historical average");
+  const movement = !Number.isFinite(change)
+    ? ""
+    : change === 0
+      ? (lang === "ko" ? "전월과 같은 수준입니다" : "and was unchanged from the previous month")
+      : change < 0
+        ? (lang === "ko" ? `전월보다 ${formatRate(Math.abs(change), 2)} 완화됐지만` : `eased by ${formatRate(Math.abs(change), 2)} from the previous month but remains`)
+        : (lang === "ko" ? `전월보다 ${formatRate(change, 2)} 상승했고` : `rose by ${formatRate(change, 2)} from the previous month and is`);
+  if (lang === "ko") return movement ? `글로벌 공급망 압력은 ${movement} ${level}입니다.` : `글로벌 공급망 압력은 ${level}입니다.`;
+  return movement ? `Global supply-chain pressure ${movement} ${level}.` : `Global supply-chain pressure is ${level}.`;
+}
+
+function lsciSummarySentence(countryName, data, lang) {
+  const qoq = Number(data.qoq);
+  const movement = !Number.isFinite(qoq) || qoq === 0
+    ? (lang === "ko" ? "전분기와 유사합니다" : "was similar to the previous quarter")
+    : qoq > 0
+      ? (lang === "ko" ? `전분기 대비 ${formatRate(qoq, 1)}% 상승했습니다` : `rose ${formatRate(qoq, 1)}% from the previous quarter`)
+      : (lang === "ko" ? `전분기 대비 ${formatRate(Math.abs(qoq), 1)}% 하락했습니다` : `fell ${formatRate(Math.abs(qoq), 1)}% from the previous quarter`);
+  return lang === "ko" ? `${countryName}의 정기선 연결성은 ${movement}.` : `${countryName} liner shipping connectivity ${movement}.`;
+}
+
+function bilateralSummarySentence(originName, destinationName, data, lang) {
+  const value = Number(data.value);
+  const previous = Number(data.previousValue);
+  const change = Number.isFinite(value) && Number.isFinite(previous) ? value - previous : 0;
+  const movement = change === 0
+    ? (lang === "ko" ? "이전 관측치와 유사합니다" : "was similar to the previous observation")
+    : change > 0
+      ? (lang === "ko" ? `이전 관측치보다 ${formatRate(change, 3)} 상승했습니다` : `increased by ${formatRate(change, 3)} from the previous observation`)
+      : (lang === "ko" ? `이전 관측치보다 ${formatRate(Math.abs(change), 3)} 하락했습니다` : `decreased by ${formatRate(Math.abs(change), 3)} from the previous observation`);
+  return lang === "ko" ? `${originName}–${destinationName} 양자 정기선 연결성은 ${movement}.` : `${originName}–${destinationName} bilateral liner connectivity ${movement}.`;
+}
+
+function freightCoverageNotes(context) {
+  const { originName, destinationName, originLsci, destinationLsci, bilateral, mode, labels, lang } = context;
+  const notes = [];
+  if (mode === "ocean") {
+    if (!originLsci) notes.push(lang === "ko" ? `${originName} 국가 정기선 연결성: 현재 제공 데이터 없음.` : `${originName} country LSCI: no data in the current dataset.`);
+    if (!bilateral) notes.push(lang === "ko" ? `${originName}–${destinationName} 양자 정기선 연결성: 현재 제공 데이터 없음.` : `${originName}–${destinationName} bilateral LSCI: no data in the current dataset.`);
+    if (!destinationLsci) notes.push(lang === "ko" ? `${destinationName} 국가 정기선 연결성: 현재 제공 데이터 없음.` : `${destinationName} country LSCI: no data in the current dataset.`);
+  } else {
+    notes.push(mode === "air" ? labels.airNotice : labels.roadNotice);
+  }
+  return notes;
+}
+
+function renderCoverageNote(notes, labels) {
+  return `
+    <section class="freight-coverage-note">
+      <h4>${labels.coverageTitle}</h4>
+      <ul>${notes.map((note) => `<li>${escapeHtml(note)}</li>`).join("")}</ul>
+    </section>
   `;
 }
 
@@ -2510,14 +2613,9 @@ function renderSignalCard(scope, title, value, previous, change, period, note, l
   const changeClass = Number.isFinite(change) ? `trend-${change >= 0 ? "up" : "down"}` : "";
   return `
     <article class="freight-signal-card">
-      <span class="kicker">${escapeHtml(scope)}</span>
-      <h5>${escapeHtml(title)}</h5>
+      <div><span class="kicker">${escapeHtml(scope)}</span><h5>${escapeHtml(title)}</h5><small>${escapeHtml(period || labels.latestObservation)}</small></div>
       <strong>${Number.isFinite(value) ? formatRate(value, digits) : labels.unavailableSignal}</strong>
-      <dl>
-        <div><dt>${labels.previous}</dt><dd>${Number.isFinite(previous) ? formatRate(previous, digits) : "N/A"}</dd></div>
-        <div><dt>${labels.change}</dt><dd class="${changeClass}">${formatSignedValue(change, digits)}</dd></div>
-      </dl>
-      <small>${escapeHtml(period || labels.latestObservation)}</small>
+      <span class="${changeClass}">${formatSignedValue(change, digits)}${options.percent ? "%" : ""}</span>
       <p>${escapeHtml(note)}</p>
     </article>
   `;
@@ -2558,28 +2656,13 @@ function lsciNote(data, labels, lang) {
 }
 
 function renderLsciCard(title, data, labels, lang, scope = labels.originSignal) {
-  if (!data) return `<article class="freight-signal-card"><span class="kicker">${escapeHtml(scope)}</span><h5>${escapeHtml(title)}</h5><strong>${labels.unavailableSignal}</strong><p>${labels.connectivityLead}</p></article>`;
-  return renderSignalCard(scope, title, Number(data.value), Number(data.previousValue), Number(data.qoq), formatQuarterLabel(data.period, lang), lsciNote(data, labels, lang), labels, { digits: 1 });
+  return renderSignalCard(scope, title, Number(data.value), Number(data.previousValue), Number(data.qoq), formatQuarterLabel(data.period, lang), lsciNote(data, labels, lang), labels, { digits: 1, percent: true });
 }
 
 function renderBilateralCard(data, labels, lang) {
-  if (!data) return `<article class="freight-signal-card"><span class="kicker">${labels.routeSignal}</span><h5>${labels.bilateralConnectivity}</h5><strong>${labels.unavailableSignal}</strong><p>${labels.connectivityLead}</p></article>`;
   const change = Number.isFinite(Number(data.value)) && Number.isFinite(Number(data.previousValue)) ? Number(data.value) - Number(data.previousValue) : null;
   const note = `${labels.connectivityLead} ${lang === "ko" ? "선택 국가 간 해운 네트워크의 상대적 연결성만 보여줍니다." : "It shows relative maritime network connectivity between the selected countries."}`;
   return renderSignalCard(labels.routeSignal, labels.bilateralConnectivity, Number(data.value), Number(data.previousValue), change, formatQuarterLabel(data.period, lang), note, labels, { digits: 3 });
-}
-
-function renderModeContextCard(mode, labels, lang) {
-  const isAir = mode === "air";
-  return `
-    <article class="freight-signal-card freight-mode-context">
-      <span class="kicker">${labels.routeSignal}</span>
-      <h5>${isAir ? labels.air : labels.roadRail}</h5>
-      <strong>${labels.unavailableSignal}</strong>
-      <p>${isAir ? labels.airNotice : labels.roadNotice}</p>
-      <a class="text-link" href="${isAir ? "airports.html" : "country-trade-profile.html"}">${isAir ? labels.allAirports : (lang === "ko" ? "국가 프로필 보기" : "View country profiles")}</a>
-    </article>
-  `;
 }
 
 function renderUsActivityCard(rows, labels, lang) {
@@ -2613,82 +2696,117 @@ function renderRateNotice(mode, labels) {
   `;
 }
 
-function renderPortLinks(ports, origin, destination, labels, lang) {
+function renderLocationLinks(origin, destination, mode, labels, lang) {
+  const isAir = mode === "air";
+  const path = isAir ? "airports.html" : "ports.html";
+  const title = isAir ? labels.relevantAirports : labels.relevantPorts;
+  const noun = isAir ? labels.allAirports : labels.allPorts;
+  const icon = isAir ? "plane" : "anchor";
   return `
     <div class="freight-port-links">
-      <h3>${labels.relevantPorts}</h3>
-      <div class="country-tool-grid">
-        <a href="ports.html?country=${escapeAttribute(origin)}"><i data-lucide="anchor"></i><strong>${escapeHtml(displayCountryName(origin, lang))}</strong><span>${labels.allPorts}</span></a>
-        <a href="ports.html?country=${escapeAttribute(destination)}"><i data-lucide="anchor"></i><strong>${escapeHtml(displayCountryName(destination, lang))}</strong><span>${labels.allPorts}</span></a>
-        ${ports.map((port) => `<a href="ports.html?q=${encodeURIComponent(port.name)}"><i data-lucide="ship"></i><strong>${escapeHtml(port.name)}</strong><span>${escapeHtml(port.locode)}</span></a>`).join("") || `<div class="data-empty">${labels.noPorts}</div>`}
+      <h4>${title}</h4>
+      <div class="country-tool-grid freight-location-grid">
+        <a href="${path}?country=${escapeAttribute(origin)}"><i data-lucide="${icon}"></i><strong>${escapeHtml(displayCountryName(origin, lang))} ${noun}</strong></a>
+        <a href="${path}?country=${escapeAttribute(destination)}"><i data-lucide="${icon}"></i><strong>${escapeHtml(displayCountryName(destination, lang))} ${noun}</strong></a>
       </div>
     </div>
   `;
 }
 
-function renderOfficialFreightResources(labels) {
-  const resources = [
+function freightMarketResources(mode) {
+  const ocean = [
     ["Ocean Container", "Shanghai Shipping Exchange SCFI", "Container spot market reference published by Shanghai Shipping Exchange.", "https://en.sse.net.cn/indices/scfinew.jsp"],
     ["Ocean Container", "Shanghai Shipping Exchange CCFI", "China export container market reference published by Shanghai Shipping Exchange.", "https://en.sse.net.cn/indices/ccfinew.jsp"],
     ["Ocean Container", "Drewry World Container Index", "Licensed container freight index resource; LOGILEE does not republish values.", "https://www.drewry.co.uk/supply-chain-advisors/supply-chain-expertise/world-container-index-assessed-by-drewry"],
-    ["Ocean Container", "Freightos Baltic Index", "Freightos official index resource; licensed data terms apply.", "https://terminal.freightos.com/freightos-baltic-index"],
+    ["Ocean Container", "Freightos FBX", "Freightos official index resource; licensed data terms apply.", "https://terminal.freightos.com/freightos-baltic-index"]
+  ];
+  if (mode === "air") return [["Air Cargo", "IATA Air Cargo Market Analysis", "Official IATA air cargo analysis resource.", "https://www.iata.org/en/publications/economics/"]];
+  if (mode === "road-rail") return [];
+  return ocean;
+}
+
+function renderRateResources(mode, labels, lang) {
+  const resources = freightMarketResources(mode);
+  if (!resources.length) return "";
+  return `
+    <section class="freight-rate-resources">
+      <div>
+        <h4>${labels.rateNoticeTitle}</h4>
+        <p>${labels.rateNotice}</p>
+      </div>
+      <div class="freight-rate-links">
+        ${resources.map(([, name, , href]) => `<a href="${escapeAttribute(href)}" target="_blank" rel="noopener noreferrer">${escapeHtml(name)} <span aria-hidden="true">↗</span></a>`).join("")}
+      </div>
+    </section>
+  `;
+}
+
+function renderFreightResourceAccordion(snapshot, labels, lang) {
+  const marketResources = [
+    ...freightMarketResources("ocean"),
     ["Dry Bulk", "Baltic Exchange Market Data", "Official Baltic Exchange market data resource; subscription/licensing may apply.", "https://www.balticexchange.com/en/data-services/market-information0.html"],
-    ["Air Cargo", "IATA Air Cargo Market Analysis", "Official IATA air cargo analysis resource.", "https://www.iata.org/en/publications/economics/"]
+    ...freightMarketResources("air")
+  ];
+  const dataRows = [
+    ["New York Fed", "GSCPI", labels.gscpiNote, snapshot.gscpi?.sourceUrl],
+    ["UNCTAD", "LSCI / Bilateral LSCI", labels.connectivityLead, snapshot.unctad?.sourceUrl],
+    ["BTS / USDOT", "U.S. Freight Activity", labels.regionalNote, BTS_FREIGHT_SOURCE]
   ];
   return `
-    <details class="freight-v2-section freight-compact-details">
-      <summary><span>${labels.resourcesTitle}</span><small>${labels.resourcesLead}</small></summary>
-      <div class="freight-resource-grid">
-        ${resources.map(([category, name, text, href]) => `<a href="${escapeAttribute(href)}" target="_blank" rel="noopener noreferrer"><span>${escapeHtml(category)}</span><strong>${escapeHtml(name)}</strong><small>${escapeHtml(text)}</small><em>${labels.sourceCta}</em></a>`).join("")}
+    <section class="freight-v2-section freight-compact-details freight-bottom-resources">
+      <button class="freight-resource-toggle" type="button" data-freight-resource-toggle aria-expanded="false" aria-controls="freight-resource-panel">
+        <span>${labels.resourcesTitle}</span><small>${labels.resourcesLead}</small>
+      </button>
+      <div class="freight-resource-panel" id="freight-resource-panel" hidden>
+        <div>
+          <h3>${lang === "ko" ? "시장 지표 데이터" : "Market Signal Data"}</h3>
+          <div class="freight-compact-list">
+            ${dataRows.map(([source, name, note, href]) => `<a href="${escapeAttribute(href)}" target="_blank" rel="noopener noreferrer"><strong>${escapeHtml(source)} — ${escapeHtml(name)}</strong><small>${escapeHtml(note)}</small></a>`).join("")}
+          </div>
+        </div>
+        <div>
+          <h3>${lang === "ko" ? "운임·시장 자료" : "Freight Rate and Market Resources"}</h3>
+          <div class="freight-compact-list">
+            ${marketResources.map(([, name, text, href]) => `<a href="${escapeAttribute(href)}" target="_blank" rel="noopener noreferrer"><strong>${escapeHtml(name)}</strong><small>${escapeHtml(text)}</small></a>`).join("")}
+          </div>
+        </div>
       </div>
-    </details>
+    </section>
   `;
 }
 
 function renderFreightRelatedTools(labels, lang, origin, destination, mode) {
   const originParam = `country=${encodeURIComponent(origin)}`;
   const destinationParam = `country=${encodeURIComponent(destination)}`;
+  const originName = displayCountryName(origin, lang);
+  const destinationName = displayCountryName(destination, lang);
+  const routeName = lang === "ko" ? `${originName}–${destinationName}` : `${originName}–${destinationName}`;
+  const complianceHref = `compliance.html?market=${encodeURIComponent(destination.toLowerCase())}`;
   const tools = mode === "air"
     ? [
-        [lang === "ko" ? "출발 공항 확인" : "Check origin airports", `airports.html?${originParam}`, "plane"],
-        [lang === "ko" ? "도착 공항 확인" : "Check destination airports", `airports.html?${destinationParam}`, "plane-landing"],
-        [lang === "ko" ? "무역 공휴일 확인" : "Check trade holidays", `holidays.html?${destinationParam}`, "calendar-check"],
-        ["CBM Calculator", "cbm.html", "box"],
-        ["Compliance Hub", "compliance.html", "shield-check"]
+        [lang === "ko" ? `${originName} 공항 확인` : `${originName} Airports`, `airports.html?${originParam}`, "plane"],
+        [lang === "ko" ? `${destinationName} 공항 확인` : `${destinationName} Airports`, `airports.html?${destinationParam}`, "plane-landing"],
+        [lang === "ko" ? `${destinationName} 공휴일 확인` : `${destinationName} Trade Holidays`, `holidays.html?${destinationParam}`, "calendar-check"],
+        [lang === "ko" ? "CBM 계산기" : "CBM Calculator", "cbm.html", "box"],
+        [lang === "ko" ? `${destinationName} 수입 규제 확인` : `${destinationName} Import Compliance`, complianceHref, "shield-check"]
       ]
     : mode === "road-rail"
       ? [
-          [lang === "ko" ? "출발국 프로필" : "Origin country profile", `country-trade-profile.html?${originParam}`, "globe"],
-          [lang === "ko" ? "도착국 프로필" : "Destination country profile", `country-trade-profile.html?${destinationParam}`, "globe-2"],
+          [lang === "ko" ? `${originName} 국가 프로필` : `${originName} Country Profile`, `country-trade-profile.html?${originParam}`, "globe"],
+          [lang === "ko" ? `${destinationName} 국가 프로필` : `${destinationName} Country Profile`, `country-trade-profile.html?${destinationParam}`, "globe-2"],
           [lang === "ko" ? "영업일 확인" : "Check business days", "business-day.html", "calendar-clock"],
-          ["CBM Calculator", "cbm.html", "box"],
-          ["Compliance Hub", "compliance.html", "shield-check"]
+          [lang === "ko" ? "CBM 계산기" : "CBM Calculator", "cbm.html", "box"],
+          [lang === "ko" ? `${destinationName} 수입 규제 확인` : `${destinationName} Import Compliance`, complianceHref, "shield-check"]
         ]
       : [
-          [lang === "ko" ? "출발 항만 확인" : "Check origin ports", `ports.html?${originParam}`, "anchor"],
-          [lang === "ko" ? "도착 항만 확인" : "Check destination ports", `ports.html?${destinationParam}`, "ship"],
-          [lang === "ko" ? "무역 데이터 확인" : "Review trade data", `global-trade-explorer.html?reporter=${encodeURIComponent(origin)}&partner=${encodeURIComponent(destination)}`, "bar-chart-3"],
-          [lang === "ko" ? "무역 공휴일 확인" : "Check trade holidays", `holidays.html?${destinationParam}`, "calendar-check"],
-          ["CBM Calculator", "cbm.html", "box"],
-          ["Compliance Hub", "compliance.html", "shield-check"]
+          [lang === "ko" ? `${originName} 항만 확인` : `${originName} Ports`, `ports.html?${originParam}`, "anchor"],
+          [lang === "ko" ? `${destinationName} 항만 확인` : `${destinationName} Ports`, `ports.html?${destinationParam}`, "ship"],
+          [lang === "ko" ? `${routeName} 무역 데이터` : `${routeName} Trade Data`, `global-trade-explorer.html?reporter=${encodeURIComponent(origin)}&partner=${encodeURIComponent(destination)}`, "bar-chart-3"],
+          [lang === "ko" ? `${destinationName} 공휴일 확인` : `${destinationName} Trade Holidays`, `holidays.html?${destinationParam}`, "calendar-check"],
+          [lang === "ko" ? "CBM 계산기" : "CBM Calculator", "cbm.html", "box"],
+          [lang === "ko" ? `${destinationName} 수입 규제 확인` : `${destinationName} Import Compliance`, complianceHref, "shield-check"]
         ];
   return `<section class="freight-next-actions"><h4>${labels.nextActionsTitle}</h4><div class="country-tool-grid freight-action-grid">${tools.map(([label, href, icon]) => `<a href="${href}"><i data-lucide="${icon}"></i><strong>${escapeHtml(label)}</strong></a>`).join("")}</div></section>`;
-}
-
-function renderFreightSources(snapshot, labels, lang) {
-  const rows = [
-    ["New York Fed", "Global Supply Chain Pressure Index (GSCPI)", "Monthly", snapshot.gscpi?.sourceUrl, labels.gscpiNote],
-    ["UNCTAD", "Liner Shipping Connectivity Index; Bilateral LSCI", "Quarterly", snapshot.unctad?.sourceUrl, labels.connectivityLead],
-    ["BTS / USDOT", "Transportation Services Index and seasonally adjusted freight data", "Monthly", BTS_FREIGHT_SOURCE, labels.regionalNote]
-  ];
-  return `
-    <details class="freight-v2-section freight-compact-details freight-sources-compact">
-      <summary><span>${labels.sourcesTitle}</span><small>${lang === "ko" ? "공식 공개 데이터와 표시 한계" : "Official public data and display limits"}</small></summary>
-      <div class="source-note-grid freight-source-notes">
-        ${rows.map(([source, dataset, frequency, href, note]) => `<div><strong>${escapeHtml(source)}</strong><span>${escapeHtml(dataset)}</span><span>${escapeHtml(frequency)}</span><a href="${escapeAttribute(href)}" target="_blank" rel="noopener noreferrer">${labels.sourceCta}</a><small>${escapeHtml(note)}</small></div>`).join("")}
-      </div>
-    </details>
-  `;
 }
 
 async function loadExchangePage() {
