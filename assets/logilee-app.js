@@ -881,6 +881,27 @@ async function wireFreightMarket() {
         air: "Air",
         roadRail: "Road / Rail",
         viewMarket: "시장 확인",
+        freightCharges: "운임·부대비용",
+        shipmentContext: "선적 조건",
+        shipmentContextLead: "운임 견적이 아니라 비용 항목과 공식 확인처를 정리합니다.",
+        shipmentType: "선적 형태",
+        equipment: "장비",
+        cargoCondition: "화물 조건",
+        provider: "운송사 / Provider",
+        noProvider: "운송사 미선택",
+        chargeChecklist: "예상 비용 체크리스트",
+        officialProviderLookups: "선택한 운송사 공식 조회",
+        providerHint: "운송사를 선택하면 해당 운송사의 공식 조회 링크만 별도로 보여줍니다. 요율표 금액은 복사하지 않습니다.",
+        generalProviderHint: "운송사를 아직 모르는 경우 일반 비용 체크리스트로 준비하고, 실제 부대비용은 견적 또는 운송사 공식 조회에서 확인하세요.",
+        chargeExplainer: "비용 항목 설명",
+        chargeSearch: "THC, DEM, BAF 등 검색",
+        allCharges: "전체 항목",
+        importantNotes: "중요 안내",
+        incotermsNote: "비용 발생 여부와 비용 부담 주체는 Incoterms, 계약 조건, 운송사·터미널 정책 및 실제 선적 조건에 따라 달라질 수 있습니다.",
+        holidayTitle: "다음 공휴일",
+        holidayWindow: "30일 내 공휴일",
+        holidayLoading: "목적지 공휴일을 확인하는 중입니다...",
+        holidayUnavailable: "목적지 공휴일 데이터를 표시할 수 없습니다.",
         selectCountry: "국가 검색...",
         selectOrigin: "출발국을 선택하세요.",
         selectDestination: "도착국을 선택하세요.",
@@ -957,6 +978,27 @@ async function wireFreightMarket() {
         air: "Air",
         roadRail: "Road / Rail",
         viewMarket: "View Market",
+        freightCharges: "Freight Charges",
+        shipmentContext: "Shipment Context",
+        shipmentContextLead: "This is not a freight quotation. It organizes charge items and official lookup paths.",
+        shipmentType: "Shipment Type",
+        equipment: "Equipment",
+        cargoCondition: "Cargo Condition",
+        provider: "Carrier / Provider",
+        noProvider: "No provider selected",
+        chargeChecklist: "Expected Charge Checklist",
+        officialProviderLookups: "Official Provider Lookups",
+        providerHint: "Select a provider to show that provider's official lookup links. LOGILEE does not copy tariff values.",
+        generalProviderHint: "If the provider is not known yet, use the general checklist and verify actual charges through a quote or official provider lookup.",
+        chargeExplainer: "Charge Item Explainer",
+        chargeSearch: "Search THC, DEM, BAF...",
+        allCharges: "All items",
+        importantNotes: "Important Notes",
+        incotermsNote: "The existence of a charge and who bears it may vary by Incoterms, contract terms, provider policy, terminal rules, and actual shipment conditions.",
+        holidayTitle: "Next Public Holiday",
+        holidayWindow: "Public holidays in the next 30 days",
+        holidayLoading: "Checking destination public holidays...",
+        holidayUnavailable: "Destination public holiday data is unavailable.",
         selectCountry: "Search country...",
         selectOrigin: "Select origin country.",
         selectDestination: "Select destination country.",
@@ -2289,8 +2331,8 @@ function freightRowMarkup(item, compact = false) {
 }
 
 async function getGlobalFreightData() {
-  return fetchJson(new URL("../assets/logilee-freight-data.json?v=global-freight-brief-polish-20260902", location.href).toString(), {
-    cacheKey: "logilee:global-freight:brief-polish-20260902",
+  return fetchJson(new URL("../assets/logilee-freight-data.json?v=freight-charges-level1-20260903", location.href).toString(), {
+    cacheKey: "logilee:global-freight:charges-level1-20260903",
     ttl: 24 * 60 * 60 * 1000
   });
 }
@@ -2334,8 +2376,473 @@ function freightMetricCard(title, current, previous, change, period, note, label
   `;
 }
 
+const FREIGHT_CHARGE_PROVIDERS = [
+  {
+    id: "hmm",
+    mode: "ocean",
+    name: "HMM",
+    resources: [
+      ["quote", "Hi Quote", "Hi Quote", "https://www.hmm21.com/e-service/hiquote/quotationNew.do", true, "LINK_ONLY"],
+      ["surcharge", "Surcharge Inquiry", "Surcharge Inquiry", "https://www.hmm21.com/e-service/general/tariffRate/SurchargeInquiry.do", false, "LINK_ONLY"],
+      ["tariff", "HMM Tariff (United States)", "HMM Tariff (United States)", "https://www.hmm21.com/e-service/general/tariffRate/HmmTariff.do", false, "LINK_ONLY"],
+      ["demdet", "DEM/DET Tariff", "DEM/DET Tariff", "https://www.hmm21.com/e-service/general/tariffRate/DemDetTariff.do", false, "LINK_ONLY"],
+      ["local", "Korea Import Surcharge", "Korea Import Surcharge", "https://www.hmm21.com/e-service/import/quickInquiry/DomImpSchgRt.do", false, "LINK_ONLY"],
+      ["schedule", "Schedule", "Schedule", "https://www.hmm21.com/e-service/general/schedule/ScheduleMain.do", false, "LINK_ONLY"]
+    ],
+    noteKo: "HMM 공식 e-Service에서 견적, surcharge, DEM/DET, 한국 수입 local charge를 확인합니다.",
+    noteEn: "Use HMM's official e-Service for quote, surcharge, DEM/DET, and Korea import local charge lookups."
+  },
+  {
+    id: "maersk",
+    mode: "ocean",
+    name: "Maersk",
+    resources: [
+      ["quote", "Maersk Spot / Quote", "Maersk Spot / Quote", "https://www.maersk.com/book", true, "LINK_ONLY"],
+      ["demdet", "Detention & Demurrage Terms", "Detention & Demurrage Terms", "https://terms.maersk.com/dnd", false, "LINK_ONLY"],
+      ["local", "Local Information", "Local Information", "https://www.maersk.com/local-information", false, "LINK_ONLY"],
+      ["schedule", "Schedules", "Schedules", "https://www.maersk.com/schedules", false, "LINK_ONLY"]
+    ],
+    noteKo: "국가별 local information과 D&D 조회는 Maersk 공식 페이지에서 확인합니다.",
+    noteEn: "Check country local information and D&D details through Maersk's official pages."
+  },
+  {
+    id: "msc",
+    mode: "ocean",
+    name: "MSC",
+    resources: [
+      ["local", "Local Information", "Local Information", "https://www.msc.com/en/local-information", false, "LINK_ONLY"],
+      ["schedule", "Schedules", "Schedules", "https://www.msc.com/en/track-a-shipment", false, "LINK_ONLY"],
+      ["quote", "myMSC", "myMSC", "https://www.msc.com/en/solutions/digital-business-solutions/mymsc", true, "LINK_ONLY"]
+    ],
+    noteKo: "MSC 공식 local information과 myMSC를 통해 국가별 조건과 예약/조회 기능을 확인합니다.",
+    noteEn: "Use MSC local information and myMSC for country-specific conditions and booking tools."
+  },
+  {
+    id: "cma-cgm",
+    mode: "ocean",
+    name: "CMA CGM",
+    resources: [
+      ["quote", "SpotOn / Quote", "SpotOn / Quote", "https://www.cma-cgm.com/my-cma-cgm/prices/spoton", true, "LINK_ONLY"],
+      ["tariff", "Rates & Tariffs", "Rates & Tariffs", "https://www.cma-cgm.com/my-cma-cgm/prices/rates-tariffs", false, "LINK_ONLY"],
+      ["demdet", "Demurrage and Detention Tariffs", "Demurrage and Detention Tariffs", "https://www.cma-cgm.com/my-cma-cgm/prices/rates-tariffs/demurrage-detention", false, "LINK_ONLY"],
+      ["schedule", "Schedules", "Schedules", "https://www.cma-cgm.com/ebusiness/schedules", false, "LINK_ONLY"]
+    ],
+    noteKo: "CMA CGM 공식 rate/tariff 도구에서 carrier charge와 DEM/DET 자료를 확인합니다.",
+    noteEn: "Use CMA CGM's official rates and tariff tools for carrier charges and DEM/DET resources."
+  },
+  {
+    id: "cosco",
+    mode: "ocean",
+    name: "COSCO SHIPPING",
+    resources: [
+      ["local", "COSCO SHIPPING Lines", "COSCO SHIPPING Lines", "https://elines.coscoshipping.com/ebusiness/", true, "LINK_ONLY"],
+      ["schedule", "Sailing Schedule", "Sailing Schedule", "https://elines.coscoshipping.com/ebusiness/sailingSchedule", false, "LINK_ONLY"]
+    ],
+    noteKo: "COSCO 공식 eBusiness에서 schedule 및 업무 조회를 확인합니다.",
+    noteEn: "Use COSCO's official eBusiness tools for schedules and service lookups."
+  },
+  {
+    id: "one",
+    mode: "ocean",
+    name: "ONE",
+    resources: [
+      ["quote", "ONE Quote", "ONE Quote", "https://ecomm.one-line.com/one-ecom", true, "LINK_ONLY"],
+      ["local", "Local Information", "Local Information", "https://www.one-line.com/en/local-information", false, "LINK_ONLY"],
+      ["schedule", "Point-to-Point Schedule", "Point-to-Point Schedule", "https://ecomm.one-line.com/one-ecom/schedule/point-to-point-schedule", false, "LINK_ONLY"]
+    ],
+    noteKo: "ONE 공식 eCommerce와 local information에서 견적/스케줄/지역 charge 자료를 확인합니다.",
+    noteEn: "Use ONE eCommerce and local information for quote, schedule, and local charge resources."
+  },
+  {
+    id: "evergreen",
+    mode: "ocean",
+    name: "Evergreen",
+    resources: [
+      ["local", "Local Information", "Local Information", "https://www.evergreen-line.com/", false, "LINK_ONLY"],
+      ["schedule", "Sailing Schedule", "Sailing Schedule", "https://www.evergreen-line.com/route/jsp/TransitTime.jsp", false, "LINK_ONLY"],
+      ["quote", "ShipmentLink", "ShipmentLink", "https://www.shipmentlink.com/", true, "LINK_ONLY"]
+    ],
+    noteKo: "Evergreen 공식 사이트와 ShipmentLink에서 스케줄 및 업무 조회를 확인합니다.",
+    noteEn: "Use Evergreen and ShipmentLink official tools for schedules and shipment services."
+  },
+  {
+    id: "yang-ming",
+    mode: "ocean",
+    name: "Yang Ming",
+    resources: [
+      ["local", "Local Information", "Local Information", "https://www.yangming.com/", false, "LINK_ONLY"],
+      ["schedule", "Schedule", "Schedule", "https://www.yangming.com/e-service/schedule/PointToPointSchedule.aspx", false, "LINK_ONLY"],
+      ["quote", "e-Service", "e-Service", "https://www.yangming.com/e-service/", true, "LINK_ONLY"]
+    ],
+    noteKo: "Yang Ming 공식 e-Service에서 스케줄과 선적 관련 조회를 확인합니다.",
+    noteEn: "Use Yang Ming's official e-Service for schedules and shipment lookups."
+  },
+  {
+    id: "hapag-lloyd",
+    mode: "ocean",
+    name: "Hapag-Lloyd",
+    resources: [
+      ["quote", "Quick Quotes", "Quick Quotes", "https://www.hapag-lloyd.com/en/online-business/quotation/quick-quotes.html", true, "LINK_ONLY"],
+      ["local", "Tariffs", "Tariffs", "https://www.hapag-lloyd.com/en/online-business/tariffs.html", false, "LINK_ONLY"],
+      ["demdet", "Detention and Demurrage", "Detention and Demurrage", "https://www.hapag-lloyd.com/en/online-business/quotation/detention-demurrage.html", false, "LINK_ONLY"],
+      ["schedule", "Schedules", "Schedules", "https://www.hapag-lloyd.com/en/online-business/schedule.html", false, "LINK_ONLY"]
+    ],
+    noteKo: "Hapag-Lloyd 공식 quotation, tariff, D&D 도구를 사용해 조건을 확인합니다.",
+    noteEn: "Use Hapag-Lloyd quotation, tariff, and D&D tools for official checks."
+  },
+  {
+    id: "zim",
+    mode: "ocean",
+    name: "ZIM",
+    resources: [
+      ["quote", "Request a Quote", "Request a Quote", "https://www.zim.com/tools/request-a-quote", true, "LINK_ONLY"],
+      ["demdet", "Demurrage & Detention Tariff", "Demurrage & Detention Tariff", "https://www.zim.com/tools/demurrage-detention-tariff?containerType=All&countryCode=US&direction=false&portCode=USNYC", false, "LINK_ONLY"],
+      ["local", "Tariff Calculator / Local Charges", "Tariff Calculator / Local Charges", "https://www.zim.com/tools/tariff-calculator", false, "LINK_ONLY"],
+      ["schedule", "Schedules", "Schedules", "https://www.zim.com/schedules", false, "LINK_ONLY"]
+    ],
+    noteKo: "ZIM 공식 도구에서 D&D와 스케줄, 고객용 quote 기능을 확인합니다.",
+    noteEn: "Use ZIM official tools for D&D, schedules, and customer quote functions."
+  },
+  {
+    id: "korean-air",
+    mode: "air",
+    name: "Korean Air Cargo",
+    resources: [
+      ["tariff", "Cargo Tariff Guide", "Cargo Tariff Guide", "https://cargo.koreanair.com/ko/node/393", false, "LINK_ONLY"],
+      ["terminal", "Storage / Terminal Charges", "Storage / Terminal Charges", "https://cargosvc.koreanair.com/tms/storageChargeInfo.do", false, "LINK_ONLY"],
+      ["schedule", "Flight Schedule", "Flight Schedule", "https://cargo.koreanair.com/en/schedule/search", false, "LINK_ONLY"]
+    ],
+    noteKo: "대한항공카고 공식 tariff 안내와 터미널/보관료 조회를 확인합니다.",
+    noteEn: "Use Korean Air Cargo's official tariff guide and terminal/storage charge lookup."
+  },
+  {
+    id: "lufthansa-cargo",
+    mode: "air",
+    name: "Lufthansa Cargo",
+    resources: [
+      ["quote", "eServices", "eServices", "https://www.lufthansa-cargo.com/en/eservices", true, "LINK_ONLY"],
+      ["tariff", "General Terms", "General Terms", "https://www.lufthansa-cargo.com/en/meta/meta/company/general-terms", false, "LINK_ONLY"],
+      ["schedule", "Schedule", "Schedule", "https://www.lufthansa-cargo.com/en/eservices/schedules", false, "LINK_ONLY"]
+    ],
+    noteKo: "Lufthansa Cargo 공식 eServices와 약관에서 항공화물 조건을 확인합니다.",
+    noteEn: "Use Lufthansa Cargo eServices and terms for air cargo conditions."
+  },
+  {
+    id: "cathay-cargo",
+    mode: "air",
+    name: "Cathay Cargo",
+    resources: [
+      ["surcharge", "Cargo Fuel Surcharge", "Cargo Fuel Surcharge", "https://www.cathaycargo.com/en-us/help-and-support/cargo-fuel-surcharge.html", false, "LINK_ONLY"],
+      ["quote", "Booking", "Booking", "https://www.cathaycargo.com/en-us/manage-booking.html", true, "LINK_ONLY"],
+      ["schedule", "Flight Schedule", "Flight Schedule", "https://www.cathaycargo.com/en-us/tools/flight-schedule.html", false, "LINK_ONLY"]
+    ],
+    noteKo: "Cathay Cargo 공식 fuel surcharge와 booking/schedule 자료를 확인합니다.",
+    noteEn: "Use Cathay Cargo's official fuel surcharge, booking, and schedule resources."
+  },
+  {
+    id: "singapore-airlines-cargo",
+    mode: "air",
+    name: "Singapore Airlines Cargo",
+    resources: [
+      ["quote", "myCargo", "myCargo", "https://www.siacargo.com/", true, "LINK_ONLY"],
+      ["schedule", "Flight Schedule", "Flight Schedule", "https://www.siacargo.com/eServices/FlightSchedule", false, "LINK_ONLY"]
+    ],
+    noteKo: "Singapore Airlines Cargo 공식 서비스에서 booking과 schedule을 확인합니다.",
+    noteEn: "Use Singapore Airlines Cargo official services for booking and schedules."
+  },
+  {
+    id: "emirates-skycargo",
+    mode: "air",
+    name: "Emirates SkyCargo",
+    resources: [
+      ["quote", "Emirates SkyCargo", "Emirates SkyCargo", "https://www.skycargo.com/", true, "LINK_ONLY"],
+      ["schedule", "Schedules", "Schedules", "https://www.skycargo.com/shipping-services/schedules/", false, "LINK_ONLY"]
+    ],
+    noteKo: "Emirates SkyCargo 공식 사이트에서 booking/contact 및 schedule을 확인합니다.",
+    noteEn: "Use Emirates SkyCargo official resources for booking/contact and schedules."
+  },
+  {
+    id: "qatar-airways-cargo",
+    mode: "air",
+    name: "Qatar Airways Cargo",
+    resources: [
+      ["quote", "Digital Lounge", "Digital Lounge", "https://www.qrcargo.com/s/digital-lounge", true, "LINK_ONLY"],
+      ["schedule", "Flight Schedule", "Flight Schedule", "https://www.qrcargo.com/s/flight-schedule", false, "LINK_ONLY"]
+    ],
+    noteKo: "Qatar Airways Cargo 공식 Digital Lounge와 schedule 자료를 확인합니다.",
+    noteEn: "Use Qatar Airways Cargo's official Digital Lounge and schedule resources."
+  }
+];
+
+const FREIGHT_CHARGE_GLOSSARY = [
+  ["ocean-freight", "Ocean Freight", "해상 운임", ["ocean"], "main", "Carrier", "Quote Required / Contractual", "선사가 제공하는 해상 본운송 운임입니다. 실제 금액은 route, 장비, 계약, spot 조건에 따라 견적으로 확인합니다.", "Main ocean transportation charge quoted by the carrier. The actual amount depends on route, equipment, contract, and spot conditions.", "quote"],
+  ["air-freight", "Air Freight", "항공 운임", ["air"], "main", "Airline / GSSA", "Quote Required / Contractual", "항공 본운송 운임입니다. chargeable weight, 서비스, 계약 조건에 따라 견적으로 확인합니다.", "Main air transportation charge. Verify by quote based on chargeable weight, service, and contract terms.", "quote"],
+  ["thc", "THC", "THC", ["ocean", "air"], "terminal", "Carrier or Terminal", "Published / Provider-specific", "Terminal Handling Charge입니다. 터미널 처리와 관련된 비용으로 운송사 local charge 또는 터미널 tariff에서 확인합니다.", "Terminal Handling Charge related to terminal handling. Verify in carrier local charges or terminal tariffs.", "carrier_terminal"],
+  ["doc", "DOC", "DOC", ["ocean"], "origin", "Carrier", "Published / Provider-specific", "선적 서류 또는 documentation 처리와 관련된 운송사 charge입니다.", "Carrier documentation-related charge. Verify through the selected carrier's local charges.", "carrier"],
+  ["do", "D/O", "D/O", ["ocean", "air"], "destination", "Carrier / Airline / Agent", "Published / Provider-specific", "Delivery Order 또는 화물 인도 관련 문서/업무 charge입니다. 목적지 운송사 또는 agent 조건을 확인합니다.", "Delivery Order or release-related document/service charge. Verify with destination carrier or agent conditions.", "carrier"],
+  ["baf", "BAF", "BAF", ["ocean"], "surcharge", "Carrier", "Variable / Provider-specific", "Bunker Adjustment Factor입니다. 연료비 변동을 반영하는 운송사 surcharge로 carrier tariff 또는 견적에서 확인합니다.", "Bunker Adjustment Factor. A carrier surcharge reflecting fuel cost movement; verify in carrier tariff or quote.", "carrier"],
+  ["lss", "LSS", "LSS", ["ocean"], "surcharge", "Carrier", "Variable / Provider-specific", "Low Sulphur Surcharge입니다. 저유황유 또는 배출 규제 관련 비용으로 carrier 조건에 따라 달라집니다.", "Low Sulphur Surcharge related to low-sulphur fuel or emissions rules. It varies by carrier conditions.", "carrier"],
+  ["pss", "PSS", "PSS", ["ocean", "air"], "surcharge", "Carrier / Airline", "Conditional / Provider-specific", "Peak Season Surcharge입니다. 성수기 또는 수요 증가 구간에 조건부로 적용될 수 있습니다.", "Peak Season Surcharge. It may apply conditionally during peak demand periods.", "provider"],
+  ["gri", "GRI", "GRI", ["ocean"], "surcharge", "Carrier", "Variable / Provider-specific", "General Rate Increase입니다. 특정 기간 또는 trade lane에 운임 인상 공지가 적용될 수 있습니다.", "General Rate Increase. A carrier-announced increase that may apply by period or trade lane.", "carrier"],
+  ["ebs", "EBS", "EBS", ["ocean"], "surcharge", "Carrier", "Variable / Provider-specific", "Emergency Bunker Surcharge입니다. 급격한 연료비 변동 등으로 적용될 수 있는 carrier surcharge입니다.", "Emergency Bunker Surcharge. A carrier surcharge that may apply during sharp fuel cost changes.", "carrier"],
+  ["caf", "CAF", "CAF", ["ocean", "air"], "surcharge", "Carrier / Airline", "Variable / Provider-specific", "Currency Adjustment Factor입니다. 통화 변동을 반영할 수 있는 surcharge입니다.", "Currency Adjustment Factor. A surcharge that may reflect currency movement.", "provider"],
+  ["dem", "DEM", "DEM", ["ocean"], "conditional", "Carrier / Terminal", "Conditional / Published", "Demurrage입니다. free time 이후 컨테이너가 터미널에 남아 있을 때 발생할 수 있습니다. carrier/terminal/date/equipment별로 확인합니다.", "Demurrage may apply when a container remains at the terminal after free time. Verify by carrier, terminal, date, and equipment.", "demdet"],
+  ["det", "DET", "DET", ["ocean"], "conditional", "Carrier", "Conditional / Published", "Detention입니다. 컨테이너를 터미널 밖에서 free time 이후 보유할 때 발생할 수 있습니다.", "Detention may apply when carrier equipment is kept outside the terminal after free time.", "demdet"],
+  ["storage", "Storage", "Storage", ["ocean", "air", "road-rail"], "conditional", "Terminal / Warehouse", "Conditional / Published", "터미널 또는 창고 보관료입니다. free time, 기간, 화물 상태, 시설 정책에 따라 달라집니다.", "Terminal or warehouse storage. It varies by free time, duration, cargo condition, and facility rules.", "terminal"],
+  ["wharfage", "Wharfage", "Wharfage", ["ocean"], "terminal", "Government / Port / Terminal", "Published / Authority", "항만 시설 사용 또는 부두 관련 요금입니다. 항만/터미널 공식 tariff에서 확인합니다.", "Port or wharf-related charge. Verify through port or terminal official tariffs.", "authority"],
+  ["pfs", "PFS", "PFS", ["ocean"], "terminal", "Government / Port / Terminal", "Published / Authority", "Port Facility Security 관련 charge입니다. 국가/항만 정책에 따라 확인합니다.", "Port Facility Security-related charge. Verify by country and port authority rules.", "authority"],
+  ["psc", "PSC", "PSC", ["ocean"], "terminal", "Government / Port / Terminal", "Published / Authority", "Port Safety Charge 등 항만 안전 관련 charge입니다. 공식 항만/기관 자료를 확인합니다.", "Port Safety Charge or similar safety-related port charge. Verify official port or authority sources.", "authority"],
+  ["ccf", "CCF", "CCF", ["ocean"], "conditional", "Carrier", "Conditional / Provider-specific", "Container Cleaning Fee입니다. 컨테이너 반납 상태나 carrier 정책에 따라 발생할 수 있습니다.", "Container Cleaning Fee. It may apply based on container return condition or carrier policy.", "carrier"],
+  ["dg", "DG Surcharge", "DG Surcharge", ["ocean", "air", "road-rail"], "conditional", "Carrier / Airline / Transport Provider", "Conditional / Quote Required", "위험물 취급과 관련된 추가 비용입니다. DG class, 포장, route, provider 조건을 확인합니다.", "Additional charge for dangerous goods handling. Verify DG class, packaging, route, and provider conditions.", "quote"],
+  ["reefer", "Reefer Surcharge", "Reefer Surcharge", ["ocean", "road-rail"], "conditional", "Carrier / Terminal / Transport Provider", "Conditional / Quote Required", "냉동·냉장 장비와 전력/모니터링 관련 비용입니다. 장비와 시설 조건에 따라 달라집니다.", "Charge related to reefer equipment, power, or monitoring. It varies by equipment and facility rules.", "quote"],
+  ["oog", "OOG Surcharge", "OOG Surcharge", ["ocean", "road-rail", "air"], "conditional", "Carrier / Airline / Transport Provider", "Conditional / Quote Required", "규격 외 화물 취급 비용입니다. 크기, 중량, 장비, route에 따라 개별 확인합니다.", "Out-of-gauge or oversized cargo handling charge. Verify individually by dimensions, weight, equipment, and route.", "quote"],
+  ["awb", "AWB Fee", "AWB Fee", ["air"], "origin", "Airline / GSSA", "Published / Provider-specific", "Air Waybill 발행 또는 documentation 관련 항공화물 charge입니다.", "Air Waybill or documentation-related air cargo charge.", "airline"],
+  ["fuel", "Fuel Surcharge", "Fuel Surcharge", ["air", "road-rail"], "surcharge", "Airline / Transport Provider", "Variable / Provider-specific", "연료비 변동을 반영하는 surcharge입니다. airline/provider의 공식 조건 또는 견적으로 확인합니다.", "Surcharge reflecting fuel cost movement. Verify through official airline/provider terms or quote.", "provider"],
+  ["security", "Security Surcharge", "Security Surcharge", ["air", "ocean"], "surcharge", "Airline / Carrier / Terminal", "Published / Provider-specific", "보안 검색 또는 보안 관련 운영 비용입니다. mode와 provider별 조건을 확인합니다.", "Security screening or security-related operating charge. Verify by mode and provider.", "provider"],
+  ["customs-broker", "Customs Broker Service Fee", "관세사 통관대행 수수료", ["ocean", "air", "road-rail"], "customs", "Customs Broker", "Market / Contractual", "관세사 또는 통관 대행 서비스 비용입니다. 정부 세금과 구분하고 업무 범위별로 확인합니다.", "Customs broker or clearance service fee. Keep it separate from government taxes and verify by service scope.", "broker"],
+  ["duty-tax", "Duty / VAT / GST", "관세 / VAT / GST", ["ocean", "air", "road-rail"], "customs", "Government / Customs Authority", "Government-set / Formula-based", "품목분류, 과세가격, 원산지, 수입국 규정에 따라 발생할 수 있는 정부 부담금입니다.", "Government charges that may depend on classification, customs value, origin, and import-country rules.", "government"],
+  ["trucking", "Base Trucking / Drayage", "기본 운송 / Drayage", ["road-rail", "ocean", "air"], "origin", "Transport Provider", "Quote Required / Market", "내륙 운송 또는 항만/공항 drayage 비용입니다. 거리, 장비, 대기, 톨, provider 조건에 따라 견적으로 확인합니다.", "Inland transport or port/airport drayage charge. Verify by quote based on distance, equipment, waiting, tolls, and provider terms.", "quote"],
+  ["toll", "Toll", "통행료", ["road-rail"], "road", "Authority / Transport Provider", "Published / Pass-through", "유료도로 또는 통행료입니다. 실제 청구 방식은 운송 계약과 route에 따라 확인합니다.", "Road toll or access fee. Billing treatment depends on transport contract and route.", "authority"]
+].map(([code, nameEn, nameKo, modes, category, party, nature, descriptionKo, descriptionEn, verificationType]) => ({
+  code, nameEn, nameKo, modes, category, party, nature, descriptionKo, descriptionEn, verificationType
+}));
+
+const FREIGHT_CHARGE_CHECKLISTS = {
+  ocean: {
+    origin: ["trucking", "customs-broker", "thc", "doc"],
+    main: ["ocean-freight", "baf", "lss", "pss", "gri"],
+    destination: ["thc", "do", "customs-broker", "duty-tax", "trucking"],
+    conditional: ["dem", "det", "storage", "ccf", "dg", "reefer", "oog", "wharfage", "pfs", "psc"]
+  },
+  air: {
+    origin: ["trucking", "customs-broker", "thc", "security", "awb"],
+    main: ["air-freight", "fuel", "security"],
+    destination: ["thc", "storage", "customs-broker", "duty-tax", "trucking"],
+    conditional: ["dg", "oog", "storage"]
+  },
+  "road-rail": {
+    origin: ["trucking", "customs-broker"],
+    main: ["trucking", "fuel", "toll"],
+    destination: ["customs-broker", "duty-tax", "trucking"],
+    conditional: ["storage", "dg", "reefer", "oog"]
+  }
+};
+
+function freightProviderOptions(mode, selected = "", labels) {
+  const providers = FREIGHT_CHARGE_PROVIDERS.filter((item) => item.mode === mode);
+  return `<option value="">${labels.noProvider}</option>${providers.map((item) => `<option value="${escapeAttribute(item.id)}"${item.id === selected ? " selected" : ""}>${escapeHtml(item.name)}</option>`).join("")}`;
+}
+
+function freightChargeName(item, lang) {
+  return lang === "ko" ? item.nameKo : item.nameEn;
+}
+
+function freightChargeByCode(code) {
+  return FREIGHT_CHARGE_GLOSSARY.find((item) => item.code === code);
+}
+
+function freightGroupTitle(key, lang) {
+  const ko = { origin: "Origin Charges", main: "Main Transport", destination: "Destination Charges", conditional: "Conditional Charges" };
+  const en = { origin: "Origin Charges", main: "Main Transport", destination: "Destination Charges", conditional: "Conditional Charges" };
+  return (lang === "ko" ? ko : en)[key] || key;
+}
+
+function freightStatusLabel(item, lang) {
+  const type = item.verificationType;
+  if (lang === "ko") {
+    if (type === "quote") return "견적 필요";
+    if (type === "demdet") return "공식 요율 확인";
+    if (type === "government" || type === "authority") return "정부/기관 기준";
+    if (item.category === "conditional") return "조건부";
+    return "일반적으로 확인";
+  }
+  if (type === "quote") return "Quote Required";
+  if (type === "demdet") return "Official Tariff Lookup";
+  if (type === "government" || type === "authority") return "Government / Authority";
+  if (item.category === "conditional") return "Conditional";
+  return "Common Check";
+}
+
+function renderChargeChecklist(mode, labels, lang) {
+  const checklist = FREIGHT_CHARGE_CHECKLISTS[mode] || FREIGHT_CHARGE_CHECKLISTS.ocean;
+  return `
+    <section class="freight-charge-section">
+      <h4>${labels.chargeChecklist}</h4>
+      <div class="freight-charge-groups">
+        ${Object.entries(checklist).map(([key, codes]) => `
+          <div class="freight-charge-group">
+            <h5>${freightGroupTitle(key, lang)}</h5>
+            <ul>
+              ${codes.map((code) => {
+                const item = freightChargeByCode(code);
+                if (!item) return "";
+                return `<li><strong>${escapeHtml(freightChargeName(item, lang))}</strong><span>${escapeHtml(freightStatusLabel(item, lang))}</span></li>`;
+              }).join("")}
+            </ul>
+          </div>
+        `).join("")}
+      </div>
+    </section>
+  `;
+}
+
+function renderProviderLookups(mode, providerId, labels, lang, origin, destination) {
+  const provider = FREIGHT_CHARGE_PROVIDERS.find((item) => item.mode === mode && item.id === providerId);
+  if (!provider) {
+    return `
+      <section class="freight-provider-panel freight-provider-empty">
+        <h4>${labels.officialProviderLookups}</h4>
+        <p>${labels.generalProviderHint}</p>
+      </section>
+    `;
+  }
+  const routeNote = `${displayCountryName(origin, lang)} → ${displayCountryName(destination, lang)}`;
+  return `
+    <section class="freight-provider-panel">
+      <div class="freight-provider-head">
+        <div>
+          <h4>${labels.officialProviderLookups}</h4>
+          <p><strong>${escapeHtml(provider.name)}</strong> · ${escapeHtml(routeNote)}</p>
+        </div>
+        <span>${provider.resources.length} ${lang === "ko" ? "공식 링크" : "official links"}</span>
+      </div>
+      <p>${escapeHtml(lang === "ko" ? provider.noteKo : provider.noteEn)}</p>
+      <div class="freight-provider-links">
+        ${provider.resources.map(([, labelKo, labelEn, url, loginRequired]) => `
+          <a href="${escapeAttribute(url)}" target="_blank" rel="noopener noreferrer">
+            <strong>${escapeHtml(lang === "ko" ? labelKo : labelEn)} <span aria-hidden="true">↗</span></strong>
+            <small>${loginRequired ? (lang === "ko" ? "로그인 또는 계정 권한이 필요할 수 있습니다." : "Login or account permission may be required.") : (lang === "ko" ? "공식 제공처에서 직접 확인합니다." : "Verify directly with the official provider.")}</small>
+          </a>
+        `).join("")}
+      </div>
+      <p class="muted">${labels.providerHint}</p>
+    </section>
+  `;
+}
+
+function renderChargeExplainer(mode, labels, lang, query = "") {
+  const needle = String(query || "").trim().toLowerCase();
+  const placeholder = mode === "air"
+    ? (lang === "ko" ? "AWB, Fuel, Security 등 검색" : "Search AWB, Fuel, Security...")
+    : mode === "road-rail"
+      ? (lang === "ko" ? "Trucking, Toll, Fuel 등 검색" : "Search Trucking, Toll, Fuel...")
+      : labels.chargeSearch;
+  const rows = FREIGHT_CHARGE_GLOSSARY
+    .filter((item) => item.modes.includes(mode))
+    .filter((item) => !needle || [item.code, item.nameEn, item.nameKo, item.party, item.nature].join(" ").toLowerCase().includes(needle));
+  return `
+    <section class="freight-charge-section freight-explainer-section">
+      <div class="freight-charge-section-head">
+        <h4>${labels.chargeExplainer}</h4>
+        <label><span>${escapeHtml(placeholder)}</span><input type="search" value="${escapeAttribute(query)}" data-freight-charge-search placeholder="${escapeAttribute(placeholder)}"></label>
+      </div>
+      <div class="freight-explainer-list">
+        ${rows.length ? rows.map((item) => `
+          <article>
+            <div>
+              <h5>${escapeHtml(freightChargeName(item, lang))}</h5>
+              <span>${escapeHtml(freightStatusLabel(item, lang))}</span>
+            </div>
+            <p>${escapeHtml(lang === "ko" ? item.descriptionKo : item.descriptionEn)}</p>
+            <dl>
+              <div><dt>${lang === "ko" ? "청구 주체" : "Typical party"}</dt><dd>${escapeHtml(item.party)}</dd></div>
+              <div><dt>${lang === "ko" ? "요율 성격" : "Rate nature"}</dt><dd>${escapeHtml(item.nature)}</dd></div>
+              <div><dt>${lang === "ko" ? "확인 위치" : "Where to verify"}</dt><dd>${escapeHtml(freightVerificationLabel(item.verificationType, lang))}</dd></div>
+            </dl>
+          </article>
+        `).join("") : `<div class="data-empty">${lang === "ko" ? "일치하는 비용 항목이 없습니다." : "No matching charge item."}</div>`}
+      </div>
+    </section>
+  `;
+}
+
+function freightVerificationLabel(type, lang) {
+  const ko = {
+    quote: "견적서 또는 운송사/Provider",
+    carrier: "선사 local charge 또는 tariff",
+    carrier_terminal: "선사 local charge 또는 터미널 tariff",
+    provider: "운송사/항공사 공식 조건",
+    demdet: "공식 DEM/DET 조회",
+    terminal: "터미널 또는 창고 tariff",
+    authority: "정부/항만/기관 공식 자료",
+    airline: "항공사/GSSA 공식 자료",
+    broker: "관세사 또는 서비스 제공자",
+    government: "관세청/세관/정부 공식 자료"
+  };
+  const en = {
+    quote: "Quote or provider",
+    carrier: "Carrier local charges or tariff",
+    carrier_terminal: "Carrier local charges or terminal tariff",
+    provider: "Provider official terms",
+    demdet: "Official DEM/DET lookup",
+    terminal: "Terminal or warehouse tariff",
+    authority: "Government, port, or authority source",
+    airline: "Airline or GSSA official source",
+    broker: "Customs broker or service provider",
+    government: "Customs or government source"
+  };
+  return (lang === "ko" ? ko : en)[type] || type;
+}
+
+function renderChargeResourceLinks(origin, destination, mode, lang) {
+  const hsHref = lang === "ko" ? "../hscode.html" : "../hscode-en.html";
+  const rows = [
+    [lang === "ko" ? `${destinationNameForCharge(destination, lang)} 수입 규제` : `${destinationNameForCharge(destination, lang)} import compliance`, `compliance.html?market=${encodeURIComponent(destination.toLowerCase())}`, "shield-check"],
+    [lang === "ko" ? "HS Code / 관세 확인" : "HS Code / tariff check", hsHref, "barcode"],
+    [lang === "ko" ? `${destinationNameForCharge(destination, lang)} 공휴일` : `${destinationNameForCharge(destination, lang)} public holidays`, `holidays.html?country=${encodeURIComponent(destination)}`, "calendar-check"]
+  ];
+  if (mode === "ocean") rows.push([lang === "ko" ? "항만 확인" : "Port check", `ports.html?country=${encodeURIComponent(destination)}`, "anchor"]);
+  if (mode === "air") rows.push([lang === "ko" ? "공항 확인" : "Airport check", `airports.html?country=${encodeURIComponent(destination)}`, "plane"]);
+  if (mode === "road-rail" && (origin === "KR" || destination === "KR")) rows.push([lang === "ko" ? "한국 안전운임 참고" : "Korea safe freight reference", "https://safetruck.go.kr/intro1/system1.do", "truck"]);
+  return `
+    <section class="freight-charge-section">
+      <h4>${lang === "ko" ? "정부 / 터미널 / 통관 자료" : "Government / Terminal / Customs Resources"}</h4>
+      <div class="country-tool-grid freight-charge-resource-grid">
+        ${rows.map(([label, href, icon]) => `<a href="${escapeAttribute(href)}"${/^https?:/.test(href) ? ' target="_blank" rel="noopener noreferrer"' : ""}><i data-lucide="${icon}"></i><strong>${escapeHtml(label)}</strong></a>`).join("")}
+      </div>
+    </section>
+  `;
+}
+
+function destinationNameForCharge(destination, lang) {
+  return displayCountryName(destination, lang);
+}
+
+function renderFreightCharges(origin, destination, mode, context, labels, lang) {
+  if (!origin || !destination) {
+    return `<div class="data-empty">${labels.noSelection}</div>`;
+  }
+  const modeLabel = mode === "ocean" ? labels.ocean : mode === "air" ? labels.air : labels.roadRail;
+  return `
+    <article class="freight-charges-workflow">
+      <div class="freight-brief-head">
+        <div>
+          <span class="kicker">${labels.freightCharges}</span>
+          <h3>${labels.shipmentContext}</h3>
+          <p>${escapeHtml(displayCountryName(origin, lang))} <span aria-hidden="true">→</span> ${escapeHtml(displayCountryName(destination, lang))} · ${escapeHtml(modeLabel)}</p>
+        </div>
+        <span class="freight-mode-pill">${escapeHtml(context.providerName || labels.noProvider)}</span>
+      </div>
+      <p class="muted">${labels.shipmentContextLead}</p>
+      ${renderChargeChecklist(mode, labels, lang)}
+      ${renderProviderLookups(mode, context.provider, labels, lang, origin, destination)}
+      ${renderChargeExplainer(mode, labels, lang, context.search)}
+      ${renderChargeResourceLinks(origin, destination, mode, lang)}
+      <section class="freight-charge-note">
+        <h4>${labels.importantNotes}</h4>
+        <p>${labels.incotermsNote}</p>
+        <p>${lang === "ko" ? "LOGILEE는 평균 운임, 총액 견적, 운임 적정성 판단을 제공하지 않습니다. 실제 금액은 운송사, 터미널, 관세사, 포워더 또는 정부 공식 자료로 확인하세요." : "LOGILEE does not provide average rates, total quotations, or price fairness judgments. Confirm actual amounts with the carrier, terminal, broker, forwarder, or official government source."}</p>
+      </section>
+    </article>
+  `;
+}
+
 function renderGlobalFreightMarket(snapshot, btsRows, labels, lang) {
   return `
+    <div class="freight-tabs" role="tablist" aria-label="${lang === "ko" ? "Freight Market sections" : "Freight Market sections"}">
+      <button class="freight-tab is-active" type="button" role="tab" id="freight-tab-brief" aria-selected="true" aria-controls="freight-panel-brief" data-freight-tab="brief">${labels.marketBrief}</button>
+      <button class="freight-tab" type="button" role="tab" id="freight-tab-charges" aria-selected="false" aria-controls="freight-panel-charges" data-freight-tab="charges">${labels.freightCharges}</button>
+    </div>
     <section class="freight-v2-section freight-explorer-panel freight-explorer-primary">
       <div class="data-summary-head">
         <div>
@@ -2348,10 +2855,20 @@ function renderGlobalFreightMarket(snapshot, btsRows, labels, lang) {
         <div class="field"><label for="freight-origin">${labels.origin}</label><select id="freight-origin" name="origin" data-freight-origin><option value="">${labels.selectOrigin}</option></select></div>
         <div class="field"><label for="freight-destination">${labels.destination}</label><select id="freight-destination" name="destination" data-freight-destination><option value="">${labels.selectDestination}</option></select></div>
         <div class="field"><label for="freight-mode">${labels.mode}</label><select id="freight-mode" name="mode"><option value="ocean">${labels.ocean}</option><option value="air">${labels.air}</option><option value="road-rail">${labels.roadRail}</option></select></div>
-        <button class="btn primary" type="submit">${labels.viewMarket}</button>
+      </form>
+      <form class="freight-charge-context-form" data-freight-charge-form>
+        <div class="field" data-freight-shipment-field><label for="freight-shipment-type">${labels.shipmentType}</label><select id="freight-shipment-type" name="shipmentType"><option value="fcl">FCL</option><option value="lcl">LCL</option><option value="general">General</option></select></div>
+        <div class="field" data-freight-equipment-field><label for="freight-equipment">${labels.equipment}</label><select id="freight-equipment" name="equipment"><option value="">Other / Not selected</option><option value="20gp">20GP</option><option value="40gp">40GP</option><option value="40hc">40HC</option><option value="reefer">Reefer</option></select></div>
+        <div class="field"><label for="freight-cargo-condition">${labels.cargoCondition}</label><select id="freight-cargo-condition" name="cargoCondition"><option value="general">General</option><option value="dg">DG</option><option value="reefer">Reefer / Temperature-controlled</option><option value="oog">OOG / Oversized</option></select></div>
+        <div class="field"><label for="freight-provider">${labels.provider}</label><select id="freight-provider" name="provider" data-freight-provider></select></div>
       </form>
       <p class="freight-selector-helper" data-freight-empty-helper>${labels.noSelection}</p>
-      <div data-freight-explorer-output class="freight-explorer-output"></div>
+      <div id="freight-panel-brief" role="tabpanel" aria-labelledby="freight-tab-brief" data-freight-panel="brief">
+        <div data-freight-explorer-output class="freight-explorer-output"></div>
+      </div>
+      <div id="freight-panel-charges" role="tabpanel" aria-labelledby="freight-tab-charges" data-freight-panel="charges" hidden>
+        <div data-freight-charges-output class="freight-explorer-output"></div>
+      </div>
     </section>
     ${renderFreightResourceAccordion(snapshot, labels, lang)}
   `;
@@ -2412,6 +2929,14 @@ function setupFreightExplorer(target, snapshot, btsRows, labels, lang) {
   const destination = form.querySelector("[name='destination']");
   const mode = form.querySelector("[name='mode']");
   const output = target.querySelector("[data-freight-explorer-output]");
+  const chargesOutput = target.querySelector("[data-freight-charges-output]");
+  const chargeForm = target.querySelector("[data-freight-charge-form]");
+  const shipmentType = chargeForm?.querySelector("[name='shipmentType']");
+  const equipment = chargeForm?.querySelector("[name='equipment']");
+  const cargoCondition = chargeForm?.querySelector("[name='cargoCondition']");
+  const provider = chargeForm?.querySelector("[name='provider']");
+  const shipmentField = target.querySelector("[data-freight-shipment-field]");
+  const equipmentField = target.querySelector("[data-freight-equipment-field]");
   const helper = target.querySelector("[data-freight-empty-helper]");
   const countryItems = TRADE_COUNTRIES.map(([value, en, ko]) => ({ value, label: lang === "ko" ? ko : en, meta: `${value} · ${en}`, terms: [value, en, ko, ...(COUNTRY_SEARCH_ALIASES[value] || [])].map(normalizeCountrySearch) }));
   origin.innerHTML = `<option value="">${labels.selectOrigin}</option>` + optionMarkup(TRADE_COUNTRIES);
@@ -2420,20 +2945,81 @@ function setupFreightExplorer(target, snapshot, btsRows, labels, lang) {
   if (TRADE_COUNTRIES.some(([code]) => code === params.get("origin"))) origin.value = params.get("origin");
   if (TRADE_COUNTRIES.some(([code]) => code === params.get("destination"))) destination.value = params.get("destination");
   if (["ocean", "air", "road-rail"].includes(params.get("mode"))) mode.value = params.get("mode");
+  const validTab = ["brief", "charges"].includes(params.get("tab")) ? params.get("tab") : "brief";
+  let activeTab = validTab;
   enhanceSimpleCombobox(origin, countryItems, { label: labels.origin, placeholder: labels.selectCountry, open: labels.origin, empty: labels.unavailableSignal });
   enhanceSimpleCombobox(destination, countryItems, { label: labels.destination, placeholder: labels.selectCountry, open: labels.destination, empty: labels.unavailableSignal });
   let syncingHistory = false;
+  let chargeSearchQuery = "";
+  const syncChargeControls = () => {
+    if (!provider || !shipmentType || !equipment || !cargoCondition) return;
+    const selectedProvider = provider.value;
+    const selectedShipmentType = shipmentType.value;
+    const selectedEquipment = equipment.value;
+    const selectedCargoCondition = cargoCondition.value;
+    provider.innerHTML = freightProviderOptions(mode.value, selectedProvider, labels);
+    if (![...provider.options].some((item) => item.value === selectedProvider)) provider.value = "";
+    if (mode.value === "air") {
+      shipmentType.innerHTML = `<option value="general">General Air Cargo</option>`;
+      cargoCondition.innerHTML = `<option value="general">General</option><option value="dg">DG</option><option value="temperature">Temperature-controlled</option><option value="oog">Oversized</option>`;
+      if (shipmentField) shipmentField.hidden = true;
+      if (equipmentField) equipmentField.hidden = true;
+    } else if (mode.value === "road-rail") {
+      shipmentType.innerHTML = `<option value="general">General Trucking</option>`;
+      cargoCondition.innerHTML = `<option value="general">General</option><option value="dg">DG</option><option value="reefer">Reefer</option><option value="overweight">Overweight</option>`;
+      if (shipmentField) shipmentField.hidden = true;
+      if (equipmentField) equipmentField.hidden = true;
+    } else {
+      shipmentType.innerHTML = `<option value="fcl">FCL</option><option value="lcl">LCL</option>`;
+      cargoCondition.innerHTML = `<option value="general">General</option><option value="dg">DG</option><option value="reefer">Reefer</option><option value="oog">OOG</option>`;
+      if ([...shipmentType.options].some((item) => item.value === selectedShipmentType)) shipmentType.value = selectedShipmentType;
+      if ([...equipment.options].some((item) => item.value === selectedEquipment)) equipment.value = selectedEquipment;
+      if (shipmentField) shipmentField.hidden = false;
+      if (equipmentField) equipmentField.hidden = shipmentType.value === "lcl";
+    }
+    if ([...cargoCondition.options].some((item) => item.value === selectedCargoCondition)) cargoCondition.value = selectedCargoCondition;
+  };
+  const syncTabs = () => {
+    target.querySelectorAll("[data-freight-tab]").forEach((button) => {
+      const selected = button.dataset.freightTab === activeTab;
+      button.classList.toggle("is-active", selected);
+      button.setAttribute("aria-selected", String(selected));
+      button.tabIndex = selected ? 0 : -1;
+    });
+    target.querySelectorAll("[data-freight-panel]").forEach((panel) => {
+      panel.hidden = panel.dataset.freightPanel !== activeTab;
+    });
+  };
   const render = (push = false) => {
+    syncChargeControls();
     output.innerHTML = renderFreightExplorerResult(origin.value, destination.value, mode.value, snapshot, btsRows, labels, lang);
+    if (chargesOutput) {
+      const selectedProvider = FREIGHT_CHARGE_PROVIDERS.find((item) => item.id === provider?.value && item.mode === mode.value);
+      chargesOutput.innerHTML = renderFreightCharges(origin.value, destination.value, mode.value, {
+        shipmentType: shipmentType?.value || "",
+        equipment: equipment?.value || "",
+        cargoCondition: cargoCondition?.value || "",
+        provider: provider?.value || "",
+        providerName: selectedProvider?.name || "",
+        search: chargeSearchQuery
+      }, labels, lang);
+    }
     if (helper) helper.hidden = Boolean(origin.value && destination.value);
     if (push && !syncingHistory) {
       const next = new URL(location.href);
       origin.value ? next.searchParams.set("origin", origin.value) : next.searchParams.delete("origin");
       destination.value ? next.searchParams.set("destination", destination.value) : next.searchParams.delete("destination");
       next.searchParams.set("mode", mode.value);
+      next.searchParams.set("tab", activeTab);
+      provider?.value ? next.searchParams.set("provider", provider.value) : next.searchParams.delete("provider");
+      shipmentType?.value ? next.searchParams.set("shipmentType", shipmentType.value) : next.searchParams.delete("shipmentType");
+      equipment?.value ? next.searchParams.set("equipment", equipment.value) : next.searchParams.delete("equipment");
+      cargoCondition?.value ? next.searchParams.set("cargo", cargoCondition.value) : next.searchParams.delete("cargo");
       history.pushState({}, "", next);
       updateFreightLanguageSwitch();
     }
+    syncTabs();
+    renderFreightHolidayCard(target, destination.value, labels, lang);
     refreshIcons();
   };
   target.querySelector("[data-freight-resource-toggle]")?.addEventListener("click", (event) => {
@@ -2448,12 +3034,50 @@ function setupFreightExplorer(target, snapshot, btsRows, labels, lang) {
     render(true);
   });
   form.addEventListener("change", () => render(true));
+  chargeForm?.addEventListener("change", () => render(true));
+  chargeForm?.addEventListener("submit", (event) => event.preventDefault());
+  target.addEventListener("input", (event) => {
+    if (event.target?.matches("[data-freight-charge-search]")) {
+      chargeSearchQuery = event.target.value;
+      const cursor = event.target.selectionStart || chargeSearchQuery.length;
+      render(true);
+      const nextInput = target.querySelector("[data-freight-charge-search]");
+      nextInput?.focus();
+      nextInput?.setSelectionRange(cursor, cursor);
+    }
+  });
+  target.querySelectorAll("[data-freight-tab]").forEach((button) => {
+    button.addEventListener("click", () => {
+      activeTab = button.dataset.freightTab || "brief";
+      render(true);
+    });
+    button.addEventListener("keydown", (event) => {
+      if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+      event.preventDefault();
+      const tabs = [...target.querySelectorAll("[data-freight-tab]")];
+      const index = tabs.indexOf(button);
+      const nextIndex = event.key === "Home" ? 0 : event.key === "End" ? tabs.length - 1 : event.key === "ArrowRight" ? (index + 1) % tabs.length : (index - 1 + tabs.length) % tabs.length;
+      tabs[nextIndex]?.focus();
+      tabs[nextIndex]?.click();
+    });
+  });
+  syncChargeControls();
+  if (provider && FREIGHT_CHARGE_PROVIDERS.some((item) => item.id === params.get("provider") && item.mode === mode.value)) provider.value = params.get("provider");
+  if (shipmentType && params.get("shipmentType")) shipmentType.value = params.get("shipmentType");
+  if (equipment && params.get("equipment")) equipment.value = params.get("equipment");
+  if (cargoCondition && params.get("cargo")) cargoCondition.value = params.get("cargo");
   window.addEventListener("popstate", () => {
     const nextParams = new URLSearchParams(location.search);
     syncingHistory = true;
     origin.value = nextParams.get("origin") || "";
     destination.value = nextParams.get("destination") || "";
     mode.value = ["ocean", "air", "road-rail"].includes(nextParams.get("mode")) ? nextParams.get("mode") : "ocean";
+    activeTab = ["brief", "charges"].includes(nextParams.get("tab")) ? nextParams.get("tab") : "brief";
+    syncChargeControls();
+    if (provider) provider.value = nextParams.get("provider") || "";
+    if (shipmentType) shipmentType.value = nextParams.get("shipmentType") || shipmentType.value;
+    if (equipment) equipment.value = nextParams.get("equipment") || "";
+    if (cargoCondition) cargoCondition.value = nextParams.get("cargo") || cargoCondition.value;
     origin.dispatchEvent(new Event("change"));
     destination.dispatchEvent(new Event("change"));
     syncingHistory = false;
@@ -2510,6 +3134,10 @@ function renderFreightExplorerResult(origin, destination, mode, snapshot, btsRow
         <h4>${labels.summaryTitle}</h4>
         ${renderMarketSummary({ gscpi, originName, destinationName, originLsci, destinationLsci, bilateral, mode, modeLabel, labels, lang })}
       </section>
+      <section class="freight-holiday-card" data-freight-holiday="${escapeAttribute(destination)}">
+        <h4>${labels.holidayTitle}</h4>
+        <p>${labels.holidayLoading}</p>
+      </section>
       <h4>${labels.relevantSignals}</h4>
       <div class="freight-signal-list">
         ${renderGscpiBriefCard(gscpi, labels, lang)}
@@ -2525,6 +3153,51 @@ function renderFreightExplorerResult(origin, destination, mode, snapshot, btsRow
       ${involvesUs ? renderBtsRegionalSection(btsRows, labels, lang, { collapsed: true }) : ""}
     </article>
   `;
+}
+
+async function renderFreightHolidayCard(target, destination, labels, lang) {
+  const card = target.querySelector("[data-freight-holiday]");
+  if (!card || !destination || card.dataset.freightHoliday !== destination) return;
+  const year = new Date().getFullYear();
+  try {
+    const holidays = [
+      ...(await getHolidays(destination, year)),
+      ...(await getHolidays(destination, year + 1))
+    ].filter((item) => item && item.date);
+    const today = new Date(todayIsoLocal()).getTime();
+    const upcoming = holidays
+      .map((item) => ({ ...item, days: daysUntilHoliday(item.date), time: holidayDateValue(item.date) }))
+      .filter((item) => item.time >= today)
+      .sort((a, b) => a.time - b.time);
+    const next = upcoming[0];
+    const within30 = upcoming.filter((item) => item.days >= 0 && item.days <= 30).slice(0, 4);
+    if (!next) throw new Error("No upcoming holiday");
+    const dateLabel = formatFreightHolidayDate(next.date, lang);
+    const daysLabel = lang === "ko" ? `${next.days}일 후` : `in ${next.days} day${next.days === 1 ? "" : "s"}`;
+    card.innerHTML = `
+      <h4>${labels.holidayTitle}</h4>
+      <div class="freight-holiday-main">
+        <strong>${escapeHtml(dateLabel)}</strong>
+        <span>${escapeHtml(next.localName || next.name || "")}</span>
+        <small>${escapeHtml(daysLabel)}</small>
+      </div>
+      ${within30.length ? `<p>${labels.holidayWindow}: ${within30.map((item) => `${formatFreightHolidayDate(item.date, lang)} ${item.localName || item.name || ""}`).map(escapeHtml).join(" · ")}</p>` : `<p>${lang === "ko" ? "30일 내 표시할 공휴일이 없습니다." : "No public holidays are shown in the next 30 days."}</p>`}
+      <small>${lang === "ko" ? "공휴일 자료: Nager.Date. 통관·항만·터미널 휴무 여부를 의미하지 않습니다." : "Holiday data: Nager.Date. This does not indicate customs, port, or terminal closure."}</small>
+    `;
+  } catch (error) {
+    card.innerHTML = `<h4>${labels.holidayTitle}</h4><p>${labels.holidayUnavailable}</p>`;
+  }
+}
+
+function formatFreightHolidayDate(value, lang) {
+  const date = new Date(`${value}T00:00:00Z`);
+  if (!Number.isFinite(date.getTime())) return value || "N/A";
+  return new Intl.DateTimeFormat(lang === "ko" ? "ko-KR" : "en-GB", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    timeZone: "UTC"
+  }).format(date);
 }
 
 function renderMarketSummary(context) {
