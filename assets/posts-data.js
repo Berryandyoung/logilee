@@ -1,5 +1,21 @@
 window.LOGILEE_POSTS = [
   {
+    "slug": "aqaba-iraq-hormuz-alternative-route-2026",
+    "language": "ko",
+    "status": "published",
+    "title": "호르무즈 막히자 아카바가 뜬다…이라크 화물 760km 육상 우회로의 비용과 리스크",
+    "description": "호르무즈 리스크로 이라크행 화물이 요르단 아카바항으로 이동하고 있습니다. 상반기 환적량 155.1% 증가 배경과 약 760km 육상 우회운송의 비용·통관·리드타임 체크포인트를 정리합니다.",
+    "category": "logistics",
+    "date": "2026-09-03",
+    "publishedAt": "2026-09-03T02:05:57.657Z",
+    "readingTime": "4遺??쎄린",
+    "path": "ko/posts/aqaba-iraq-hormuz-alternative-route-2026/",
+    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_e422b562-7f4c-4e65-8a32-1f0218ce68c6-ChatGPT%20Image%202026%EB%85%84%209%EC%9B%94%203%EC%9D%BC%20%EC%98%A4%EC%A0%84%2011_05_05%20(1).png?alt=media&token=c1a9612c-1fc3-4296-bdb2-5d77a8e7152a",
+    "imageAlt": "요르단 아카바항에서 이라크행 컨테이너를 장거리 트럭으로 환적하는 물류 현장",
+    "imageCredit": "LOGILEE",
+    "imageLicense": "AI Generated"
+  },
+  {
     "slug": "canada-us-counter-tariffs-september-2026",
     "language": "en",
     "status": "published",
