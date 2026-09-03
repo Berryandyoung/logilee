@@ -1,5 +1,21 @@
 window.LOGILEE_POSTS = [
   {
+    "slug": "vietnam-decree-292-takes-effect-september-5-what-importers-and-exporters-need-to-review",
+    "language": "en",
+    "status": "published",
+    "title": "Vietnam Decree 292 Takes Effect September 5: What Importers and Exporters Need to Review",
+    "description": "Vietnam's Decree 292 takes effect September 5, updating import-export controls, prohibited goods and licensing rules while adding restrictions involving forced-labour goods.",
+    "category": "trade",
+    "date": "2026-09-03",
+    "publishedAt": "2026-09-03T02:08:31.893Z",
+    "readingTime": "6 min read",
+    "path": "en/posts/vietnam-decree-292-takes-effect-september-5-what-importers-and-exporters-need-to-review/",
+    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_2606b8cc-b8a9-4ebf-a4ff-33ef2dda8205-ChatGPT%20Image%202026%EB%85%84%209%EC%9B%94%203%EC%9D%BC%20%EC%98%A4%EC%A0%84%2011_05_10%20(2).png?alt=media&token=cf72c4e0-71f0-46db-b73d-07afd59a788f",
+    "imageAlt": "Vietnam Decree 292 Takes Effect September 5: What Importers and Exporters Need to Review",
+    "imageCredit": "LOGILEE",
+    "imageLicense": "AI Generated"
+  },
+  {
     "slug": "aqaba-iraq-hormuz-alternative-route-2026",
     "language": "ko",
     "status": "published",
