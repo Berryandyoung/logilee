@@ -643,6 +643,10 @@ h1 {
   gap: 6px;
 }
 
+.field[hidden] {
+  display: none !important;
+}
+
 .field label {
   color: var(--deep-navy);
   font-size: 13px;
@@ -5860,7 +5864,7 @@ body.sidebar-drawer-active {
 }
 
 .freight-charge-context-form {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
   padding: 12px;
   border: 1px solid #e1ebf5;
   border-radius: 8px;
@@ -6304,6 +6308,207 @@ body.sidebar-drawer-active {
   font-weight: 850;
 }
 
+.freight-navigator-section {
+  background: #ffffff;
+}
+
+.freight-charge-row-groups {
+  display: grid;
+  gap: 14px;
+}
+
+.freight-charge-row-group {
+  display: grid;
+  gap: 8px;
+}
+
+.freight-charge-row-group h5 {
+  margin: 0;
+  color: var(--ink-navy);
+  font-size: 13px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.freight-charge-row-list {
+  display: grid;
+  gap: 8px;
+}
+
+.freight-charge-row {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(180px, 240px);
+  gap: 8px 14px;
+  align-items: start;
+  padding: 12px;
+  border: 1px solid #dfe8f2;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.freight-charge-row *,
+.freight-charges-workflow *,
+.freight-explorer-primary * {
+  min-width: 0;
+}
+
+.freight-charge-row-main {
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.freight-charge-row-main h5 {
+  margin: 0;
+  color: var(--ink-navy);
+  font-size: 16px;
+  line-height: 1.25;
+}
+
+.freight-charge-row-main small {
+  display: block;
+  margin-top: 2px;
+  color: var(--secondary-text);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.freight-status-badge {
+  display: inline-flex;
+  min-height: 26px;
+  align-items: center;
+  padding: 4px 8px;
+  border: 1px solid #cfe0f2;
+  border-radius: 999px;
+  background: #f4f8fd;
+  color: var(--deep-navy);
+  font-size: 12px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.freight-status-badge.is-formula,
+.freight-status-badge.is-rate {
+  border-color: #b8ddcc;
+  background: #effaf4;
+  color: #0b6b45;
+}
+
+.freight-status-badge.is-lookup {
+  border-color: #c5dbfb;
+  background: #f1f7ff;
+  color: var(--signal-blue);
+}
+
+.freight-status-badge.is-quote {
+  border-color: #ead8bd;
+  background: #fff8ed;
+  color: #9a530f;
+}
+
+.freight-status-badge.is-conditional {
+  border-color: #d8ddeb;
+  background: #f7f8fb;
+  color: #415069;
+}
+
+.freight-charge-row > p {
+  margin: 0;
+  color: var(--secondary-text);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.freight-charge-row-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.freight-charge-row-meta span {
+  min-width: 0;
+  padding: 4px 7px;
+  border-radius: 8px;
+  background: #f5f8fc;
+  color: var(--secondary-text);
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.freight-formula-box {
+  display: grid;
+  gap: 3px;
+  padding: 9px 10px;
+  border: 1px solid #cfe7d8;
+  border-radius: 8px;
+  background: #f6fbf8;
+}
+
+.freight-formula-box strong {
+  color: var(--ink-navy);
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.freight-formula-box small {
+  color: var(--secondary-text);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.freight-quote-question {
+  padding-left: 9px;
+  border-left: 3px solid #d6e4f4;
+  color: var(--ink-navy) !important;
+  font-weight: 750;
+}
+
+.freight-charge-action {
+  grid-column: 2;
+  grid-row: 1 / span 5;
+  display: grid;
+  gap: 5px;
+  align-self: stretch;
+  align-content: center;
+  min-width: 0;
+  padding-left: 12px;
+  border-left: 1px solid #edf2f7;
+}
+
+.freight-charge-action a,
+.freight-charge-action > span {
+  display: inline-flex;
+  min-height: 36px;
+  align-items: center;
+  justify-content: center;
+  padding: 7px 10px;
+  border: 1px solid #c7d7ea;
+  border-radius: 8px;
+  background: #f8fbff;
+  color: var(--deep-navy);
+  font-size: 13px;
+  font-weight: 900;
+  line-height: 1.25;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.freight-charge-action a:hover {
+  border-color: rgba(23, 107, 255, .45);
+  color: var(--signal-blue);
+}
+
+.freight-charge-action small {
+  color: var(--secondary-text);
+  font-size: 12px;
+  line-height: 1.35;
+  text-align: center;
+}
+
 .freight-provider-head {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
@@ -6556,6 +6761,25 @@ body.sidebar-drawer-active {
 
   .freight-mini-metrics {
     grid-template-columns: 1fr;
+  }
+
+  .freight-charge-row {
+    grid-template-columns: 1fr;
+  }
+
+  .freight-charge-action {
+    grid-column: auto;
+    grid-row: auto;
+    padding-left: 0;
+    border-left: 0;
+    border-top: 1px solid #edf2f7;
+    padding-top: 8px;
+  }
+
+  .freight-charge-action a,
+  .freight-charge-action > span {
+    justify-content: flex-start;
+    text-align: left;
   }
 }
 
