@@ -2353,8 +2353,8 @@ function freightRowMarkup(item, compact = false) {
 }
 
 async function getGlobalFreightData() {
-  return fetchJson(new URL("../assets/logilee-freight-data.json?v=freight-cost-navigator-20260904", location.href).toString(), {
-    cacheKey: "logilee:global-freight:cost-navigator-20260904",
+  return fetchJson(new URL("../assets/logilee-freight-data.json?v=freight-cost-navigator-polish-20260904", location.href).toString(), {
+    cacheKey: "logilee:global-freight:cost-navigator-polish-20260904",
     ttl: 24 * 60 * 60 * 1000
   });
 }
@@ -3289,9 +3289,10 @@ function freightGenericAction(row, context, lang) {
       return { kind: "question", label: lang === "ko" ? "조건 확인" : "Confirm Conditions", note: lang === "ko" ? "보관·창고 비용은 실제 운송 조건과 계약 범위로 확인하세요." : "Confirm storage or warehouse charges through the actual transport quote and contract scope." };
     }
     return {
-      label: lang === "ko" ? "공식 터미널 Tariff 확인" : "View Official Terminal Tariff",
+      label: freightLocationToolLabel(context.mode, destination, lang),
       url: modeLocationToolHref(context.mode, destination, lang),
-      note: lang === "ko" ? "항만·공항 정보에서 관련 공식 자료를 확인하세요." : "Use port or airport intelligence to find relevant official resources."
+      note: lang === "ko" ? "목적지 항만·공항 정보에서 터미널과 관련 자료를 확인하세요." : "Use destination port or airport information to review terminal-related resources.",
+      internalLocationTool: true
     };
   }
   if (row.genericAction === "customsLookup") {
@@ -3326,6 +3327,14 @@ function modeLocationToolHref(mode, country, lang) {
   if (mode === "air") return `airports.html?country=${encodeURIComponent(country || "")}`;
   if (mode === "ocean") return `ports.html?country=${encodeURIComponent(country || "")}`;
   return `country-trade-profile.html?country=${encodeURIComponent(country || "")}`;
+}
+
+function freightLocationToolLabel(mode, country, lang) {
+  const countryName = destinationNameForCharge(country, lang);
+  if (mode === "air") {
+    return lang === "ko" ? `${countryName} 공항·터미널 정보` : `${countryName} Airport & Terminal Information`;
+  }
+  return lang === "ko" ? `${countryName} 항만·터미널 정보` : `${countryName} Port & Terminal Information`;
 }
 
 function rowMatchesFreightContext(row, context) {
@@ -3411,6 +3420,8 @@ function freightRowAction(row, provider, context, lang) {
 
 function freightEffectiveState(row, action) {
   if (row.state === "OFFICIAL_FORMULA") return row.state;
+  if (action?.internalLocationTool && row.state === "CONDITIONAL_LOOKUP") return "CONDITIONAL";
+  if (action?.internalLocationTool && row.state === "OFFICIAL_LOOKUP") return "CONFIRM_AMOUNT";
   if (action?.url && ["OFFICIAL_LOOKUP", "CONDITIONAL_LOOKUP"].includes(row.state)) return row.state;
   if (row.state === "OFFICIAL_LOOKUP") return ["origin-thc", "destination-thc", "ocean-doc", "delivery-order", "awb-doc"].includes(row.id) ? "CHECK_INCLUSION" : "CONFIRM_AMOUNT";
   if (row.state === "CONDITIONAL_LOOKUP") return "CONDITIONAL_CHECK";
@@ -3431,6 +3442,28 @@ function freightPrimaryInstruction(row, action, stateKey, lang) {
   if (stateKey === "CONDITIONAL_QUOTE") return lang === "ko" ? "조건 발생 시 별도 견적" : "Quote if condition applies";
   if (stateKey === "QUOTE_REQUIRED") return lang === "ko" ? "선사·포워더 견적 확인" : "Confirm with carrier or forwarder";
   return lang === "ko" ? "확인 필요" : "Confirm before shipment";
+}
+
+function freightCargoConditionLabel(value) {
+  const labels = { general: "General Cargo", dg: "DG", reefer: "Reefer", temperature: "Reefer", oog: "OOG", overweight: "OOG" };
+  return labels[value] || "";
+}
+
+function normalizeFreightDetailText(value) {
+  return String(value || "").replace(/\s+/g, " ").trim().toLowerCase();
+}
+
+function uniqueAdjacentFreightDetails(items) {
+  const rows = [];
+  items.forEach((item) => {
+    const text = typeof item === "string" ? item : item?.text;
+    const normalized = normalizeFreightDetailText(text);
+    if (!normalized) return;
+    const previous = rows[rows.length - 1];
+    if (previous && normalizeFreightDetailText(previous.text) === normalized) return;
+    rows.push(typeof item === "string" ? { text } : { ...item, text });
+  });
+  return rows;
 }
 
 function freightWorkflowGroup(row, mode) {
@@ -3486,6 +3519,11 @@ function freightChargeRowMarkup(row, provider, context, labels, lang) {
   const detailsLabel = lang === "ko" ? "상세보기" : "Details";
   const copyLabel = lang === "ko" ? "질문 복사" : "Copy Question";
   const instruction = freightPrimaryInstruction(row, action, stateKey, lang);
+  const detailRows = uniqueAdjacentFreightDetails([
+    { text: instruction || action.note || desc, prefix: lang === "ko" ? "확인할 것" : "What to check" },
+    action.note,
+    action.scope
+  ]);
   return `
     <article class="freight-charge-row" data-charge-row="${escapeAttribute(row.id)}" data-state="${escapeAttribute(stateKey)}">
       <div class="freight-charge-row-main">
@@ -3504,9 +3542,7 @@ function freightChargeRowMarkup(row, provider, context, labels, lang) {
       <details class="freight-row-details">
         <summary>${escapeHtml(detailsLabel)}</summary>
         <div class="freight-row-detail-body">
-          <p><strong>${lang === "ko" ? "확인할 것" : "What to check"}:</strong> ${escapeHtml(instruction || action.note || desc)}</p>
-          ${action.note ? `<p>${escapeHtml(action.note)}</p>` : ""}
-          ${action.scope ? `<p>${escapeHtml(action.scope)}</p>` : ""}
+          ${detailRows.map((item) => `<p>${item.prefix ? `<strong>${escapeHtml(item.prefix)}:</strong> ` : ""}${escapeHtml(item.text)}</p>`).join("")}
         </div>
         ${row.formula ? `<div class="freight-formula-box"><strong>${escapeHtml(row.formula)}</strong>${row.metadata?.length ? `<small>${row.metadata.map(escapeHtml).join(" · ")}</small>` : ""}</div>` : ""}
         <div class="freight-charge-row-meta">
@@ -3710,7 +3746,7 @@ function renderFreightCharges(origin, destination, mode, context, labels, lang) 
     return `<div class="data-empty">${labels.noSelection}</div>`;
   }
   const modeLabel = mode === "ocean" ? labels.ocean : mode === "air" ? labels.air : labels.roadRail;
-  const shipmentParts = [modeLabel, context.shipmentType?.toUpperCase(), context.equipment?.toUpperCase(), context.cargoCondition ? `${context.cargoCondition.toUpperCase()} Cargo` : ""].filter(Boolean);
+  const shipmentParts = [modeLabel, context.shipmentType?.toUpperCase(), context.equipment?.toUpperCase(), freightCargoConditionLabel(context.cargoCondition)].filter(Boolean);
   return `
     <article class="freight-charges-workflow">
       <div class="freight-brief-head">
