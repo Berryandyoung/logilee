@@ -1101,6 +1101,28 @@ function escapeHtml(value) {
     .replace(/>/g, "&gt;");
 }
 
+async function copyTextWithFallback(text) {
+  let copied = false;
+  try {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(text);
+      copied = true;
+    }
+  } catch (_) {}
+  if (!copied) {
+    const textarea = document.createElement("textarea");
+    textarea.value = text;
+    textarea.setAttribute("readonly", "");
+    textarea.style.position = "fixed";
+    textarea.style.left = "-9999px";
+    document.body.appendChild(textarea);
+    textarea.select();
+    try { copied = document.execCommand("copy"); } catch (_) {}
+    textarea.remove();
+  }
+  return copied;
+}
+
 function firstImageUrlFromHtml(value) {
   if (!value || !/<img/i.test(String(value))) return "";
   const div = document.createElement("div");
@@ -2331,8 +2353,8 @@ function freightRowMarkup(item, compact = false) {
 }
 
 async function getGlobalFreightData() {
-  return fetchJson(new URL("../assets/logilee-freight-data.json?v=freight-charges-v11-20260903", location.href).toString(), {
-    cacheKey: "logilee:global-freight:charges-v11-20260903",
+  return fetchJson(new URL("../assets/logilee-freight-data.json?v=freight-charges-actionable-20260904", location.href).toString(), {
+    cacheKey: "logilee:global-freight:charges-actionable-20260904",
     ttl: 24 * 60 * 60 * 1000
   });
 }
@@ -2612,6 +2634,9 @@ const FREIGHT_DISPLAY_STATES = {
   NUMERIC_OFFICIAL: { ko: "공식 요율", en: "Official Rate", tone: "rate" },
   OFFICIAL_LOOKUP: { ko: "공식 조회", en: "Official Lookup", tone: "lookup" },
   QUOTE_REQUIRED: { ko: "견적 필요", en: "Quote Required", tone: "quote" },
+  CHECK_INCLUSION: { ko: "포함 여부 확인", en: "Check Inclusion", tone: "quote" },
+  CONFIRM_AMOUNT: { ko: "금액 확인 필요", en: "Confirm Amount", tone: "quote" },
+  CONDITIONAL_CHECK: { ko: "조건부 확인", en: "Conditional Check", tone: "conditional" },
   CONDITIONAL: { ko: "조건부", en: "Conditional", tone: "conditional" },
   CONDITIONAL_LOOKUP: { ko: "조건부 · 공식 조회", en: "Conditional · Official Lookup", tone: "conditional" },
   CONDITIONAL_QUOTE: { ko: "조건부 · 견적 필요", en: "Conditional · Quote Required", tone: "conditional" },
@@ -2668,8 +2693,8 @@ const FREIGHT_CHARGE_ROWS = [
     state: "QUOTE_REQUIRED",
     actionType: "quote",
     genericAction: "quote",
-    questionKo: "픽업, 컨테이너 반입, 대기료, 톨이 견적에 포함되어 있나요?",
-    questionEn: "Does the quote include pickup, container drayage, waiting time, and tolls?"
+    questionKo: "출발지 내륙운송료가 포함되어 있나요? 추가 대기료, 톨, 상하차 비용 조건도 알려주세요.",
+    questionEn: "Is origin inland/drayage included in this quote? Please also confirm waiting time, toll, and loading/unloading conditions."
   },
   {
     id: "export-clearance",
@@ -2684,8 +2709,8 @@ const FREIGHT_CHARGE_ROWS = [
     state: "QUOTE_REQUIRED",
     actionType: "quote",
     genericAction: "quote",
-    questionKo: "신고 수수료 외 추가 서류·검사·정정 비용이 별도인가요?",
-    questionEn: "Are document, inspection, or amendment services billed separately?"
+    questionKo: "수출통관 대행료가 포함되어 있나요? 신고 수수료 외 별도 서류, 검사, 정정 비용이 발생할 수 있나요?",
+    questionEn: "Is export customs clearance included? Can document, inspection, or amendment charges be billed separately?"
   },
   {
     id: "origin-thc",
@@ -2701,8 +2726,8 @@ const FREIGHT_CHARGE_ROWS = [
     state: "OFFICIAL_LOOKUP",
     actionType: "local",
     genericAction: "carrierLookup",
-    questionKo: "출발지 THC가 본운임에 포함인지, 별도 local charge인지 확인했나요?",
-    questionEn: "Is origin THC included in the freight quote or billed as a separate local charge?"
+    questionKo: "출발지 THC가 현재 견적에 포함되어 있나요? 별도 청구라면 금액, 통화, 과금 단위를 알려주세요.",
+    questionEn: "Is origin THC included in this quote? If charged separately, please confirm the amount, currency, and charging unit."
   },
   {
     id: "ocean-doc",
@@ -2718,8 +2743,8 @@ const FREIGHT_CHARGE_ROWS = [
     state: "OFFICIAL_LOOKUP",
     actionType: "local",
     genericAction: "carrierLookup",
-    questionKo: "B/L 발행, 정정, surrender 또는 telex release 비용이 별도인가요?",
-    questionEn: "Are B/L issuance, amendment, surrender, or telex release fees separate?"
+    questionKo: "B/L 발행 관련 Documentation Fee가 포함되어 있나요? Surrender 또는 Telex Release 시 추가 비용이 있나요?",
+    questionEn: "Is the B/L documentation fee included? Are there additional charges for surrender or telex release?"
   },
   {
     id: "ocean-freight-main",
@@ -2768,8 +2793,8 @@ const FREIGHT_CHARGE_ROWS = [
     state: "OFFICIAL_LOOKUP",
     actionType: "local",
     genericAction: "carrierLookup",
-    questionKo: "도착지 THC가 포함되어 있나요, 아니면 수입지에서 별도 청구되나요?",
-    questionEn: "Is destination THC included, or will it be billed separately at import?"
+    questionKo: "도착지 THC가 견적에 포함되어 있나요? 별도라면 금액, 통화, 과금 기준을 알려주세요.",
+    questionEn: "Is destination THC included in this quote? If separate, please confirm the amount, currency, and charging basis."
   },
   {
     id: "delivery-order",
@@ -2785,8 +2810,8 @@ const FREIGHT_CHARGE_ROWS = [
     state: "OFFICIAL_LOOKUP",
     actionType: "local",
     genericAction: "carrierLookup",
-    questionKo: "Delivery Order 또는 현지 documentation 비용이 포함되어 있나요?",
-    questionEn: "Is the delivery-order or local documentation fee included?"
+    questionKo: "Destination D/O 또는 local documentation fee가 포함되어 있나요? 별도라면 금액을 알려주세요.",
+    questionEn: "Is the destination D/O or local documentation fee included? If separate, please confirm the amount."
   },
   {
     id: "import-clearance",
@@ -2801,8 +2826,8 @@ const FREIGHT_CHARGE_ROWS = [
     state: "QUOTE_REQUIRED",
     actionType: "quote",
     genericAction: "quote",
-    questionKo: "통관대행 수수료에 검사, 서류 보완, 창고 연계 업무가 포함되어 있나요?",
-    questionEn: "Does the clearance fee include inspection, document support, or warehouse coordination?"
+    questionKo: "수입통관 대행료에 어떤 업무가 포함되어 있나요? 검사, 정정, 추가 서류 비용은 별도인가요?",
+    questionEn: "What services are included in the import clearance fee? Are inspection, amendment, or additional document charges separate?"
   },
   {
     id: "duty-tax",
@@ -2833,8 +2858,8 @@ const FREIGHT_CHARGE_ROWS = [
     state: "QUOTE_REQUIRED",
     actionType: "quote",
     genericAction: "quote",
-    questionKo: "배송지, 하역, 대기, 톨, appointment 조건이 견적에 반영되어 있나요?",
-    questionEn: "Do delivery place, unloading, waiting time, tolls, and appointment conditions affect the quote?"
+    questionKo: "도착지 내륙운송료가 포함되어 있나요? 대기, 톨, 상하차 등 별도 비용 조건도 확인 부탁드립니다.",
+    questionEn: "Is destination inland delivery included? Please also confirm waiting time, toll, and loading/unloading charge conditions."
   },
   {
     id: "demdet",
@@ -2850,8 +2875,8 @@ const FREIGHT_CHARGE_ROWS = [
     state: "CONDITIONAL_LOOKUP",
     actionType: "demdet",
     genericAction: "carrierLookup",
-    questionKo: "free time은 며칠이며, 언제부터 비용이 시작되나요?",
-    questionEn: "What free time applies, and when do charges begin?"
+    questionKo: "적용 Free Time은 며칠인가요? Free Time 종료 후 DEM/DET 과금 기준과 요율 확인처를 알려주세요.",
+    questionEn: "What free time applies to this shipment? Please confirm where the applicable DEM/DET tariff can be checked after free time expires."
   },
   {
     id: "storage",
@@ -3223,11 +3248,21 @@ function providerResource(provider, actionType) {
   return provider.resources.find(([type]) => type === "quote" || type === "local") || null;
 }
 
-function freightProviderAction(provider, row, lang) {
+function providerResourceApplies(provider, resource, context) {
+  if (!provider || !resource) return false;
+  const [type] = resource;
+  if (provider.id === "hmm" && type === "tariff") return context.origin === "US" || context.destination === "US";
+  if (provider.id === "hmm" && type === "local") return context.destination === "KR";
+  if (provider.id === "zim" && type === "demdet") return context.origin === "US" || context.destination === "US";
+  return true;
+}
+
+function freightProviderAction(provider, row, context, lang) {
   if (!provider) return null;
   if (row.actionType === "quote" && !["ocean-freight-main", "air-freight-main"].includes(row.id)) return null;
   if (provider.id === "hmm" && row.actionType === "local" && !(row.group === "destination" && row.destination === "KR")) return null;
   const resource = providerResource(provider, row.actionType);
+  if (!providerResourceApplies(provider, resource, context)) return null;
   if (!resource) return null;
   const [type, labelKo, labelEn, url, loginRequired] = resource;
   const template = FREIGHT_PROVIDER_ACTION_LABELS[type]?.[lang] || (lang === "ko" ? "{provider} 공식 조회" : "Check {provider} Official Resource");
@@ -3244,18 +3279,8 @@ function freightProviderAction(provider, row, lang) {
 
 function freightGenericAction(row, context, lang) {
   const destination = context.destination;
-  const origin = context.origin;
   if (row.genericAction === "carrierLookup" || row.genericAction === "providerLookup") {
-    if (context.providerName) {
-      return {
-        label: lang === "ko" ? `${context.providerName} 공식 조회처 확인 필요` : `${context.providerName} official lookup needed`,
-        note: lang === "ko" ? "이 row에 맞는 국가·비용별 deep link는 아직 검증되지 않았습니다." : "A country and charge-specific deep link for this row is not verified yet."
-      };
-    }
-    return {
-      label: lang === "ko" ? "선사 선택 시 공식 조회 가능" : "Select a carrier for official lookup",
-      note: lang === "ko" ? "운송사를 선택하면 해당 공식 조회 링크로 바뀝니다." : "Choose a provider to replace this with the official lookup action."
-    };
+    return { kind: "question", label: lang === "ko" ? "질문 복사" : "Copy Question", note: lang === "ko" ? "견적 포함 여부와 별도 청구 기준을 바로 문의하세요." : "Ask directly about inclusion and separate charge basis." };
   }
   if (row.genericAction === "terminalLookup") {
     return {
@@ -3286,8 +3311,9 @@ function freightGenericAction(row, context, lang) {
     };
   }
   return {
-    label: lang === "ko" ? "견적서에서 확인" : "Check in Quote",
-    note: lang === "ko" ? "금액은 provider/forwarder 견적으로 확인합니다." : "Confirm the amount through a provider or forwarder quote."
+    kind: "question",
+    label: lang === "ko" ? "질문 복사" : "Copy Question",
+    note: lang === "ko" ? "금액과 포함 범위를 견적 담당자에게 확인하세요." : "Confirm amount and inclusion with the quote owner."
   };
 }
 
@@ -3342,7 +3368,7 @@ function usGovernmentFormulaRows(context, lang) {
     category: "Customs / Government",
     party: mpf.authority,
     formula: customsValue === null
-      ? (lang === "ko" ? "Customs value 입력 시 FY2026 공식 기준으로 참고 금액을 표시합니다." : "Enter customs value to show a FY2026 official-formula reference amount.")
+      ? (lang === "ko" ? "Customs Value를 입력하면 FY2026 공식 기준 참고 금액을 계산합니다." : "Enter Customs Value to calculate the FY2026 official-formula reference.")
       : `${formatUsdAmount(mpfAmount)} = min/max(${formatUsdAmount(customsValue)} x 0.3464%)`,
     metadata: [mpf.currency, mpf.effective, lang === "ko" ? "최소 USD 33.58 / 최대 USD 651.50" : "Min USD 33.58 / Max USD 651.50"],
     action: { label: lang === "ko" ? "CBP 공식 기준 확인" : "Check Official CBP Rule", url: mpf.url, note: mpf.authority },
@@ -3362,7 +3388,7 @@ function usGovernmentFormulaRows(context, lang) {
       category: "Customs / Government",
       party: hmf.authority,
       formula: customsValue === null
-        ? (lang === "ko" ? "Customs value 입력 시 공식 0.125% 기준 참고 금액을 표시합니다." : "Enter customs value to show a 0.125% official-formula reference amount.")
+        ? (lang === "ko" ? "Customs Value를 입력하면 공식 0.125% 기준 참고 금액을 계산합니다." : "Enter Customs Value to calculate the 0.125% official-formula reference.")
         : `${formatUsdAmount(hmfAmount)} = ${formatUsdAmount(customsValue)} x 0.125%`,
       metadata: [hmf.currency, hmf.effective, lang === "ko" ? "수입·항만 이용 범위 확인 필요" : "Check import and port-use applicability"],
       action: { label: lang === "ko" ? "CBP 공식 기준 확인" : "Check Official CBP Rule", url: hmf.url, note: hmf.authority },
@@ -3375,61 +3401,136 @@ function usGovernmentFormulaRows(context, lang) {
 
 function freightRowAction(row, provider, context, lang) {
   if (row.action) return row.action;
-  return freightProviderAction(provider, row, lang) || freightGenericAction(row, context, lang);
+  return freightProviderAction(provider, row, context, lang) || freightGenericAction(row, context, lang);
+}
+
+function freightEffectiveState(row, action) {
+  if (row.state === "OFFICIAL_FORMULA") return row.state;
+  if (action?.url && ["OFFICIAL_LOOKUP", "CONDITIONAL_LOOKUP"].includes(row.state)) return row.state;
+  if (row.state === "OFFICIAL_LOOKUP") return ["origin-thc", "destination-thc", "ocean-doc", "delivery-order", "awb-doc"].includes(row.id) ? "CHECK_INCLUSION" : "CONFIRM_AMOUNT";
+  if (row.state === "CONDITIONAL_LOOKUP") return "CONDITIONAL_CHECK";
+  return row.state;
+}
+
+function freightQuestionText(row, context, lang) {
+  const question = lang === "ko" ? row.questionKo : row.questionEn;
+  return String(question || "").trim();
 }
 
 function freightChargeRowMarkup(row, provider, context, labels, lang) {
-  const state = freightDisplayState(row.state, lang);
   const rowContext = { ...context, providerName: provider?.name || context.providerName || "" };
   const action = freightRowAction(row, provider, rowContext, lang);
+  const stateKey = freightEffectiveState(row, action);
+  const state = freightDisplayState(stateKey, lang);
   const title = lang === "ko" ? row.titleKo : row.titleEn;
   const desc = lang === "ko" ? row.descKo : row.descEn;
-  const question = lang === "ko" ? row.questionKo : row.questionEn;
+  const question = freightQuestionText(row, rowContext, lang);
+  const detailsLabel = lang === "ko" ? "상세 보기" : "Details";
+  const copyLabel = lang === "ko" ? "질문 복사" : "Copy Question";
   return `
-    <article class="freight-charge-row" data-charge-row="${escapeAttribute(row.id)}" data-state="${escapeAttribute(row.state)}">
+    <article class="freight-charge-row" data-charge-row="${escapeAttribute(row.id)}" data-state="${escapeAttribute(stateKey)}">
       <div class="freight-charge-row-main">
         <div>
           <h5>${escapeHtml(title)}</h5>
           ${row.rawLabel ? `<small>${escapeHtml(row.rawLabel)}</small>` : ""}
         </div>
+      </div>
+      <div class="freight-charge-state">
         <span class="freight-status-badge is-${escapeAttribute(state.tone)}">${escapeHtml(state.label)}</span>
       </div>
-      <p>${escapeHtml(desc)}</p>
-      ${row.formula ? `<div class="freight-formula-box"><strong>${escapeHtml(row.formula)}</strong>${row.metadata?.length ? `<small>${row.metadata.map(escapeHtml).join(" · ")}</small>` : ""}</div>` : ""}
-      <div class="freight-charge-row-meta">
-        <span>${escapeHtml(row.category || "")}</span>
-        <span>${escapeHtml(row.party || "")}</span>
-      </div>
-      ${question ? `<p class="freight-quote-question">${escapeHtml(question)}</p>` : ""}
       <div class="freight-charge-action">
-        ${action.url ? `<a href="${escapeAttribute(action.url)}"${/^https?:/.test(action.url) ? ' target="_blank" rel="noopener noreferrer"' : ""}>${escapeHtml(action.label)} <span aria-hidden="true">→</span></a>` : `<span>${escapeHtml(action.label)}</span>`}
+        ${row.formula ? `<div class="freight-formula-box freight-formula-primary"><strong>${escapeHtml(row.formula)}</strong></div>` : ""}
+        ${action.url ? `<a href="${escapeAttribute(action.url)}"${/^https?:/.test(action.url) ? ' target="_blank" rel="noopener noreferrer"' : ""}>${escapeHtml(action.label)} <span aria-hidden="true">→</span></a>` : (action.kind === "question" ? "" : `<span>${escapeHtml(action.label)}</span>`)}
+        ${question ? `<button type="button" data-copy-freight-question="${escapeAttribute(question)}" aria-label="${escapeAttribute(copyLabel)}">${escapeHtml(copyLabel)}</button>` : ""}
         ${action.note ? `<small>${escapeHtml(action.note)}</small>` : ""}
         ${action.scope ? `<small>${escapeHtml(action.scope)}</small>` : ""}
+        <span class="freight-copy-feedback" aria-live="polite"></span>
       </div>
+      <details class="freight-row-details">
+        <summary>${escapeHtml(detailsLabel)}</summary>
+        <p>${escapeHtml(desc)}</p>
+        ${row.formula ? `<div class="freight-formula-box"><strong>${escapeHtml(row.formula)}</strong>${row.metadata?.length ? `<small>${row.metadata.map(escapeHtml).join(" · ")}</small>` : ""}</div>` : ""}
+        <div class="freight-charge-row-meta">
+          <span>${escapeHtml(row.category || "")}</span>
+          <span>${escapeHtml(row.party || "")}</span>
+        </div>
+        ${question ? `<p class="freight-quote-question">${escapeHtml(question)}</p>` : ""}
+      </details>
     </article>
   `;
+}
+
+function freightPrimaryGroup(row) {
+  if (["ocean-freight-main", "carrier-surcharges", "origin-thc", "ocean-doc", "destination-thc", "delivery-order", "air-freight-main", "air-surcharges", "awb-doc", "origin-air-terminal", "destination-air-terminal", "road-base", "road-fuel", "road-toll"].includes(row.id)) return "core";
+  if (["demdet", "storage", "dg-surcharge", "dg-terminal", "reefer-surcharge", "reefer-plug", "oog-surcharge", "road-waiting"].includes(row.id)) return "conditional";
+  return "service";
+}
+
+function freightPrimaryGroupTitle(key, lang) {
+  const ko = { core: "지금 확인할 주요 비용", conditional: "조건에 따라 발생할 비용", service: "통관·정부·별도 서비스" };
+  const en = { core: "Core Costs to Check", conditional: "Conditional Costs", service: "Customs, Government & Services" };
+  return (lang === "ko" ? ko : en)[key] || key;
+}
+
+function freightActionabilitySummary(rows, provider, context, lang) {
+  return rows.reduce((acc, row) => {
+    const action = freightRowAction(row, provider, context, lang);
+    const question = freightQuestionText(row, context, lang);
+    if (action?.url) acc.linked += 1;
+    if (row.formula) acc.formula += 1;
+    if (question) acc.copyable += 1;
+    return acc;
+  }, { linked: 0, formula: 0, copyable: 0 });
+}
+
+function freightQuestionBundle(origin, destination, mode, rows, provider, context, lang) {
+  const questions = rows
+    .map((row) => freightQuestionText(row, context, lang))
+    .filter(Boolean);
+  const unique = [...new Set(questions)];
+  const modeLabel = mode === "ocean" ? "Ocean" : mode === "air" ? "Air" : "Road / Rail";
+  const header = `[${displayCountryName(origin, lang)} -> ${displayCountryName(destination, lang)} / ${modeLabel}${context.shipmentType ? ` / ${String(context.shipmentType).toUpperCase()}` : ""}${context.equipment ? ` / ${String(context.equipment).toUpperCase()}` : ""}${provider?.name ? ` / ${provider.name}` : ""}]`;
+  if (lang === "ko") {
+    return `${header}\n\n견적 관련 아래 사항 확인 부탁드립니다.\n\n${unique.map((question, index) => `${index + 1}. ${question}`).join("\n\n")}\n\n감사합니다.`;
+  }
+  return `${header}\n\nPlease help confirm the following points for this shipment quote.\n\n${unique.map((question, index) => `${index + 1}. ${question}`).join("\n\n")}\n\nThank you.`;
 }
 
 function renderChargeNavigator(origin, destination, mode, context, labels, lang) {
   const provider = freightSelectedProvider(mode, context.provider);
   const rowContext = { ...context, origin, destination, mode, providerName: provider?.name || "" };
   const rows = [...freightChargeRowsForContext(rowContext), ...usGovernmentFormulaRows(rowContext, lang)].map((row) => ({ ...row, origin, destination }));
-  const groups = ["origin", "main", "destination", "delay", "conditional"];
+  const groups = ["core", "conditional", "service"];
+  const summary = freightActionabilitySummary(rows, provider, rowContext, lang);
+  const bundle = freightQuestionBundle(origin, destination, mode, rows, provider, rowContext, lang);
+  const tableLabels = lang === "ko" ? ["비용 항목", "상태", "지금 할 일"] : ["Charge", "Status", "Action"];
   return `
     <section class="freight-charge-section freight-navigator-section">
       <div class="freight-charge-section-head">
         <div>
           <h4>${lang === "ko" ? "이 선적에서 확인할 비용" : "Costs to Check for This Shipment"}</h4>
-          <p>${lang === "ko" ? "관련 비용만 표시하고, 숫자 표시 가능 여부와 공식 확인처를 구분합니다." : "Only relevant charges are shown, with clear display state and official action paths."}</p>
+          <p>${lang === "ko" ? "각 row는 공식 링크, 계산 결과 또는 바로 복사할 질문 중 하나 이상의 action을 제공합니다." : "Every row gives an official link, a calculation, or a copyable question you can act on."}</p>
         </div>
+        <div class="freight-copy-all-wrap">
+          <button type="button" class="secondary-btn freight-copy-all" data-copy-freight-all="${escapeAttribute(bundle)}">${lang === "ko" ? "확인 질문 전체 복사" : "Copy All Questions"}</button>
+          <span class="freight-copy-feedback" aria-live="polite"></span>
+        </div>
+      </div>
+      <div class="freight-action-summary">
+        <span>${lang === "ko" ? "공식/내부 링크" : "Official/internal links"} ${summary.linked}</span>
+        <span>${lang === "ko" ? "공식 계산" : "Official formulas"} ${summary.formula}</span>
+        <span>${lang === "ko" ? "복사 가능 질문" : "Copyable questions"} ${summary.copyable}</span>
+      </div>
+      <div class="freight-row-table-head" aria-hidden="true">
+        <span>${tableLabels.map(escapeHtml).join("</span><span>")}</span>
       </div>
       <div class="freight-charge-row-groups">
         ${groups.map((group) => {
-          const groupRows = rows.filter((row) => row.group === group);
+          const groupRows = rows.filter((row) => freightPrimaryGroup(row) === group);
           if (!groupRows.length) return "";
           return `
             <section class="freight-charge-row-group">
-              <h5>${escapeHtml(freightCostGroupTitle(group, lang))}</h5>
+              <h5>${escapeHtml(freightPrimaryGroupTitle(group, lang))}</h5>
               <div class="freight-charge-row-list">
                 ${groupRows.map((row) => freightChargeRowMarkup(row, provider, rowContext, labels, lang)).join("")}
               </div>
@@ -3452,6 +3553,8 @@ function renderProviderLookups(mode, providerId, labels, lang, origin, destinati
     `;
   }
   const routeNote = `${displayCountryName(origin, lang)} → ${displayCountryName(destination, lang)}`;
+  const context = { mode, origin, destination };
+  const resources = provider.resources.filter((resource) => providerResourceApplies(provider, resource, context));
   return `
     <section class="freight-provider-panel">
       <div class="freight-provider-head">
@@ -3459,16 +3562,16 @@ function renderProviderLookups(mode, providerId, labels, lang, origin, destinati
           <h4>${labels.officialProviderLookups}</h4>
           <p><strong>${escapeHtml(provider.name)}</strong> · ${escapeHtml(routeNote)}</p>
         </div>
-        <span>${provider.resources.length} ${lang === "ko" ? "공식 링크" : "official links"}</span>
+        <span>${resources.length} ${lang === "ko" ? "관련 링크" : "relevant links"}</span>
       </div>
-      <p>${escapeHtml(lang === "ko" ? provider.noteKo : provider.noteEn)}</p>
+      <p>${escapeHtml(lang === "ko" ? "선택한 선적 조건에 맞는 공식 도구만 표시합니다. 국가·방향 범위가 맞지 않는 tariff/local charge 링크는 숨깁니다." : "Only official tools relevant to the selected shipment are shown. Country or direction-specific tariff/local-charge links are hidden when out of scope.")}</p>
       <div class="freight-provider-links">
-        ${provider.resources.map(([, labelKo, labelEn, url, loginRequired]) => `
+        ${resources.map(([, labelKo, labelEn, url, loginRequired]) => `
           <a href="${escapeAttribute(url)}" target="_blank" rel="noopener noreferrer">
             <strong>${escapeHtml(lang === "ko" ? labelKo : labelEn)} <span aria-hidden="true">↗</span></strong>
             <small>${loginRequired ? (lang === "ko" ? "로그인 또는 계정 권한이 필요할 수 있습니다." : "Login or account permission may be required.") : (lang === "ko" ? "공식 제공처에서 직접 확인합니다." : "Verify directly with the official provider.")}</small>
           </a>
-        `).join("")}
+        `).join("") || `<div class="data-empty">${lang === "ko" ? "선택 조건에 맞는 별도 공식 링크가 없습니다. 위 비용 row의 질문을 사용해 provider에게 확인하세요." : "No separate official link fits this selection. Use the questions in the charge rows to confirm with the provider."}</div>`}
       </div>
       <p class="muted">${labels.providerHint}</p>
     </section>
@@ -3486,7 +3589,13 @@ function renderChargeExplainer(mode, labels, lang, query = "") {
     .filter((item) => item.modes.includes(mode))
     .filter((item) => !needle || [item.code, item.nameEn, item.nameKo, item.party, item.nature].join(" ").toLowerCase().includes(needle));
   return `
-    <section class="freight-charge-section freight-explainer-section">
+    <details class="freight-charge-section freight-explainer-section freight-glossary-details" ${needle ? "open" : ""}>
+      <summary>
+        <span>
+          <strong>${lang === "ko" ? "운임·부대비용 용어사전" : "Freight Charge Glossary"}</strong>
+          <small>${lang === "ko" ? "용어 설명은 보조 자료입니다. 주요 업무는 위 비용 row에서 바로 처리하세요." : "Definitions are secondary. Use the action rows above for the practical workflow."}</small>
+        </span>
+      </summary>
       <div class="freight-charge-section-head">
         <h4>${labels.chargeExplainer}</h4>
         <label><span>${escapeHtml(placeholder)}</span><input type="search" value="${escapeAttribute(query)}" data-freight-charge-search placeholder="${escapeAttribute(placeholder)}"></label>
@@ -3507,7 +3616,7 @@ function renderChargeExplainer(mode, labels, lang, query = "") {
           </article>
         `).join("") : `<div class="data-empty">${lang === "ko" ? "일치하는 비용 항목이 없습니다." : "No matching charge item."}</div>`}
       </div>
-    </section>
+    </details>
   `;
 }
 
@@ -3806,6 +3915,21 @@ function setupFreightExplorer(target, snapshot, btsRows, labels, lang) {
       nextInput?.focus();
       nextInput?.setSelectionRange(cursor, cursor);
     }
+  });
+  target.addEventListener("click", async (event) => {
+    const copyButton = event.target.closest("[data-copy-freight-question], [data-copy-freight-all]");
+    if (!copyButton) return;
+    const text = copyButton.getAttribute("data-copy-freight-question") || copyButton.getAttribute("data-copy-freight-all") || "";
+    const copied = await copyTextWithFallback(text);
+    const original = copyButton.dataset.originalLabel || copyButton.textContent;
+    copyButton.dataset.originalLabel = original;
+    copyButton.textContent = copied ? (lang === "ko" ? "복사됨" : "Copied") : (lang === "ko" ? "복사 실패" : "Copy failed");
+    const feedback = copyButton.parentElement?.querySelector(".freight-copy-feedback") || copyButton.closest(".freight-navigator-section")?.querySelector(".freight-copy-feedback");
+    if (feedback) feedback.textContent = copyButton.textContent;
+    window.setTimeout(() => {
+      copyButton.textContent = copyButton.dataset.originalLabel || original;
+      if (feedback) feedback.textContent = "";
+    }, 1400);
   });
   target.querySelectorAll("[data-freight-tab]").forEach((button) => {
     button.addEventListener("click", () => {

@@ -6338,10 +6338,10 @@ body.sidebar-drawer-active {
 .freight-charge-row {
   min-width: 0;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(180px, 240px);
-  gap: 8px 14px;
-  align-items: start;
-  padding: 12px;
+  grid-template-columns: minmax(0, 1.1fr) minmax(120px, 0.34fr) minmax(210px, 0.72fr);
+  gap: 10px;
+  align-items: center;
+  padding: 10px 12px;
   border: 1px solid #dfe8f2;
   border-radius: 8px;
   background: #fff;
@@ -6355,11 +6355,8 @@ body.sidebar-drawer-active {
 
 .freight-charge-row-main {
   min-width: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  align-items: center;
-  justify-content: space-between;
+  display: grid;
+  gap: 2px;
 }
 
 .freight-charge-row-main h5 {
@@ -6375,6 +6372,11 @@ body.sidebar-drawer-active {
   color: var(--secondary-text);
   font-size: 12px;
   font-weight: 800;
+}
+
+.freight-charge-state {
+  display: flex;
+  justify-content: flex-start;
 }
 
 .freight-status-badge {
@@ -6416,13 +6418,6 @@ body.sidebar-drawer-active {
   color: #415069;
 }
 
-.freight-charge-row > p {
-  margin: 0;
-  color: var(--secondary-text);
-  font-size: 13px;
-  line-height: 1.45;
-}
-
 .freight-charge-row-meta {
   display: flex;
   flex-wrap: wrap;
@@ -6448,6 +6443,10 @@ body.sidebar-drawer-active {
   background: #f6fbf8;
 }
 
+.freight-formula-primary {
+  padding: 7px 8px;
+}
+
 .freight-formula-box strong {
   color: var(--ink-navy);
   font-size: 14px;
@@ -6461,6 +6460,7 @@ body.sidebar-drawer-active {
 }
 
 .freight-quote-question {
+  margin: 0;
   padding-left: 9px;
   border-left: 3px solid #d6e4f4;
   color: var(--ink-navy) !important;
@@ -6468,19 +6468,20 @@ body.sidebar-drawer-active {
 }
 
 .freight-charge-action {
-  grid-column: 2;
-  grid-row: 1 / span 5;
+  grid-column: 3;
+  grid-row: auto;
   display: grid;
   gap: 5px;
   align-self: stretch;
   align-content: center;
   min-width: 0;
-  padding-left: 12px;
+  padding-left: 10px;
   border-left: 1px solid #edf2f7;
 }
 
 .freight-charge-action a,
-.freight-charge-action > span {
+.freight-charge-action > span,
+.freight-charge-action button {
   display: inline-flex;
   min-height: 36px;
   align-items: center;
@@ -6497,7 +6498,12 @@ body.sidebar-drawer-active {
   overflow-wrap: anywhere;
 }
 
-.freight-charge-action a:hover {
+.freight-charge-action button {
+  cursor: pointer;
+}
+
+.freight-charge-action a:hover,
+.freight-charge-action button:hover {
   border-color: rgba(23, 107, 255, .45);
   color: var(--signal-blue);
 }
@@ -6507,6 +6513,110 @@ body.sidebar-drawer-active {
   font-size: 12px;
   line-height: 1.35;
   text-align: center;
+}
+
+.freight-copy-feedback {
+  min-height: 16px;
+  color: var(--signal-blue);
+  font-size: 12px;
+  font-weight: 900;
+  text-align: center;
+}
+
+.freight-copy-all-wrap {
+  display: grid;
+  gap: 4px;
+  justify-items: end;
+}
+
+.freight-action-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.freight-action-summary span {
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: #eef6ff;
+  color: var(--deep-navy);
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.freight-row-table-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(120px, 0.34fr) minmax(210px, 0.72fr);
+  gap: 10px;
+  padding: 0 12px;
+  color: var(--secondary-text);
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.freight-row-details {
+  grid-column: 1 / -1;
+  display: block;
+  padding-top: 4px;
+}
+
+.freight-row-details summary,
+.freight-glossary-details > summary {
+  cursor: pointer;
+  color: var(--signal-blue);
+  font-size: 12px;
+  font-weight: 900;
+  list-style: none;
+}
+
+.freight-row-details summary::-webkit-details-marker,
+.freight-glossary-details > summary::-webkit-details-marker {
+  display: none;
+}
+
+.freight-row-details summary::after,
+.freight-glossary-details > summary::after {
+  content: " +";
+}
+
+.freight-row-details[open] summary::after,
+.freight-glossary-details[open] > summary::after {
+  content: " -";
+}
+
+.freight-row-details p,
+.freight-glossary-details > summary small {
+  margin: 7px 0 0;
+  color: var(--secondary-text);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.freight-glossary-details {
+  display: block;
+}
+
+.freight-glossary-details > summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--ink-navy);
+}
+
+.freight-glossary-details > summary span {
+  display: grid;
+  gap: 3px;
+}
+
+.freight-glossary-details > summary strong {
+  color: var(--ink-navy);
+  font-size: 16px;
+}
+
+.freight-glossary-details .freight-charge-section-head,
+.freight-glossary-details .freight-explainer-list {
+  margin-top: 12px;
 }
 
 .freight-provider-head {
@@ -6765,6 +6875,15 @@ body.sidebar-drawer-active {
 
   .freight-charge-row {
     grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .freight-row-table-head {
+    display: none;
+  }
+
+  .freight-charge-state {
+    justify-content: flex-start;
   }
 
   .freight-charge-action {
@@ -6777,9 +6896,14 @@ body.sidebar-drawer-active {
   }
 
   .freight-charge-action a,
-  .freight-charge-action > span {
+  .freight-charge-action > span,
+  .freight-charge-action button {
     justify-content: flex-start;
     text-align: left;
+  }
+
+  .freight-copy-all-wrap {
+    justify-items: start;
   }
 }
 
