@@ -1,5 +1,21 @@
 window.LOGILEE_POSTS = [
   {
+    "slug": "us-cbp-foreign-export-documents-supply-chain-visibility-2026",
+    "language": "en",
+    "status": "published",
+    "title": "US Customs Clearance: Beyond Import Documents? CBP Considers Reviewing 'Korean Export Declarations'",
+    "description": "The U.S. CBP is considering expanding import data requirements to include foreign export declarations, invoices, origin data, and manufacturer information. We summarize the core of this new proposal, currently in the ANPRM stage, and key data points for Korean exporters to review.",
+    "category": "customs",
+    "date": "2026-09-04",
+    "publishedAt": "2026-09-04T06:27:25.864Z",
+    "readingTime": "7 min read",
+    "path": "en/posts/us-cbp-foreign-export-documents-supply-chain-visibility-2026/",
+    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_3a30d0e4-b2a8-4f75-a3d3-86e1769bffbf-ChatGPT%20Image%202026%EB%85%84%209%EC%9B%94%204%EC%9D%BC%20%EC%98%A4%ED%9B%84%2003_24_17.png?alt=media&token=f9e9579e-c0d3-4502-8d09-1d320e51291b",
+    "imageAlt": "Air Freight",
+    "imageCredit": "LOGILEE",
+    "imageLicense": "AI Generated"
+  },
+  {
     "slug": "vietnam-decree-292-takes-effect-september-5-what-importers-and-exporters-need-to-review",
     "language": "en",
     "status": "published",
