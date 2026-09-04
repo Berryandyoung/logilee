@@ -1,6 +1,22 @@
 window.LOGILEE_POSTS = [
   {
     "slug": "us-cbp-foreign-export-documents-supply-chain-visibility-2026",
+    "language": "ko",
+    "status": "published",
+    "title": "미국 통관, 수입서류만으론 부족해지나…CBP가 ‘한국 수출신고서’까지 들여다보는 방안 검토",
+    "description": "미국 CBP가 해외 수출신고서·송장·원산지자료와 제조자 정보까지 활용하는 수입정보 확대를 검토합니다. 아직 ANPRM 단계인 새 제도의 핵심과 한국 수출기업의 데이터 점검사항을 정리합니다.",
+    "category": "customs",
+    "date": "2026-09-04",
+    "publishedAt": "2026-09-04T06:27:38.017Z",
+    "readingTime": "5遺??쎄린",
+    "path": "ko/posts/us-cbp-foreign-export-documents-supply-chain-visibility-2026/",
+    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_3a30d0e4-b2a8-4f75-a3d3-86e1769bffbf-ChatGPT%20Image%202026%EB%85%84%209%EC%9B%94%204%EC%9D%BC%20%EC%98%A4%ED%9B%84%2003_24_17.png?alt=media&token=f9e9579e-c0d3-4502-8d09-1d320e51291b",
+    "imageAlt": "항공 화물",
+    "imageCredit": "LOGILEE",
+    "imageLicense": "AI Generated"
+  },
+  {
+    "slug": "us-cbp-foreign-export-documents-supply-chain-visibility-2026",
     "language": "en",
     "status": "published",
     "title": "US Customs Clearance: Beyond Import Documents? CBP Considers Reviewing 'Korean Export Declarations'",
