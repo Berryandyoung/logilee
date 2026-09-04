@@ -6005,7 +6005,8 @@ body.sidebar-drawer-active {
 
 .freight-charges-workflow {
   display: grid;
-  gap: 14px;
+  gap: 12px;
+  max-width: 1040px;
   background: #ffffff;
 }
 
@@ -6314,7 +6315,7 @@ body.sidebar-drawer-active {
 
 .freight-charge-row-groups {
   display: grid;
-  gap: 14px;
+  gap: 18px;
 }
 
 .freight-charge-row-group {
@@ -6325,26 +6326,34 @@ body.sidebar-drawer-active {
 .freight-charge-row-group h5 {
   margin: 0;
   color: var(--ink-navy);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 900;
-  text-transform: uppercase;
 }
 
 .freight-charge-row-list {
   display: grid;
-  gap: 8px;
+  gap: 0;
+  border: 1px solid #dfe8f2;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
 }
 
 .freight-charge-row {
   min-width: 0;
   display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(120px, 0.34fr) minmax(210px, 0.72fr);
-  gap: 10px;
-  align-items: center;
-  padding: 10px 12px;
-  border: 1px solid #dfe8f2;
-  border-radius: 8px;
+  grid-template-columns: minmax(0, 1fr) minmax(190px, 260px);
+  gap: 12px 18px;
+  align-items: start;
+  padding: 13px 14px;
+  border: 0;
+  border-bottom: 1px solid #e8eef6;
+  border-radius: 0;
   background: #fff;
+}
+
+.freight-charge-row:last-child {
+  border-bottom: 0;
 }
 
 .freight-charge-row *,
@@ -6355,8 +6364,10 @@ body.sidebar-drawer-active {
 
 .freight-charge-row-main {
   min-width: 0;
-  display: grid;
-  gap: 2px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 9px;
+  align-items: baseline;
 }
 
 .freight-charge-row-main h5 {
@@ -6368,27 +6379,35 @@ body.sidebar-drawer-active {
 
 .freight-charge-row-main small {
   display: block;
-  margin-top: 2px;
   color: var(--secondary-text);
   font-size: 12px;
   font-weight: 800;
 }
 
+.freight-charge-row-main p {
+  flex-basis: 100%;
+  margin: 1px 0 0;
+  color: var(--secondary-text);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
 .freight-charge-state {
   display: flex;
-  justify-content: flex-start;
+  justify-content: flex-end;
+  align-self: center;
 }
 
 .freight-status-badge {
   display: inline-flex;
-  min-height: 26px;
+  min-height: 23px;
   align-items: center;
-  padding: 4px 8px;
+  padding: 3px 7px;
   border: 1px solid #cfe0f2;
   border-radius: 999px;
   background: #f4f8fd;
   color: var(--deep-navy);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 900;
   white-space: nowrap;
 }
@@ -6468,22 +6487,19 @@ body.sidebar-drawer-active {
 }
 
 .freight-charge-action {
-  grid-column: 3;
-  grid-row: auto;
+  grid-column: 2;
+  grid-row: 1;
   display: grid;
   gap: 5px;
-  align-self: stretch;
-  align-content: center;
+  justify-items: end;
+  align-self: center;
   min-width: 0;
-  padding-left: 10px;
-  border-left: 1px solid #edf2f7;
 }
 
 .freight-charge-action a,
-.freight-charge-action > span,
-.freight-charge-action button {
+.freight-charge-action > span {
   display: inline-flex;
-  min-height: 36px;
+  min-height: 34px;
   align-items: center;
   justify-content: center;
   padding: 7px 10px;
@@ -6498,12 +6514,15 @@ body.sidebar-drawer-active {
   overflow-wrap: anywhere;
 }
 
-.freight-charge-action button {
-  cursor: pointer;
+.freight-charge-action > span {
+  border-color: transparent;
+  background: transparent;
+  color: var(--ink-navy);
+  justify-content: flex-end;
+  padding-right: 0;
 }
 
-.freight-charge-action a:hover,
-.freight-charge-action button:hover {
+.freight-charge-action a:hover {
   border-color: rgba(23, 107, 255, .45);
   color: var(--signal-blue);
 }
@@ -6513,6 +6532,18 @@ body.sidebar-drawer-active {
   font-size: 12px;
   line-height: 1.35;
   text-align: center;
+}
+
+.freight-copy-question-link {
+  min-height: 32px;
+  padding: 6px 9px;
+  border: 1px solid #c7d7ea;
+  border-radius: 8px;
+  background: #fff;
+  color: var(--deep-navy);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 900;
 }
 
 .freight-copy-feedback {
@@ -6558,11 +6589,13 @@ body.sidebar-drawer-active {
 .freight-row-details {
   grid-column: 1 / -1;
   display: block;
-  padding-top: 4px;
+  padding-top: 0;
 }
 
 .freight-row-details summary,
-.freight-glossary-details > summary {
+.freight-glossary-details > summary,
+.freight-forwarder-questions > summary,
+.freight-provider-details > summary {
   cursor: pointer;
   color: var(--signal-blue);
   font-size: 12px;
@@ -6571,30 +6604,61 @@ body.sidebar-drawer-active {
 }
 
 .freight-row-details summary::-webkit-details-marker,
-.freight-glossary-details > summary::-webkit-details-marker {
+.freight-glossary-details > summary::-webkit-details-marker,
+.freight-forwarder-questions > summary::-webkit-details-marker,
+.freight-provider-details > summary::-webkit-details-marker {
   display: none;
 }
 
 .freight-row-details summary::after,
-.freight-glossary-details > summary::after {
+.freight-glossary-details > summary::after,
+.freight-forwarder-questions > summary::after,
+.freight-provider-details > summary::after {
   content: " +";
 }
 
 .freight-row-details[open] summary::after,
-.freight-glossary-details[open] > summary::after {
+.freight-glossary-details[open] > summary::after,
+.freight-forwarder-questions[open] > summary::after,
+.freight-provider-details[open] > summary::after {
   content: " -";
 }
 
 .freight-row-details p,
-.freight-glossary-details > summary small {
+.freight-glossary-details > summary small,
+.freight-forwarder-questions p {
   margin: 7px 0 0;
   color: var(--secondary-text);
   font-size: 13px;
   line-height: 1.45;
 }
 
+.freight-row-detail-body {
+  display: grid;
+  gap: 4px;
+  margin-top: 8px;
+}
+
 .freight-glossary-details {
   display: block;
+}
+
+.freight-forwarder-questions {
+  display: grid;
+  gap: 8px;
+  margin-top: 2px;
+  padding: 12px;
+  border: 1px solid #e2ebf6;
+  border-radius: 8px;
+  background: #fbfdff;
+}
+
+.freight-forwarder-questions > summary {
+  color: var(--ink-navy);
+}
+
+.freight-forwarder-questions .freight-copy-all {
+  width: fit-content;
 }
 
 .freight-glossary-details > summary {
@@ -6638,6 +6702,10 @@ body.sidebar-drawer-active {
   font-size: 12px;
   font-weight: 900;
   white-space: nowrap;
+}
+
+.freight-provider-details {
+  display: block;
 }
 
 .freight-provider-links {
@@ -6889,15 +6957,11 @@ body.sidebar-drawer-active {
   .freight-charge-action {
     grid-column: auto;
     grid-row: auto;
-    padding-left: 0;
-    border-left: 0;
-    border-top: 1px solid #edf2f7;
-    padding-top: 8px;
+    justify-items: start;
   }
 
   .freight-charge-action a,
-  .freight-charge-action > span,
-  .freight-charge-action button {
+  .freight-charge-action > span {
     justify-content: flex-start;
     text-align: left;
   }
