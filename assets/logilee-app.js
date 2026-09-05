@@ -2261,11 +2261,14 @@ function populateCurrencyOptions() {
   });
   const from = document.querySelector("[data-fx-from]");
   const to = document.querySelector("[data-fx-to]");
+  const amount = document.querySelector("[data-fx-amount]");
   const params = new URLSearchParams(location.search);
-  const fromParam = params.get("from");
-  const toParam = params.get("to");
+  const fromParam = String(params.get("from") || "").toUpperCase();
+  const toParam = String(params.get("to") || "").toUpperCase();
+  const amountParam = sanitizeFxAmount(params.get("amount"));
   if (from) from.value = TRADE_CURRENCIES.includes(fromParam) ? fromParam : "USD";
   if (to) to.value = TRADE_CURRENCIES.includes(toParam) ? toParam : (currentLang() === "ko" ? "KRW" : "EUR");
+  if (amount && amountParam !== null) amount.value = String(amountParam);
 }
 
 const BTS_FREIGHT_SOURCE = "https://data.bts.gov/resource/bw6n-ddqk.json";
@@ -4461,31 +4464,108 @@ async function loadExchangePage() {
   }
 }
 
+function sanitizeFxAmount(value) {
+  const normalized = String(value ?? "").replace(/,/g, "").trim();
+  if (!normalized) return null;
+  const amount = Number(normalized);
+  if (!Number.isFinite(amount) || amount < 0) return null;
+  return amount;
+}
+
+function formatFxAmount(value, currency) {
+  const abs = Math.abs(Number(value));
+  let digits = Number.isInteger(Number(value)) ? 0 : 2;
+  if (["KRW", "JPY", "VND", "IDR"].includes(currency) && abs >= 1) digits = 0;
+  if (abs > 0 && abs < 1) digits = Math.min(6, Math.max(2, Math.ceil(Math.abs(Math.log10(abs))) + 2));
+  return formatRate(value, digits).replace(/(\.\d*?[1-9])0+$/, "$1").replace(/\.0+$/, "");
+}
+
+function formatFxRate(value) {
+  const abs = Math.abs(Number(value));
+  if (!Number.isFinite(abs)) return "N/A";
+  if (abs >= 100) return formatRate(value, 2);
+  if (abs >= 1) return formatRate(value, 4).replace(/(\.\d*?[1-9])0+$/, "$1").replace(/\.0+$/, "");
+  if (abs >= 0.01) return formatRate(value, 6).replace(/(\.\d*?[1-9])0+$/, "$1").replace(/\.0+$/, "");
+  return Number(value).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 8 });
+}
+
+function updateFxUrlState() {
+  const from = document.querySelector("[data-fx-from]")?.value;
+  const to = document.querySelector("[data-fx-to]")?.value;
+  const amount = sanitizeFxAmount(document.querySelector("[data-fx-amount]")?.value);
+  if (!from || !to || amount === null) return;
+  const next = new URL(location.href);
+  next.searchParams.set("from", from);
+  next.searchParams.set("to", to);
+  next.searchParams.set("amount", String(amount));
+  history.replaceState(null, "", `${next.pathname}?${next.searchParams.toString()}${next.hash}`);
+}
+
+function renderFxUseGuide(lang) {
+  const target = document.querySelector("[data-fx-use-guide]");
+  if (!target) return;
+  const items = lang === "ko"
+    ? [
+        ["견적·시장가격 검토", "공개 기준 환율을 이용해 대략적인 통화 환산과 가격 비교에 참고할 수 있습니다.", "참고 가능", ""],
+        ["계약·인보이스 정산", "계약서 또는 거래조건에서 정한 환율 기준, 기준일, 약정 출처를 확인해야 합니다.", "기준 확인", ""],
+        ["수입신고·관세", "세관 신고에는 관할 세관이 정한 환율 또는 과세 기준이 적용될 수 있으므로 이 기준 환율을 그대로 사용하지 마세요.", "세관 기준 확인", "../hscode.html"],
+        ["해외송금·결제", "실제 송금액은 거래 은행의 송금환율, 스프레드 및 수수료에 따라 달라질 수 있습니다.", "은행 기준 확인", ""]
+      ]
+    : [
+        ["Quotation & market review", "Useful as a reference for approximate currency conversion and price comparison.", "Reference use", ""],
+        ["Contract / invoice settlement", "Check the rate basis, rate date, and agreed source set in the contract or trade terms.", "Confirm basis", ""],
+        ["Customs / import declaration", "Do not use this reference rate as-is where the customs authority sets a governing exchange-rate basis.", "Check customs basis", "../hscode-en.html"],
+        ["International payment / remittance", "Actual settlement amounts may differ due to the bank's exchange rate, spread, and fees.", "Check bank basis", ""]
+      ];
+  target.innerHTML = `
+    <div class="section-head fx-guide-head">
+      <div>
+        <h2>${lang === "ko" ? "이 환율을 어디에 사용할 수 있나요?" : "How should I use this reference rate?"}</h2>
+        <p>${lang === "ko" ? "공개 기준 환율의 성격을 업무별로 구분해 확인하세요." : "Use the public reference rate with the right business context."}</p>
+      </div>
+    </div>
+    <div class="fx-use-list">
+      ${items.map(([title, body, status, href]) => `
+        <article>
+          <div><h3>${escapeHtml(title)}</h3><p>${escapeHtml(body)}</p></div>
+          ${href ? `<a href="${escapeAttribute(href)}">${escapeHtml(status)} <span aria-hidden="true">→</span></a>` : `<span>${escapeHtml(status)}</span>`}
+        </article>
+      `).join("")}
+    </div>
+  `;
+}
+
 function renderFxResult(data) {
   const lang = currentLang();
-  const amount = Number(document.querySelector("[data-fx-amount]")?.value);
+  const amount = sanitizeFxAmount(document.querySelector("[data-fx-amount]")?.value);
   const from = document.querySelector("[data-fx-from]")?.value;
   const to = document.querySelector("[data-fx-to]")?.value;
   const result = document.querySelector("[data-fx-result]");
-  if (!result || !Number.isFinite(amount) || amount < 0 || !from || !to) return;
+  if (!result || !from || !to) return;
+  if (amount === null) {
+    result.innerHTML = `<div class="data-empty">${lang === "ko" ? "0 이상의 금액을 입력하세요." : "Enter an amount of 0 or greater."}</div>`;
+    return;
+  }
   const rate = data.rates[to] / data.rates[from];
   const inverse = data.rates[from] / data.rates[to];
   if (!Number.isFinite(rate)) {
-    dataError(result, "Exchange rate data is temporarily unavailable.");
+    dataError(result, lang === "ko" ? "환율 데이터를 불러오지 못했습니다. 잠시 후 다시 시도해주세요." : "Exchange rate data could not be loaded. Please try again later.");
     return;
   }
-  const resultDigits = to === "KRW" || to === "JPY" || to === "VND" || to === "IDR" ? 0 : 2;
+  updateFxUrlState();
   result.innerHTML = `
-    <span class="kicker">${lang === "ko" ? "환산 결과" : "Converted Amount"}</span>
-    <span class="summary-number">${formatRate(amount * rate, resultDigits)}</span>
-    <strong>${to}</strong>
-    <div class="data-status-list compact-fx-meta">
-      <div><strong>${lang === "ko" ? "기준 환율" : "Exchange Rate"}</strong><span>1 ${from} = ${formatRate(rate, 6)} ${to}</span></div>
-      <div><strong>${lang === "ko" ? "반대 환율" : "Inverse Rate"}</strong><span>1 ${to} = ${formatRate(inverse, 6)} ${from}</span></div>
-      <div><strong>${lang === "ko" ? "데이터 날짜" : "Data Date"}</strong><span>${data.date || "N/A"}</span></div>
-      <div><strong>Source</strong><span>Frankfurter</span></div>
+    <span class="kicker">${lang === "ko" ? "환산 결과" : "Conversion Result"}</span>
+    <div class="fx-result-main">
+      <span>${formatFxAmount(amount, from)} ${from}</span>
+      <strong>≈ ${formatFxAmount(amount * rate, to)} ${to}</strong>
     </div>
-    <p class="muted">${lang === "ko" ? "공개 기준 환율이며 은행, 카드, 송금, 정산 환율과 다를 수 있습니다." : "Public reference rates can differ from bank, card, remittance, and settlement rates."}</p>
+    <div class="data-status-list compact-fx-meta fx-reference-meta">
+      <div><strong>${lang === "ko" ? "기준 환율" : "Reference rate"}</strong><span>1 ${from} = ${formatFxRate(rate)} ${to}</span></div>
+      <div><strong>${lang === "ko" ? "반대 환율" : "Inverse rate"}</strong><span>1 ${to} = ${formatFxRate(inverse)} ${from}</span></div>
+      <div><strong>${lang === "ko" ? "기준일" : "Rate date"}</strong><span>${data.date || "N/A"}</span></div>
+      <div><strong>${lang === "ko" ? "출처" : "Source"}</strong><span><a href="https://frankfurter.dev/" target="_blank" rel="noopener noreferrer">Frankfurter</a></span></div>
+    </div>
+    <p class="muted">${lang === "ko" ? "공개 기준 환율입니다. 실제 은행 송금환율, 카드환율, 계약 정산환율 및 세관 적용환율과 다를 수 있습니다." : "This is a public reference exchange rate. Actual bank remittance, card, contract settlement, and customs-applied rates may differ."}</p>
   `;
 }
 
@@ -4493,6 +4573,7 @@ async function wireCurrencyConverter() {
   const form = document.querySelector("[data-currency-converter]");
   if (!form) return;
   populateCurrencyOptions();
+  renderFxUseGuide(currentLang());
   try {
     const data = await getUsdRates();
     renderFxResult(data);
@@ -4505,14 +4586,23 @@ async function wireCurrencyConverter() {
       to.value = previous;
       renderFxResult(data);
     });
+    document.querySelectorAll("[data-fx-quick]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const amount = document.querySelector("[data-fx-amount]");
+        if (!amount) return;
+        amount.value = button.dataset.fxQuick || "1000";
+        renderFxResult(data);
+      });
+    });
     form.addEventListener("submit", (event) => {
       event.preventDefault();
       renderFxResult(data);
     });
     form.addEventListener("input", () => renderFxResult(data));
+    form.addEventListener("change", () => renderFxResult(data));
   } catch (error) {
     console.warn("Currency converter unavailable:", error);
-    dataError(document.querySelector("[data-fx-result]"), "Exchange rate data is temporarily unavailable.");
+    dataError(document.querySelector("[data-fx-result]"), currentLang() === "ko" ? "환율 데이터를 불러오지 못했습니다. 잠시 후 다시 시도해주세요." : "Exchange rate data could not be loaded. Please try again later.");
   }
 }
 
