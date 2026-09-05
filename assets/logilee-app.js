@@ -5281,61 +5281,634 @@ function isoDate(date) {
   return date.toISOString().slice(0, 10);
 }
 
-async function wireBusinessDay() {
-  const form = document.querySelector("[data-business-day-form]");
-  if (!form) return;
-  populateCountrySelects();
-  const start = form.querySelector("[data-start-date]");
-  if (start && !start.value) start.value = isoDate(new Date());
-  const output = document.querySelector("[data-business-day-output]");
-  const render = async () => {
-    output.innerHTML = `<div class="data-empty">Loading...</div>`;
-    try {
-      const country = form.querySelector("[data-country-select]").value;
-      const amount = Math.max(0, Number(form.querySelector("[data-business-days]").value || 0));
-      const direction = form.querySelector("[data-direction]").value === "subtract" ? -1 : 1;
-      let cursor = new Date(`${start.value}T00:00:00Z`);
-      const years = new Set([cursor.getUTCFullYear(), addDaysUtc(cursor, direction * (amount + 45)).getUTCFullYear()]);
-      const holidays = (await Promise.all([...years].map((year) => getHolidays(country, year)))).flat();
-      const holidayMap = new Map(holidays.map((item) => [item.date, item]));
-      const excluded = [];
-      let weekendDays = 0;
-      let counted = 0;
-      while (counted < amount) {
-        cursor = addDaysUtc(cursor, direction);
-        const weekday = cursor.getUTCDay();
-        const date = isoDate(cursor);
-        if (weekday === 0 || weekday === 6) {
-          weekendDays += 1;
-          continue;
-        }
-        const holiday = holidayMap.get(date);
-        if (holiday) {
-          excluded.push(holiday);
-          continue;
-        }
-        counted += 1;
+function validIsoDate(value) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(String(value || ""))) return false;
+  return isoDate(new Date(`${value}T00:00:00Z`)) === value;
+}
+
+function dateFromIso(value) {
+  return new Date(`${value}T00:00:00Z`);
+}
+
+function businessDayLabels(lang) {
+  return lang === "ko"
+    ? {
+        tabs: { business: "영업일 계산", timer: "타이머", stopwatch: "스톱워치" },
+        offset: "영업일 더하기/빼기",
+        between: "두 날짜 사이",
+        start: "시작일",
+        end: "종료일",
+        days: "영업일 수",
+        country: "국가",
+        partner: "거래 상대국도 함께 확인",
+        noPartner: "선택 안 함",
+        direction: "계산 방향",
+        add: "이후 날짜 계산",
+        subtract: "이전 날짜 계산",
+        calculate: "계산하기",
+        loading: "공휴일 데이터를 확인하는 중입니다...",
+        result: "예상 영업일",
+        businessDays: "영업일",
+        weekendDays: "주말 제외",
+        holidays: "공휴일 제외",
+        excluded: "제외된 공휴일",
+        noExcluded: "제외된 공휴일이 없습니다.",
+        common: "양국 공통 영업일 기준 예상일",
+        baseResult: "선택 국가 기준 예상일",
+        partnerResult: "거래 상대국 기준 예상일",
+        commonDays: "양국 공통 영업일",
+        ruleOffset: "시작일은 카운트하지 않고, 다음 날짜부터 영업일을 셉니다.",
+        ruleBetween: "시작일과 종료일을 모두 포함해 기간 안의 영업일을 셉니다.",
+        disclaimer: "공개 공휴일과 토·일요일 주말을 기준으로 계산합니다. 실제 항만, 세관, 은행, 선사, 포워더 및 거래처의 운영일은 별도 휴무나 지역 일정에 따라 다를 수 있습니다.",
+        source: "공휴일 데이터는 Nager.Date 공개 API를 사용합니다. 국가 단위 공휴일 중심이며, 지역 공휴일·기관별 휴무·대체/관측일 적용은 국가별 데이터 제공 범위에 따라 달라질 수 있습니다.",
+        error: "공휴일 데이터를 불러오지 못해 정확한 영업일 계산을 완료할 수 없습니다.",
+        retry: "다시 계산",
+        guideTitle: "무역 일정에 이렇게 사용하세요",
+        guide: ["선적 Lead Time", "서류 제출 기한", "통관 일정", "결제 예정일", "거래처 회신 일정"],
+        timerTitle: "타이머",
+        stopwatchTitle: "스톱워치",
+        hours: "시",
+        minutes: "분",
+        seconds: "초",
+        startBtn: "시작",
+        pause: "일시정지",
+        resume: "다시 시작",
+        reset: "초기화",
+        lap: "랩",
+        presets: "빠른 설정",
+        sound: "완료음",
+        complete: "완료되었습니다.",
+        laps: "Lap 기록",
+        lapDuration: "구간",
+        totalElapsed: "전체"
       }
-      output.innerHTML = `
-        <span class="summary-number">${isoDate(cursor)}</span>
-        <strong>Estimated Business Date</strong>
-        <div class="stat-grid compact-stat-grid">
-          <div class="stat-block"><span>Business days</span><strong>${amount}</strong></div>
-          <div class="stat-block"><span>Weekend days excluded</span><strong>${weekendDays}</strong></div>
-          <div class="stat-block"><span>Holidays excluded</span><strong>${excluded.length}</strong></div>
+    : {
+        tabs: { business: "Business Days", timer: "Timer", stopwatch: "Stopwatch" },
+        offset: "Add / Subtract Business Days",
+        between: "Business Days Between Dates",
+        start: "Start Date",
+        end: "End Date",
+        days: "Business Days",
+        country: "Country",
+        partner: "Also check a trade partner country",
+        noPartner: "None",
+        direction: "Direction",
+        add: "Add",
+        subtract: "Subtract",
+        calculate: "Calculate",
+        loading: "Checking public holiday data...",
+        result: "Estimated Business Date",
+        businessDays: "Business days",
+        weekendDays: "Weekend days excluded",
+        holidays: "Public holidays excluded",
+        excluded: "Excluded public holidays",
+        noExcluded: "No public holidays were excluded.",
+        common: "Common business day estimate",
+        baseResult: "Selected country estimate",
+        partnerResult: "Partner country estimate",
+        commonDays: "Common business days",
+        ruleOffset: "The start date is not counted; counting begins on the next calendar date.",
+        ruleBetween: "Both the start date and end date are included in the period count.",
+        disclaimer: "Calculated from public holidays and Saturday/Sunday weekends. Actual operating days for ports, customs, banks, carriers, forwarders, and trade partners can differ because of local closures or regional schedules.",
+        source: "Holiday data uses the Nager.Date public API. It is centered on country-level public holidays; regional holidays, institution-specific closures, and observed/substitute-day handling depend on the provider's country coverage.",
+        error: "Public holiday data could not be loaded, so an accurate business-day calculation cannot be completed.",
+        retry: "Retry",
+        guideTitle: "Use it for trade schedule planning",
+        guide: ["Shipment lead time", "Document submission deadline", "Customs schedule", "Payment due date", "Partner response timing"],
+        timerTitle: "Timer",
+        stopwatchTitle: "Stopwatch",
+        hours: "Hours",
+        minutes: "Minutes",
+        seconds: "Seconds",
+        startBtn: "Start",
+        pause: "Pause",
+        resume: "Resume",
+        reset: "Reset",
+        lap: "Lap",
+        presets: "Presets",
+        sound: "Sound",
+        complete: "Completed.",
+        laps: "Lap records",
+        lapDuration: "Lap",
+        totalElapsed: "Total"
+      };
+}
+
+function holidayDisplayName(item) {
+  return item?.localName || item?.name || item?.englishName || "";
+}
+
+function isWeekendUtc(date) {
+  const day = date.getUTCDay();
+  return day === 0 || day === 6;
+}
+
+async function holidayMapForYears(country, years) {
+  const holidays = (await Promise.all([...years].map((year) => getHolidays(country, year)))).flat();
+  return new Map(holidays.map((item) => [item.date, item]));
+}
+
+async function holidayMapsForRange(countries, fromDate, toDate, paddingYears = 0) {
+  const minYear = Math.min(fromDate.getUTCFullYear(), toDate.getUTCFullYear()) - paddingYears;
+  const maxYear = Math.max(fromDate.getUTCFullYear(), toDate.getUTCFullYear()) + paddingYears;
+  const years = Array.from({ length: maxYear - minYear + 1 }, (_, index) => minYear + index);
+  const entries = await Promise.all(countries.map(async (country) => [country, await holidayMapForYears(country, years)]));
+  return Object.fromEntries(entries);
+}
+
+function isBusinessDate(date, maps, countries) {
+  if (isWeekendUtc(date)) return false;
+  const iso = isoDate(date);
+  return !countries.some((country) => maps[country]?.has(iso));
+}
+
+function collectHolidayExclusions(date, maps, countries) {
+  const iso = isoDate(date);
+  const seen = new Set();
+  return countries.flatMap((country) => {
+    const item = maps[country]?.get(iso);
+    if (!item) return [];
+    const key = `${country}:${iso}:${holidayDisplayName(item)}`;
+    if (seen.has(key)) return [];
+    seen.add(key);
+    return [{ ...item, country }];
+  });
+}
+
+async function calculateBusinessOffset({ startIso, amount, country, partner, direction }) {
+  const startDate = dateFromIso(startIso);
+  const countries = partner ? [country, partner] : [country];
+  const searchYears = Math.max(1, Math.ceil((amount + 30) / 220));
+  const maps = await holidayMapsForRange(countries, startDate, addDaysUtc(startDate, direction * Math.max(45, amount * 2 + 30)), searchYears);
+  const excluded = [];
+  let weekendDays = 0;
+  let counted = 0;
+  let cursor = new Date(startDate);
+  if (amount === 0) {
+    return { resultIso: startIso, counted, weekendDays, excluded, maps, countries };
+  }
+  let guard = 0;
+  while (counted < amount && guard < Math.max(4000, amount * 5 + 400)) {
+    cursor = addDaysUtc(cursor, direction);
+    guard += 1;
+    if (isWeekendUtc(cursor)) {
+      weekendDays += 1;
+      continue;
+    }
+    const holidayHits = collectHolidayExclusions(cursor, maps, countries);
+    if (holidayHits.length) {
+      excluded.push(...holidayHits);
+      continue;
+    }
+    counted += 1;
+  }
+  return { resultIso: isoDate(cursor), counted, weekendDays, excluded, maps, countries };
+}
+
+async function calculateBusinessBetween({ startIso, endIso, country, partner }) {
+  const startDate = dateFromIso(startIso);
+  const endDate = dateFromIso(endIso);
+  const direction = endDate >= startDate ? 1 : -1;
+  const countries = partner ? [country, partner] : [country];
+  const maps = await holidayMapsForRange(countries, startDate, endDate);
+  const excluded = [];
+  let weekendDays = 0;
+  let businessDays = 0;
+  let cursor = new Date(startDate);
+  let guard = 0;
+  while (guard < 5000) {
+    guard += 1;
+    if (isWeekendUtc(cursor)) {
+      weekendDays += 1;
+    } else {
+      const holidayHits = collectHolidayExclusions(cursor, maps, countries);
+      if (holidayHits.length) excluded.push(...holidayHits);
+      else businessDays += 1;
+    }
+    if (isoDate(cursor) === endIso) break;
+    cursor = addDaysUtc(cursor, direction);
+  }
+  return { resultIso: endIso, counted: businessDays, weekendDays, excluded, maps, countries };
+}
+
+function compactHolidayList(items, lang) {
+  const deduped = [];
+  const seen = new Set();
+  items.forEach((item) => {
+    const key = `${item.country || ""}:${item.date}:${holidayDisplayName(item)}`;
+    if (!seen.has(key)) {
+      seen.add(key);
+      deduped.push(item);
+    }
+  });
+  if (!deduped.length) return "";
+  return `
+    <div class="business-day-holidays">
+      <h3>${lang === "ko" ? "제외된 공휴일" : "Excluded public holidays"}</h3>
+      <ul class="plain-list">${deduped.map((item) => `<li>${escapeHtml(item.date.slice(5))} · ${escapeHtml(holidayDisplayName(item))}${item.country ? ` <small>${escapeHtml(item.country)}</small>` : ""}</li>`).join("")}</ul>
+    </div>
+  `;
+}
+
+function businessDayResultMarkup(result, labels, lang, mode, partner) {
+  const title = mode === "between" ? (partner ? labels.commonDays : labels.businessDays) : (partner ? labels.common : labels.result);
+  return `
+    <section class="business-result">
+      <span>${escapeHtml(title)}</span>
+      <strong>${mode === "between" ? escapeHtml(String(result.counted)) : escapeHtml(result.resultIso)}</strong>
+      <div class="stat-grid compact-stat-grid business-day-stats">
+        <div class="stat-block"><span>${escapeHtml(labels.businessDays)}</span><strong>${escapeHtml(String(result.counted))}</strong></div>
+        <div class="stat-block"><span>${escapeHtml(labels.weekendDays)}</span><strong>${escapeHtml(String(result.weekendDays))}</strong></div>
+        <div class="stat-block"><span>${escapeHtml(labels.holidays)}</span><strong>${escapeHtml(String(result.excluded.length))}</strong></div>
+      </div>
+      ${result.excluded.length ? compactHolidayList(result.excluded, lang) : `<p class="muted">${escapeHtml(labels.noExcluded)}</p>`}
+      <p class="business-day-disclaimer">${escapeHtml(labels.disclaimer)}</p>
+    </section>
+  `;
+}
+
+function formatClock(ms, showCenti = false) {
+  const totalMs = Math.max(0, Math.floor(ms));
+  const hours = Math.floor(totalMs / 3600000);
+  const minutes = Math.floor((totalMs % 3600000) / 60000);
+  const seconds = Math.floor((totalMs % 60000) / 1000);
+  const centi = Math.floor((totalMs % 1000) / 10);
+  const base = [hours, minutes, seconds].map((value) => String(value).padStart(2, "0")).join(":");
+  return showCenti ? `${base}.${String(centi).padStart(2, "0")}` : base;
+}
+
+async function wireBusinessDay() {
+  const legacyForm = document.querySelector("[data-business-day-form]");
+  if (!legacyForm) return;
+  const lang = currentLang();
+  const labels = businessDayLabels(lang);
+  const page = legacyForm.closest(".page");
+  const oldCalculator = legacyForm.closest(".calculator");
+  oldCalculator.outerHTML = `<section class="business-day-toolkit" data-business-day-app></section>`;
+  page?.querySelector(".prose-panel")?.remove();
+  const app = document.querySelector("[data-business-day-app]");
+  app.innerHTML = `
+    <div class="planning-tabs" role="tablist" aria-label="${escapeAttribute(lang === "ko" ? "계획 도구" : "Planning tools")}">
+      <button type="button" role="tab" aria-selected="true" data-planning-tab="business-day">${escapeHtml(labels.tabs.business)}</button>
+      <button type="button" role="tab" aria-selected="false" data-planning-tab="timer">${escapeHtml(labels.tabs.timer)}</button>
+      <button type="button" role="tab" aria-selected="false" data-planning-tab="stopwatch">${escapeHtml(labels.tabs.stopwatch)}</button>
+    </div>
+    <section class="panel planning-panel" role="tabpanel" data-planning-panel="business-day">
+      <form data-business-day-v2-form>
+        <div class="mode-tabs" role="tablist" aria-label="${escapeAttribute(labels.tabs.business)}">
+          <button type="button" role="tab" aria-selected="true" data-business-mode="offset">${escapeHtml(labels.offset)}</button>
+          <button type="button" role="tab" aria-selected="false" data-business-mode="between">${escapeHtml(labels.between)}</button>
         </div>
-        ${excluded.length ? `<h3>Excluded Holidays</h3><ul class="plain-list">${excluded.map((item) => `<li>${item.date} ${item.localName || item.name}</li>`).join("")}</ul>` : `<p class="muted">No public holidays were excluded in this calculation.</p>`}
-        <p class="muted">Holiday data: Nager.Date</p>
-      `;
+        <div class="form-grid business-day-form-grid">
+          <div class="field"><label>${escapeHtml(labels.start)}</label><input type="date" data-start-date></div>
+          <div class="field" data-offset-field><label>${escapeHtml(labels.days)}</label><input type="number" min="0" value="10" data-business-days></div>
+          <div class="field" data-between-field hidden><label>${escapeHtml(labels.end)}</label><input type="date" data-end-date></div>
+          <div class="field"><label>${escapeHtml(labels.country)}</label><select data-country-select data-param="country"></select></div>
+          <div class="field"><label>${escapeHtml(labels.partner)}</label><select data-partner-select data-param="partner"><option value="">${escapeHtml(labels.noPartner)}</option></select></div>
+          <div class="field" data-offset-field><label>${escapeHtml(labels.direction)}</label><select data-direction><option value="add">${escapeHtml(labels.add)}</option><option value="subtract">${escapeHtml(labels.subtract)}</option></select></div>
+          <button class="primary-btn" type="submit">${escapeHtml(labels.calculate)}</button>
+        </div>
+        <p class="muted" data-business-rule>${escapeHtml(labels.ruleOffset)}</p>
+      </form>
+      <div data-business-day-output><div class="data-empty">${escapeHtml(labels.loading)}</div></div>
+      <details class="business-day-source"><summary>${lang === "ko" ? "데이터와 계산 기준" : "Data and calculation basis"}</summary><p>${escapeHtml(labels.source)}</p><p>${lang === "ko" ? "출처" : "Source"}: <a href="https://nagerholidays.com/api" target="_blank" rel="noopener">Nager.Date Public Holiday API</a>.</p></details>
+    </section>
+    <section class="panel planning-panel" role="tabpanel" data-planning-panel="timer" hidden>
+      <h2>${escapeHtml(labels.timerTitle)}</h2>
+      <div class="timer-duration-grid">
+        <div class="field"><label>${escapeHtml(labels.hours)}</label><input type="number" min="0" max="99" value="0" data-timer-hours></div>
+        <div class="field"><label>${escapeHtml(labels.minutes)}</label><input type="number" min="0" max="59" value="30" data-timer-minutes></div>
+        <div class="field"><label>${escapeHtml(labels.seconds)}</label><input type="number" min="0" max="59" value="0" data-timer-seconds></div>
+      </div>
+      <strong class="planning-clock" data-timer-display>00:30:00</strong>
+      <div class="planning-controls">
+        <button class="primary-btn" type="button" data-timer-start>${escapeHtml(labels.startBtn)}</button>
+        <button type="button" data-timer-pause disabled>${escapeHtml(labels.pause)}</button>
+        <button type="button" data-timer-reset>${escapeHtml(labels.reset)}</button>
+        <label class="planning-toggle"><input type="checkbox" data-timer-sound checked> ${escapeHtml(labels.sound)}</label>
+      </div>
+      <div class="preset-row"><span>${escapeHtml(labels.presets)}</span>${[5, 10, 15, 30, 60].map((min) => `<button type="button" data-timer-preset="${min}">${min}${lang === "ko" ? "분" : " min"}</button>`).join("")}</div>
+      <p class="muted" data-timer-status></p>
+    </section>
+    <section class="panel planning-panel" role="tabpanel" data-planning-panel="stopwatch" hidden>
+      <h2>${escapeHtml(labels.stopwatchTitle)}</h2>
+      <strong class="planning-clock" data-stopwatch-display>00:00:00.00</strong>
+      <div class="planning-controls">
+        <button class="primary-btn" type="button" data-stopwatch-start>${escapeHtml(labels.startBtn)}</button>
+        <button type="button" data-stopwatch-pause disabled>${escapeHtml(labels.pause)}</button>
+        <button type="button" data-stopwatch-lap disabled>${escapeHtml(labels.lap)}</button>
+        <button type="button" data-stopwatch-reset>${escapeHtml(labels.reset)}</button>
+      </div>
+      <div class="lap-list-wrap"><h3>${escapeHtml(labels.laps)}</h3><div class="lap-list" data-lap-list></div></div>
+    </section>
+    <section class="panel business-day-guide"><h2>${escapeHtml(labels.guideTitle)}</h2><div>${labels.guide.map((item) => `<span>${escapeHtml(item)}</span>`).join("")}</div><p>${escapeHtml(labels.disclaimer)}</p></section>
+  `;
+  populateCountrySelects();
+  const form = app.querySelector("[data-business-day-v2-form]");
+  const countrySelect = form.querySelector("[data-country-select]");
+  const partnerSelect = form.querySelector("[data-partner-select]");
+  populateCountrySelects();
+  partnerSelect.innerHTML = `<option value="">${escapeHtml(labels.noPartner)}</option>` + TRADE_COUNTRIES.map(([code, en, ko]) => `<option value="${code}">${lang === "ko" ? ko : en}</option>`).join("");
+  const start = form.querySelector("[data-start-date]");
+  const end = form.querySelector("[data-end-date]");
+  const days = form.querySelector("[data-business-days]");
+  const directionSelect = form.querySelector("[data-direction]");
+  const rule = form.querySelector("[data-business-rule]");
+  const output = app.querySelector("[data-business-day-output]");
+  const params = new URLSearchParams(location.search);
+  let currentTool = ["business-day", "timer", "stopwatch"].includes(params.get("tool")) ? params.get("tool") : "business-day";
+  let currentMode = ["offset", "between"].includes(params.get("mode")) ? params.get("mode") : "offset";
+  if (validIsoDate(params.get("start"))) start.value = params.get("start");
+  else start.value = isoDate(new Date());
+  if (validIsoDate(params.get("end"))) end.value = params.get("end");
+  else end.value = isoDate(addDaysUtc(new Date(), 25));
+  const requestedDays = Number(params.get("days"));
+  if (Number.isFinite(requestedDays) && requestedDays >= 0) days.value = String(Math.min(999, Math.floor(requestedDays)));
+  if (["add", "subtract"].includes(params.get("direction"))) directionSelect.value = params.get("direction");
+  const partnerParam = params.get("partner")?.toUpperCase();
+  if (partnerParam && [...partnerSelect.options].some((option) => option.value === partnerParam)) partnerSelect.value = partnerParam;
+  const setVisibleTool = (tool, { push = true } = {}) => {
+    currentTool = tool;
+    app.querySelectorAll("[data-planning-tab]").forEach((button) => button.setAttribute("aria-selected", String(button.dataset.planningTab === tool)));
+    app.querySelectorAll("[data-planning-panel]").forEach((panel) => panel.hidden = panel.dataset.planningPanel !== tool);
+    if (push) updateBusinessUrl();
+  };
+  const setMode = (mode, { push = true, renderNow = true } = {}) => {
+    currentMode = mode;
+    form.querySelectorAll("[data-business-mode]").forEach((button) => button.setAttribute("aria-selected", String(button.dataset.businessMode === mode)));
+    form.querySelectorAll("[data-offset-field]").forEach((node) => node.hidden = mode !== "offset");
+    form.querySelectorAll("[data-between-field]").forEach((node) => node.hidden = mode !== "between");
+    rule.textContent = mode === "offset" ? labels.ruleOffset : labels.ruleBetween;
+    if (push) updateBusinessUrl();
+    if (renderNow) render();
+  };
+  const updateBusinessUrl = () => {
+    const url = new URL(location.href);
+    url.searchParams.set("tool", currentTool);
+    if (currentTool === "business-day") {
+      url.searchParams.set("mode", currentMode);
+      url.searchParams.set("start", start.value);
+      url.searchParams.set("country", countrySelect.value);
+      if (partnerSelect.value) url.searchParams.set("partner", partnerSelect.value); else url.searchParams.delete("partner");
+      if (currentMode === "offset") {
+        url.searchParams.set("days", String(Math.max(0, Number(days.value || 0))));
+        url.searchParams.set("direction", directionSelect.value);
+        url.searchParams.delete("end");
+      } else {
+        url.searchParams.set("end", end.value);
+        url.searchParams.delete("days");
+        url.searchParams.delete("direction");
+      }
+    }
+    history.replaceState(null, "", url);
+  };
+  const render = async () => {
+    if (!validIsoDate(start.value) || (currentMode === "between" && !validIsoDate(end.value))) return;
+    output.innerHTML = `<div class="data-empty">${escapeHtml(labels.loading)}</div>`;
+    updateBusinessUrl();
+    try {
+      const partner = partnerSelect.value && partnerSelect.value !== countrySelect.value ? partnerSelect.value : "";
+      const result = currentMode === "offset"
+        ? await calculateBusinessOffset({ startIso: start.value, amount: Math.max(0, Number(days.value || 0)), country: countrySelect.value, partner, direction: directionSelect.value === "subtract" ? -1 : 1 })
+        : await calculateBusinessBetween({ startIso: start.value, endIso: end.value, country: countrySelect.value, partner });
+      output.innerHTML = businessDayResultMarkup(result, labels, lang, currentMode, partner);
     } catch (error) {
       console.warn("Business day unavailable:", error);
-      dataError(output, "Business day data is temporarily unavailable.");
+      output.innerHTML = `<div class="data-empty">${escapeHtml(labels.error)} <button type="button" data-business-retry>${escapeHtml(labels.retry)}</button></div>`;
+      output.querySelector("[data-business-retry]")?.addEventListener("click", render);
     }
   };
+  enhanceCountryCombobox(countrySelect, () => render());
+  enhanceCountryCombobox(partnerSelect, () => render());
+  app.querySelectorAll("[data-planning-tab]").forEach((button) => button.addEventListener("click", () => setVisibleTool(button.dataset.planningTab)));
+  form.querySelectorAll("[data-business-mode]").forEach((button) => button.addEventListener("click", () => setMode(button.dataset.businessMode)));
+  [start, end, days, directionSelect, countrySelect, partnerSelect].forEach((input) => input.addEventListener("change", render));
   form.addEventListener("submit", (event) => {
     event.preventDefault();
     render();
   });
+  setVisibleTool(currentTool, { push: false });
+  setMode(currentMode, { push: false, renderNow: false });
+  render();
+  wirePlanningTimer(app, labels);
+  wirePlanningStopwatch(app, labels);
+  refreshIcons();
+}
+
+function wirePlanningTimer(app, labels) {
+  const display = app.querySelector("[data-timer-display]");
+  if (!display) return;
+  const h = app.querySelector("[data-timer-hours]");
+  const m = app.querySelector("[data-timer-minutes]");
+  const s = app.querySelector("[data-timer-seconds]");
+  const startBtn = app.querySelector("[data-timer-start]");
+  const pauseBtn = app.querySelector("[data-timer-pause]");
+  const resetBtn = app.querySelector("[data-timer-reset]");
+  const soundToggle = app.querySelector("[data-timer-sound]");
+  const status = app.querySelector("[data-timer-status]");
+  const key = `logilee:planning-timer:${currentLang()}`;
+  const saved = (() => {
+    try { return JSON.parse(localStorage.getItem(key) || "{}"); } catch { return {}; }
+  })();
+  let configuredMs = Number.isFinite(saved.configuredMs) && saved.configuredMs > 0 ? saved.configuredMs : 30 * 60 * 1000;
+  let remainingMs = Number.isFinite(saved.remainingMs) ? Math.max(0, saved.remainingMs) : configuredMs;
+  let targetTime = Number.isFinite(saved.targetTime) ? saved.targetTime : 0;
+  let running = saved.running === true;
+  let completed = false;
+  let interval = null;
+
+  const durationFromInputs = () => {
+    const hours = Math.max(0, Math.min(99, Number(h.value || 0)));
+    const minutes = Math.max(0, Math.min(59, Number(m.value || 0)));
+    const seconds = Math.max(0, Math.min(59, Number(s.value || 0)));
+    return Math.max(1000, ((hours * 3600) + (minutes * 60) + seconds) * 1000);
+  };
+  const syncInputs = () => {
+    const total = Math.floor(configuredMs / 1000);
+    h.value = String(Math.floor(total / 3600));
+    m.value = String(Math.floor((total % 3600) / 60));
+    s.value = String(total % 60);
+  };
+  const persist = () => {
+    localStorage.setItem(key, JSON.stringify({ configuredMs, remainingMs, targetTime, running }));
+  };
+  const beep = () => {
+    if (!soundToggle.checked || !window.AudioContext && !window.webkitAudioContext) return;
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    const context = new AudioCtx();
+    const osc = context.createOscillator();
+    const gain = context.createGain();
+    osc.type = "sine";
+    osc.frequency.value = 660;
+    gain.gain.setValueAtTime(0.001, context.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.08, context.currentTime + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.001, context.currentTime + 0.45);
+    osc.connect(gain).connect(context.destination);
+    osc.start();
+    osc.stop(context.currentTime + 0.5);
+  };
+  const render = () => {
+    if (running) remainingMs = Math.max(0, targetTime - Date.now());
+    display.textContent = formatClock(remainingMs);
+    pauseBtn.disabled = !running && remainingMs <= 0;
+    pauseBtn.textContent = running ? labels.pause : labels.resume;
+    startBtn.disabled = running;
+    if (running && remainingMs <= 0) {
+      running = false;
+      completed = true;
+      status.textContent = labels.complete;
+      beep();
+      clearInterval(interval);
+      interval = null;
+    } else if (!completed) {
+      status.textContent = "";
+    }
+    persist();
+  };
+  const tick = () => {
+    if (!interval) interval = setInterval(render, 250);
+  };
+  const start = () => {
+    if (!remainingMs || remainingMs <= 0) remainingMs = durationFromInputs();
+    configuredMs = durationFromInputs();
+    remainingMs = Math.min(remainingMs, configuredMs);
+    targetTime = Date.now() + remainingMs;
+    running = true;
+    completed = false;
+    tick();
+    render();
+  };
+  const pause = () => {
+    if (running) {
+      remainingMs = Math.max(0, targetTime - Date.now());
+      running = false;
+      clearInterval(interval);
+      interval = null;
+    } else if (remainingMs > 0) {
+      targetTime = Date.now() + remainingMs;
+      running = true;
+      tick();
+    }
+    render();
+  };
+  const reset = () => {
+    running = false;
+    clearInterval(interval);
+    interval = null;
+    configuredMs = durationFromInputs();
+    remainingMs = configuredMs;
+    targetTime = 0;
+    completed = false;
+    render();
+  };
+  [h, m, s].forEach((input) => input.addEventListener("change", () => {
+    if (running) return;
+    configuredMs = durationFromInputs();
+    remainingMs = configuredMs;
+    render();
+  }));
+  app.querySelectorAll("[data-timer-preset]").forEach((button) => button.addEventListener("click", () => {
+    if (running) return;
+    configuredMs = Number(button.dataset.timerPreset) * 60 * 1000;
+    remainingMs = configuredMs;
+    syncInputs();
+    render();
+  }));
+  startBtn.addEventListener("click", start);
+  pauseBtn.addEventListener("click", pause);
+  resetBtn.addEventListener("click", reset);
+  if (running) {
+    remainingMs = Math.max(0, targetTime - Date.now());
+    if (remainingMs > 0) tick(); else completed = true;
+  }
+  syncInputs();
+  render();
+}
+
+function wirePlanningStopwatch(app, labels) {
+  const display = app.querySelector("[data-stopwatch-display]");
+  if (!display) return;
+  const startBtn = app.querySelector("[data-stopwatch-start]");
+  const pauseBtn = app.querySelector("[data-stopwatch-pause]");
+  const lapBtn = app.querySelector("[data-stopwatch-lap]");
+  const resetBtn = app.querySelector("[data-stopwatch-reset]");
+  const lapList = app.querySelector("[data-lap-list]");
+  const key = `logilee:planning-stopwatch:${currentLang()}`;
+  const saved = (() => {
+    try { return JSON.parse(localStorage.getItem(key) || "{}"); } catch { return {}; }
+  })();
+  let accumulatedMs = Number.isFinite(saved.accumulatedMs) ? Math.max(0, saved.accumulatedMs) : 0;
+  let wallStart = Number.isFinite(saved.wallStart) ? saved.wallStart : Date.now();
+  let perfStart = performance.now();
+  let running = saved.running === true;
+  let laps = Array.isArray(saved.laps) ? saved.laps.slice(0, 50) : [];
+  let interval = null;
+  if (running) accumulatedMs += Math.max(0, Date.now() - wallStart);
+
+  const elapsed = () => running ? accumulatedMs + Math.max(0, performance.now() - perfStart) : accumulatedMs;
+  const persist = () => {
+    localStorage.setItem(key, JSON.stringify({ running, accumulatedMs: elapsed(), wallStart: Date.now(), laps }));
+  };
+  const renderLaps = () => {
+    lapList.innerHTML = laps.length ? laps.map((lap, index) => `
+      <div class="lap-row"><span>Lap ${laps.length - index}</span><strong>${formatClock(lap.lapMs, true)}</strong><small>${labels.totalElapsed}: ${formatClock(lap.totalMs, true)}</small></div>
+    `).join("") : `<p class="muted">${currentLang() === "ko" ? "아직 기록된 Lap이 없습니다." : "No laps recorded yet."}</p>`;
+  };
+  const render = () => {
+    display.textContent = formatClock(elapsed(), true);
+    startBtn.disabled = running;
+    pauseBtn.disabled = !running && accumulatedMs === 0;
+    pauseBtn.textContent = running ? labels.pause : labels.resume;
+    lapBtn.disabled = !running;
+    renderLaps();
+    persist();
+  };
+  const tick = () => {
+    if (!interval) interval = setInterval(render, 100);
+  };
+  startBtn.addEventListener("click", () => {
+    if (!running) {
+      running = true;
+      perfStart = performance.now();
+      wallStart = Date.now();
+      tick();
+      render();
+    }
+  });
+  pauseBtn.addEventListener("click", () => {
+    if (running) {
+      accumulatedMs = elapsed();
+      running = false;
+      clearInterval(interval);
+      interval = null;
+    } else if (accumulatedMs > 0) {
+      running = true;
+      perfStart = performance.now();
+      wallStart = Date.now();
+      tick();
+    }
+    render();
+  });
+  lapBtn.addEventListener("click", () => {
+    if (!running) return;
+    const totalMs = elapsed();
+    const previousTotal = laps[0]?.totalMs || 0;
+    laps.unshift({ totalMs, lapMs: Math.max(0, totalMs - previousTotal) });
+    render();
+  });
+  resetBtn.addEventListener("click", () => {
+    accumulatedMs = 0;
+    running = false;
+    laps = [];
+    clearInterval(interval);
+    interval = null;
+    render();
+  });
+  if (running) {
+    perfStart = performance.now();
+    wallStart = Date.now();
+    tick();
+  }
   render();
 }
 
