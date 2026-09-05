@@ -4501,6 +4501,14 @@ function updateFxUrlState() {
   history.replaceState(null, "", `${next.pathname}?${next.searchParams.toString()}${next.hash}`);
 }
 
+function updateFxQuickAmountState(amount) {
+  document.querySelectorAll("[data-fx-quick]").forEach((button) => {
+    const active = sanitizeFxAmount(button.dataset.fxQuick) === amount;
+    button.classList.toggle("is-active", active);
+    button.setAttribute("aria-pressed", String(active));
+  });
+}
+
 function renderFxUseGuide(lang) {
   const target = document.querySelector("[data-fx-use-guide]");
   if (!target) return;
@@ -4544,6 +4552,7 @@ function renderFxResult(data) {
   if (!result || !from || !to) return;
   if (amount === null) {
     result.innerHTML = `<div class="data-empty">${lang === "ko" ? "0 이상의 금액을 입력하세요." : "Enter an amount of 0 or greater."}</div>`;
+    updateFxQuickAmountState(null);
     return;
   }
   const rate = data.rates[to] / data.rates[from];
@@ -4553,6 +4562,7 @@ function renderFxResult(data) {
     return;
   }
   updateFxUrlState();
+  updateFxQuickAmountState(amount);
   result.innerHTML = `
     <span class="kicker">${lang === "ko" ? "환산 결과" : "Conversion Result"}</span>
     <div class="fx-result-main">

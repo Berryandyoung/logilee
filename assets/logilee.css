@@ -5108,8 +5108,8 @@ body.sidebar-drawer-active {
 
 .currency-converter-panel {
   display: grid;
-  grid-template-columns: minmax(280px, 0.95fr) minmax(320px, 1.05fr);
-  gap: 18px;
+  grid-template-columns: 1fr;
+  gap: 14px;
   align-items: start;
   overflow: visible;
 }
@@ -5119,6 +5119,7 @@ body.sidebar-drawer-active {
   grid-template-columns: minmax(0, 1fr) 44px minmax(0, 1fr);
   gap: 10px;
   align-items: end;
+  max-width: 720px;
 }
 
 .fx-swap-btn {
@@ -5148,7 +5149,7 @@ body.sidebar-drawer-active {
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 10px;
   align-items: end;
-  margin-top: 12px;
+  max-width: 760px;
 }
 
 .currency-amount-row .primary-btn {
@@ -5161,7 +5162,7 @@ body.sidebar-drawer-active {
   flex-wrap: wrap;
   gap: 8px;
   align-items: center;
-  margin-top: 12px;
+  max-width: 760px;
 }
 
 .fx-quick-amounts span {
@@ -5189,40 +5190,85 @@ body.sidebar-drawer-active {
   outline: 2px solid transparent;
 }
 
+.fx-quick-amounts button.is-active,
+.fx-quick-amounts button[aria-pressed="true"] {
+  border-color: #c7ddff;
+  background: #eaf2ff;
+  color: var(--signal-blue);
+}
+
 .fx-result-panel {
   min-width: 0;
-  padding: 18px;
+  margin-top: 2px;
+  padding: 18px 18px 14px;
   border: 1px solid var(--border);
   border-radius: 8px;
   background: #f8fbff;
 }
 
 .fx-result-main {
-  display: grid;
-  gap: 4px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  align-items: baseline;
   margin-top: 8px;
 }
 
 .fx-result-main span {
-  color: var(--secondary-text);
-  font-size: 15px;
-  font-weight: 800;
+  color: var(--ink-navy);
+  font-size: clamp(26px, 2.8vw, 42px);
+  font-weight: 900;
+  line-height: 1.08;
+  word-break: break-word;
 }
 
 .fx-result-main strong {
   color: var(--ink-navy);
-  font-size: clamp(28px, 3.2vw, 44px);
-  line-height: 1.05;
+  font-size: clamp(30px, 3vw, 44px);
+  line-height: 1.08;
   word-break: break-word;
 }
 
 .fx-reference-meta {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
   margin: 14px 0 10px;
+}
+
+.fx-reference-meta div {
+  display: block;
+  min-width: 0;
+  padding: 0 16px;
+  border: 0;
+  border-right: 1px solid #dbe6f3;
+  border-radius: 0;
+  background: transparent;
+}
+
+.fx-reference-meta div:first-child {
+  padding-left: 0;
+}
+
+.fx-reference-meta div:last-child {
+  border-right: 0;
+}
+
+.fx-reference-meta strong,
+.fx-reference-meta span {
+  display: block;
 }
 
 .fx-reference-meta a {
   color: var(--signal-blue);
   font-weight: 850;
+}
+
+.fx-result-panel > .muted {
+  margin: 12px 0 0;
+  padding: 11px 12px;
+  border-radius: 8px;
+  background: #edf4ff;
 }
 
 .fx-use-guide {
@@ -5241,25 +5287,21 @@ body.sidebar-drawer-active {
 
 .fx-use-list {
   display: grid;
-  gap: 0;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
   margin-top: 14px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  overflow: hidden;
 }
 
 .fx-use-list article {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(110px, auto);
+  grid-template-columns: 1fr;
   gap: 12px;
-  align-items: center;
+  align-items: start;
+  align-content: space-between;
   padding: 14px;
-  border-bottom: 1px solid #edf2f7;
+  border: 1px solid var(--border);
+  border-radius: 8px;
   background: #fff;
-}
-
-.fx-use-list article:last-child {
-  border-bottom: 0;
 }
 
 .fx-use-list h3 {
@@ -5276,11 +5318,11 @@ body.sidebar-drawer-active {
 
 .fx-use-list span,
 .fx-use-list a {
-  justify-self: end;
+  justify-self: start;
   color: var(--signal-blue);
   font-size: 13px;
   font-weight: 850;
-  text-align: right;
+  text-align: left;
 }
 
 .fx-rate-details summary {
@@ -5293,12 +5335,29 @@ body.sidebar-drawer-active {
   .currency-converter-panel {
     grid-template-columns: 1fr;
   }
+
+  .fx-use-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .fx-reference-meta {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px 0;
+  }
+
+  .fx-reference-meta div:nth-child(2) {
+    border-right: 0;
+  }
+
+  .fx-reference-meta div:nth-child(3) {
+    padding-left: 0;
+  }
 }
 
 @media (max-width: 640px) {
   .currency-pair-row,
   .currency-amount-row,
-  .fx-use-list article {
+  .fx-use-list {
     grid-template-columns: 1fr;
   }
 
@@ -5310,6 +5369,17 @@ body.sidebar-drawer-active {
   .fx-use-list a {
     justify-self: start;
     text-align: left;
+  }
+
+  .fx-reference-meta {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .fx-reference-meta div,
+  .fx-reference-meta div:nth-child(3) {
+    padding: 0;
+    border-right: 0;
   }
 }
 
