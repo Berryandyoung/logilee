@@ -230,7 +230,7 @@ function workspaceNavMarkup(lang) {
         market: "Market",
         freight: "Freight Market",
         fx: "환율 계산기",
-        business: "영업일 계산기",
+        business: "일정 도구",
         resources: "Resources",
         templates: "Templates",
         documents: "Documents",
@@ -258,7 +258,7 @@ function workspaceNavMarkup(lang) {
         market: "Market",
         freight: "Freight Market",
         fx: "Currency Converter",
-        business: "Business Day Calculator",
+        business: "Planning Tools",
         resources: "Resources",
         templates: "Templates",
         documents: "Documents",
@@ -5715,7 +5715,9 @@ function wirePlanningTimer(app, labels) {
   let targetTime = Number.isFinite(saved.targetTime) ? saved.targetTime : 0;
   let running = saved.running === true;
   let completed = false;
+  let completionSoundPlayed = saved.completed === true;
   let interval = null;
+  let audioContext = null;
 
   const durationFromInputs = () => {
     const hours = Math.max(0, Math.min(99, Number(h.value || 0)));
@@ -5730,22 +5732,61 @@ function wirePlanningTimer(app, labels) {
     s.value = String(total % 60);
   };
   const persist = () => {
-    localStorage.setItem(key, JSON.stringify({ configuredMs, remainingMs, targetTime, running }));
+    localStorage.setItem(key, JSON.stringify({ configuredMs, remainingMs, targetTime, running, completed }));
+  };
+  const ensureAudioContext = async () => {
+    if (!soundToggle.checked || !window.AudioContext && !window.webkitAudioContext) return null;
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!audioContext || audioContext.state === "closed") audioContext = new AudioCtx();
+      if (audioContext.state === "suspended") await audioContext.resume();
+      return audioContext;
+    } catch (error) {
+      console.warn("Timer audio could not be prepared:", error);
+      return null;
+    }
+  };
+  const unlockAudio = async () => {
+    const context = await ensureAudioContext();
+    if (!context) return;
+    try {
+      const osc = context.createOscillator();
+      const gain = context.createGain();
+      gain.gain.value = 0;
+      osc.connect(gain).connect(context.destination);
+      osc.start();
+      osc.stop(context.currentTime + 0.03);
+    } catch (error) {
+      console.warn("Timer audio unlock failed:", error);
+    }
   };
   const beep = () => {
-    if (!soundToggle.checked || !window.AudioContext && !window.webkitAudioContext) return;
-    const AudioCtx = window.AudioContext || window.webkitAudioContext;
-    const context = new AudioCtx();
-    const osc = context.createOscillator();
-    const gain = context.createGain();
-    osc.type = "sine";
-    osc.frequency.value = 660;
-    gain.gain.setValueAtTime(0.001, context.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.08, context.currentTime + 0.02);
-    gain.gain.exponentialRampToValueAtTime(0.001, context.currentTime + 0.45);
-    osc.connect(gain).connect(context.destination);
-    osc.start();
-    osc.stop(context.currentTime + 0.5);
+    if (!soundToggle.checked || completionSoundPlayed) return;
+    completionSoundPlayed = true;
+    const play = async () => {
+      const context = await ensureAudioContext();
+      if (!context) return;
+      try {
+        const playTone = (startAt, frequency) => {
+          const osc = context.createOscillator();
+          const gain = context.createGain();
+          osc.type = "sine";
+          osc.frequency.value = frequency;
+          gain.gain.setValueAtTime(0.001, startAt);
+          gain.gain.exponentialRampToValueAtTime(0.11, startAt + 0.025);
+          gain.gain.exponentialRampToValueAtTime(0.001, startAt + 0.22);
+          osc.connect(gain).connect(context.destination);
+          osc.start(startAt);
+          osc.stop(startAt + 0.24);
+        };
+        const now = context.currentTime;
+        playTone(now, 660);
+        playTone(now + 0.26, 880);
+      } catch (error) {
+        console.warn("Timer completion sound failed:", error);
+      }
+    };
+    play();
   };
   const render = () => {
     if (running) remainingMs = Math.max(0, targetTime - Date.now());
@@ -5775,6 +5816,8 @@ function wirePlanningTimer(app, labels) {
     targetTime = Date.now() + remainingMs;
     running = true;
     completed = false;
+    completionSoundPlayed = false;
+    unlockAudio();
     tick();
     render();
   };
@@ -5799,6 +5842,7 @@ function wirePlanningTimer(app, labels) {
     remainingMs = configuredMs;
     targetTime = 0;
     completed = false;
+    completionSoundPlayed = false;
     render();
   };
   [h, m, s].forEach((input) => input.addEventListener("change", () => {
@@ -5819,7 +5863,16 @@ function wirePlanningTimer(app, labels) {
   resetBtn.addEventListener("click", reset);
   if (running) {
     remainingMs = Math.max(0, targetTime - Date.now());
-    if (remainingMs > 0) tick(); else completed = true;
+    if (remainingMs > 0) {
+      completed = false;
+      completionSoundPlayed = false;
+      tick();
+    } else {
+      running = false;
+      completed = true;
+      completionSoundPlayed = true;
+      targetTime = 0;
+    }
   }
   syncInputs();
   render();
