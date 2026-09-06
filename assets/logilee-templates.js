@@ -383,20 +383,58 @@
     return num(row.length) * dimToM[row.dimensionUnit] * num(row.width) * dimToM[row.dimensionUnit] * num(row.height) * dimToM[row.dimensionUnit] * num(row.quantity);
   }
 
-  function tableRows(id, d) {
-    const rows = [["Document", templates.find((tpl) => tpl.id === id).title], ...Object.entries(d).filter(([, v]) => typeof v !== "object").map(([k, v]) => [k, v])];
-    (d.rows || []).forEach((row, index) => Object.entries(row).forEach(([k, v]) => rows.push([`Row ${index + 1} ${k}`, v])));
-    if (id === "shipment-checklist") (d.items || []).forEach((item) => rows.push([item.id, item.checked ? "Checked" : "Unchecked"]));
+  // One semantic row model feeds the web preview and every downloadable format.
+  function exportRows(id, d) {
+    const rows = [];
+    const add = (...cells) => rows.push(cells);
+    const party = (label, name, address, country, contact) => { add(label); add("Company Name", name); add("Address", address); if (country) add("Country", country); if (contact) add("Contact", contact); };
+    const countryName = (code) => (countries().find((item) => item[0] === code) || ["", code, code])[1];
+    const title = templates.find((tpl) => tpl.id === id).title.toUpperCase();
+    add(title); add("Generated with LOGILEE");
+    if (id === "commercial-invoice") {
+      add("Invoice No.", d.invoiceNo); add("Invoice Date", d.invoiceDate); add("Buyer Reference / PO No.", d.buyerRef); add("Currency", d.currency); add("Terms of Payment", d.paymentTerms); add("");
+      party("SELLER / EXPORTER", d.sellerName, d.sellerAddress, countryName(d.sellerCountry), d.sellerContact); add("");
+      party("BUYER / CONSIGNEE", d.buyerName, d.buyerAddress, countryName(d.buyerCountry), d.buyerContact); add("");
+      party("SHIP TO", d.shipSame ? d.buyerName : d.shipName, d.shipSame ? d.buyerAddress : d.shipAddress, countryName(d.shipSame ? d.buyerCountry : d.shipCountry), ""); add("");
+      add("SHIPMENT / TRADE INFORMATION"); add("Incoterms® Rule", `${d.incoterms || ""} ${d.namedPlace || ""}`.trim()); add("Mode of Transport", d.mode); add("Country of Origin", countryName(d.origin)); add("Destination Country", countryName(d.destination)); add("");
+      add("No.", "Description of Goods", "HS Code", "Country of Origin", "Quantity", "Unit", "Unit Price", "Amount");
+      (d.rows || []).forEach((row, index) => add(index + 1, row.description, row.hsCode, countryName(row.origin || d.origin), num(row.quantity), row.unit, num(row.unitPrice), num(row.quantity) * num(row.unitPrice)));
+      const total = totals(id, d); add(""); add("Subtotal", total.goods); add("Freight", num(d.freight)); add("Insurance", num(d.insurance)); add("Packing", num(d.packing)); add("Other Charges", num(d.otherCharges)); add("Discount", num(d.discount)); add("TOTAL", total.total, d.currency);
+    } else if (id === "packing-list") {
+      add("Packing List No.", d.packingNo); add("Invoice No.", d.invoiceNo); add("Date", d.packingDate); add("");
+      party("SELLER / SHIPPER", d.sellerName, d.sellerAddress, "", ""); add(""); party("BUYER / CONSIGNEE", d.buyerName, d.buyerAddress, "", ""); add("");
+      add("SHIPMENT INFORMATION"); add("Mode", d.mode); add("Port of Loading", d.loading); add("Port of Discharge", d.discharge); add("Final Destination", d.finalDestination); add("Carrier", d.carrier); add("");
+      add("Package No.", "Marks & Numbers", "Package Type", "Description", "Quantity", "Unit", "Net Weight (kg)", "Gross Weight (kg)", "Dimensions", "CBM");
+      (d.rows || []).forEach((row) => { const factor = weightToKg[row.weightUnit] || 1; const cbm = packageCbm(row); add(row.packageNo || row.type, row.marks, row.type, row.description, num(row.quantity), row.unit, num(row.netWeight) * factor, num(row.grossWeight) * factor, `${row.length} × ${row.width} × ${row.height} ${row.dimensionUnit}`, cbm); });
+      const total = totals(id, d); add(""); add("Total Packages", total.packages); add("Total Quantity", total.quantity); add("Total Net Weight (kg)", total.net); add("Total Gross Weight (kg)", total.gross); add("Total CBM", total.cbm);
+    } else if (id === "pro-forma-invoice") {
+      add("Quotation / Reference", d.proformaNo); add("Issue Date", d.issueDate); add("Validity Date", d.validUntil); add("Estimated Shipping Date", d.estimatedShipDate); add("Buyer Reference", d.buyerRef); add("Currency", d.currency); add("Payment Terms", d.paymentTerms); add("Incoterms® / Named Delivery Point", `${d.incoterms || ""} ${d.namedPlace || ""}`.trim()); add("");
+      party("SELLER", d.sellerName, d.sellerAddress, countryName(d.sellerCountry), ""); add(""); party("BUYER", d.buyerName, d.buyerAddress, countryName(d.buyerCountry), ""); add("");
+      add("No.", "Quoted Items", "HS Code", "Country of Origin", "Quantity", "Unit", "Unit Price", "Extended Amount");
+      (d.rows || []).forEach((row, index) => add(index + 1, row.description, row.hsCode, countryName(row.origin), num(row.quantity), row.unit, num(row.unitPrice), num(row.quantity) * num(row.unitPrice)));
+      const total = totals(id, d); add(""); add("Quoted Goods Total", total.goods); add("Freight", num(d.freight)); add("Insurance", num(d.insurance)); add("Discount", num(d.discount)); add("QUOTED TOTAL", total.total, d.currency); add("Remarks", d.remarks);
+    } else if (id === "shipping-instruction") {
+      add("Booking No.", d.bookingNo); add("SI Reference", d.siRef); add("B/L Type", d.blType); add("Freight Terms", d.freightTerms); add("");
+      party("SHIPPER", d.shipperName, d.shipperAddress, countryName(d.shipperCountry), d.shipperContact); add(""); party("CONSIGNEE", d.consigneeName, d.consigneeAddress, countryName(d.consigneeCountry), d.consigneeContact); add(""); if (d.notifyName) party("NOTIFY PARTY", d.notifyName, d.notifyAddress, countryName(d.notifyCountry), d.notifyContact); add("");
+      add("ROUTING"); add("Place of Receipt", d.receipt); add("Port of Loading", d.loading); add("Port of Discharge", d.discharge); add("Place of Delivery", d.delivery); add("Vessel / Voyage", d.vessel); add("");
+      add("Container No.", "Seal No.", "Marks & Numbers", "Packages", "Package Type", "Cargo Description", "HS Code", "Gross Weight (kg)", "CBM");
+      (d.rows || []).forEach((row) => add(row.containerNo, row.sealNo, row.marks, num(row.packages), row.packageType, row.description, row.hsCode, num(row.grossWeight) * (weightToKg[row.weightUnit] || 1), num(row.cbm)));
+      add(""); add("Reference", "General reference document - carrier/local requirements may vary.");
+    } else {
+      add("Shipment Reference", d.reference); add(""); add("Stage", "Check", "Task", "Owner", "Due Date", "Status", "Notes");
+      const items = checklistItems(); const saved = new Map((d.items || []).map((item) => [item.id, item]));
+      items.forEach((item) => { const value = saved.get(item.id) || {}; add(item.group, value.checked ? "Done" : "Open", item.label, value.owner || "", value.due || "", value.checked ? "Complete" : "Pending", d.notes || ""); });
+    }
     return rows;
   }
   async function exportTemplate(format) {
     const id = state.selected;
     const d = state.data[id];
     const name = filename(id, d, format);
-    const rows = tableRows(id, d);
-    if (format === "xlsx") downloadBlob(await xlsxBlob(rows), name, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+    const rows = exportRows(id, d);
+    if (format === "xlsx") downloadBlob(await xlsxBlob(rows, id), name, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
     if (format === "docx") downloadBlob(await docxBlob(rows, templates.find((tpl) => tpl.id === id).title), name, "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
-    if (format === "pdf") downloadBlob(pdfBlob(plainLines(id, d)), name, "application/pdf");
+    if (format === "pdf") downloadBlob(pdfBlob(rows.map((row) => row.join("  |  "))), name, "application/pdf");
     toast(T.exported);
   }
   function filename(id, d, format) {
@@ -409,25 +447,27 @@
     a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
   }
   function xmlEscape(value) { return String(value ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
-  function plainLines(id, d) { return tableRows(id, d).map(([k, v]) => `${k}: ${v}`); }
-
-  async function xlsxBlob(rows) {
-    const sheetRows = rows.map((row, r) => `<row r="${r + 1}">${row.map((cell, c) => {
-      const ref = `${String.fromCharCode(65 + c)}${r + 1}`;
-      return Number.isFinite(Number(cell)) && cell !== "" ? `<c r="${ref}"><v>${Number(cell)}</v></c>` : `<c r="${ref}" t="inlineStr"><is><t>${xmlEscape(cell)}</t></is></c>`;
+  async function xlsxBlob(rows, id) {
+    const width = Math.max(2, Math.min(10, Math.max(...rows.map((row) => row.length))));
+    const sheetRows = rows.map((row, r) => `<row r="${r + 1}" ht="${r === 0 ? 28 : 20}" customHeight="1">${row.map((cell, c) => {
+      const ref = `${String.fromCharCode(65 + Math.min(c, 25))}${r + 1}`;
+      if (cell === "") return `<c r="${ref}"/>`;
+      return typeof cell === "number" && Number.isFinite(cell) ? `<c r="${ref}" s="2"><v>${cell}</v></c>` : `<c r="${ref}" t="inlineStr" s="${r === 0 ? 1 : 0}"><is><t>${xmlEscape(cell)}</t></is></c>`;
     }).join("")}</row>`).join("");
+    const merges = rows[0]?.length ? `<mergeCells count="1"><mergeCell ref="A1:${String.fromCharCode(64 + width)}1"/></mergeCells>` : "";
     return zipBlob({
-      "[Content_Types].xml": `<?xml version="1.0" encoding="UTF-8"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/></Types>`,
+      "[Content_Types].xml": `<?xml version="1.0" encoding="UTF-8"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>`,
       "_rels/.rels": `<?xml version="1.0" encoding="UTF-8"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>`,
-      "xl/workbook.xml": `<?xml version="1.0" encoding="UTF-8"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="Document" sheetId="1" r:id="rId1"/></sheets></workbook>`,
+      "xl/workbook.xml": `<?xml version="1.0" encoding="UTF-8"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="${id === "shipment-checklist" ? "Checklist" : "Document"}" sheetId="1" r:id="rId1"/></sheets></workbook>`,
       "xl/_rels/workbook.xml.rels": `<?xml version="1.0" encoding="UTF-8"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/></Relationships>`,
-      "xl/worksheets/sheet1.xml": `<?xml version="1.0" encoding="UTF-8"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>${sheetRows}</sheetData></worksheet>`
+      "xl/styles.xml": `<?xml version="1.0" encoding="UTF-8"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><numFmts count="1"><numFmt numFmtId="4" formatCode="#,##0.00"/></numFmts><fonts count="2"><font><sz val="10"/><name val="Aptos"/></font><font><b/><sz val="15"/><name val="Aptos Display"/></font></fonts><fills count="2"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="solid"><fgColor rgb="DCEBFF"/><bgColor indexed="64"/></patternFill></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf/></cellStyleXfs><cellXfs count="3"><xf/><xf fontId="1" fillId="1"/><xf numFmtId="4"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles><dxfs count="0"/><tableStyles count="0" defaultTableStyle="TableStyleMedium2" defaultPivotStyle="PivotStyleMedium9"/></styleSheet>`,
+      "xl/worksheets/sheet1.xml": `<?xml version="1.0" encoding="UTF-8"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><cols><col min="1" max="${width}" width="22" customWidth="1"/></cols><sheetData>${sheetRows}</sheetData>${merges}<pageMargins left="0.3" right="0.3" top="0.5" bottom="0.5" header="0.2" footer="0.2"/><pageSetup orientation="landscape" fitToWidth="1" fitToHeight="0"/><printOptions horizontalCentered="1"/></worksheet>`
     }, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
   }
   async function docxBlob(rows, title) {
-    const cell = (value) => `<w:tc><w:tcPr><w:tcW w:w="4500" w:type="dxa"/></w:tcPr><w:p><w:r><w:t>${xmlEscape(value)}</w:t></w:r></w:p></w:tc>`;
-    const table = `<w:tbl><w:tblPr><w:tblW w:w="9000" w:type="dxa"/><w:tblBorders><w:top w:val="single" w:sz="4" w:color="D7E2F0"/><w:left w:val="single" w:sz="4" w:color="D7E2F0"/><w:bottom w:val="single" w:sz="4" w:color="D7E2F0"/><w:right w:val="single" w:sz="4" w:color="D7E2F0"/><w:insideH w:val="single" w:sz="4" w:color="D7E2F0"/><w:insideV w:val="single" w:sz="4" w:color="D7E2F0"/></w:tblBorders></w:tblPr>${rows.map(([k, v]) => `<w:tr>${cell(k)}${cell(v)}</w:tr>`).join("")}</w:tbl>`;
-    const body = `<w:p><w:r><w:t>${xmlEscape(title)}</w:t></w:r></w:p>${table}`;
+    const cell = (value, header = false) => `<w:tc><w:tcPr><w:tcW w:w="3000" w:type="dxa"/></w:tcPr><w:p><w:r>${header ? "<w:rPr><w:b/></w:rPr>" : ""}<w:t xml:space="preserve">${xmlEscape(value)}</w:t></w:r></w:p></w:tc>`;
+    const table = `<w:tbl><w:tblPr><w:tblW w:w="9000" w:type="dxa"/><w:tblBorders><w:top w:val="single" w:sz="4" w:color="D7E2F0"/><w:left w:val="single" w:sz="4" w:color="D7E2F0"/><w:bottom w:val="single" w:sz="4" w:color="D7E2F0"/><w:right w:val="single" w:sz="4" w:color="D7E2F0"/><w:insideH w:val="single" w:sz="4" w:color="D7E2F0"/><w:insideV w:val="single" w:sz="4" w:color="D7E2F0"/></w:tblBorders></w:tblPr>${rows.map((row, index) => `<w:tr>${row.map((value) => cell(value, index === 0)).join("")}</w:tr>`).join("")}</w:tbl>`;
+    const body = `<w:p><w:pPr><w:jc w:val="center"/></w:pPr><w:r><w:rPr><w:b/><w:sz w:val="28"/></w:rPr><w:t>${xmlEscape(title)}</w:t></w:r></w:p>${table}<w:p><w:r><w:t>General reference document — carrier/local requirements may vary.</w:t></w:r></w:p>`;
     return zipBlob({
       "[Content_Types].xml": `<?xml version="1.0" encoding="UTF-8"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>`,
       "_rels/.rels": `<?xml version="1.0" encoding="UTF-8"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>`,
@@ -436,7 +476,7 @@
   }
   function pdfBlob(lines) {
     const enc = new TextEncoder();
-    const safe = lines.flatMap((line) => String(line).match(/.{1,78}/g) || [""]);
+    const safe = lines.flatMap((line) => String(line).normalize("NFKD").replace(/[^\x20-\x7E]/g, "?").match(/.{1,88}/g) || [""]);
     const chunks = [];
     for (let i = 0; i < safe.length; i += 56) chunks.push(safe.slice(i, i + 56));
     if (!chunks.length) chunks.push([""]);
@@ -448,12 +488,11 @@
     chunks.forEach((chunk, index) => {
       const pageId = 3 + index * 2;
       const contentId = pageId + 1;
-      const content = `BT /F1 10 Tf 50 790 Td ${chunk.map((line, i) => `${i ? "0 -13 Td " : ""}<${utf16Hex(line)}> Tj`).join(" ")} ET`;
+      const content = `BT /F1 9 Tf 50 790 Td ${chunk.map((line, i) => `${i ? "0 -13 Td " : ""}(${pdfEscape(line)}) Tj`).join(" ")} ET`;
       objects.push(`${pageId} 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 ${fontId} 0 R >> >> /Contents ${contentId} 0 R >> endobj`);
       objects.push(`${contentId} 0 obj << /Length ${enc.encode(content).length} >> stream\n${content}\nendstream endobj`);
     });
-    objects.push(`${fontId} 0 obj << /Type /Font /Subtype /Type0 /BaseFont /HYGoThic-Medium /Encoding /UniKS-UCS2-H /DescendantFonts [${fontId + 1} 0 R] >> endobj`);
-    objects.push(`${fontId + 1} 0 obj << /Type /Font /Subtype /CIDFontType0 /BaseFont /HYGoThic-Medium /CIDSystemInfo << /Registry (Adobe) /Ordering (Korea1) /Supplement 2 >> >> endobj`);
+    objects.push(`${fontId} 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> endobj`);
     let pdf = "%PDF-1.4\n";
     const offsets = [0];
     objects.forEach((obj) => { offsets.push(enc.encode(pdf).length); pdf += `${obj}\n`; });
@@ -461,9 +500,7 @@
     pdf += `xref\n0 ${objects.length + 1}\n0000000000 65535 f \n${offsets.slice(1).map((n) => `${String(n).padStart(10, "0")} 00000 n `).join("\n")}\ntrailer << /Size ${objects.length + 1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`;
     return new Blob([pdf], { type: "application/pdf" });
   }
-  function utf16Hex(text) {
-    return "FEFF" + [...String(text)].map((ch) => ch.charCodeAt(0).toString(16).padStart(4, "0")).join("").toUpperCase();
-  }
+  function pdfEscape(text) { return String(text).replace(/([\\()])/g, "\\$1"); }
   function zipBlob(files, type) {
     const encoder = new TextEncoder();
     const chunks = [];
