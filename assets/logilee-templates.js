@@ -44,6 +44,20 @@
   const dimensionOptions = (value = "cm") => ["mm", "cm", "m", "in", "ft"].map((code) => `<option value="${code}" ${value === code ? "selected" : ""}>${code}</option>`).join("");
   const dimToM = { mm: 0.001, cm: 0.01, m: 1, in: 0.0254, ft: 0.3048 };
   const weightToKg = { kg: 1, lb: 0.45359237 };
+  let excelJsPromise;
+
+  function loadExcelJs() {
+    if (window.ExcelJS) return Promise.resolve(window.ExcelJS);
+    if (excelJsPromise) return excelJsPromise;
+    excelJsPromise = new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = new URL("../assets/vendor/exceljs.min.js", location.href).href;
+      script.onload = () => window.ExcelJS ? resolve(window.ExcelJS) : reject(new Error("ExcelJS runtime unavailable"));
+      script.onerror = () => reject(new Error("ExcelJS runtime unavailable"));
+      document.head.appendChild(script);
+    });
+    return excelJsPromise;
+  }
 
   const templates = [
     { id: "commercial-invoice", category: "trade", formats: ["XLSX", "PDF"], title: "Commercial Invoice", ko: "상업송장", descKo: "수출입 거래와 통관에 활용되는 기본 거래 서류", descEn: "Sales and customs value document for trade shipments.", aliases: "commercial invoice 상업송장 invoice ci customs value" },
@@ -454,8 +468,9 @@
     return { A4: [d.sellerName || d.shipperName, d.sellerAddress || d.shipperAddress].filter(Boolean).join("\n"), A9: [d.buyerName || d.consigneeName, d.buyerAddress || d.consigneeAddress].filter(Boolean).join("\n"), A14: [notifyName, notifyAddress].filter(Boolean).join("\n"), H4: [d.invoiceNo || d.packingNo || d.proformaNo, d.invoiceDate || d.packingDate || d.issueDate].filter(Boolean).join(" / "), H6: id === "packing-list" ? (d.remarks || "") : [d.lcNo, d.lcDate].filter(Boolean).join(" / "), H9: d.lcBank || "", H12: id === "packing-list" ? "" : (d.remarks || d.notes || ""), E19: route.loading || "", E21: [route.carrier, route.sailing].filter(Boolean).join(" / ") };
   }
   async function baseXlsxBlob(id, d) {
-    const layout = xlsxLayouts[id]; const ExcelJS = window.ExcelJS;
-    if (!layout || !ExcelJS) throw new Error("ExcelJS runtime unavailable");
+    const layout = xlsxLayouts[id];
+    const ExcelJS = await loadExcelJs();
+    if (!layout) throw new Error("Template layout unavailable");
     const response = await fetch(new URL(`../assets/templates/${layout.file}`, location.href).href, { cache: "no-store" });
     if (!response.ok) throw new Error("Template base unavailable");
     const workbook = new ExcelJS.Workbook(); await workbook.xlsx.load(await response.arrayBuffer());
