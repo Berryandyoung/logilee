@@ -15,9 +15,10 @@
   <link rel="alternate" hreflang="en" href="https://www.logilee.com/en/templates.html">
   <link rel="alternate" hreflang="ko" href="https://www.logilee.com/ko/templates.html">
   <link rel="alternate" hreflang="x-default" href="https://www.logilee.com/en/templates.html">
-  <link rel="stylesheet" href="../assets/logilee.css?v=documents-runtime-v29-20260906">
-  <script defer src="../assets/logilee-app.js?v=documents-runtime-v29-20260906"></script>
-  <script defer src="../assets/logilee-documents.js?v=documents-runtime-v29-20260906"></script>
+  <link rel="stylesheet" href="../assets/logilee.css?v=templates-recovery-v30-20260906">
+  <script defer src="../assets/logilee-app.js?v=templates-recovery-v30-20260906"></script>
+  <script defer src="../assets/vendor/exceljs.min.js?v=exceljs-4.4.0"></script>
+  <script defer src="../assets/logilee-documents.js?v=templates-recovery-v30-20260906"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -29,12 +30,5 @@
     </section>
     <section class="panel"><div class="data-empty">Loading template tools...</div></section>
   </main>
-  <script>
-    window.setTimeout(function () {
-      var root = document.querySelector("[data-template-builder]");
-      var waiting = root && root.querySelector(".data-empty");
-      if (waiting) waiting.textContent = "Document generation module failed to load. Please refresh the page.";
-    }, 8000);
-  </script>
 </body>
 </html>

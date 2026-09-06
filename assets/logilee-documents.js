@@ -44,21 +44,6 @@
   const dimensionOptions = (value = "cm") => ["mm", "cm", "m", "in", "ft"].map((code) => `<option value="${code}" ${value === code ? "selected" : ""}>${code}</option>`).join("");
   const dimToM = { mm: 0.001, cm: 0.01, m: 1, in: 0.0254, ft: 0.3048 };
   const weightToKg = { kg: 1, lb: 0.45359237 };
-  let excelJsPromise;
-
-  function loadExcelJs() {
-    if (window.ExcelJS) return Promise.resolve(window.ExcelJS);
-    if (excelJsPromise) return excelJsPromise;
-    excelJsPromise = new Promise((resolve, reject) => {
-      const script = document.createElement("script");
-      script.src = new URL("../assets/vendor/exceljs.min.js", location.href).href;
-      script.onload = () => window.ExcelJS ? resolve(window.ExcelJS) : reject(new Error("ExcelJS runtime unavailable"));
-      script.onerror = () => reject(new Error("ExcelJS runtime unavailable"));
-      document.head.appendChild(script);
-    });
-    return excelJsPromise;
-  }
-
   const templates = [
     { id: "commercial-invoice", category: "trade", formats: ["XLSX", "PDF"], title: "Commercial Invoice", ko: "상업송장", descKo: "수출입 거래와 통관에 활용되는 기본 거래 서류", descEn: "Sales and customs value document for trade shipments.", aliases: "commercial invoice 상업송장 invoice ci customs value" },
     { id: "packing-list", category: "trade", formats: ["XLSX", "PDF"], title: "Packing List", ko: "포장명세서", descKo: "포장 수량, 중량, 치수, 마크 정보를 정리하는 서류", descEn: "Package, weight, dimension, and marks reference for the physical cargo.", aliases: "packing list 포장명세서 package cbm" },
@@ -139,7 +124,7 @@
         <strong>${tpl.ko}</strong>
         <p>${lang === "ko" ? tpl.descKo : tpl.descEn}</p>
         <div class="template-formats">${tpl.formats.map((item) => `<span>${item}</span>`).join("")}</div>
-        <a class="primary-btn" href="?template=${encodeURIComponent(tpl.id)}" data-open-template="${tpl.id}">${T.start} <span aria-hidden="true">→</span></a>
+        <button class="primary-btn" type="button" data-open-template="${tpl.id}">${T.start} <span aria-hidden="true">→</span></button>
       </article>
     `;
   }
@@ -468,9 +453,8 @@
     return { A4: [d.sellerName || d.shipperName, d.sellerAddress || d.shipperAddress].filter(Boolean).join("\n"), A9: [d.buyerName || d.consigneeName, d.buyerAddress || d.consigneeAddress].filter(Boolean).join("\n"), A14: [notifyName, notifyAddress].filter(Boolean).join("\n"), H4: [d.invoiceNo || d.packingNo || d.proformaNo, d.invoiceDate || d.packingDate || d.issueDate].filter(Boolean).join(" / "), H6: id === "packing-list" ? (d.remarks || "") : [d.lcNo, d.lcDate].filter(Boolean).join(" / "), H9: d.lcBank || "", H12: id === "packing-list" ? "" : (d.remarks || d.notes || ""), E19: route.loading || "", E21: [route.carrier, route.sailing].filter(Boolean).join(" / ") };
   }
   async function baseXlsxBlob(id, d) {
-    const layout = xlsxLayouts[id];
-    const ExcelJS = await loadExcelJs();
-    if (!layout) throw new Error("Template layout unavailable");
+    const layout = xlsxLayouts[id]; const ExcelJS = window.ExcelJS;
+    if (!layout || !ExcelJS) throw new Error("ExcelJS runtime unavailable");
     const response = await fetch(new URL(`../assets/templates/${layout.file}`, location.href).href, { cache: "no-store" });
     if (!response.ok) throw new Error("Template base unavailable");
     const workbook = new ExcelJS.Workbook(); await workbook.xlsx.load(await response.arrayBuffer());
@@ -623,21 +607,21 @@
     const limit = Math.max(1, Math.floor(max / Math.max(3.2, size * 0.52)));
     return text.length > limit ? `${text.slice(0, Math.max(1, limit - 3))}...` : text;
   }
-  function field(page, label, value, x, y, w) {
+  function pdfField(page, label, value, x, y, w) {
     page.text(label, x + 5, y + 15, 6.5, true, w - 10);
     page.text(value, x + 5, y + 5, 8, false, w - 10);
   }
   function formHeader(page, title, d, meta) {
     page.rect(28, 32, 539, 778); page.text(title, 205, 786, 16, true, 250);
     page.line(28, 770, 567, 770, 1.1);
-    field(page, "SELLER / SHIPPER", d.sellerName || d.shipperName, 36, 706, 255);
-    field(page, "BUYER / CONSIGNEE", d.buyerName || d.consigneeName, 304, 706, 255);
+    pdfField(page, "SELLER / SHIPPER", d.sellerName || d.shipperName, 36, 706, 255);
+    pdfField(page, "BUYER / CONSIGNEE", d.buyerName || d.consigneeName, 304, 706, 255);
     page.line(36, 706, 559, 706); page.line(298, 706, 298, 760);
-    field(page, "ADDRESS", d.sellerAddress || d.shipperAddress, 36, 665, 255);
-    field(page, "ADDRESS", d.buyerAddress || d.consigneeAddress, 304, 665, 255);
+    pdfField(page, "ADDRESS", d.sellerAddress || d.shipperAddress, 36, 665, 255);
+    pdfField(page, "ADDRESS", d.buyerAddress || d.consigneeAddress, 304, 665, 255);
     page.line(36, 665, 559, 665);
-    field(page, meta.leftLabel, meta.leftValue, 36, 624, 255);
-    field(page, meta.rightLabel, meta.rightValue, 304, 624, 255);
+    pdfField(page, meta.leftLabel, meta.leftValue, 36, 624, 255);
+    pdfField(page, meta.rightLabel, meta.rightValue, 304, 624, 255);
     page.line(36, 624, 559, 624); page.line(298, 624, 298, 760);
   }
   function drawInvoice(page, d, rows, offset, last, proforma) {
@@ -648,8 +632,8 @@
       rightLabel: "CURRENCY / PAYMENT TERMS",
       rightValue: [d.currency, d.paymentTerms].filter(Boolean).join(" / ")
     });
-    field(page, "INCOTERMS / NAMED PLACE", [d.incoterms, d.namedPlace].filter(Boolean).join(" "), 36, 583, 255);
-    field(page, "PORT / MODE", [d.loading, d.mode, d.discharge].filter(Boolean).join(" / "), 304, 583, 255);
+    pdfField(page, "INCOTERMS / NAMED PLACE", [d.incoterms, d.namedPlace].filter(Boolean).join(" "), 36, 583, 255);
+    pdfField(page, "PORT / MODE", [d.loading, d.mode, d.discharge].filter(Boolean).join(" / "), 304, 583, 255);
     page.line(36, 583, 559, 583);
     const cols = [36, 72, 275, 335, 395, 455, 515, 559];
     const heads = ["NO.", "DESCRIPTION OF GOODS", "QTY", "UNIT", "UNIT PRICE", "AMOUNT", "HS CODE"];
@@ -666,9 +650,9 @@
     page.line(36, tableBottom, 559, tableBottom);
     if (last) {
       const total = totals(proforma ? "pro-forma-invoice" : "commercial-invoice", d);
-      field(page, "GOODS TOTAL", total.goods || "", 36, tableBottom - 42, 175);
-      field(page, "TOTAL QUANTITY", rows.length ? meaningfulRows(d.rows || []).reduce((sum, row) => sum + num(row.quantity), 0) : "", 218, tableBottom - 42, 175);
-      field(page, proforma ? "QUOTED TOTAL" : "TOTAL AMOUNT", total.total || "", 400, tableBottom - 42, 159);
+      pdfField(page, "GOODS TOTAL", total.goods || "", 36, tableBottom - 42, 175);
+      pdfField(page, "TOTAL QUANTITY", rows.length ? meaningfulRows(d.rows || []).reduce((sum, row) => sum + num(row.quantity), 0) : "", 218, tableBottom - 42, 175);
+      pdfField(page, proforma ? "QUOTED TOTAL" : "TOTAL AMOUNT", total.total || "", 400, tableBottom - 42, 159);
       page.line(36, tableBottom - 42, 559, tableBottom - 42);
       page.text("REMARKS", 41, tableBottom - 64, 7, true); page.text(d.remarks || d.notes || "", 41, tableBottom - 77, 8, false, 510);
       page.line(36, 88, 559, 88); page.text("AUTHORIZED SIGNATURE", 420, 61, 7, true);
@@ -676,8 +660,8 @@
   }
   function drawPackingList(page, d, rows, offset, last) {
     formHeader(page, "PACKING LIST", d, { leftLabel: "PACKING LIST NO. / DATE", leftValue: [d.packingNo, d.packingDate].filter(Boolean).join(" / "), rightLabel: "INVOICE NO.", rightValue: d.invoiceNo });
-    field(page, "PORT OF LOADING / DISCHARGE", [d.loading, d.discharge].filter(Boolean).join(" / "), 36, 583, 255);
-    field(page, "FINAL DESTINATION / CARRIER", [d.finalDestination, d.carrier].filter(Boolean).join(" / "), 304, 583, 255);
+    pdfField(page, "PORT OF LOADING / DISCHARGE", [d.loading, d.discharge].filter(Boolean).join(" / "), 36, 583, 255);
+    pdfField(page, "FINAL DESTINATION / CARRIER", [d.finalDestination, d.carrier].filter(Boolean).join(" / "), 304, 583, 255);
     page.line(36, 583, 559, 583);
     const cols = [36, 86, 275, 335, 395, 455, 515, 559];
     tableHeader(page, cols, ["PKG.", "DESCRIPTION OF GOODS", "QTY", "UNIT", "NET KG", "GROSS KG", "MEASUREMENT"], 542);
@@ -689,12 +673,12 @@
       tableRow(page, cols, values, 523 - i * 20, 20);
     }
     const bottom = 523 - 21 * 20; page.line(36, bottom, 559, bottom);
-    if (last) { const total = totals("packing-list", d); field(page, "TOTAL PACKAGES", total.packages || "", 36, bottom - 42, 130); field(page, "TOTAL NET KG", total.net || "", 180, bottom - 42, 130); field(page, "TOTAL GROSS KG", total.gross || "", 324, bottom - 42, 130); field(page, "TOTAL CBM", total.cbm || "", 468, bottom - 42, 91); page.line(36, bottom - 42, 559, bottom - 42); page.line(36, 88, 559, 88); page.text("AUTHORIZED SIGNATURE", 420, 61, 7, true); }
+    if (last) { const total = totals("packing-list", d); pdfField(page, "TOTAL PACKAGES", total.packages || "", 36, bottom - 42, 130); pdfField(page, "TOTAL NET KG", total.net || "", 180, bottom - 42, 130); pdfField(page, "TOTAL GROSS KG", total.gross || "", 324, bottom - 42, 130); pdfField(page, "TOTAL CBM", total.cbm || "", 468, bottom - 42, 91); page.line(36, bottom - 42, 559, bottom - 42); page.line(36, 88, 559, 88); page.text("AUTHORIZED SIGNATURE", 420, 61, 7, true); }
   }
   function drawShippingInstruction(page, d, rows, offset, last) {
     formHeader(page, "SHIPPING INSTRUCTION", d, { leftLabel: "BOOKING NO. / SI REFERENCE", leftValue: [d.bookingNo, d.siRef].filter(Boolean).join(" / "), rightLabel: "B/L TYPE / FREIGHT TERMS", rightValue: [d.blType, d.freightTerms].filter(Boolean).join(" / ") });
-    field(page, "PLACE OF RECEIPT / PORT OF LOADING", [d.receipt, d.loading].filter(Boolean).join(" / "), 36, 583, 255);
-    field(page, "PORT OF DISCHARGE / DELIVERY", [d.discharge, d.delivery].filter(Boolean).join(" / "), 304, 583, 255); page.line(36, 583, 559, 583);
+    pdfField(page, "PLACE OF RECEIPT / PORT OF LOADING", [d.receipt, d.loading].filter(Boolean).join(" / "), 36, 583, 255);
+    pdfField(page, "PORT OF DISCHARGE / DELIVERY", [d.discharge, d.delivery].filter(Boolean).join(" / "), 304, 583, 255); page.line(36, 583, 559, 583);
     const cols = [36, 105, 175, 275, 335, 430, 500, 559];
     tableHeader(page, cols, ["CONTAINER", "SEAL", "MARKS", "PACKAGES", "TYPE", "DESCRIPTION", "GROSS KG"], 542);
     for (let i = 0; i < 8; i++) { const row = rows[i] || {}; tableRow(page, cols, [row.containerNo, row.sealNo, row.marks, row.packages ? num(row.packages) : "", row.packageType, row.description, row.grossWeight ? num(row.grossWeight) * (weightToKg[row.weightUnit] || 1) : ""], 523 - i * 20, 20); }
