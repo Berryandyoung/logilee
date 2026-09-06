@@ -525,7 +525,7 @@
       const rows = exportRows(id, d);
       if (format === "xlsx") downloadBlob(await baseXlsxBlob(id, d), name, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
       if (format === "docx") downloadBlob(await docxBlob(rows, templates.find((tpl) => tpl.id === id).title), name, "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
-      if (format === "pdf") downloadBlob(pdfBlob(rows.map((row) => row.join("  |  "))), name, "application/pdf");
+      if (format === "pdf") downloadBlob(pdfBlob(id, d), name, "application/pdf");
       toast(T.exported);
     } catch (error) {
       console.error("Template export failed", error);
@@ -570,31 +570,125 @@
       "word/document.xml": `<?xml version="1.0" encoding="UTF-8"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>${body}<w:sectPr/></w:body></w:document>`
     }, "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
   }
-  function pdfBlob(lines) {
-    const enc = new TextEncoder();
-    const safe = lines.flatMap((line) => String(line).normalize("NFKD").replace(/[^\x20-\x7E]/g, "?").match(/.{1,88}/g) || [""]);
-    const chunks = [];
-    for (let i = 0; i < safe.length; i += 56) chunks.push(safe.slice(i, i + 56));
-    if (!chunks.length) chunks.push([""]);
-    const fontId = 3 + chunks.length * 2;
-    const objects = [
-      "1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj",
-      `2 0 obj << /Type /Pages /Kids [${chunks.map((_, i) => `${3 + i * 2} 0 R`).join(" ")}] /Count ${chunks.length} >> endobj`
-    ];
-    chunks.forEach((chunk, index) => {
-      const pageId = 3 + index * 2;
-      const contentId = pageId + 1;
-      const content = `BT /F1 9 Tf 50 790 Td ${chunk.map((line, i) => `${i ? "0 -13 Td " : ""}(${pdfEscape(line)}) Tj`).join(" ")} ET`;
-      objects.push(`${pageId} 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 ${fontId} 0 R >> >> /Contents ${contentId} 0 R >> endobj`);
-      objects.push(`${contentId} 0 obj << /Length ${enc.encode(content).length} >> stream\n${content}\nendstream endobj`);
+  // Draw a source-style business form directly as PDF primitives. This keeps PDF independent
+  // from the immutable XLSX bases while preserving their compact A4 portrait geometry.
+  function pdfBlob(id, d) {
+    const pages = [];
+    const items = meaningfulRows(d.rows || []);
+    const kind = id === "packing-list" ? "pl" : id === "shipping-instruction" ? "si" : "ci";
+    const capacity = kind === "pl" ? 21 : kind === "si" ? 8 : 22;
+    for (let start = 0; start < Math.max(1, items.length); start += capacity) {
+      const pageItems = items.slice(start, start + capacity);
+      const last = start + pageItems.length >= items.length;
+      const draw = new PdfPage();
+      if (kind === "pl") drawPackingList(draw, d, pageItems, start, last);
+      else if (kind === "si") drawShippingInstruction(draw, d, pageItems, start, last);
+      else drawInvoice(draw, d, pageItems, start, last, id === "pro-forma-invoice");
+      pages.push(draw.content());
+    }
+    return makePdf(pages);
+  }
+  class PdfPage {
+    constructor() { this.ops = []; }
+    line(x1, y1, x2, y2, width = 0.6) { this.ops.push(`${width} w ${x1} ${y1} m ${x2} ${y2} l S`); }
+    rect(x, y, w, h, fill = false) { this.ops.push(fill ? `0.93 g ${x} ${y} ${w} ${h} re f 0 g` : `${x} ${y} ${w} ${h} re S`); }
+    text(value, x, y, size = 8, bold = false, max = 0) {
+      const text = pdfText(value, max, size);
+      if (!text) return;
+      this.ops.push(`BT /${bold ? "F2" : "F1"} ${size} Tf ${x} ${y} Td (${pdfEscape(text)}) Tj ET`);
+    }
+    content() { return this.ops.join("\n"); }
+  }
+  function pdfText(value, max, size) {
+    const text = String(value ?? "").replace(/[\r\n]+/g, " / ").replace(/[^\x20-\x7E]/g, "?");
+    if (!max) return text;
+    const limit = Math.max(1, Math.floor(max / Math.max(3.2, size * 0.52)));
+    return text.length > limit ? `${text.slice(0, Math.max(1, limit - 3))}...` : text;
+  }
+  function field(page, label, value, x, y, w) {
+    page.text(label, x + 5, y + 15, 6.5, true, w - 10);
+    page.text(value, x + 5, y + 5, 8, false, w - 10);
+  }
+  function formHeader(page, title, d, meta) {
+    page.rect(28, 32, 539, 778); page.text(title, 205, 786, 16, true, 250);
+    page.line(28, 770, 567, 770, 1.1);
+    field(page, "SELLER / SHIPPER", d.sellerName || d.shipperName, 36, 706, 255);
+    field(page, "BUYER / CONSIGNEE", d.buyerName || d.consigneeName, 304, 706, 255);
+    page.line(36, 706, 559, 706); page.line(298, 706, 298, 760);
+    field(page, "ADDRESS", d.sellerAddress || d.shipperAddress, 36, 665, 255);
+    field(page, "ADDRESS", d.buyerAddress || d.consigneeAddress, 304, 665, 255);
+    page.line(36, 665, 559, 665);
+    field(page, meta.leftLabel, meta.leftValue, 36, 624, 255);
+    field(page, meta.rightLabel, meta.rightValue, 304, 624, 255);
+    page.line(36, 624, 559, 624); page.line(298, 624, 298, 760);
+  }
+  function drawInvoice(page, d, rows, offset, last, proforma) {
+    const capacity = 22;
+    formHeader(page, proforma ? "PRO FORMA INVOICE" : "COMMERCIAL INVOICE", d, {
+      leftLabel: proforma ? "PRO FORMA NO. / ISSUE DATE" : "INVOICE NO. / DATE",
+      leftValue: [proforma ? d.proformaNo : d.invoiceNo, proforma ? d.issueDate : d.invoiceDate].filter(Boolean).join(" / "),
+      rightLabel: "CURRENCY / PAYMENT TERMS",
+      rightValue: [d.currency, d.paymentTerms].filter(Boolean).join(" / ")
     });
-    objects.push(`${fontId} 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> endobj`);
-    let pdf = "%PDF-1.4\n";
-    const offsets = [0];
-    objects.forEach((obj) => { offsets.push(enc.encode(pdf).length); pdf += `${obj}\n`; });
-    const xref = enc.encode(pdf).length;
-    pdf += `xref\n0 ${objects.length + 1}\n0000000000 65535 f \n${offsets.slice(1).map((n) => `${String(n).padStart(10, "0")} 00000 n `).join("\n")}\ntrailer << /Size ${objects.length + 1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`;
-    return new Blob([pdf], { type: "application/pdf" });
+    field(page, "INCOTERMS / NAMED PLACE", [d.incoterms, d.namedPlace].filter(Boolean).join(" "), 36, 583, 255);
+    field(page, "PORT / MODE", [d.loading, d.mode, d.discharge].filter(Boolean).join(" / "), 304, 583, 255);
+    page.line(36, 583, 559, 583);
+    const cols = [36, 72, 275, 335, 395, 455, 515, 559];
+    const heads = ["NO.", "DESCRIPTION OF GOODS", "QTY", "UNIT", "UNIT PRICE", "AMOUNT", "HS CODE"];
+    tableHeader(page, cols, heads, 542);
+    for (let i = 0; i < capacity; i++) {
+      const row = rows[i] || {};
+      const y = 523 - i * 20;
+      const amount = num(row.quantity) * num(row.unitPrice);
+      const hasRow = Boolean(row.description || row.marks || row.packageNo || row.hsCode);
+      const values = [hasRow ? offset + i + 1 : "", row.description, row.quantity ? num(row.quantity) : "", row.unit, row.unitPrice ? num(row.unitPrice) : "", amount || "", row.hsCode];
+      tableRow(page, cols, values, y, 20);
+    }
+    const tableBottom = 523 - capacity * 20;
+    page.line(36, tableBottom, 559, tableBottom);
+    if (last) {
+      const total = totals(proforma ? "pro-forma-invoice" : "commercial-invoice", d);
+      field(page, "GOODS TOTAL", total.goods || "", 36, tableBottom - 42, 175);
+      field(page, "TOTAL QUANTITY", rows.length ? meaningfulRows(d.rows || []).reduce((sum, row) => sum + num(row.quantity), 0) : "", 218, tableBottom - 42, 175);
+      field(page, proforma ? "QUOTED TOTAL" : "TOTAL AMOUNT", total.total || "", 400, tableBottom - 42, 159);
+      page.line(36, tableBottom - 42, 559, tableBottom - 42);
+      page.text("REMARKS", 41, tableBottom - 64, 7, true); page.text(d.remarks || d.notes || "", 41, tableBottom - 77, 8, false, 510);
+      page.line(36, 88, 559, 88); page.text("AUTHORIZED SIGNATURE", 420, 61, 7, true);
+    }
+  }
+  function drawPackingList(page, d, rows, offset, last) {
+    formHeader(page, "PACKING LIST", d, { leftLabel: "PACKING LIST NO. / DATE", leftValue: [d.packingNo, d.packingDate].filter(Boolean).join(" / "), rightLabel: "INVOICE NO.", rightValue: d.invoiceNo });
+    field(page, "PORT OF LOADING / DISCHARGE", [d.loading, d.discharge].filter(Boolean).join(" / "), 36, 583, 255);
+    field(page, "FINAL DESTINATION / CARRIER", [d.finalDestination, d.carrier].filter(Boolean).join(" / "), 304, 583, 255);
+    page.line(36, 583, 559, 583);
+    const cols = [36, 86, 275, 335, 395, 455, 515, 559];
+    tableHeader(page, cols, ["PKG.", "DESCRIPTION OF GOODS", "QTY", "UNIT", "NET KG", "GROSS KG", "MEASUREMENT"], 542);
+    for (let i = 0; i < 21; i++) {
+      const row = rows[i] || {};
+      const factor = weightToKg[row.weightUnit] || 1;
+      const hasRow = Boolean(row.description || row.packageNo || row.marks || row.type);
+      const values = [hasRow ? (row.packageNo || row.type) : "", row.description, row.quantity ? num(row.quantity) : "", row.unit, row.netWeight ? num(row.netWeight) * factor : "", row.grossWeight ? num(row.grossWeight) * factor : "", hasRow ? `${row.length || ""} x ${row.width || ""} x ${row.height || ""} ${row.dimensionUnit || ""}` : ""];
+      tableRow(page, cols, values, 523 - i * 20, 20);
+    }
+    const bottom = 523 - 21 * 20; page.line(36, bottom, 559, bottom);
+    if (last) { const total = totals("packing-list", d); field(page, "TOTAL PACKAGES", total.packages || "", 36, bottom - 42, 130); field(page, "TOTAL NET KG", total.net || "", 180, bottom - 42, 130); field(page, "TOTAL GROSS KG", total.gross || "", 324, bottom - 42, 130); field(page, "TOTAL CBM", total.cbm || "", 468, bottom - 42, 91); page.line(36, bottom - 42, 559, bottom - 42); page.line(36, 88, 559, 88); page.text("AUTHORIZED SIGNATURE", 420, 61, 7, true); }
+  }
+  function drawShippingInstruction(page, d, rows, offset, last) {
+    formHeader(page, "SHIPPING INSTRUCTION", d, { leftLabel: "BOOKING NO. / SI REFERENCE", leftValue: [d.bookingNo, d.siRef].filter(Boolean).join(" / "), rightLabel: "B/L TYPE / FREIGHT TERMS", rightValue: [d.blType, d.freightTerms].filter(Boolean).join(" / ") });
+    field(page, "PLACE OF RECEIPT / PORT OF LOADING", [d.receipt, d.loading].filter(Boolean).join(" / "), 36, 583, 255);
+    field(page, "PORT OF DISCHARGE / DELIVERY", [d.discharge, d.delivery].filter(Boolean).join(" / "), 304, 583, 255); page.line(36, 583, 559, 583);
+    const cols = [36, 105, 175, 275, 335, 430, 500, 559];
+    tableHeader(page, cols, ["CONTAINER", "SEAL", "MARKS", "PACKAGES", "TYPE", "DESCRIPTION", "GROSS KG"], 542);
+    for (let i = 0; i < 8; i++) { const row = rows[i] || {}; tableRow(page, cols, [row.containerNo, row.sealNo, row.marks, row.packages ? num(row.packages) : "", row.packageType, row.description, row.grossWeight ? num(row.grossWeight) * (weightToKg[row.weightUnit] || 1) : ""], 523 - i * 20, 20); }
+    if (last) { page.line(36, 523 - 8 * 20, 559, 523 - 8 * 20); page.line(36, 88, 559, 88); page.text("AUTHORIZED SIGNATURE", 420, 61, 7, true); }
+  }
+  function tableHeader(page, cols, heads, y) { page.rect(cols[0], y, cols[cols.length - 1] - cols[0], 20, true); heads.forEach((head, i) => { page.text(head, cols[i] + 4, y + 7, 6.2, true, cols[i + 1] - cols[i] - 8); }); cols.slice(0, -1).forEach((x) => page.line(x, y, x, y + 20)); page.line(cols[cols.length - 1], y, cols[cols.length - 1], y + 20); }
+  function tableRow(page, cols, values, y, h) { values.forEach((value, i) => page.text(value, cols[i] + 4, y + 7, 6.8, false, cols[i + 1] - cols[i] - 8)); cols.forEach((x) => page.line(x, y, x, y + h)); page.line(cols[0], y, cols[cols.length - 1], y); }
+  function makePdf(contents) {
+    const enc = new TextEncoder(); const fontIds = { regular: 2, bold: 3 }; const objects = ["1 0 obj << /Type /Catalog /Pages 4 0 R >> endobj", "2 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> endobj", "3 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >> endobj"];
+    const pageIds = []; contents.forEach((content, index) => { const pageId = 5 + index * 2; const contentId = pageId + 1; pageIds.push(pageId); objects.push(`${pageId} 0 obj << /Type /Page /Parent 4 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 ${fontIds.regular} 0 R /F2 ${fontIds.bold} 0 R >> >> /Contents ${contentId} 0 R >> endobj`); objects.push(`${contentId} 0 obj << /Length ${enc.encode(content).length} >> stream\n${content}\nendstream endobj`); });
+    objects.splice(3, 0, `4 0 obj << /Type /Pages /Kids [${pageIds.map((id) => `${id} 0 R`).join(" ")}] /Count ${pageIds.length} >> endobj`);
+    let pdf = "%PDF-1.4\n"; const offsets = [0]; objects.forEach((obj) => { offsets.push(enc.encode(pdf).length); pdf += `${obj}\n`; }); const xref = enc.encode(pdf).length; pdf += `xref\n0 ${objects.length + 1}\n0000000000 65535 f \n${offsets.slice(1).map((n) => `${String(n).padStart(10, "0")} 00000 n `).join("\n")}\ntrailer << /Size ${objects.length + 1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`; return new Blob([pdf], { type: "application/pdf" });
   }
   function pdfEscape(text) { return String(text).replace(/([\\()])/g, "\\$1"); }
   function zipBlob(files, type) {
