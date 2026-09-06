@@ -9209,9 +9209,9 @@ function wireLearnPage() {
   };
   const faqRelated = (id, guideId, termId) => {
     const termIds = faqResources[id] || [termId];
-    return `<div class="faq-related"><span>${lang === "ko" ? "관련 자료" : "Related resources"}</span><div class="faq-cta-row"><a class="faq-cta" href="${escapeAttribute(guideUrl(guideId))}" data-guide-open="${escapeAttribute(guideId)}">${lang === "ko" ? "실무 가이드 보기" : "View practical guide"} <span aria-hidden="true">→</span></a>${termIds.map((term) => {
+    return `<div class="faq-related"><span>${lang === "ko" ? "관련 자료" : "Related resources"}</span><div class="faq-cta-row"><a class="faq-cta faq-guide-cta" href="${escapeAttribute(guideUrl(guideId))}" data-guide-open="${escapeAttribute(guideId)}">${lang === "ko" ? "실무 가이드 보기" : "View practical guide"} <span aria-hidden="true">→</span></a>${termIds.map((term) => {
       const item = dictionaryById.get(term);
-      return item ? `<a class="faq-cta" href="${escapeAttribute(termUrl(term))}">${escapeHtml(item.term)} ${lang === "ko" ? "사전" : "dictionary"} <span aria-hidden="true">→</span></a>` : "";
+      return item ? `<a class="faq-cta faq-term-cta" href="${escapeAttribute(termUrl(term))}">${escapeHtml(item.term)} <span aria-hidden="true">↗</span></a>` : "";
     }).join("")}</div></div>`;
   };
   const guideCard = (guide) => {
@@ -9249,6 +9249,13 @@ function wireLearnPage() {
         </section>`;
     }
     return `${hero}
+      <section class="page-section learn-section">
+        <div class="section-heading"><span class="eyebrow">Tracks</span><h2>${labels.tracks}</h2></div>
+        <div class="learn-track-row" data-learn-tracks><button type="button" data-track="all" aria-pressed="${state.track === "all"}">${labels.all}</button>${Object.entries(data.tracks).map(([id, item]) => `<button type="button" data-track="${escapeAttribute(id)}" aria-pressed="${state.track === id}">${escapeHtml(item[lang])}</button>`).join("")}</div>
+        <p class="learn-search-status" aria-live="polite">${state.query ? (visible.length ? labels.resultCount(visible.length) : labels.noSearchResults) : ""}</p>
+        <div class="learn-guide-grid">${visible.length ? shown.map(guideCard).join("") : `<div class="empty-state"><h2>${labels.noResults}</h2></div>`}</div>
+        ${libraryToggle}
+      </section>
       <section class="page-section learn-section learn-path-section">
         <div class="section-heading"><span class="eyebrow">${labels.start}</span><h2>${labels.startTitle}</h2></div>
         <ol class="learn-lifecycle">${data.lifecycle.map(([primary, step, track, guideIds, terms]) => {
@@ -9264,13 +9271,6 @@ function wireLearnPage() {
       <section class="page-section learn-section">
         <div class="section-heading"><span class="eyebrow">Featured Guides</span><h2>${labels.featured}</h2></div>
         <div class="learn-guide-grid">${featured.map(guideCard).join("")}</div>
-      </section>
-      <section class="page-section learn-section">
-        <div class="section-heading"><span class="eyebrow">Tracks</span><h2>${labels.tracks}</h2></div>
-        <div class="learn-track-row" data-learn-tracks><button type="button" data-track="all" aria-pressed="${state.track === "all"}">${labels.all}</button>${Object.entries(data.tracks).map(([id, item]) => `<button type="button" data-track="${escapeAttribute(id)}" aria-pressed="${state.track === id}">${escapeHtml(item[lang])}</button>`).join("")}</div>
-        <p class="learn-search-status" aria-live="polite">${state.query ? (visible.length ? labels.resultCount(visible.length) : labels.noSearchResults) : ""}</p>
-        <div class="learn-guide-grid">${visible.length ? shown.map(guideCard).join("") : `<div class="empty-state"><h2>${labels.noResults}</h2></div>`}</div>
-        ${libraryToggle}
       </section>
       <section class="page-section learn-section">
         <div class="section-heading"><span class="eyebrow">FAQ</span><h2>${labels.faq}</h2></div>

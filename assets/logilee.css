@@ -6446,6 +6446,19 @@ body.sidebar-drawer-active {
   color: var(--main-text);
 }
 
+.learn-lifecycle > li {
+  display: flex;
+  min-width: 0;
+}
+
+.learn-lifecycle-card,
+.learn-guide-card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+
 .learn-lifecycle-card {
   min-height: 190px;
   padding: 14px;
@@ -6473,7 +6486,7 @@ body.sidebar-drawer-active {
   line-height: 1.45;
 }
 
-.learn-lifecycle div {
+.learn-lifecycle-card > div {
   display: grid;
   gap: 4px;
 }
@@ -6494,6 +6507,11 @@ body.sidebar-drawer-active {
   font-size: 12px;
   line-height: 1.25;
   white-space: normal;
+}
+
+.learn-lifecycle-card > p {
+  margin-top: auto;
+  margin-bottom: 0;
 }
 
 [data-learn-app] .chip-row {
@@ -6530,6 +6548,10 @@ body.sidebar-drawer-active {
 .learn-guide-card,
 .learn-situation-grid a {
   padding: 16px;
+}
+
+.learn-guide-card > .chip-row {
+  margin-top: auto;
 }
 
 .learn-guide-card,
@@ -6647,21 +6669,64 @@ body.sidebar-drawer-active {
   margin-top: 0;
 }
 
+.faq-list {
+  display: grid;
+  gap: 10px;
+}
+
 .faq-list details {
-  padding: 14px 0;
-  border-bottom: 1px solid #edf2f7;
+  overflow: hidden;
+  border: 1px solid #dfe8f3;
+  border-radius: 8px;
+  background: #fff;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.faq-list details:hover,
+.faq-list details[open] {
+  border-color: rgba(23, 107, 255, 0.38);
+  box-shadow: 0 8px 22px rgba(23, 107, 255, 0.06);
 }
 
 .faq-list summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
   cursor: pointer;
+  padding: 14px 16px;
   color: var(--ink-navy);
   font-weight: 850;
+  list-style: none;
+}
+
+.faq-list summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-list summary::after {
+  flex: 0 0 auto;
+  color: var(--signal-blue);
+  content: "+";
+  font-size: 20px;
+  line-height: 1;
+}
+
+.faq-list details[open] summary::after {
+  content: "−";
+}
+
+.faq-list details > p {
+  margin: 0;
+  padding: 0 16px 14px;
+  color: var(--secondary-text);
+  line-height: 1.6;
 }
 
 .faq-related {
   display: grid;
   gap: 10px;
-  margin-top: 16px;
+  margin: 0 16px 16px;
   padding-top: 14px;
   border-top: 1px solid #edf2f7;
 }
@@ -6691,6 +6756,17 @@ body.sidebar-drawer-active {
   font-size: 13px;
   font-weight: 800;
   text-decoration: none;
+}
+
+.faq-guide-cta {
+  font-weight: 850;
+}
+
+.faq-term-cta {
+  min-height: 30px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  font-size: 12px;
 }
 
 .faq-cta:hover {
