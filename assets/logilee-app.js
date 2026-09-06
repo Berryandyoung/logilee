@@ -9188,12 +9188,12 @@ function wireLearnPage() {
   }).join("");
   const guideCard = (guide) => {
     const copy = guideCopy(guide);
-    return `<a class="learn-guide-card" href="${escapeAttribute(guideUrl(guide.slug))}" data-guide-open="${escapeAttribute(guide.id)}">
+    return `<div class="learn-guide-card" data-guide-open="${escapeAttribute(guide.id)}" tabindex="0" role="link" aria-label="${escapeAttribute(copy.title)}">
       <span class="kicker">${escapeHtml(trackLabel(guide.track))} · ${escapeHtml(guide.level)} · ${guide.readMinutes} ${labels.minutes}</span>
       <h3>${escapeHtml(copy.title)}</h3>
       <p>${escapeHtml(copy.summary)}</p>
       <div class="chip-row">${termChips((guide.relatedTerms || []).slice(0, 4))}</div>
-    </a>`;
+    </div>`;
   };
   const hubMarkup = () => {
     const visible = data.guides.filter(matchesGuide);
@@ -9214,7 +9214,7 @@ function wireLearnPage() {
         <ol class="learn-lifecycle">${data.lifecycle.map(([primary, step, track, guideIds, terms]) => {
           const guide = byId.get(primary);
           const copy = guide ? guideCopy(guide) : null;
-          return `<li><a href="${escapeAttribute(guideUrl(primary))}" data-guide-open="${escapeAttribute(primary)}"><span>${step}</span><strong>${escapeHtml(copy?.title || primary)}</strong><small>${escapeHtml(trackLabel(track))}</small><div>${guideIds.map((id) => byId.get(id)).filter(Boolean).slice(0, 2).map((item) => `<em>${escapeHtml(guideCopy(item).title)}</em>`).join("")}</div><p>${termChips(terms)}</p></a></li>`;
+          return `<li><div class="learn-lifecycle-card" data-guide-open="${escapeAttribute(primary)}" tabindex="0" role="link" aria-label="${escapeAttribute(copy?.title || primary)}"><span>${step}</span><strong>${escapeHtml(copy?.title || primary)}</strong><small>${escapeHtml(trackLabel(track))}</small><div>${guideIds.map((id) => byId.get(id)).filter(Boolean).slice(0, 2).map((item) => `<em>${escapeHtml(guideCopy(item).title)}</em>`).join("")}</div><p>${termChips(terms)}</p></div></li>`;
         }).join("")}</ol>
       </section>
       <section class="page-section">
@@ -9294,6 +9294,12 @@ function wireLearnPage() {
       state.visibleCount += 9;
       render();
     }
+  });
+  root.addEventListener("keydown", (event) => {
+    const guideLink = event.target.closest("[data-guide-open]");
+    if (!guideLink || event.target !== guideLink || !["Enter", " "].includes(event.key)) return;
+    event.preventDefault();
+    guideLink.click();
   });
   root.addEventListener("submit", (event) => {
     if (!event.target.matches("[data-learn-search-form]")) return;

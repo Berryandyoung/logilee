@@ -1107,7 +1107,7 @@ h1 {
     grid-template-columns: 1fr;
     overflow-x: visible;
   }
-  .learn-lifecycle > li > a {
+  .learn-lifecycle-card {
     min-height: 0;
   }
   .learn-detail-head,
@@ -6430,7 +6430,7 @@ body.sidebar-drawer-active {
   overflow-x: auto;
 }
 
-.learn-lifecycle > li > a,
+.learn-lifecycle-card,
 .learn-guide-card,
 .learn-situation-grid a {
   display: grid;
@@ -6442,7 +6442,7 @@ body.sidebar-drawer-active {
   color: var(--main-text);
 }
 
-.learn-lifecycle > li > a {
+.learn-lifecycle-card {
   min-height: 190px;
   padding: 14px;
 }
@@ -6509,9 +6509,14 @@ body.sidebar-drawer-active {
   padding: 16px;
 }
 
+.learn-guide-card,
+.learn-lifecycle-card {
+  cursor: pointer;
+}
+
 .learn-guide-card:hover,
 .learn-situation-grid a:hover,
-.learn-lifecycle > li > a:hover {
+.learn-lifecycle-card:hover {
   border-color: rgba(23, 107, 255, 0.45);
   box-shadow: 0 10px 26px rgba(23, 107, 255, 0.08);
 }
