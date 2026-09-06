@@ -9227,7 +9227,7 @@ function wireLearnPage() {
     const shown = state.expanded ? visible : visible.slice(0, 6);
     const featured = data.guides.filter((guide) => guide.featured).slice(0, 3);
     const libraryToggle = visible.length > 6 ? `<button class="secondary-btn learn-library-toggle" type="button" data-learn-toggle aria-expanded="${state.expanded}">${state.expanded ? labels.showLess : labels.viewAll(visible.length)}</button>` : "";
-    return `
+    const hero = `
       <section class="page-title learn-hero">
         <span class="eyebrow">${labels.kicker}</span>
         <h1>${labels.title}</h1>
@@ -9237,6 +9237,17 @@ function wireLearnPage() {
           <button class="primary-btn" type="submit">${lang === "ko" ? "검색" : "Search"}</button>
         </form>
       </section>
+    `;
+    if (state.query.trim()) {
+      return `${hero}
+        <section class="page-section learn-section learn-search-results">
+          <div class="section-heading"><span class="eyebrow">${lang === "ko" ? "검색 결과" : "Search results"}</span><h2>${escapeHtml(state.query)} ${lang === "ko" ? `검색 결과 ${visible.length}개` : `search results (${visible.length})`}</h2></div>
+          <p class="learn-search-status" aria-live="polite">${visible.length ? labels.resultCount(visible.length) : labels.noSearchResults}</p>
+          <div class="learn-guide-grid">${visible.length ? visible.map(guideCard).join("") : `<div class="empty-state"><h2>${labels.noSearchResults}</h2></div>`}</div>
+          <button class="secondary-btn learn-search-clear" type="button" data-learn-clear>${lang === "ko" ? "검색 초기화" : "Clear search"}</button>
+        </section>`;
+    }
+    return `${hero}
       <section class="page-section learn-section learn-path-section">
         <div class="section-heading"><span class="eyebrow">${labels.start}</span><h2>${labels.startTitle}</h2></div>
         <ol class="learn-lifecycle">${data.lifecycle.map(([primary, step, track, guideIds, terms]) => {
@@ -9311,6 +9322,14 @@ function wireLearnPage() {
       event.preventDefault();
       state.guide = "";
       render();
+    }
+    if (event.target.closest("[data-learn-clear]")) {
+      state.query = "";
+      state.track = "all";
+      state.expanded = false;
+      render();
+      root.querySelector("[data-learn-search]")?.focus();
+      return;
     }
     const track = event.target.closest("[data-track]");
     if (track) {

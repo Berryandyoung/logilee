@@ -6522,6 +6522,11 @@ body.sidebar-drawer-active {
   font-weight: 700;
 }
 
+.learn-search-clear {
+  display: block;
+  margin-top: 18px;
+}
+
 .learn-guide-card,
 .learn-situation-grid a {
   padding: 16px;
