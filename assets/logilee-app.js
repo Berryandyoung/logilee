@@ -9185,13 +9185,14 @@ function wireLearnPage() {
     const haystack = compact([copy.title, copy.summary, ...(copy.sections || []), ...(copy.checks || []), ...(copy.pitfalls || []), guide.track, guide.level, ...relatedDictionaryText].join(" "));
     return (!state.query || haystack.includes(compact(state.query))) && (state.track === "all" || guide.track === state.track);
   };
-  const setUrl = () => {
+  const setUrl = (replace = true) => {
     const url = new URL(location.href);
     state.guide ? url.searchParams.set("guide", state.guide) : url.searchParams.delete("guide");
     state.query ? url.searchParams.set("q", state.query) : url.searchParams.delete("q");
     state.track !== "all" ? url.searchParams.set("track", state.track) : url.searchParams.delete("track");
     const query = url.searchParams.toString();
-    history.replaceState(null, "", query ? `${url.pathname}?${query}` : url.pathname);
+    const nextUrl = query ? `${url.pathname}?${query}` : url.pathname;
+    (replace ? history.replaceState : history.pushState).call(history, null, "", nextUrl);
   };
   const pill = (text) => `<span class="chip">${escapeHtml(text)}</span>`;
   const termChips = (ids) => ids.map((id) => {
@@ -9303,8 +9304,8 @@ function wireLearnPage() {
       <details class="dictionary-sources"><summary>${labels.sources}</summary><ul>${guide.sources.map((source) => `<li><a href="${escapeAttribute(source.url)}" target="_blank" rel="noopener">${escapeHtml(source.organization)}</a><span>${escapeHtml(source.title)} · ${escapeHtml(guide.reviewedAt)}</span></li>`).join("")}</ul></details>
     </article>`;
   };
-  const render = () => {
-    setUrl();
+  const render = (replace = true) => {
+    setUrl(replace);
     const selected = byId.get(state.guide);
     root.innerHTML = selected ? guideMarkup(selected) : hubMarkup();
     refreshIcons();
@@ -9314,7 +9315,7 @@ function wireLearnPage() {
     if (guideLink) {
       event.preventDefault();
       state.guide = guideLink.dataset.guideOpen;
-      render();
+      render(false);
       root.scrollIntoView({ block: "start" });
       return;
     }
@@ -9363,6 +9364,14 @@ function wireLearnPage() {
   root.addEventListener("input", (event) => {
     if (!event.target.matches("[data-learn-search]")) return;
     state.query = event.target.value;
+  });
+  window.addEventListener("popstate", () => {
+    const params = new URLSearchParams(location.search);
+    state.query = params.get("q") || "";
+    state.track = params.get("track") || "all";
+    state.guide = params.get("guide") || "";
+    state.expanded = false;
+    render(true);
   });
   render();
 }
