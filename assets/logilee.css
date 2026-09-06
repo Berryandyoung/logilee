@@ -2648,6 +2648,342 @@ body.sidebar-drawer-active {
   color: var(--ink-navy);
 }
 
+/* Trade Document Builder */
+.template-title {
+  margin-bottom: 18px;
+}
+
+.template-hub-controls {
+  display: grid;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.template-hub-controls label {
+  display: grid;
+  gap: 6px;
+  color: var(--deep-navy);
+  font-weight: 850;
+}
+
+.template-hub-controls input {
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.template-filter-row,
+.template-formats,
+.template-actions,
+.template-mobile-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.template-filter-row button,
+.template-actions button,
+.template-mobile-tabs button,
+.template-row button {
+  min-height: 38px;
+  padding: 0 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--deep-navy);
+  font-weight: 800;
+}
+
+.template-filter-row button[aria-pressed="true"],
+.template-mobile-tabs button[aria-pressed="true"] {
+  border-color: var(--signal-blue);
+  background: #eef5ff;
+  color: var(--signal-blue);
+}
+
+.template-card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.template-card {
+  display: grid;
+  gap: 9px;
+  align-content: start;
+}
+
+.template-card h2,
+.template-builder-head h2 {
+  margin: 0;
+  color: var(--ink-navy);
+  font-size: 24px;
+}
+
+.template-card strong {
+  color: var(--deep-navy);
+}
+
+.template-card p,
+.template-builder-head p {
+  margin: 0;
+  color: var(--secondary-text);
+}
+
+.template-formats span {
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: #eef5ff;
+  color: var(--signal-blue);
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.template-builder-head {
+  display: flex;
+  gap: 14px;
+  align-items: start;
+  margin-bottom: 14px;
+}
+
+.template-builder-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(340px, 0.95fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.template-form,
+.template-preview-panel {
+  min-width: 0;
+}
+
+.template-preview-panel {
+  position: sticky;
+  top: 78px;
+  display: grid;
+  gap: 12px;
+}
+
+.template-section {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0 0 16px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.template-section legend {
+  padding: 0 6px;
+  color: var(--ink-navy);
+  font-size: 17px;
+  font-weight: 900;
+}
+
+.template-field {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.template-field span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--deep-navy);
+  font-size: 13px;
+  font-weight: 850;
+}
+
+.template-field button {
+  display: inline-grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: #fff;
+  color: var(--secondary-text);
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.template-field input,
+.template-field select,
+.template-section textarea {
+  min-height: 42px;
+  width: 100%;
+  padding: 0 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.template-section textarea {
+  min-height: 92px;
+  padding: 10px;
+  grid-column: 1 / -1;
+}
+
+.template-field small,
+.template-guardrail,
+.template-draft-note {
+  color: var(--secondary-text);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.template-draft-note {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border-left: 3px solid var(--signal-blue);
+  background: #f2f7ff;
+}
+
+.template-check {
+  display: flex;
+  gap: 8px;
+  align-items: start;
+  min-height: 34px;
+  color: var(--deep-navy);
+  font-size: 14px;
+  font-weight: 750;
+}
+
+.template-row-table {
+  display: grid;
+  grid-column: 1 / -1;
+  gap: 10px;
+}
+
+.template-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid #e2ebf6;
+  border-radius: 8px;
+  background: #fbfdff;
+}
+
+.template-row > button {
+  align-self: end;
+}
+
+.template-actions {
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+.template-warnings {
+  display: grid;
+  gap: 6px;
+}
+
+.template-warnings p {
+  margin: 0;
+  padding: 8px 10px;
+  border-left: 3px solid var(--safety-orange);
+  border-radius: 0 8px 8px 0;
+  background: #fff8f1;
+  color: #774112;
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.doc-preview {
+  width: 100%;
+  min-height: 560px;
+  padding: 24px;
+  border: 1px solid #d7dde8;
+  background: #fff;
+  color: #172033;
+  box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.03);
+}
+
+.doc-preview h2 {
+  margin: 0 0 16px;
+  color: #0f1d34;
+  font-size: 24px;
+  letter-spacing: 0;
+}
+
+.doc-preview dl,
+.doc-party-grid,
+.doc-totals {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0 0 14px;
+}
+
+.doc-preview dt {
+  color: #5f6c80;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.doc-preview dd {
+  margin: 2px 0 0;
+  font-weight: 750;
+}
+
+.doc-party-grid section {
+  padding: 10px;
+  border: 1px solid #e3e8f0;
+  border-radius: 6px;
+}
+
+.doc-party-grid h3,
+.doc-preview section h3 {
+  margin: 0 0 6px;
+  font-size: 13px;
+}
+
+.doc-party-grid p,
+.doc-preview p,
+.doc-preview li {
+  color: #2b3648;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.doc-preview table {
+  width: 100%;
+  margin: 12px 0;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.doc-preview th,
+.doc-preview td {
+  padding: 7px;
+  border: 1px solid #dfe5ee;
+  text-align: left;
+  vertical-align: top;
+}
+
+.doc-totals {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #dfe5ee;
+}
+
+.doc-preview footer {
+  margin-top: 18px;
+  color: #7b8798;
+  font-size: 11px;
+}
+
+.template-mobile-tabs {
+  display: none;
+  margin-bottom: 12px;
+}
+
 .related-links {
   display: flex;
   flex-wrap: wrap;
@@ -2729,6 +3065,35 @@ body.sidebar-drawer-active {
 
   .lap-row {
     grid-template-columns: 1fr;
+  }
+
+  .template-card-grid,
+  .template-builder-grid,
+  .template-section,
+  .template-row,
+  .doc-preview dl,
+  .doc-party-grid,
+  .doc-totals {
+    grid-template-columns: 1fr;
+  }
+
+  .template-mobile-tabs {
+    display: flex;
+  }
+
+  .template-preview-panel {
+    position: static;
+  }
+
+  .template-form.is-mobile-hidden,
+  .template-preview-panel.is-mobile-hidden {
+    display: none;
+  }
+
+  .doc-preview {
+    min-height: 0;
+    padding: 16px;
+    overflow-x: auto;
   }
 
   .compact-form .field,

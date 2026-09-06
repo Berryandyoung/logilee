@@ -33,7 +33,7 @@ const searchIndex = {
     { type: "Trade Data", title: "Country Trade Profile", summary: "World Bank 지표로 국가별 무역 프로필을 확인합니다.", url: "country-trade-profile.html", keywords: "country trade profile world bank gdp exports imports" },
     { type: "Trade Data", title: "EU Trade Explorer", summary: "Eurostat 공식 무역 통계를 조회합니다.", url: "eu-trade-explorer.html", keywords: "eurostat eu trade statistics 무역 통계" },
     { type: "Trade Data", title: "Global Trade Holiday Calendar", summary: "주요 무역국 공휴일을 확인합니다.", url: "holidays.html", keywords: "holiday calendar public holidays 공휴일" },
-    { type: "Document", title: "Commercial Invoice", summary: "무역 문서 허브로 이동합니다.", url: "documents.html", keywords: "invoice commercial document" },
+    { type: "Document", title: "Commercial Invoice", summary: "웹에서 상업송장을 작성하고 XLSX/PDF로 내려받습니다.", url: "templates.html?template=commercial-invoice", keywords: "invoice commercial document 상업송장" },
     { type: "News", title: "Latest News", summary: "LOGILEE 뉴스 페이지로 이동합니다.", url: "news.html", keywords: "news rss market logistics trade 뉴스" }
   ],
   en: [
@@ -53,7 +53,7 @@ const searchIndex = {
     { type: "Trade Data", title: "Country Trade Profile", summary: "Review World Bank indicators by country.", url: "country-trade-profile.html", keywords: "country trade profile world bank gdp exports imports" },
     { type: "Trade Data", title: "EU Trade Explorer", summary: "Search official Eurostat trade statistics.", url: "eu-trade-explorer.html", keywords: "eurostat eu trade statistics" },
     { type: "Trade Data", title: "Global Trade Holiday Calendar", summary: "Check public holidays in major trading countries.", url: "holidays.html", keywords: "holiday calendar public holidays" },
-    { type: "Document", title: "Commercial Invoice", summary: "Open the document hub for trade paperwork.", url: "documents.html", keywords: "invoice commercial document" },
+    { type: "Document", title: "Commercial Invoice", summary: "Create a commercial invoice in the browser and export XLSX/PDF.", url: "templates.html?template=commercial-invoice", keywords: "invoice commercial document" },
     { type: "News", title: "Latest News", summary: "Open LOGILEE news and insights.", url: "news.html", keywords: "news rss market logistics trade" }
   ]
 };
@@ -233,10 +233,8 @@ function workspaceNavMarkup(lang) {
         business: "일정 도구",
         resources: "Resources",
         templates: "Templates",
-        documents: "Documents",
         dictionary: "Dictionary",
-        learn: "Learn",
-        contact: "Contact & Office"
+        learn: "Learn"
       }
     : {
         label: "LOGILEE workspace menu",
@@ -261,10 +259,8 @@ function workspaceNavMarkup(lang) {
         business: "Planning Tools",
         resources: "Resources",
         templates: "Templates",
-        documents: "Documents",
         dictionary: "Dictionary",
-        learn: "Learn",
-        contact: "Contact & Office"
+        learn: "Learn"
       };
   const hsHref = lang === "ko" ? "../hscode.html" : "../hscode-en.html";
   return `
@@ -275,7 +271,7 @@ function workspaceNavMarkup(lang) {
       <section><h2>${nav.logistics}</h2><a href="ports.html"><i data-lucide="anchor"></i>${nav.ports}</a><a href="airports.html"><i data-lucide="plane"></i>${nav.airports}</a><a href="track.html"><i data-lucide="radar"></i>${nav.tracking}</a><a href="cbm.html"><i data-lucide="calculator"></i>${nav.cbm}</a></section>
       <section><h2>${nav.compliance}</h2><a href="compliance.html" data-nav-key="compliance-hub"><i data-lucide="shield-check"></i>${nav.hub}</a></section>
       <section><h2>${nav.market}</h2><a href="freight-market.html"><i data-lucide="chart-no-axes-combined"></i>${nav.freight}</a><a href="currency-converter.html"><i data-lucide="badge-dollar-sign"></i>${nav.fx}</a><a href="business-day.html"><i data-lucide="calendar-clock"></i>${nav.business}</a></section>
-      <section><h2>${nav.resources}</h2><a href="templates.html"><i data-lucide="copy"></i>${nav.templates}</a><a href="documents.html"><i data-lucide="file-text"></i>${nav.documents}</a><a href="dictionary.html"><i data-lucide="languages"></i>${nav.dictionary}</a><a href="learn.html"><i data-lucide="graduation-cap"></i>${nav.learn}</a><a href="contact.html"><i data-lucide="building-2"></i>${nav.contact}</a></section>
+      <section><h2>${nav.resources}</h2><a href="templates.html"><i data-lucide="copy"></i>${nav.templates}</a><a href="dictionary.html"><i data-lucide="languages"></i>${nav.dictionary}</a><a href="learn.html"><i data-lucide="graduation-cap"></i>${nav.learn}</a></section>
     </nav>
   `;
 }
