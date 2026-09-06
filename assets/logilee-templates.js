@@ -383,6 +383,7 @@
     return num(row.length) * dimToM[row.dimensionUnit] * num(row.width) * dimToM[row.dimensionUnit] * num(row.height) * dimToM[row.dimensionUnit] * num(row.quantity);
   }
 
+  // Legacy marker helpers remain unused for backwards source compatibility; XLSX export below uses ExcelJS only.
   const baseFileNames = { "commercial-invoice": "commercial-invoice.xlsx", "packing-list": "packing-list.xlsx", "pro-forma-invoice": "pro-forma-invoice.xlsx", "shipment-checklist": "shipment-checklist.xlsx" };
   const baseMarkerValues = (id, d) => {
     const values = {};
@@ -415,14 +416,25 @@
     const filled = Object.entries(values).reduce((output, [key, value]) => output.replace(new RegExp(`<c([^>]*)>\\s*<is>\\s*<t>\\{\\{${key}\\}\\}</t>\\s*</is>\\s*</c>`), (_, attrs) => { const clean = attrs.replace(/\s+t="[^"]*"/g, "").replace(/\s+s="[^"]*"/g, ""); return typeof value === "number" && Number.isFinite(value) ? `<c${clean} s="2"><v>${value}</v></c>` : value === "" ? `<c${clean}/>` : `<c${clean} t="inlineStr"><is><t>${xmlEscape(value)}</t></is></c>`; }), xml);
     return filled.replace(/<c([^>]*)>\s*<is>\s*<t>\{\{[^}]+\}\}<\/t>\s*<\/is>\s*<\/c>/g, "");
   }
+  const xlsxLayouts = {
+    "commercial-invoice": { file: "commercial-invoice.xlsx", sheet: "Commercial Invoice", columns: 8, totalsRow: 67, rows: (d) => (d.rows || []).map((row, i) => [i + 1, row.description, row.hsCode, countryName(row.origin || d.origin), num(row.quantity), row.unit, num(row.unitPrice), num(row.quantity) * num(row.unitPrice)]), totals: (d) => { const total = totals("commercial-invoice", d); return [total.goods, num(d.freight) + num(d.insurance) + num(d.packing) + num(d.otherCharges) - num(d.discount), total.total]; } },
+    "packing-list": { file: "packing-list.xlsx", sheet: "Packing List", columns: 10, totalsRow: 67, rows: (d) => (d.rows || []).map((row) => { const factor = weightToKg[row.weightUnit] || 1; return [row.packageNo || row.type, row.marks, row.type, row.description, num(row.quantity), row.unit, num(row.netWeight) * factor, num(row.grossWeight) * factor, `${row.length} x ${row.width} x ${row.height} ${row.dimensionUnit}`, packageCbm(row)]; }), totals: (d) => { const total = totals("packing-list", d); return [total.packages, total.quantity, total.cbm]; } },
+    "pro-forma-invoice": { file: "pro-forma-invoice.xlsx", sheet: "Pro Forma Invoice", columns: 8, totalsRow: 67, rows: (d) => (d.rows || []).map((row, i) => [i + 1, row.description, row.hsCode, countryName(row.origin), num(row.quantity), row.unit, num(row.unitPrice), num(row.quantity) * num(row.unitPrice)]), totals: (d) => { const total = totals("pro-forma-invoice", d); return [total.goods, num(d.freight) + num(d.insurance) - num(d.discount), total.total]; } },
+    "shipment-checklist": { file: "shipment-checklist.xlsx", sheet: "Shipment Checklist", title: "LOGILEE SHIPMENT CHECKLIST", columns: 7, totalsRow: 67, rows: (d) => { const saved = new Map((d.items || []).map((item) => [item.id, item])); return checklistItems().map((item) => { const value = saved.get(item.id) || {}; return [item.group, value.checked ? "Done" : "Open", item.label, value.owner || "", value.due || "", value.checked ? "Complete" : "Pending", d.notes || ""]; }); }, totals: (d) => { const items = checklistItems(); return [items.filter((item) => !d.items?.find((saved) => saved.id === item.id && saved.checked)).length, items.filter((item) => d.items?.find((saved) => saved.id === item.id && saved.checked)).length, "Pending / Complete"]; } }
+  };
+  function countryName(code) { return (countries().find((item) => item[0] === code) || ["", code, code])[1]; }
   async function baseXlsxBlob(id, d) {
-    const url = new URL(`../assets/templates/${baseFileNames[id]}`, location.href);
-    const response = await fetch(url.href, { cache: "no-store" });
+    const layout = xlsxLayouts[id]; const ExcelJS = window.ExcelJS;
+    if (!layout || !ExcelJS) throw new Error("ExcelJS runtime unavailable");
+    const response = await fetch(new URL(`../assets/templates/${layout.file}`, location.href).href, { cache: "no-store" });
     if (!response.ok) throw new Error("Template base unavailable");
-    const files = readStoredZip(await response.arrayBuffer());
-    if (!files["xl/worksheets/sheet1.xml"] || !files["xl/workbook.xml"] || !files["xl/styles.xml"]) throw new Error("Template base integrity check failed");
-    files["xl/worksheets/sheet1.xml"] = replaceBaseMarkers(files["xl/worksheets/sheet1.xml"], baseMarkerValues(id, d));
-    return zipBlob(files, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+    const workbook = new ExcelJS.Workbook(); await workbook.xlsx.load(await response.arrayBuffer());
+    const sheet = workbook.getWorksheet(layout.sheet) || workbook.worksheets[0];
+    if (!sheet || sheet.getCell("A1").value !== (layout.title || layout.sheet.toUpperCase())) throw new Error("Template base integrity check failed");
+    const rows = layout.rows(d); if (rows.length > 50) throw new Error("Template supports up to 50 item rows");
+    for (let index = 0; index < 50; index++) for (let column = 1; column <= layout.columns; column++) sheet.getCell(16 + index, column).value = rows[index]?.[column - 1] ?? null;
+    layout.totals(d).forEach((value, index) => { sheet.getCell(layout.totalsRow + index, 2).value = value; });
+    return new Blob([await workbook.xlsx.writeBuffer()], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
   }
 
   // One semantic row model feeds the web preview and every downloadable format.
@@ -495,7 +507,7 @@
     a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
   }
   function xmlEscape(value) { return String(value ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
-  async function xlsxBlob(rows, id) {
+  async function unusedLegacyXlsxBlob(rows, id) {
     const width = Math.max(2, Math.min(10, Math.max(...rows.map((row) => row.length))));
     const sheetRows = rows.map((row, r) => `<row r="${r + 1}" ht="${r === 0 ? 28 : 20}" customHeight="1">${row.map((cell, c) => {
       const ref = `${String.fromCharCode(65 + Math.min(c, 25))}${r + 1}`;

@@ -1,56 +1,41 @@
+const ExcelJS = require("exceljs");
 const fs = require("fs");
 const path = require("path");
 
 const outDir = path.join(__dirname, "..", "assets", "templates");
-fs.mkdirSync(outDir, { recursive: true });
-const esc = (v) => String(v).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-const col = (n) => { let s = ""; while (n) { const r = (n - 1) % 26; s = String.fromCharCode(65 + r) + s; n = Math.floor((n - 1) / 26); } return s; };
-const cell = (r, c, value, style = 0) => `<c r="${col(c)}${r}" t="inlineStr" s="${style}"><is><t>${esc(value)}</t></is></c>`;
-function sheet(title, headers, markerPrefix, totalLabels) {
-  const rows = [];
-  rows.push(`<row r="1" ht="30" customHeight="1">${cell(1, 1, title, 1)}</row>`);
-  rows.push(`<row r="2">${cell(2, 1, "Generated with LOGILEE")}</row>`);
-  rows.push(`<row r="4">${cell(4, 1, "Document Information", 2)}</row>`);
-  rows.push(`<row r="5">${cell(5, 1, "Reference")}${cell(5, 2, `{{${markerPrefix}_REF}}`)}</row>`);
-  rows.push(`<row r="6">${cell(6, 1, "Date")}${cell(6, 2, `{{${markerPrefix}_DATE}}`)}</row>`);
-  if (markerPrefix === "PF") rows.push(`<row r="7">${cell(7, 1, "Validity Date")}${cell(7, 2, "{{PF_VALID}}")}</row>`);
-  rows.push(`<row r="8">${cell(8, 1, "PARTIES", 2)}</row>`);
-  rows.push(`<row r="9">${cell(9, 1, "Seller / Exporter")}${cell(9, 2, `{{${markerPrefix}_SELLER}}`)}${cell(9, 5, "Buyer / Consignee")}${cell(9, 6, `{{${markerPrefix}_BUYER}}`)}</row>`);
-  rows.push(`<row r="10">${cell(10, 1, "Address")}${cell(10, 2, `{{${markerPrefix}_SELLER_ADDRESS}}`)}${cell(10, 5, "Address")}${cell(10, 6, `{{${markerPrefix}_BUYER_ADDRESS}}`)}</row>`);
-  rows.push(`<row r="12">${cell(12, 1, "SHIPMENT INFORMATION", 2)}</row>`);
-  rows.push(`<row r="13">${cell(13, 1, "Incoterms / Route")}${cell(13, 2, `{{${markerPrefix}_ROUTE}}`)}${cell(13, 5, "Currency")}${cell(13, 6, `{{${markerPrefix}_CURRENCY}}`)}</row>`);
-  rows.push(`<row r="15">${headers.map((h, i) => cell(15, i + 1, h, 2)).join("")}</row>`);
-  for (let i = 1; i <= 10; i++) rows.push(`<row r="${15 + i}">${headers.map((_, j) => cell(15 + i, j + 1, `{{${markerPrefix}_ITEM_${i}_${j + 1}}}`)).join("")}</row>`);
-  rows.push(`<row r="27">${cell(27, 1, totalLabels[0], 2)}${cell(27, 2, `{{${markerPrefix}_TOTAL_1}}`)}</row>`);
-  rows.push(`<row r="28">${cell(28, 1, totalLabels[1])}${cell(28, 2, `{{${markerPrefix}_TOTAL_2}}`)}</row>`);
-  rows.push(`<row r="29">${cell(29, 1, totalLabels[2], 2)}${cell(29, 2, `{{${markerPrefix}_TOTAL_3}}`)}</row>`);
-  rows.push(`<row r="31">${cell(31, 1, "Notes / Special Instructions", 2)}</row>`);
-  rows.push(`<row r="32">${cell(32, 1, "Document requirements may vary by destination, carrier, cargo and local customs rules.")}</row>`);
-  return rows.join("");
-}
-function xlsx(title, headers, prefix, totals) {
-  const xml = `<?xml version="1.0" encoding="UTF-8"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><cols><col min="1" max="10" width="22" customWidth="1"/></cols><sheetData>${sheet(title, headers, prefix, totals)}</sheetData><mergeCells count="1"><mergeCell ref="A1:J1"/></mergeCells><pageMargins left="0.3" right="0.3" top="0.5" bottom="0.5" header="0.2" footer="0.2"/><pageSetup orientation="landscape" fitToWidth="1" fitToHeight="0"/><printOptions horizontalCentered="1"/></worksheet>`;
-  return xml;
-}
-function crc32(data) { let c = ~0; for (const b of data) { c ^= b; for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1; } return ~c >>> 0; }
-function u16(n) { return Buffer.from([n & 255, n >>> 8 & 255]); }
-function u32(n) { return Buffer.from([n & 255, n >>> 8 & 255, n >>> 16 & 255, n >>> 24 & 255]); }
-function zip(files) {
-  const locals = [], central = []; let offset = 0;
-  for (const [name, text] of Object.entries(files)) { const data = Buffer.from(text); const nb = Buffer.from(name); const crc = crc32(data); const local = Buffer.concat([Buffer.from([80,75,3,4,20,0,0,0,0,0,0,0,0,0]),u32(crc),u32(data.length),u32(data.length),u16(nb.length),u16(0),nb,data]); locals.push(local); central.push(Buffer.concat([Buffer.from([80,75,1,2,20,0,20,0,0,0,0,0,0,0,0,0]),u32(crc),u32(data.length),u32(data.length),u16(nb.length),u16(0),u16(0),u16(0),u16(0),u32(0),u32(offset),nb])); offset += local.length; }
-  const body = Buffer.concat([...locals, ...central]); const centralSize = central.reduce((n, b) => n + b.length, 0); const end = Buffer.concat([Buffer.from([80,75,5,6]),u16(0),u16(0),u16(central.length),u16(central.length),u32(centralSize),u32(offset),u16(0)]); return Buffer.concat([body,end]);
-}
-const types = `<?xml version="1.0" encoding="UTF-8"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>`;
-const rels = `<?xml version="1.0" encoding="UTF-8"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>`;
-const workbook = `<?xml version="1.0" encoding="UTF-8"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="Document" sheetId="1" r:id="rId1"/></sheets></workbook>`;
-const workbookRels = `<?xml version="1.0" encoding="UTF-8"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/></Relationships>`;
-const styles = `<?xml version="1.0" encoding="UTF-8"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="2"><font><sz val="10"/><name val="Aptos"/></font><font><b/><sz val="15"/><name val="Aptos Display"/></font></fonts><fills count="2"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="solid"><fgColor rgb="DCEBFF"/><bgColor indexed="64"/></patternFill></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf/></cellStyleXfs><cellXfs count="3"><xf/><xf fontId="1" fillId="1"/><xf/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles><dxfs count="0"/><tableStyles count="0" defaultTableStyle="TableStyleMedium2" defaultPivotStyle="PivotStyleMedium9"/></styleSheet>`;
-const common = (title, headers, prefix, totals) => zip({"[Content_Types].xml":types,"_rels/.rels":rels,"xl/workbook.xml":workbook,"xl/_rels/workbook.xml.rels":workbookRels,"xl/styles.xml":styles,"xl/worksheets/sheet1.xml":xlsx(title,headers,prefix,totals)});
-const files = {
-  "commercial-invoice.xlsx": common("COMMERCIAL INVOICE", ["No.","Description of Goods","HS Code","Country of Origin","Quantity","Unit","Unit Price","Amount"], "CI", ["Subtotal","Charges","TOTAL"]),
-  "packing-list.xlsx": common("PACKING LIST", ["Package No.","Marks & Numbers","Package Type","Description","Quantity","Unit","Net Weight","Gross Weight","Dimensions","CBM"], "PL", ["Total Packages","Total Quantity","TOTAL CBM"]),
-  "pro-forma-invoice.xlsx": common("PRO FORMA INVOICE", ["No.","Quoted Items","HS Code","Country of Origin","Quantity","Unit","Unit Price","Extended Amount"], "PF", ["Quoted Goods Total","Estimated Charges","QUOTED TOTAL"]),
-  "shipment-checklist.xlsx": common("LOGILEE SHIPMENT CHECKLIST", ["Stage","Check","Task","Owner","Due Date","Status","Notes"], "SC", ["Open Items","Completed Items","STATUS"])
+const itemStartRow = 15;
+const itemCapacity = 50;
+const layouts = {
+  "commercial-invoice.xlsx": { title: "COMMERCIAL INVOICE", sheet: "Commercial Invoice", headers: ["No.", "Description of Goods", "HS Code", "Country of Origin", "Quantity", "Unit", "Unit Price", "Amount"], totals: ["Subtotal", "Charges", "TOTAL"] },
+  "packing-list.xlsx": { title: "PACKING LIST", sheet: "Packing List", headers: ["Package No.", "Marks & Numbers", "Package Type", "Description", "Quantity", "Unit", "Net Weight", "Gross Weight", "Dimensions", "CBM"], totals: ["Total Packages", "Total Quantity", "TOTAL CBM"] },
+  "pro-forma-invoice.xlsx": { title: "PRO FORMA INVOICE", sheet: "Pro Forma Invoice", headers: ["No.", "Quoted Items", "HS Code", "Country of Origin", "Quantity", "Unit", "Unit Price", "Extended Amount"], totals: ["Quoted Goods Total", "Estimated Charges", "QUOTED TOTAL"] },
+  "shipment-checklist.xlsx": { title: "LOGILEE SHIPMENT CHECKLIST", sheet: "Shipment Checklist", headers: ["Stage", "Check", "Task", "Owner", "Due Date", "Status", "Notes"], totals: ["Open Items", "Completed Items", "STATUS"] }
 };
-for (const [name, data] of Object.entries(files)) fs.writeFileSync(path.join(outDir, name), data);
-console.log(`Created ${Object.keys(files).length} base templates in ${outDir}`);
+
+function styleCell(cell, options = {}) {
+  cell.font = { name: "Aptos", size: options.title ? 16 : 10, bold: Boolean(options.bold || options.title), color: "142B45" };
+  cell.alignment = { vertical: "middle", horizontal: options.center ? "center" : "left", wrapText: true };
+  cell.border = { top: { style: "thin", color: "D7E2F0" }, left: { style: "thin", color: "D7E2F0" }, bottom: { style: "thin", color: "D7E2F0" }, right: { style: "thin", color: "D7E2F0" } };
+  if (options.fill) cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: options.fill } };
+}
+function setLabel(sheet, address, value, options = {}) { const cell = sheet.getCell(address); cell.value = value; styleCell(cell, options); return cell; }
+function buildWorkbook(layout) {
+  const workbook = new ExcelJS.Workbook(); workbook.creator = "LOGILEE"; workbook.lastModifiedBy = "LOGILEE";
+  const sheet = workbook.addWorksheet(layout.sheet, { properties: { defaultRowHeight: 20 } });
+  [18, 28, 18, 22, 13, 13, 16, 18, 22, 14].forEach((width, index) => { sheet.getColumn(index + 1).width = width; });
+  sheet.mergeCells("A1:J1"); setLabel(sheet, "A1", layout.title, { title: true, fill: "DCEBFF" }); sheet.getRow(1).height = 30;
+  sheet.mergeCells("A2:J2"); setLabel(sheet, "A2", "Generated with LOGILEE", { fill: "F4F7FB" });
+  sheet.mergeCells("A4:J4"); setLabel(sheet, "A4", "Document Information", { bold: true, fill: "DCEBFF" });
+  [["A5", "Reference"], ["A6", "Date"], ["A9", "Seller / Exporter"], ["E9", "Buyer / Consignee"], ["A10", "Address"], ["E10", "Address"], ["A13", "Incoterms / Route"], ["E13", "Currency"]].forEach(([address, value]) => setLabel(sheet, address, value, { bold: true }));
+  ["B5", "B6", "B9", "F9", "B10", "F10", "B13", "F13"].forEach((address) => styleCell(sheet.getCell(address)));
+  if (layout.title === "PRO FORMA INVOICE") { setLabel(sheet, "A7", "Validity Date", { bold: true }); styleCell(sheet.getCell("B7")); }
+  sheet.mergeCells("A8:J8"); setLabel(sheet, "A8", "PARTIES", { bold: true, fill: "DCEBFF" }); sheet.mergeCells("A12:J12"); setLabel(sheet, "A12", "SHIPMENT INFORMATION", { bold: true, fill: "DCEBFF" });
+  layout.headers.forEach((header, index) => setLabel(sheet, `${String.fromCharCode(65 + index)}${itemStartRow}`, header, { bold: true, center: true, fill: "DCEBFF" }));
+  for (let row = itemStartRow + 1; row <= itemStartRow + itemCapacity; row++) { for (let column = 1; column <= layout.headers.length; column++) styleCell(sheet.getCell(row, column)); sheet.getRow(row).height = 30; }
+  const totalsStartRow = itemStartRow + itemCapacity + 2;
+  layout.totals.forEach((label, index) => { setLabel(sheet, `A${totalsStartRow + index}`, label, { bold: index === 0 || index === 2, fill: index === 2 ? "DCEBFF" : undefined }); styleCell(sheet.getCell(`B${totalsStartRow + index}`)); sheet.getCell(`B${totalsStartRow + index}`).numFmt = "#,##0.00"; });
+  sheet.mergeCells(`A${totalsStartRow + 4}:J${totalsStartRow + 4}`); setLabel(sheet, `A${totalsStartRow + 4}`, "Notes / Special Instructions", { bold: true, fill: "DCEBFF" }); sheet.mergeCells(`A${totalsStartRow + 5}:J${totalsStartRow + 5}`); setLabel(sheet, `A${totalsStartRow + 5}`, "Document requirements may vary by destination, carrier, cargo and local customs rules.");
+  sheet.getRow(totalsStartRow + 5).height = 30; sheet.pageSetup = { orientation: "landscape", fitToPage: true, fitToWidth: 1, fitToHeight: 0, printArea: `A1:J${totalsStartRow + 5}` }; sheet.pageMargins = { left: 0.3, right: 0.3, top: 0.5, bottom: 0.5, header: 0.2, footer: 0.2 }; sheet.views = [{ state: "frozen", ySplit: itemStartRow }];
+  return workbook;
+}
+(async () => { fs.mkdirSync(outDir, { recursive: true }); for (const [fileName, layout] of Object.entries(layouts)) await buildWorkbook(layout).xlsx.writeFile(path.join(outDir, fileName)); console.log(`Created ${Object.keys(layouts).length} ExcelJS base templates in ${outDir}`); })().catch((error) => { console.error(error); process.exitCode = 1; });
