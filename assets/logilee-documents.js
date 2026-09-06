@@ -139,7 +139,7 @@
         <strong>${tpl.ko}</strong>
         <p>${lang === "ko" ? tpl.descKo : tpl.descEn}</p>
         <div class="template-formats">${tpl.formats.map((item) => `<span>${item}</span>`).join("")}</div>
-        <button class="primary-btn" type="button" data-open-template="${tpl.id}">${T.start} <span aria-hidden="true">→</span></button>
+        <a class="primary-btn" href="?template=${encodeURIComponent(tpl.id)}" data-open-template="${tpl.id}">${T.start} <span aria-hidden="true">→</span></a>
       </article>
     `;
   }
