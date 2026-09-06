@@ -9103,14 +9103,15 @@ function wireLearnPage() {
     lead: "처음 수출입을 시작하는 단계부터 실제 업무 중 마주치는 서류, 운송, 통관, 화물 취급과 비용 문제까지 단계별로 확인하세요.",
     search: "Guide 검색",
     searchPlaceholder: "B/L Draft, 받침목, HS Code, demurrage...",
-    start: "Start Here",
-    startTitle: "Shipment Lifecycle Learning Path",
-    featured: "Featured Practical Guides",
-    tracks: "Learning Tracks",
-    situations: "Common Work Situations",
-    faq: "Frequently Asked Practical Questions",
-    resources: "Related LOGILEE Resources",
+    start: "시작하기",
+    startTitle: "처음 시작하기",
+    featured: "추천 실무 가이드",
+    tracks: "분야별 가이드",
+    situations: "상황별로 찾기",
+    faq: "자주 묻는 실무 질문",
+    resources: "관련 LOGILEE 도구",
     all: "전체",
+    loadMore: "더 보기",
     minutes: "분",
     fit: "업무 흐름에서 어디에 등장하는가",
     explanation: "핵심 이해",
@@ -9138,6 +9139,7 @@ function wireLearnPage() {
     faq: "Frequently Asked Practical Questions",
     resources: "Related LOGILEE Resources",
     all: "All",
+    loadMore: "Load more",
     minutes: "min",
     fit: "Where this fits in the workflow",
     explanation: "Main explanation",
@@ -9157,7 +9159,8 @@ function wireLearnPage() {
   let state = {
     query: new URLSearchParams(location.search).get("q") || "",
     track: new URLSearchParams(location.search).get("track") || "all",
-    guide: new URLSearchParams(location.search).get("guide") || ""
+    guide: new URLSearchParams(location.search).get("guide") || "",
+    visibleCount: 9
   };
   const compact = (value) => searchNormalize(value);
   const guideCopy = (guide) => guide[lang] || guide.en || guide.ko;
@@ -9175,7 +9178,8 @@ function wireLearnPage() {
     state.guide ? url.searchParams.set("guide", state.guide) : url.searchParams.delete("guide");
     state.query ? url.searchParams.set("q", state.query) : url.searchParams.delete("q");
     state.track !== "all" ? url.searchParams.set("track", state.track) : url.searchParams.delete("track");
-    history.replaceState(null, "", `${url.pathname}?${url.searchParams.toString()}`);
+    const query = url.searchParams.toString();
+    history.replaceState(null, "", query ? `${url.pathname}?${query}` : url.pathname);
   };
   const pill = (text) => `<span class="chip">${escapeHtml(text)}</span>`;
   const termChips = (ids) => ids.map((id) => {
@@ -9193,6 +9197,7 @@ function wireLearnPage() {
   };
   const hubMarkup = () => {
     const visible = data.guides.filter(matchesGuide);
+    const shown = visible.slice(0, state.visibleCount);
     const featured = data.guides.filter((guide) => guide.featured).slice(0, 6);
     return `
       <section class="page-title learn-hero">
@@ -9213,17 +9218,18 @@ function wireLearnPage() {
         }).join("")}</ol>
       </section>
       <section class="page-section">
+        <div class="section-heading"><span class="eyebrow">Situations</span><h2>${labels.situations}</h2></div>
+        <div class="learn-situation-grid">${data.situations.map((item) => `<a href="${escapeAttribute(guideUrl(item.guide))}" data-guide-open="${escapeAttribute(item.guide)}"><strong>${escapeHtml(item[lang])}</strong><span>${escapeHtml(guideCopy(byId.get(item.guide)).title)}</span></a>`).join("")}</div>
+      </section>
+      <section class="page-section">
         <div class="section-heading"><span class="eyebrow">Featured Guides</span><h2>${labels.featured}</h2></div>
         <div class="learn-guide-grid">${featured.map(guideCard).join("")}</div>
       </section>
       <section class="page-section">
         <div class="section-heading"><span class="eyebrow">Tracks</span><h2>${labels.tracks}</h2></div>
         <div class="learn-track-row" data-learn-tracks><button type="button" data-track="all" aria-pressed="${state.track === "all"}">${labels.all}</button>${Object.entries(data.tracks).map(([id, item]) => `<button type="button" data-track="${escapeAttribute(id)}" aria-pressed="${state.track === id}">${escapeHtml(item[lang])}</button>`).join("")}</div>
-        <div class="learn-guide-grid">${visible.length ? visible.map(guideCard).join("") : `<div class="empty-state"><h2>${labels.noResults}</h2></div>`}</div>
-      </section>
-      <section class="page-section">
-        <div class="section-heading"><span class="eyebrow">Situations</span><h2>${labels.situations}</h2></div>
-        <div class="learn-situation-grid">${data.situations.map((item) => `<a href="${escapeAttribute(guideUrl(item.guide))}" data-guide-open="${escapeAttribute(item.guide)}"><strong>${escapeHtml(item[lang])}</strong><span>${escapeHtml(guideCopy(byId.get(item.guide)).title)}</span></a>`).join("")}</div>
+        <div class="learn-guide-grid">${visible.length ? shown.map(guideCard).join("") : `<div class="empty-state"><h2>${labels.noResults}</h2></div>`}</div>
+        ${visible.length > shown.length ? `<button class="secondary-btn learn-load-more" type="button" data-learn-load-more>${labels.loadMore}</button>` : ""}
       </section>
       <section class="page-section">
         <div class="section-heading"><span class="eyebrow">FAQ</span><h2>${labels.faq}</h2></div>
@@ -9280,6 +9286,12 @@ function wireLearnPage() {
     const track = event.target.closest("[data-track]");
     if (track) {
       state.track = track.dataset.track || "all";
+      state.visibleCount = 9;
+      render();
+      return;
+    }
+    if (event.target.closest("[data-learn-load-more]")) {
+      state.visibleCount += 9;
       render();
     }
   });
