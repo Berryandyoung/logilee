@@ -109,7 +109,7 @@ function currentLang() {
 
 function logileeAssetUrl(file) {
   const normalized = String(file || "").replace(/^\/+/, "");
-  return `${/^\/(?:ko|en)\//.test(location.pathname) ? "../assets/" : "assets/"}${normalized}`;
+  return `/assets/${normalized}`;
 }
 
 function languageRoot(lang) {
@@ -206,6 +206,26 @@ function ensureGlobalHeader() {
     </div>
   `;
   if (mobileNav && !shell) topbar.appendChild(mobileNav);
+}
+
+function ensureSkipLink() {
+  if (!location.pathname.includes("/ko/") && !location.pathname.includes("/en/")) return;
+  const lang = currentLang();
+  let main = document.querySelector("main[id], #main, #main-content, main");
+  if (!main) return;
+  if (!main.id) main.id = "main";
+  let link = document.querySelector(".skip-link");
+  if (!link) {
+    link = document.createElement("a");
+    link.className = "skip-link";
+    document.body.insertBefore(link, document.body.firstChild);
+  }
+  link.href = `#${main.id}`;
+  link.textContent = lang === "ko" ? "본문으로 이동" : "Skip to main content";
+  link.addEventListener("click", () => {
+    main.setAttribute("tabindex", "-1");
+    window.setTimeout(() => main.focus({ preventScroll: true }), 0);
+  }, { once: false });
 }
 
 function workspaceNavMarkup(lang) {
@@ -556,13 +576,124 @@ function setupLanguageMenu() {
   });
 }
 
-function runSearch(query, lang) {
-  const normalized = query.trim().toLowerCase();
-  if (!normalized) return searchIndex[lang];
-  return searchIndex[lang].filter((item) => {
-    const haystack = `${item.type} ${item.title} ${item.summary} ${item.keywords}`.toLowerCase();
-    return haystack.includes(normalized);
+const searchDataPromises = {};
+function loadScriptOnce(src, key) {
+  if (window[key]) return Promise.resolve();
+  if (searchDataPromises[key]) return searchDataPromises[key];
+  searchDataPromises[key] = new Promise((resolve) => {
+    const script = document.createElement("script");
+    script.src = src;
+    script.defer = true;
+    script.onload = resolve;
+    script.onerror = resolve;
+    document.head.appendChild(script);
   });
+  return searchDataPromises[key];
+}
+
+function ensureSearchData() {
+  return Promise.all([
+    loadScriptOnce(logileeAssetUrl("logilee-dictionary-data.js?v=dictionary-v11-20260906"), "LOGILEE_DICTIONARY"),
+    loadScriptOnce(logileeAssetUrl("logilee-learn-data.js?v=learn-v2-20260906"), "LOGILEE_LEARN_DATA")
+  ]);
+}
+
+function searchNormalize(value = "") {
+  return String(value).toLowerCase().replace(/[®™]/g, "").replace(/[^a-z0-9가-힣]+/g, " ").trim();
+}
+
+function searchTypeLabel(type, lang) {
+  const labels = {
+    ko: { Dictionary: "DICTIONARY", Learn: "LEARN", Tool: "TOOL", Template: "TEMPLATE", Post: "POST", Tracking: "TOOL", Port: "TOOL", Country: "TOOL", "Trade Data": "TOOL", Document: "TEMPLATE", News: "POST", Guide: "GUIDE" },
+    en: { Dictionary: "DICTIONARY", Learn: "LEARN", Tool: "TOOL", Template: "TEMPLATE", Post: "POST", Tracking: "TOOL", Port: "TOOL", Country: "TOOL", "Trade Data": "TOOL", Document: "TEMPLATE", News: "POST", Guide: "GUIDE" }
+  };
+  return labels[lang][type] || String(type).toUpperCase();
+}
+
+function dictionarySearchItems(lang) {
+  const data = window.LOGILEE_DICTIONARY;
+  if (!data?.terms) return [];
+  const categoryLabels = lang === "ko"
+    ? { trade: "무역", ocean: "해상", air: "항공", customs: "통관·규제", operations: "선적업무", charges: "운임·비용", cargo: "화물 취급·고정" }
+    : { trade: "Trade", ocean: "Ocean", air: "Air", customs: "Customs & Compliance", operations: "Shipping Operations", charges: "Charges", cargo: "Cargo Handling & Securing" };
+  return data.terms.map((term) => {
+    const copy = term[lang] || term.en || term.ko;
+    return {
+      type: "Dictionary",
+      id: `dictionary:${term.id}`,
+      title: term.term,
+      summary: `${term.koName ? `${term.koName} · ` : ""}${copy.shortDefinition}`,
+      meta: categoryLabels[term.categoryKey] || term.primaryCategory,
+      url: `dictionary.html?term=${encodeURIComponent(term.id)}`,
+      titleText: `${term.term} ${term.fullName || ""} ${term.koName || ""}`,
+      aliases: term.aliases || [],
+      keywords: [term.id, term.slug, term.term, term.fullName, term.koName, ...(term.aliases || []), copy.shortDefinition, copy.practicalContext].filter(Boolean).join(" ")
+    };
+  });
+}
+
+function learnSearchItems(lang) {
+  const data = window.LOGILEE_LEARN_DATA;
+  if (!data?.guides) return [];
+  return data.guides.map((guide) => {
+    const copy = guide[lang] || guide.en || guide.ko;
+    const track = data.tracks?.[guide.track]?.[lang] || guide.track;
+    return {
+      type: "Learn",
+      id: `learn:${guide.id}`,
+      title: copy.title,
+      summary: copy.summary,
+      meta: `${track} · ${guide.level} · ${guide.readMinutes} min`,
+      url: `learn.html?guide=${encodeURIComponent(guide.slug)}`,
+      titleText: `${copy.title} ${track}`,
+      aliases: [guide.id, guide.slug, ...(guide.relatedTerms || [])],
+      keywords: [copy.title, copy.summary, ...(copy.sections || []), ...(copy.checks || []), ...(copy.pitfalls || []), ...(guide.relatedTerms || [])].filter(Boolean).join(" ")
+    };
+  });
+}
+
+function baseSearchItems(lang) {
+  const templateItems = window.LOGILEE_LEARN_DATA?.templateLabels
+    ? Object.entries(window.LOGILEE_LEARN_DATA.templateLabels).map(([id, item]) => ({
+        type: "Template",
+        id: `template:${id}`,
+        title: item[lang],
+        summary: lang === "ko" ? "웹에서 작성하고 파일로 내보내는 Trade Document Builder입니다." : "Create the document in the browser and export it.",
+        meta: "Templates",
+        url: item.url,
+        titleText: item[lang],
+        aliases: [id],
+        keywords: `${item.ko} ${item.en} ${id} document template`
+      }))
+    : [];
+  return [...searchIndex[lang].map((item, index) => ({ ...item, id: `base:${index}`, titleText: item.title, aliases: [] })), ...templateItems];
+}
+
+function scoreSearchItem(item, query) {
+  const q = searchNormalize(query);
+  if (!q) return 1;
+  const title = searchNormalize(item.titleText || item.title);
+  const aliases = (item.aliases || []).map(searchNormalize);
+  const summary = searchNormalize(`${item.summary || ""} ${item.keywords || ""} ${item.meta || ""}`);
+  if (title === q) return 120;
+  if (aliases.some((alias) => alias === q)) return 115;
+  if (title.startsWith(q)) return 95;
+  if (title.includes(q)) return 75;
+  if (aliases.some((alias) => alias.includes(q))) return 68;
+  if (summary.includes(q)) return 35;
+  const words = q.split(/\s+/).filter(Boolean);
+  return words.length && words.every((word) => `${title} ${summary}`.includes(word)) ? 22 : 0;
+}
+
+function runSearch(query, lang) {
+  const items = [...dictionarySearchItems(lang), ...learnSearchItems(lang), ...baseSearchItems(lang)];
+  const typeWeight = { Dictionary: 8, Learn: 6, Template: 4, Tool: 3 };
+  return items
+    .map((item) => ({ item, score: scoreSearchItem(item, query) }))
+    .filter(({ score }) => score > 0)
+    .sort((a, b) => b.score - a.score || (typeWeight[b.item.type] || 0) - (typeWeight[a.item.type] || 0) || a.item.title.localeCompare(b.item.title))
+    .map(({ item }) => item)
+    .slice(0, query.trim() ? 30 : 12);
 }
 
 function renderResults(target, results, lang) {
@@ -572,10 +703,10 @@ function renderResults(target, results, lang) {
     return;
   }
   target.innerHTML = results.map((item) => `
-    <a class="result-item" href="${item.url}">
-      <span class="kicker">${item.type}</span>
-      <h3>${item.title}</h3>
-      <p class="muted">${item.summary}</p>
+    <a class="result-item" href="${localizedResultUrl(item, lang)}">
+      <span class="kicker">${searchTypeLabel(item.type, lang)}${item.meta ? ` · ${escapeHtml(item.meta)}` : ""}</span>
+      <h3>${escapeHtml(item.title)}</h3>
+      <p class="muted">${escapeHtml(item.summary)}</p>
     </a>
   `).join("");
 }
@@ -583,9 +714,9 @@ function renderResults(target, results, lang) {
 function resultMarkup(item, lang = currentLang()) {
   return `
     <a class="header-result-item" href="${localizedResultUrl(item, lang)}">
-      <span>${item.type}</span>
-      <strong>${item.title}</strong>
-      <small>${item.summary}</small>
+      <span>${searchTypeLabel(item.type, lang)}</span>
+      <strong>${escapeHtml(item.title)}</strong>
+      <small>${escapeHtml(item.summary)}</small>
     </a>
   `;
 }
@@ -597,13 +728,17 @@ function wireHeaderSearch() {
     const results = form.querySelector("[data-header-search-results]");
     if (!input || !results) return;
 
-    const render = () => {
+    let renderToken = 0;
+    const render = async () => {
       const q = input.value.trim();
       if (!q) {
         results.innerHTML = "";
         form.classList.remove("has-results");
         return;
       }
+      const token = ++renderToken;
+      await ensureSearchData();
+      if (token !== renderToken) return;
       const matches = runSearch(q, lang).slice(0, 5);
       results.innerHTML = matches.length
         ? matches.map((item) => resultMarkup(item, lang)).join("")
@@ -652,8 +787,12 @@ function wireSearch() {
     const params = new URLSearchParams(location.search);
     const q = params.get("q") || input?.value || "";
     if (input) input.value = q;
-    renderResults(results, runSearch(q, lang), lang);
-    input?.addEventListener("input", () => renderResults(results, runSearch(input.value, lang), lang));
+    const renderSearchPage = async () => {
+      await ensureSearchData();
+      renderResults(results, runSearch(input?.value || q, lang), lang);
+    };
+    renderSearchPage();
+    input?.addEventListener("input", renderSearchPage);
   }
   document.addEventListener("keydown", (event) => {
     if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") {
@@ -8953,8 +9092,214 @@ async function wireNewsPage() {
   }
 }
 
+function wireLearnPage() {
+  const root = document.querySelector("[data-learn-app]");
+  const data = window.LOGILEE_LEARN_DATA;
+  if (!root || !data?.guides) return;
+  const lang = currentLang();
+  const labels = lang === "ko" ? {
+    kicker: "Learning Hub",
+    title: "무역·물류 실무 가이드",
+    lead: "처음 수출입을 시작하는 단계부터 실제 업무 중 마주치는 서류, 운송, 통관, 화물 취급과 비용 문제까지 단계별로 확인하세요.",
+    search: "Guide 검색",
+    searchPlaceholder: "B/L Draft, 받침목, HS Code, demurrage...",
+    start: "Start Here",
+    startTitle: "Shipment Lifecycle Learning Path",
+    featured: "Featured Practical Guides",
+    tracks: "Learning Tracks",
+    situations: "Common Work Situations",
+    faq: "Frequently Asked Practical Questions",
+    resources: "Related LOGILEE Resources",
+    all: "전체",
+    minutes: "분",
+    fit: "업무 흐름에서 어디에 등장하는가",
+    explanation: "핵심 이해",
+    scenario: "Practical Scenario",
+    checks: "실무 체크포인트",
+    pitfalls: "자주 놓치는 부분",
+    terms: "Key Dictionary Terms",
+    templates: "Related Templates",
+    tools: "Related Tools",
+    next: "What to do next",
+    sources: "Sources / 검토일",
+    noResults: "검색 결과가 없습니다. 다른 용어나 업무 키워드로 검색해보세요.",
+    back: "전체 가이드 보기"
+  } : {
+    kicker: "Learning Hub",
+    title: "Trade & Logistics Learning Hub",
+    lead: "Move from first shipment basics to practical checks for documents, transport, customs, cargo handling, and freight cost settlement.",
+    search: "Find a Guide",
+    searchPlaceholder: "B/L Draft, dunnage, HS Code, demurrage...",
+    start: "Start Here",
+    startTitle: "Shipment Lifecycle Learning Path",
+    featured: "Featured Practical Guides",
+    tracks: "Learning Tracks",
+    situations: "Common Work Situations",
+    faq: "Frequently Asked Practical Questions",
+    resources: "Related LOGILEE Resources",
+    all: "All",
+    minutes: "min",
+    fit: "Where this fits in the workflow",
+    explanation: "Main explanation",
+    scenario: "Practical Scenario",
+    checks: "Practical Checkpoints",
+    pitfalls: "Common Pitfalls",
+    terms: "Key Dictionary Terms",
+    templates: "Related Templates",
+    tools: "Related Tools",
+    next: "What to do next",
+    sources: "Sources / Reviewed Date",
+    noResults: "No results found. Try another term or workflow keyword.",
+    back: "Back to all guides"
+  };
+  const byId = new Map(data.guides.map((guide) => [guide.id, guide]));
+  const dictionaryById = new Map((window.LOGILEE_DICTIONARY?.terms || []).map((term) => [term.id, term]));
+  let state = {
+    query: new URLSearchParams(location.search).get("q") || "",
+    track: new URLSearchParams(location.search).get("track") || "all",
+    guide: new URLSearchParams(location.search).get("guide") || ""
+  };
+  const compact = (value) => searchNormalize(value);
+  const guideCopy = (guide) => guide[lang] || guide.en || guide.ko;
+  const trackLabel = (track) => data.tracks[track]?.[lang] || track;
+  const guideUrl = (id) => `learn.html?guide=${encodeURIComponent(id)}`;
+  const termUrl = (id) => `dictionary.html?term=${encodeURIComponent(id)}`;
+  const toolUrl = (tool) => lang === "ko" ? tool.urlKo : tool.urlEn;
+  const matchesGuide = (guide) => {
+    const copy = guideCopy(guide);
+    const haystack = compact([copy.title, copy.summary, ...(copy.sections || []), ...(copy.checks || []), ...(copy.pitfalls || []), guide.track, guide.level, ...(guide.relatedTerms || [])].join(" "));
+    return (!state.query || haystack.includes(compact(state.query))) && (state.track === "all" || guide.track === state.track);
+  };
+  const setUrl = () => {
+    const url = new URL(location.href);
+    state.guide ? url.searchParams.set("guide", state.guide) : url.searchParams.delete("guide");
+    state.query ? url.searchParams.set("q", state.query) : url.searchParams.delete("q");
+    state.track !== "all" ? url.searchParams.set("track", state.track) : url.searchParams.delete("track");
+    history.replaceState(null, "", `${url.pathname}?${url.searchParams.toString()}`);
+  };
+  const pill = (text) => `<span class="chip">${escapeHtml(text)}</span>`;
+  const termChips = (ids) => ids.map((id) => {
+    const term = dictionaryById.get(id);
+    return term ? `<a class="chip" href="${escapeAttribute(termUrl(id))}">${escapeHtml(term.term)}</a>` : "";
+  }).join("");
+  const guideCard = (guide) => {
+    const copy = guideCopy(guide);
+    return `<a class="learn-guide-card" href="${escapeAttribute(guideUrl(guide.slug))}" data-guide-open="${escapeAttribute(guide.id)}">
+      <span class="kicker">${escapeHtml(trackLabel(guide.track))} · ${escapeHtml(guide.level)} · ${guide.readMinutes} ${labels.minutes}</span>
+      <h3>${escapeHtml(copy.title)}</h3>
+      <p>${escapeHtml(copy.summary)}</p>
+      <div class="chip-row">${termChips((guide.relatedTerms || []).slice(0, 4))}</div>
+    </a>`;
+  };
+  const hubMarkup = () => {
+    const visible = data.guides.filter(matchesGuide);
+    const featured = data.guides.filter((guide) => guide.featured).slice(0, 6);
+    return `
+      <section class="page-title learn-hero">
+        <span class="eyebrow">${labels.kicker}</span>
+        <h1>${labels.title}</h1>
+        <p class="lead">${labels.lead}</p>
+        <form class="learn-search" data-learn-search-form role="search">
+          <label><span>${labels.search}</span><input type="search" value="${escapeAttribute(state.query)}" data-learn-search placeholder="${escapeAttribute(labels.searchPlaceholder)}"></label>
+          <button class="primary-btn" type="submit">${lang === "ko" ? "검색" : "Search"}</button>
+        </form>
+      </section>
+      <section class="page-section learn-path-section">
+        <div class="section-heading"><span class="eyebrow">${labels.start}</span><h2>${labels.startTitle}</h2></div>
+        <ol class="learn-lifecycle">${data.lifecycle.map(([primary, step, track, guideIds, terms]) => {
+          const guide = byId.get(primary);
+          const copy = guide ? guideCopy(guide) : null;
+          return `<li><a href="${escapeAttribute(guideUrl(primary))}" data-guide-open="${escapeAttribute(primary)}"><span>${step}</span><strong>${escapeHtml(copy?.title || primary)}</strong><small>${escapeHtml(trackLabel(track))}</small><div>${guideIds.map((id) => byId.get(id)).filter(Boolean).slice(0, 2).map((item) => `<em>${escapeHtml(guideCopy(item).title)}</em>`).join("")}</div><p>${termChips(terms)}</p></a></li>`;
+        }).join("")}</ol>
+      </section>
+      <section class="page-section">
+        <div class="section-heading"><span class="eyebrow">Featured Guides</span><h2>${labels.featured}</h2></div>
+        <div class="learn-guide-grid">${featured.map(guideCard).join("")}</div>
+      </section>
+      <section class="page-section">
+        <div class="section-heading"><span class="eyebrow">Tracks</span><h2>${labels.tracks}</h2></div>
+        <div class="learn-track-row" data-learn-tracks><button type="button" data-track="all" aria-pressed="${state.track === "all"}">${labels.all}</button>${Object.entries(data.tracks).map(([id, item]) => `<button type="button" data-track="${escapeAttribute(id)}" aria-pressed="${state.track === id}">${escapeHtml(item[lang])}</button>`).join("")}</div>
+        <div class="learn-guide-grid">${visible.length ? visible.map(guideCard).join("") : `<div class="empty-state"><h2>${labels.noResults}</h2></div>`}</div>
+      </section>
+      <section class="page-section">
+        <div class="section-heading"><span class="eyebrow">Situations</span><h2>${labels.situations}</h2></div>
+        <div class="learn-situation-grid">${data.situations.map((item) => `<a href="${escapeAttribute(guideUrl(item.guide))}" data-guide-open="${escapeAttribute(item.guide)}"><strong>${escapeHtml(item[lang])}</strong><span>${escapeHtml(guideCopy(byId.get(item.guide)).title)}</span></a>`).join("")}</div>
+      </section>
+      <section class="page-section">
+        <div class="section-heading"><span class="eyebrow">FAQ</span><h2>${labels.faq}</h2></div>
+        <div class="faq-list">${data.faq.map(([id, guideId, termId, qKo, qEn, aKo, aEn]) => `<details><summary>${escapeHtml(lang === "ko" ? qKo : qEn)}</summary><p>${escapeHtml(lang === "ko" ? aKo : aEn)} <a href="${escapeAttribute(guideUrl(guideId))}" data-guide-open="${escapeAttribute(guideId)}">${lang === "ko" ? "관련 가이드" : "Related guide"}</a> · <a href="${escapeAttribute(termUrl(termId))}">Dictionary</a></p></details>`).join("")}</div>
+      </section>
+      <section class="page-section">
+        <div class="section-heading"><span class="eyebrow">Resources</span><h2>${labels.resources}</h2></div>
+        <div class="related-row"><a href="dictionary.html">Dictionary</a><a href="templates.html">Templates</a><a href="cbm.html">CBM Calculator</a><a href="compliance.html">${lang === "ko" ? "무역 규제 허브" : "Compliance Hub"}</a><a href="freight-market.html">Freight Market</a></div>
+      </section>
+    `;
+  };
+  const guideMarkup = (guide) => {
+    const copy = guideCopy(guide);
+    return `<article class="learn-detail">
+      <a class="text-link" href="learn.html" data-learn-back>${labels.back}</a>
+      <header class="learn-detail-head">
+        <span class="kicker">${escapeHtml(trackLabel(guide.track))} · ${escapeHtml(guide.level)} · ${guide.readMinutes} ${labels.minutes}</span>
+        <h1>${escapeHtml(copy.title)}</h1>
+        <p class="lead">${escapeHtml(copy.summary)}</p>
+      </header>
+      ${guide.workflowStages?.length ? `<section><h2>${labels.fit}</h2><div class="chip-row">${guide.workflowStages.map(pill).join("")}</div></section>` : ""}
+      <section><h2>${labels.explanation}</h2>${copy.sections.map((item) => `<p>${escapeHtml(item)}</p>`).join("")}</section>
+      ${guide.visual ? `<section class="learn-visual"><h2>Visual Guide</h2><img src="${escapeAttribute(guide.visual.src)}" alt="${escapeAttribute(lang === "ko" ? guide.visual.altKo : guide.visual.altEn)}" loading="lazy"><p class="muted">LOGILEE self-made diagram.</p></section>` : ""}
+      ${copy.scenario ? `<section class="notice"><h2>${labels.scenario}</h2><p>${escapeHtml(copy.scenario)}</p></section>` : ""}
+      ${copy.checks?.length ? `<section><h2>${labels.checks}</h2><ul class="learn-checklist">${copy.checks.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul></section>` : ""}
+      ${copy.pitfalls?.length ? `<section class="learn-cautions"><h2>${labels.pitfalls}</h2><ul>${copy.pitfalls.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul></section>` : ""}
+      <section><h2>${labels.terms}</h2><div class="chip-row">${termChips(guide.relatedTerms || [])}</div></section>
+      ${guide.relatedTemplates?.length ? `<section><h2>${labels.templates}</h2><div class="dictionary-tool-grid">${guide.relatedTemplates.map((key) => data.templateLabels[key]).filter(Boolean).map((item) => `<a href="${escapeAttribute(item.url)}">${escapeHtml(item[lang])}</a>`).join("")}</div></section>` : ""}
+      ${guide.relatedTools?.length ? `<section><h2>${labels.tools}</h2><div class="dictionary-tool-grid">${guide.relatedTools.map((key) => data.toolLabels[key]).filter(Boolean).map((item) => `<a href="${escapeAttribute(toolUrl(item))}">${escapeHtml(item[lang])}</a>`).join("")}</div></section>` : ""}
+      <section><h2>${labels.next}</h2><p>${lang === "ko" ? "용어는 Dictionary에서 확인하고, 문서가 필요하면 Templates에서 작성하며, 계산·조회가 필요하면 관련 LOGILEE 도구로 이어가세요." : "Use Dictionary for terminology, Templates to create documents, and the related LOGILEE tools to calculate, check, or track the next step."}</p></section>
+      <details class="dictionary-sources"><summary>${labels.sources}</summary><ul>${guide.sources.map((source) => `<li><a href="${escapeAttribute(source.url)}" target="_blank" rel="noopener">${escapeHtml(source.organization)}</a><span>${escapeHtml(source.title)} · ${escapeHtml(guide.reviewedAt)}</span></li>`).join("")}</ul></details>
+    </article>`;
+  };
+  const render = () => {
+    setUrl();
+    const selected = byId.get(state.guide);
+    root.innerHTML = selected ? guideMarkup(selected) : hubMarkup();
+    refreshIcons();
+  };
+  root.addEventListener("click", (event) => {
+    const guideLink = event.target.closest("[data-guide-open]");
+    if (guideLink) {
+      event.preventDefault();
+      state.guide = guideLink.dataset.guideOpen;
+      render();
+      root.scrollIntoView({ block: "start" });
+      return;
+    }
+    if (event.target.closest("[data-learn-back]")) {
+      event.preventDefault();
+      state.guide = "";
+      render();
+    }
+    const track = event.target.closest("[data-track]");
+    if (track) {
+      state.track = track.dataset.track || "all";
+      render();
+    }
+  });
+  root.addEventListener("submit", (event) => {
+    if (!event.target.matches("[data-learn-search-form]")) return;
+    event.preventDefault();
+    state.query = root.querySelector("[data-learn-search]")?.value || "";
+    state.guide = "";
+    render();
+  });
+  root.addEventListener("input", (event) => {
+    if (!event.target.matches("[data-learn-search]")) return;
+    state.query = event.target.value;
+  });
+  render();
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   ensureIconLibrary();
+  ensureSkipLink();
   ensureGlobalSidebar();
   ensureGlobalHeader();
   enhanceSidebar();
@@ -8974,6 +9319,7 @@ document.addEventListener("DOMContentLoaded", () => {
   wireCbm();
   wireTracking();
   wireDictionary();
+  wireLearnPage();
   loadExchangePage();
   wireCurrencyConverter();
   wireHolidayCalendar();
