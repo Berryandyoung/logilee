@@ -9103,6 +9103,8 @@ function wireLearnPage() {
     lead: "처음 수출입을 시작하는 단계부터 실제 업무 중 마주치는 서류, 운송, 통관, 화물 취급과 비용 문제까지 단계별로 확인하세요.",
     search: "Guide 검색",
     searchPlaceholder: "B/L Draft, 받침목, HS Code, demurrage...",
+    resultCount: (count) => `${count}개 가이드가 검색되었습니다.`,
+    noSearchResults: "검색 결과가 없습니다. 다른 용어나 업무 키워드로 검색해보세요.",
     start: "시작하기",
     startTitle: "처음 시작하기",
     featured: "추천 실무 가이드",
@@ -9111,7 +9113,8 @@ function wireLearnPage() {
     faq: "자주 묻는 실무 질문",
     resources: "관련 LOGILEE 도구",
     all: "전체",
-    loadMore: "더 보기",
+    viewAll: (count) => `전체 가이드 보기 (${count}) ↓`,
+    showLess: "간단히 보기 ↑",
     minutes: "분",
     fit: "업무 흐름에서 어디에 등장하는가",
     explanation: "핵심 이해",
@@ -9131,6 +9134,8 @@ function wireLearnPage() {
     lead: "Move from first shipment basics to practical checks for documents, transport, customs, cargo handling, and freight cost settlement.",
     search: "Find a Guide",
     searchPlaceholder: "B/L Draft, dunnage, HS Code, demurrage...",
+    resultCount: (count) => `${count} guides found.`,
+    noSearchResults: "No guides found. Try another term or workflow keyword.",
     start: "Start Here",
     startTitle: "Shipment Lifecycle Learning Path",
     featured: "Featured Practical Guides",
@@ -9139,7 +9144,8 @@ function wireLearnPage() {
     faq: "Frequently Asked Practical Questions",
     resources: "Related LOGILEE Resources",
     all: "All",
-    loadMore: "Load more",
+    viewAll: (count) => `View all guides (${count}) ↓`,
+    showLess: "Show less ↑",
     minutes: "min",
     fit: "Where this fits in the workflow",
     explanation: "Main explanation",
@@ -9160,7 +9166,7 @@ function wireLearnPage() {
     query: new URLSearchParams(location.search).get("q") || "",
     track: new URLSearchParams(location.search).get("track") || "all",
     guide: new URLSearchParams(location.search).get("guide") || "",
-    visibleCount: 9
+    expanded: false
   };
   const compact = (value) => searchNormalize(value);
   const guideCopy = (guide) => guide[lang] || guide.en || guide.ko;
@@ -9170,7 +9176,13 @@ function wireLearnPage() {
   const toolUrl = (tool) => lang === "ko" ? tool.urlKo : tool.urlEn;
   const matchesGuide = (guide) => {
     const copy = guideCopy(guide);
-    const haystack = compact([copy.title, copy.summary, ...(copy.sections || []), ...(copy.checks || []), ...(copy.pitfalls || []), guide.track, guide.level, ...(guide.relatedTerms || [])].join(" "));
+    const relatedDictionaryText = (guide.relatedTerms || []).flatMap((id) => {
+      const term = dictionaryById.get(id);
+      if (!term) return [id];
+      const termCopy = term[lang] || term.en || term.ko || {};
+      return [id, term.term, term.fullName, term.koName, ...(term.aliases || []), termCopy.shortDefinition, termCopy.practicalContext].filter(Boolean);
+    });
+    const haystack = compact([copy.title, copy.summary, ...(copy.sections || []), ...(copy.checks || []), ...(copy.pitfalls || []), guide.track, guide.level, ...relatedDictionaryText].join(" "));
     return (!state.query || haystack.includes(compact(state.query))) && (state.track === "all" || guide.track === state.track);
   };
   const setUrl = () => {
@@ -9186,6 +9198,21 @@ function wireLearnPage() {
     const term = dictionaryById.get(id);
     return term ? `<a class="chip" href="${escapeAttribute(termUrl(id))}">${escapeHtml(term.term)}</a>` : "";
   }).join("");
+  const faqResources = {
+    "fob-cif": ["fob", "cif"],
+    "bl-original": ["bl", "shipping-instruction"],
+    "hs-owner": ["hs-code"],
+    dd: ["demurrage", "detention", "storage"],
+    "ci-pi": ["commercial-invoice", "pro-forma-invoice"],
+    "fcl-lcl": ["fcl", "lcl"]
+  };
+  const faqRelated = (id, guideId, termId) => {
+    const termIds = faqResources[id] || [termId];
+    return `<div class="faq-related"><span>${lang === "ko" ? "관련 자료" : "Related resources"}</span><div class="faq-cta-row"><a class="faq-cta" href="${escapeAttribute(guideUrl(guideId))}" data-guide-open="${escapeAttribute(guideId)}">${lang === "ko" ? "실무 가이드 보기" : "View practical guide"} <span aria-hidden="true">→</span></a>${termIds.map((term) => {
+      const item = dictionaryById.get(term);
+      return item ? `<a class="faq-cta" href="${escapeAttribute(termUrl(term))}">${escapeHtml(item.term)} ${lang === "ko" ? "사전" : "dictionary"} <span aria-hidden="true">→</span></a>` : "";
+    }).join("")}</div></div>`;
+  };
   const guideCard = (guide) => {
     const copy = guideCopy(guide);
     return `<div class="learn-guide-card" data-guide-open="${escapeAttribute(guide.id)}" tabindex="0" role="link" aria-label="${escapeAttribute(copy.title)}">
@@ -9197,8 +9224,9 @@ function wireLearnPage() {
   };
   const hubMarkup = () => {
     const visible = data.guides.filter(matchesGuide);
-    const shown = visible.slice(0, state.visibleCount);
-    const featured = data.guides.filter((guide) => guide.featured).slice(0, 6);
+    const shown = state.expanded ? visible : visible.slice(0, 6);
+    const featured = data.guides.filter((guide) => guide.featured).slice(0, 3);
+    const libraryToggle = visible.length > 6 ? `<button class="secondary-btn learn-library-toggle" type="button" data-learn-toggle aria-expanded="${state.expanded}">${state.expanded ? labels.showLess : labels.viewAll(visible.length)}</button>` : "";
     return `
       <section class="page-title learn-hero">
         <span class="eyebrow">${labels.kicker}</span>
@@ -9209,7 +9237,7 @@ function wireLearnPage() {
           <button class="primary-btn" type="submit">${lang === "ko" ? "검색" : "Search"}</button>
         </form>
       </section>
-      <section class="page-section learn-path-section">
+      <section class="page-section learn-section learn-path-section">
         <div class="section-heading"><span class="eyebrow">${labels.start}</span><h2>${labels.startTitle}</h2></div>
         <ol class="learn-lifecycle">${data.lifecycle.map(([primary, step, track, guideIds, terms]) => {
           const guide = byId.get(primary);
@@ -9217,25 +9245,26 @@ function wireLearnPage() {
           return `<li><div class="learn-lifecycle-card" data-guide-open="${escapeAttribute(primary)}" tabindex="0" role="link" aria-label="${escapeAttribute(copy?.title || primary)}"><span>${step}</span><strong>${escapeHtml(copy?.title || primary)}</strong><small>${escapeHtml(trackLabel(track))}</small><div>${guideIds.map((id) => byId.get(id)).filter(Boolean).slice(0, 2).map((item) => `<em>${escapeHtml(guideCopy(item).title)}</em>`).join("")}</div><p>${termChips(terms)}</p></div></li>`;
         }).join("")}</ol>
       </section>
-      <section class="page-section">
+      <section class="page-section learn-section">
         <div class="section-heading"><span class="eyebrow">Situations</span><h2>${labels.situations}</h2></div>
         <div class="learn-situation-grid">${data.situations.map((item) => `<a href="${escapeAttribute(guideUrl(item.guide))}" data-guide-open="${escapeAttribute(item.guide)}"><strong>${escapeHtml(item[lang])}</strong><span>${escapeHtml(guideCopy(byId.get(item.guide)).title)}</span></a>`).join("")}</div>
       </section>
-      <section class="page-section">
+      <section class="page-section learn-section">
         <div class="section-heading"><span class="eyebrow">Featured Guides</span><h2>${labels.featured}</h2></div>
         <div class="learn-guide-grid">${featured.map(guideCard).join("")}</div>
       </section>
-      <section class="page-section">
+      <section class="page-section learn-section">
         <div class="section-heading"><span class="eyebrow">Tracks</span><h2>${labels.tracks}</h2></div>
         <div class="learn-track-row" data-learn-tracks><button type="button" data-track="all" aria-pressed="${state.track === "all"}">${labels.all}</button>${Object.entries(data.tracks).map(([id, item]) => `<button type="button" data-track="${escapeAttribute(id)}" aria-pressed="${state.track === id}">${escapeHtml(item[lang])}</button>`).join("")}</div>
+        <p class="learn-search-status" aria-live="polite">${state.query ? (visible.length ? labels.resultCount(visible.length) : labels.noSearchResults) : ""}</p>
         <div class="learn-guide-grid">${visible.length ? shown.map(guideCard).join("") : `<div class="empty-state"><h2>${labels.noResults}</h2></div>`}</div>
-        ${visible.length > shown.length ? `<button class="secondary-btn learn-load-more" type="button" data-learn-load-more>${labels.loadMore}</button>` : ""}
+        ${libraryToggle}
       </section>
-      <section class="page-section">
+      <section class="page-section learn-section">
         <div class="section-heading"><span class="eyebrow">FAQ</span><h2>${labels.faq}</h2></div>
-        <div class="faq-list">${data.faq.map(([id, guideId, termId, qKo, qEn, aKo, aEn]) => `<details><summary>${escapeHtml(lang === "ko" ? qKo : qEn)}</summary><p>${escapeHtml(lang === "ko" ? aKo : aEn)} <a href="${escapeAttribute(guideUrl(guideId))}" data-guide-open="${escapeAttribute(guideId)}">${lang === "ko" ? "관련 가이드" : "Related guide"}</a> · <a href="${escapeAttribute(termUrl(termId))}">Dictionary</a></p></details>`).join("")}</div>
+        <div class="faq-list">${data.faq.map(([id, guideId, termId, qKo, qEn, aKo, aEn]) => `<details><summary>${escapeHtml(lang === "ko" ? qKo : qEn)}</summary><p>${escapeHtml(lang === "ko" ? aKo : aEn)}</p>${faqRelated(id, guideId, termId)}</details>`).join("")}</div>
       </section>
-      <section class="page-section">
+      <section class="page-section learn-section">
         <div class="section-heading"><span class="eyebrow">Resources</span><h2>${labels.resources}</h2></div>
         <div class="related-row"><a href="dictionary.html">Dictionary</a><a href="templates.html">Templates</a><a href="cbm.html">CBM Calculator</a><a href="compliance.html">${lang === "ko" ? "무역 규제 허브" : "Compliance Hub"}</a><a href="freight-market.html">Freight Market</a></div>
       </section>
@@ -9286,13 +9315,15 @@ function wireLearnPage() {
     const track = event.target.closest("[data-track]");
     if (track) {
       state.track = track.dataset.track || "all";
-      state.visibleCount = 9;
+      state.query = "";
+      state.expanded = false;
       render();
       return;
     }
-    if (event.target.closest("[data-learn-load-more]")) {
-      state.visibleCount += 9;
+    if (event.target.closest("[data-learn-toggle]")) {
+      state.expanded = !state.expanded;
       render();
+      if (!state.expanded) root.querySelector(".learn-track-row")?.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   });
   root.addEventListener("keydown", (event) => {
@@ -9306,6 +9337,8 @@ function wireLearnPage() {
     event.preventDefault();
     state.query = root.querySelector("[data-learn-search]")?.value || "";
     state.guide = "";
+    state.track = "all";
+    state.expanded = false;
     render();
   });
   root.addEventListener("input", (event) => {
