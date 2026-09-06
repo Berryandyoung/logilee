@@ -1,19 +1,7 @@
 (function () {
-  const diag = window.LOGILEE_DOCS_DIAG = { scriptLoaded: true, initEntered: false, renderEntered: false, renderCompleted: false, error: null, firstError: null, stack: null, rootSelectorMatchCount: document.querySelectorAll("[data-template-builder]").length, documentReadyState: document.readyState, queryParsed: new URLSearchParams(location.search).get("template") || "" };
-  const recordDiagnosticError = (error) => {
-    if (diag.firstError) return;
-    diag.firstError = String(error?.message || error);
-    diag.stack = error?.stack || null;
-    diag.error = { message: diag.firstError, stack: diag.stack };
-  };
-  window.addEventListener("error", (event) => recordDiagnosticError(event.error || event.message));
-  window.addEventListener("unhandledrejection", (event) => recordDiagnosticError(event.reason));
-  diag.initEntered = true;
-  let root;
-  try {
   const lang = document.documentElement.lang === "ko" ? "ko" : "en";
-  root = document.querySelector("[data-template-builder]");
-  if (!root) throw new Error("Templates root selector did not match");
+  const root = document.querySelector("[data-template-builder]");
+  if (!root) return;
 
   const T = lang === "ko" ? {
     search: "템플릿 검색", all: "전체", trade: "무역서류", shipping: "운송", checklist: "체크리스트",
@@ -119,16 +107,9 @@
   }
 
   function render() {
-    diag.renderEntered = true;
-    try {
-      setUrl();
-      root.innerHTML = `${titleMarkup()}${state.selected ? builderMarkup() : hubMarkup()}<p class="sr-only" aria-live="polite" data-template-status></p>`;
-      bind();
-      diag.renderCompleted = true;
-    } catch (error) {
-      recordDiagnosticError(error);
-      throw error;
-    }
+    setUrl();
+    root.innerHTML = `${titleMarkup()}${state.selected ? builderMarkup() : hubMarkup()}<p class="sr-only" aria-live="polite" data-template-status></p>`;
+    bind();
   }
 
   function titleMarkup() {
@@ -762,8 +743,4 @@
   }
 
   render();
-  } catch (error) {
-    recordDiagnosticError(error);
-    if (root) root.innerHTML = `<div class="data-empty">${document.documentElement.lang === "ko" ? "템플릿 초기화 오류: 새로고침해 주세요." : "Template initialization failed. Please refresh the page."}</div>`;
-  }
 })();
