@@ -61,9 +61,9 @@
     "shipment-checklist": () => ({ reference: "SHIP-2026-001", notes: "", items: checklistItems().map((item) => ({ id: item.id, checked: false, owner: "", due: "" })) })
   };
 
-  function goodsRow() { return { description: "", hsCode: "", quantity: 1, unit: "pcs", unitPrice: 0, origin: "" }; }
-  function packageRow() { return { packageNo: "", type: "Carton", marks: "", description: "", quantity: 1, unit: "pcs", netWeight: 0, grossWeight: 0, weightUnit: "kg", length: 0, width: 0, height: 0, dimensionUnit: "cm" }; }
-  function cargoRow() { return { containerNo: "", sealNo: "", marks: "", packages: 1, packageType: "Carton", description: "", hsCode: "", grossWeight: 0, weightUnit: "kg", cbm: 0 }; }
+  function goodsRow() { return { description: "", hsCode: "", quantity: "", unit: "", unitPrice: "", origin: "" }; }
+  function packageRow() { return { packageNo: "", type: "Carton", marks: "", description: "", quantity: "", unit: "", netWeight: "", grossWeight: "", weightUnit: "kg", length: "", width: "", height: "", dimensionUnit: "cm" }; }
+  function cargoRow() { return { containerNo: "", sealNo: "", marks: "", packages: "", packageType: "Carton", description: "", hsCode: "", grossWeight: "", weightUnit: "kg", cbm: "" }; }
   function checklistItems() {
     const groups = lang === "ko"
       ? [["Before Booking", ["Buyer/order details confirmed", "Incoterms confirmed", "Cargo dimensions / weight confirmed", "HS classification reviewed", "DG / Reefer / OOG applicability reviewed"]], ["Booking", ["Carrier / forwarder selected", "Booking confirmation received", "Cut-off checked", "Equipment confirmed"]], ["Documentation", ["Commercial Invoice prepared", "Packing List prepared", "Shipping Instruction prepared/submitted externally", "Certificate of Origin requirement checked", "Export/customs requirements checked"]], ["Before Departure", ["Cargo delivered", "VGM submitted if applicable", "Draft B/L reviewed", "Export clearance status checked"]], ["After Departure", ["Final B/L or AWB received", "Buyer notified", "Document dispatch checked", "Payment milestone checked"]], ["Destination", ["Import documents shared", "Arrival information checked", "DEM/DET free time checked", "Customs / broker coordination checked"]]]
@@ -162,6 +162,7 @@
     return `<label class="template-field"><span>${label}<button type="button" aria-label="${attr(help)}" title="${attr(help)}">i</button></span><select name="${name}">${options}</select><small>${help}</small></label>`;
   }
   function section(title, body) { return `<fieldset class="template-section"><legend>${title}</legend>${body}</fieldset>`; }
+  function optionalSection(title, body, open = false) { return `<details class="template-optional" ${open ? "open" : ""}><summary>${title}</summary><div class="template-optional-body">${body}</div></details>`; }
 
   function formMarkup(id, d) {
     if (id === "shipment-checklist") return checklistForm(d);
@@ -172,23 +173,24 @@
     };
     if (id === "commercial-invoice") return [
       section("Document", field("invoiceNo", "Invoice No.", d.invoiceNo, commonHelp.ref) + field("invoiceDate", "Invoice Date", d.invoiceDate, commonHelp.ref, "date") + field("buyerRef", "Buyer Reference / PO No.", d.buyerRef, "Optional buyer reference.") + selectField("currency", "Currency", currencyOptions(d.currency), commonHelp.currency) + field("paymentTerms", "Terms of Payment", d.paymentTerms, "Payment terms shown on the invoice.")),
-      partyFields("seller", "Seller / Exporter", d, true), partyFields("buyer", "Consignee / Importer", d, false), section("Notify Party", `<label class="template-check"><input type="checkbox" name="notifySame" ${d.notifySame ? "checked" : ""}> ${lang === "ko" ? "Consignee와 동일" : "Same as Consignee"}</label>` + field("notifyName", "Company Name", d.notifyName, "Notify party name.") + field("notifyAddress", "Address", d.notifyAddress, "Notify party address.") + field("notifyContact", "Contact", d.notifyContact, "Notify party contact.")), shipToFields(d),
+      `<div class="template-party-pair">${partyFields("seller", "Seller / Exporter", d, true)}${partyFields("buyer", "Consignee / Importer", d, false)}</div>`,
+      optionalSection("Notify Party", `<label class="template-check"><input type="checkbox" name="notifySame" ${d.notifySame ? "checked" : ""}> ${lang === "ko" ? "Consignee와 동일" : "Same as Consignee"}</label><div data-notify-fields ${d.notifySame ? "hidden" : ""}>${field("notifyName", "Company Name", d.notifyName, "Notify party name.") + field("notifyAddress", "Address", d.notifyAddress, "Notify party address.") + field("notifyContact", "Contact", d.notifyContact, "Notify party contact.")}</div>`, !d.notifySame || Boolean(d.notifyName || d.notifyAddress || d.notifyContact)),
       section("Shipment", field("loading", "Port of Loading", d.loading, "Loading port.") + field("finalDestination", "Final Destination", d.finalDestination, "Final destination.") + field("carrier", "Carrier", d.carrier, "Carrier or forwarder.") + field("sailingDate", "Sailing on or about", d.sailingDate, "Planned sailing date.", "date") + selectField("incoterms", "Incoterms", incotermsOptions(d.incoterms), commonHelp.incoterms) + field("namedPlace", "Named Place", d.namedPlace, commonHelp.incoterms) + field("mode", "Mode of Transport", d.mode, "Ocean, air, truck, courier, or multimodal.") + selectField("origin", "Country of Origin", countryOptions(d.origin), "Country where the goods originate.") + selectField("destination", "Country of Destination", countryOptions(d.destination), "Destination country for this shipment.")),
-      section("Letter of Credit / Remarks", field("lcNo", "L/C No. & Date", d.lcNo, "Optional letter of credit reference.") + field("lcBank", "L/C Issuing Bank", d.lcBank, "Optional issuing bank.") + field("remarks", "Remarks", d.remarks, "Optional document remarks.")),
-      goodsRows(id, d.rows, commonHelp), chargesFields(d)
+      goodsRows(id, d.rows, commonHelp),
+      optionalSection("Optional Details", `${shipToFields(d).replace('<fieldset class="template-section">', '<div class="template-subsection">').replace('</fieldset>', '</div>')}<div class="template-subsection"><h3>Letter of Credit</h3>${field("lcNo", "L/C No. & Date", d.lcNo, "Optional letter of credit reference.") + field("lcBank", "L/C Issuing Bank", d.lcBank, "Optional issuing bank.")}</div><div class="template-subsection"><h3>Additional Charges</h3>${chargesFields(d).replace('<fieldset class="template-section">', '<div>').replace('</fieldset>', '</div>')}</div>${field("remarks", "Remarks", d.remarks, "Optional document remarks.")}`, Boolean(d.lcNo || d.lcDate || d.lcBank || d.remarks || d.shipName || d.shipAddress || d.freight || d.insurance || d.packing || d.otherCharges || d.discount))
     ].join("");
     if (id === "packing-list") return [
       section("Reference", field("packingNo", "Packing List No.", d.packingNo, commonHelp.ref) + field("invoiceNo", "Invoice No.", d.invoiceNo, "Related invoice reference.") + field("packingDate", "Packing Date / Shipment Date", d.packingDate, "Date used for the packing record.", "date")),
       section("Seller / Shipper", field("sellerName", "Company Name", d.sellerName, "Company shown as seller or shipper.") + field("sellerAddress", "Address", d.sellerAddress, "Use the address requested by your partner.")),
       section("Buyer / Consignee", field("buyerName", "Company Name", d.buyerName, "Company receiving or buying the goods.") + field("buyerAddress", "Address", d.buyerAddress, "Use the address requested by your partner.")),
-      section("Notify Party", `<label class="template-check"><input type="checkbox" name="notifySame" ${d.notifySame ? "checked" : ""}> ${lang === "ko" ? "Consignee와 동일" : "Same as Consignee"}</label>` + field("notifyName", "Company Name", d.notifyName, "Notify party name.") + field("notifyAddress", "Address", d.notifyAddress, "Notify party address.")),
+      optionalSection("Notify Party", `<label class="template-check"><input type="checkbox" name="notifySame" ${d.notifySame ? "checked" : ""}> ${lang === "ko" ? "Consignee와 동일" : "Same as Consignee"}</label><div data-notify-fields ${d.notifySame ? "hidden" : ""}>${field("notifyName", "Company Name", d.notifyName, "Notify party name.") + field("notifyAddress", "Address", d.notifyAddress, "Notify party address.")}</div>`, !d.notifySame || Boolean(d.notifyName || d.notifyAddress)),
       section("Shipment", field("mode", "Mode", d.mode, "Ocean, air, truck, courier, or multimodal.") + field("carrier", "Carrier", d.carrier, "Optional carrier or forwarder reference.") + field("loading", "Port/Airport of Loading", d.loading, "Loading location.") + field("discharge", "Port/Airport of Discharge", d.discharge, "Discharge location.") + field("finalDestination", "Final Destination", d.finalDestination, "Final delivery destination.")),
       `<button type="button" class="secondary-btn" data-import-ci>${T.importCi}</button>${packageRows(d.rows)}`
     ].join("");
     if (id === "pro-forma-invoice") return [
       `<p class="template-guardrail">${lang === "ko" ? "견적 및 거래조건 협의를 위한 참고 문서입니다. 최종 Commercial Invoice와 용도를 혼동하지 마세요." : "A pro forma invoice is used to present proposed transaction terms and should not be confused with the final commercial invoice."}</p>`,
       section("Document", field("proformaNo", "Pro Forma No.", d.proformaNo, commonHelp.ref) + field("issueDate", "Issue Date", d.issueDate, commonHelp.ref, "date") + field("validUntil", "Valid Until", d.validUntil, "Date through which the proposal is valid.", "date") + field("buyerRef", "Buyer Reference", d.buyerRef, "Optional buyer reference.") + field("estimatedShipDate", "Estimated Shipping Date", d.estimatedShipDate, "Estimated shipment timing.", "date")),
-      partyFields("seller", "Seller / Exporter", d, true), partyFields("buyer", "Consignee / Importer", d, false), section("Notify Party", `<label class="template-check"><input type="checkbox" name="notifySame" ${d.notifySame ? "checked" : ""}> ${lang === "ko" ? "Consignee와 동일" : "Same as Consignee"}</label>` + field("notifyName", "Company Name", d.notifyName, "Notify party name.") + field("notifyAddress", "Address", d.notifyAddress, "Notify party address.")), goodsRows(id, d.rows, commonHelp),
+      `<div class="template-party-pair">${partyFields("seller", "Seller / Exporter", d, true)}${partyFields("buyer", "Consignee / Importer", d, false)}</div>`, optionalSection("Notify Party", `<label class="template-check"><input type="checkbox" name="notifySame" ${d.notifySame ? "checked" : ""}> ${lang === "ko" ? "Consignee와 동일" : "Same as Consignee"}</label><div data-notify-fields ${d.notifySame ? "hidden" : ""}>${field("notifyName", "Company Name", d.notifyName, "Notify party name.") + field("notifyAddress", "Address", d.notifyAddress, "Notify party address.")}</div>`, !d.notifySame || Boolean(d.notifyName || d.notifyAddress)), goodsRows(id, d.rows, commonHelp),
       section("Commercial Terms", selectField("currency", "Currency", currencyOptions(d.currency), commonHelp.currency) + selectField("incoterms", "Incoterms", incotermsOptions(d.incoterms), commonHelp.incoterms) + field("namedPlace", "Named Place", d.namedPlace, commonHelp.incoterms) + field("paymentTerms", "Payment Terms", d.paymentTerms, "Proposed payment terms.") + field("discount", "Discount", d.discount, "Estimated discount.", "number") + field("freight", "Estimated Freight", d.freight, "Estimated freight amount.", "number") + field("insurance", "Estimated Insurance", d.insurance, "Estimated insurance amount.", "number") + field("remarks", "Remarks", d.remarks, "Optional commercial note."))
     ].join("");
     return [
@@ -204,7 +206,7 @@
     return section(title, field(`${prefix}Name`, "Company Name", d[`${prefix}Name`], "Legal or trade name used on the document.") + field(`${prefix}Address`, "Address", d[`${prefix}Address`], "Address requested for this transaction.") + (country ? selectField(`${prefix}Country`, "Country", countryOptions(d[`${prefix}Country`]), "Country for this party.") : "") + field(`${prefix}Contact`, "Contact", d[`${prefix}Contact`] || "", "Optional operational contact."));
   }
   function shipToFields(d) {
-    return section("Ship To", `<label class="template-check"><input type="checkbox" name="shipSame" ${d.shipSame ? "checked" : ""}> ${lang === "ko" ? "Buyer와 동일" : "Same as Buyer"}</label>` + field("shipName", "Company", d.shipName, "Ship-to company if different.") + field("shipAddress", "Address", d.shipAddress, "Ship-to address if different.") + selectField("shipCountry", "Country", countryOptions(d.shipCountry), "Ship-to country."));
+    return section("Ship To", `<label class="template-check"><input type="checkbox" name="shipSame" ${d.shipSame ? "checked" : ""}> ${lang === "ko" ? "Buyer와 동일" : "Same as Buyer"}</label><div data-ship-fields ${d.shipSame ? "hidden" : ""}>${field("shipName", "Company", d.shipName, "Ship-to company if different.") + field("shipAddress", "Address", d.shipAddress, "Ship-to address if different.") + selectField("shipCountry", "Country", countryOptions(d.shipCountry), "Ship-to country.")}</div>`);
   }
   function goodsRows(id, rows, help) {
     return section("Goods", `<div class="template-row-table">${rows.map((row, i) => `<div class="template-row" data-row="${i}">${field(`rows.${i}.description`, "Description", row.description, help.desc)}${field(`rows.${i}.hsCode`, "HS Code", row.hsCode, help.hs)}${field(`rows.${i}.quantity`, "Quantity", row.quantity, "Quantity for this line.", "number")}${selectField(`rows.${i}.unit`, "Unit", unitOptions(row.unit), "Unit of measure.")}${field(`rows.${i}.unitPrice`, "Unit Price", row.unitPrice, "Unit price.", "number")}${field(`rows.${i}.origin`, "Origin Override", row.origin, "Optional country of origin override.")}<button type="button" data-remove-row="${i}">${T.remove}</button></div>`).join("")}</div><button type="button" class="secondary-btn" data-add-row="${id}">${T.addRow}</button>`);
@@ -229,15 +231,23 @@
   }
 
   function totals(id, d) {
+    const rows = meaningfulRows(d.rows || []);
     if (id === "packing-list") {
-      return d.rows.reduce((acc, row) => {
+      return rows.reduce((acc, row) => {
         const cbm = num(row.length) * dimToM[row.dimensionUnit] * num(row.width) * dimToM[row.dimensionUnit] * num(row.height) * dimToM[row.dimensionUnit] * num(row.quantity);
         acc.packages += 1; acc.quantity += num(row.quantity); acc.net += num(row.netWeight) * weightToKg[row.weightUnit]; acc.gross += num(row.grossWeight) * weightToKg[row.weightUnit]; acc.cbm += Number.isFinite(cbm) ? cbm : 0; return acc;
       }, { packages: 0, quantity: 0, net: 0, gross: 0, cbm: 0 });
     }
-    const goods = (d.rows || []).reduce((sum, row) => sum + num(row.quantity) * num(row.unitPrice), 0);
+    const goods = rows.reduce((sum, row) => sum + num(row.quantity) * num(row.unitPrice), 0);
     return { goods, total: goods + num(d.freight) + num(d.insurance) + num(d.packing) + num(d.otherCharges) - num(d.discount) };
   }
+  function meaningfulRow(row) {
+    const textValues = [row.description, row.hsCode, row.origin, row.marks, row.packageNo, row.containerNo, row.sealNo];
+    const hasText = textValues.some((value) => String(value ?? "").trim());
+    const legacyPlaceholder = !hasText && ((row.quantity === 1 && row.unit === "pcs" && num(row.unitPrice) === 0) || (row.packages === 1 && row.packageType === "Carton" && num(row.grossWeight) === 0 && num(row.cbm) === 0));
+    return !legacyPlaceholder && (hasText || [row.quantity, row.unitPrice, row.packages, row.netWeight, row.grossWeight, row.length, row.width, row.height, row.cbm].some((value) => String(value ?? "").trim()));
+  }
+  function meaningfulRows(rows) { return rows.filter(meaningfulRow); }
   function warnings(id, d) {
     const list = [];
     const rows = d.rows || [];
@@ -246,14 +256,15 @@
     if (id === "pro-forma-invoice" && !d.proformaNo) list.push(`Pro Forma No.: ${T.required}`);
     if (id === "shipping-instruction" && !d.siRef && !d.bookingNo) list.push(`SI Reference / Booking No.: ${T.required}`);
     rows.forEach((row, i) => {
-      if ("description" in row && !String(row.description || "").trim()) list.push(`Row ${i + 1}: ${T.required}`);
+      if (!meaningfulRow(row)) return;
+      if ("description" in row && !String(row.description || "").trim()) list.push(`${lang === "ko" ? "행" : "Row"} ${i + 1}: ${T.required}`);
       if (num(row.quantity ?? row.packages) <= 0 || num(row.unitPrice ?? 0) < 0) list.push(`Row ${i + 1}: ${T.invalidNumber}`);
     });
     if ((d.incoterms || "") && !String(d.namedPlace || "").trim()) list.push(T.namedPlace);
     if (id === "packing-list") {
       const ci = state.data["commercial-invoice"];
-      const ciQty = (ci.rows || []).reduce((sum, row) => sum + num(row.quantity), 0);
-      const plQty = (d.rows || []).reduce((sum, row) => sum + num(row.quantity), 0);
+      const ciQty = meaningfulRows(ci.rows || []).reduce((sum, row) => sum + num(row.quantity), 0);
+      const plQty = meaningfulRows(d.rows || []).reduce((sum, row) => sum + num(row.quantity), 0);
       if (ciQty && plQty && ciQty !== plQty) list.push(T.qtyMismatch);
     }
     return list;
@@ -262,9 +273,9 @@
   function previewMarkup(id, d) {
     const title = templates.find((tpl) => tpl.id === id).title.toUpperCase();
     if (id === "shipment-checklist") return checklistPreview(d);
-    const rows = d.rows || [];
+    const rows = meaningfulRows(d.rows || []);
     const total = totals(id, d);
-    return `<article class="doc-preview" data-doc-preview><h2>${title}</h2>${documentSummary(id, d)}${partyPreview(d)}<table><thead><tr>${previewHeaders(id).map((h) => `<th>${h}</th>`).join("")}</tr></thead><tbody>${rows.map((row) => previewRow(id, row)).join("")}</tbody></table>${totalMarkup(id, total, d)}<footer>Created with LOGILEE</footer></article>`;
+    return `<article class="doc-preview" data-doc-preview><h2>${title}</h2>${documentSummary(id, d)}${partyPreview(d, id)}<table><thead><tr>${previewHeaders(id).map((h) => `<th>${h}</th>`).join("")}</tr></thead><tbody>${rows.map((row) => previewRow(id, row)).join("")}</tbody></table>${totalMarkup(id, total, d)}</article>`;
   }
   function documentSummary(id, d) {
     const rows = id === "commercial-invoice" ? [["Invoice No.", d.invoiceNo], ["Date", d.invoiceDate], ["Currency", d.currency], ["Incoterms", `${d.incoterms || ""} ${d.namedPlace || ""}`.trim()]]
@@ -273,17 +284,22 @@
       : [["Booking No.", d.bookingNo], ["SI Reference", d.siRef], ["B/L Type", d.blType], ["Freight Terms", d.freightTerms]];
     return `<dl>${rows.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join("")}</dl>`;
   }
-  function partyPreview(d) {
+  function partyPreview(d, id) {
     const seller = d.sellerName || d.shipperName || "";
     const buyer = d.buyerName || d.consigneeName || "";
-    return `<div class="doc-party-grid"><section><h3>Seller / Shipper</h3><p>${esc(seller)}<br>${esc(d.sellerAddress || d.shipperAddress || "")}</p></section><section><h3>Buyer / Consignee</h3><p>${esc(buyer)}<br>${esc(d.buyerAddress || d.consigneeAddress || "")}</p></section></div>`;
+    const notify = d.notifySame ? buyer : d.notifyName;
+    const notifyAddress = d.notifySame ? (d.buyerAddress || d.consigneeAddress || "") : d.notifyAddress;
+    const labels = id === "commercial-invoice" || id === "pro-forma-invoice" ? ["Shipper / Exporter", "Consignee / Importer"] : ["Seller / Shipper", "Buyer / Consignee"];
+    return `<div class="doc-party-grid"><section><h3>${labels[0]}</h3><p>${esc(seller)}<br>${esc(d.sellerAddress || d.shipperAddress || "")}</p></section><section><h3>${labels[1]}</h3><p>${esc(buyer)}<br>${esc(d.buyerAddress || d.consigneeAddress || "")}</p></section>${id === "commercial-invoice" ? `<section><h3>Notify Party</h3><p>${esc(notify)}<br>${esc(notifyAddress)}</p></section>` : ""}</div>`;
   }
   function previewHeaders(id) {
+    if (id === "commercial-invoice") return ["Marks / Pkgs", "Description", "Quantity", "Unit Price", "Amount", "HS CODE"];
     if (id === "packing-list") return ["Package", "Description", "Qty", "Net", "Gross", "CBM"];
     if (id === "shipping-instruction") return ["Container", "Marks", "Packages", "Description", "HS", "Gross", "CBM"];
     return ["Description", "HS Code", "Qty", "Unit", "Unit Price", "Line Total"];
   }
   function previewRow(id, row) {
+    if (id === "commercial-invoice") return `<tr><td>${esc(row.marks || row.packageNo)}</td><td>${esc(row.description)}</td><td>${esc(row.quantity)} ${esc(row.unit)}</td><td>${money(row.unitPrice)}</td><td>${money(num(row.quantity) * num(row.unitPrice))}</td><td>${esc(row.hsCode)}</td></tr>`;
     if (id === "packing-list") {
       const cbm = num(row.length) * dimToM[row.dimensionUnit] * num(row.width) * dimToM[row.dimensionUnit] * num(row.height) * dimToM[row.dimensionUnit] * num(row.quantity);
       return `<tr><td>${esc(row.packageNo || row.type)}</td><td>${esc(row.description)}</td><td>${esc(row.quantity)} ${esc(row.unit)}</td><td>${money(num(row.netWeight) * weightToKg[row.weightUnit])} kg</td><td>${money(num(row.grossWeight) * weightToKg[row.weightUnit])} kg</td><td>${money(cbm)}</td></tr>`;
@@ -352,6 +368,7 @@
   }
 
   function refreshBuilderFeedback() {
+    syncConditionalFields();
     const preview = root.querySelector("[data-doc-preview]");
     if (preview && state.selected) {
       preview.outerHTML = previewMarkup(state.selected, state.data[state.selected]);
@@ -360,6 +377,11 @@
     if (warningBox && state.selected) {
       warningBox.innerHTML = warnings(state.selected, state.data[state.selected]).map((msg) => `<p>${esc(msg)}</p>`).join("");
     }
+  }
+  function syncConditionalFields() {
+    const d = state.data[state.selected];
+    root.querySelectorAll("[data-notify-fields]").forEach((node) => { node.hidden = Boolean(d.notifySame); });
+    root.querySelectorAll("[data-ship-fields]").forEach((node) => { node.hidden = Boolean(d.shipSame); });
   }
 
   function importCommercialInvoice() {
@@ -419,9 +441,9 @@
     return filled.replace(/<c([^>]*)>\s*<is>\s*<t>\{\{[^}]+\}\}<\/t>\s*<\/is>\s*<\/c>/g, "");
   }
   const xlsxLayouts = {
-    "commercial-invoice": { file: "commercial-invoice.xlsx", sheet: "CI", title: "COMMERCIAL INVOICE", columns: [1, 3, 5, 7, 8, 9], totalsRow: 74, rows: (d) => (d.rows || []).map((row) => [row.marks || row.packageNo || "", row.description, num(row.quantity), num(row.unitPrice), num(row.quantity) * num(row.unitPrice), row.hsCode]), totals: (d) => { const total = totals("commercial-invoice", d); return [{ column: 5, value: (d.rows || []).reduce((sum, row) => sum + num(row.quantity), 0) }, { column: 8, value: total.total }]; } },
-    "packing-list": { file: "packing-list.xlsx", sheet: "PL", title: "PACKING LIST", columns: [1, 3, 5, 7, 8, 9], totalsRow: 74, rows: (d) => (d.rows || []).map((row) => { const factor = weightToKg[row.weightUnit] || 1; const packageLabel = [row.packageNo, row.marks, row.type].filter(Boolean).join(" / "); return [packageLabel, row.description, num(row.quantity), num(row.netWeight) * factor, num(row.grossWeight) * factor, `${row.length} x ${row.width} x ${row.height} ${row.dimensionUnit} / ${packageCbm(row).toFixed(3)} CBM`]; }), totals: (d) => { const total = totals("packing-list", d); return [{ column: 5, value: total.packages }, { column: 7, value: total.net }, { column: 8, value: total.gross }, { column: 9, value: total.cbm }]; } },
-    "pro-forma-invoice": { file: "pro-forma-invoice.xlsx", sheet: "PF", title: "PRO FORMA INVOICE", columns: [1, 3, 5, 7, 8, 9], totalsRow: 74, rows: (d) => (d.rows || []).map((row) => [row.marks || row.packageNo || "", row.description, num(row.quantity), num(row.unitPrice), num(row.quantity) * num(row.unitPrice), row.hsCode]), totals: (d) => { const total = totals("pro-forma-invoice", d); return [{ column: 5, value: (d.rows || []).reduce((sum, row) => sum + num(row.quantity), 0) }, { column: 8, value: total.total }]; } },
+    "commercial-invoice": { file: "commercial-invoice.xlsx", sheet: "CI", title: "COMMERCIAL INVOICE", itemStartRow: 23, itemCapacity: 23, totalsRow: 46, columns: [1, 3, 5, 7, 8, 9], rows: (d) => meaningfulRows(d.rows || []).map((row) => [row.marks || row.packageNo || "", row.description, num(row.quantity), num(row.unitPrice), num(row.quantity) * num(row.unitPrice), row.hsCode]), totals: (d) => { const total = totals("commercial-invoice", d); return [{ column: 5, value: meaningfulRows(d.rows || []).length ? meaningfulRows(d.rows || []).reduce((sum, row) => sum + num(row.quantity), 0) : "", rowOffset: 0 }, { column: 8, value: total.total || "", rowOffset: 1 }]; } },
+    "packing-list": { file: "packing-list.xlsx", sheet: "PL", title: "PACKING LIST", itemStartRow: 23, itemCapacity: 22, totalsRow: 45, columns: [1, 3, 5, 7, 8, 9], rows: (d) => meaningfulRows(d.rows || []).map((row) => { const factor = weightToKg[row.weightUnit] || 1; const packageLabel = [row.packageNo, row.marks, row.type].filter(Boolean).join(" / "); return [packageLabel, row.description, num(row.quantity), num(row.netWeight) * factor, num(row.grossWeight) * factor, `${row.length} x ${row.width} x ${row.height} ${row.dimensionUnit} / ${packageCbm(row).toFixed(3)} CBM`]; }), totals: (d) => { const total = totals("packing-list", d); return [{ column: 5, value: total.packages || "" }, { column: 7, value: total.net || "" }, { column: 8, value: total.gross || "" }, { column: 9, value: total.cbm || "" }]; } },
+    "pro-forma-invoice": { file: "pro-forma-invoice.xlsx", sheet: "PF", title: "PRO FORMA INVOICE", itemStartRow: 23, itemCapacity: 23, totalsRow: 46, columns: [1, 3, 5, 7, 8, 9], rows: (d) => meaningfulRows(d.rows || []).map((row) => [row.marks || row.packageNo || "", row.description, num(row.quantity), num(row.unitPrice), num(row.quantity) * num(row.unitPrice), row.hsCode]), totals: (d) => { const total = totals("pro-forma-invoice", d); return [{ column: 5, value: meaningfulRows(d.rows || []).length ? meaningfulRows(d.rows || []).reduce((sum, row) => sum + num(row.quantity), 0) : "", rowOffset: 0 }, { column: 8, value: total.total || "", rowOffset: 1 }]; } },
     "shipment-checklist": { file: "shipment-checklist.xlsx", sheet: "Shipment Checklist", title: "LOGILEE SHIPMENT CHECKLIST", columns: [1, 2, 3, 4, 5, 6, 7], totalsRow: 58, rows: (d) => { const saved = new Map((d.items || []).map((item) => [item.id, item])); return checklistItems().map((item) => { const value = saved.get(item.id) || {}; return [item.group, value.checked ? "Done" : "Open", item.label, value.owner || "", value.due || "", value.checked ? "Complete" : "Pending", d.notes || ""]; }); }, totals: (d) => { const items = checklistItems(); return [{ column: 2, value: items.filter((item) => !d.items?.find((saved) => saved.id === item.id && saved.checked)).length }, { column: 2, value: items.filter((item) => d.items?.find((saved) => saved.id === item.id && saved.checked)).length }]; } }
   };
   function countryName(code) { return (countries().find((item) => item[0] === code) || ["", code, code])[1]; }
@@ -441,8 +463,12 @@
     if (!sheet || sheet.getCell("A1").value !== (layout.title || layout.sheet.toUpperCase())) throw new Error("Template base integrity check failed");
     Object.entries(topValues(id, d)).forEach(([address, value]) => { sheet.getCell(address).value = value; });
     const rows = layout.rows(d); if (rows.length > 50) throw new Error("Template supports up to 50 item rows");
-    for (let index = 0; index < 50; index++) layout.columns.forEach((column, valueIndex) => { sheet.getCell(23 + index, column).value = rows[index]?.[valueIndex] ?? null; });
-    layout.totals(d).forEach(({ column, value }) => { sheet.getCell(layout.totalsRow, column).value = value; });
+    const extraRows = Math.max(0, rows.length - layout.itemCapacity);
+    if (extraRows) sheet.insertRows(layout.totalsRow, Array.from({ length: extraRows }, () => []), "i");
+    for (let index = 0; index < layout.itemCapacity + extraRows; index++) layout.columns.forEach((column, valueIndex) => { sheet.getCell(layout.itemStartRow + index, column).value = rows[index]?.[valueIndex] ?? null; });
+    layout.totals(d).forEach(({ column, value, rowOffset = 0 }) => { sheet.getCell(layout.totalsRow + extraRows + rowOffset, column).value = value; });
+    const printEnd = layout.totalsRow + extraRows + (id === "commercial-invoice" || id === "pro-forma-invoice" ? 4 : 5);
+    sheet.pageSetup.printArea = `A1:${id === "commercial-invoice" ? "K" : "I"}${printEnd}`;
     return new Blob([await workbook.xlsx.writeBuffer()], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
   }
 
@@ -461,20 +487,20 @@
       party("SHIP TO", d.shipSame ? d.buyerName : d.shipName, d.shipSame ? d.buyerAddress : d.shipAddress, countryName(d.shipSame ? d.buyerCountry : d.shipCountry), ""); add("");
       add("SHIPMENT / TRADE INFORMATION"); add("Incoterms® Rule", `${d.incoterms || ""} ${d.namedPlace || ""}`.trim()); add("Mode of Transport", d.mode); add("Country of Origin", countryName(d.origin)); add("Destination Country", countryName(d.destination)); add("");
       add("No.", "Description of Goods", "HS Code", "Country of Origin", "Quantity", "Unit", "Unit Price", "Amount");
-      (d.rows || []).forEach((row, index) => add(index + 1, row.description, row.hsCode, countryName(row.origin || d.origin), num(row.quantity), row.unit, num(row.unitPrice), num(row.quantity) * num(row.unitPrice)));
+      meaningfulRows(d.rows || []).forEach((row, index) => add(index + 1, row.description, row.hsCode, countryName(row.origin || d.origin), num(row.quantity), row.unit, num(row.unitPrice), num(row.quantity) * num(row.unitPrice)));
       const total = totals(id, d); add(""); add("Subtotal", total.goods); add("Freight", num(d.freight)); add("Insurance", num(d.insurance)); add("Packing", num(d.packing)); add("Other Charges", num(d.otherCharges)); add("Discount", num(d.discount)); add("TOTAL", total.total, d.currency);
     } else if (id === "packing-list") {
       add("Packing List No.", d.packingNo); add("Invoice No.", d.invoiceNo); add("Date", d.packingDate); add("");
       party("SELLER / SHIPPER", d.sellerName, d.sellerAddress, "", ""); add(""); party("BUYER / CONSIGNEE", d.buyerName, d.buyerAddress, "", ""); add("");
       add("SHIPMENT INFORMATION"); add("Mode", d.mode); add("Port of Loading", d.loading); add("Port of Discharge", d.discharge); add("Final Destination", d.finalDestination); add("Carrier", d.carrier); add("");
       add("Package No.", "Marks & Numbers", "Package Type", "Description", "Quantity", "Unit", "Net Weight (kg)", "Gross Weight (kg)", "Dimensions", "CBM");
-      (d.rows || []).forEach((row) => { const factor = weightToKg[row.weightUnit] || 1; const cbm = packageCbm(row); add(row.packageNo || row.type, row.marks, row.type, row.description, num(row.quantity), row.unit, num(row.netWeight) * factor, num(row.grossWeight) * factor, `${row.length} × ${row.width} × ${row.height} ${row.dimensionUnit}`, cbm); });
+      meaningfulRows(d.rows || []).forEach((row) => { const factor = weightToKg[row.weightUnit] || 1; const cbm = packageCbm(row); add(row.packageNo || row.type, row.marks, row.type, row.description, num(row.quantity), row.unit, num(row.netWeight) * factor, num(row.grossWeight) * factor, `${row.length} × ${row.width} × ${row.height} ${row.dimensionUnit}`, cbm); });
       const total = totals(id, d); add(""); add("Total Packages", total.packages); add("Total Quantity", total.quantity); add("Total Net Weight (kg)", total.net); add("Total Gross Weight (kg)", total.gross); add("Total CBM", total.cbm);
     } else if (id === "pro-forma-invoice") {
       add("Quotation / Reference", d.proformaNo); add("Issue Date", d.issueDate); add("Validity Date", d.validUntil); add("Estimated Shipping Date", d.estimatedShipDate); add("Buyer Reference", d.buyerRef); add("Currency", d.currency); add("Payment Terms", d.paymentTerms); add("Incoterms® / Named Delivery Point", `${d.incoterms || ""} ${d.namedPlace || ""}`.trim()); add("");
       party("SELLER", d.sellerName, d.sellerAddress, countryName(d.sellerCountry), ""); add(""); party("BUYER", d.buyerName, d.buyerAddress, countryName(d.buyerCountry), ""); add("");
       add("No.", "Quoted Items", "HS Code", "Country of Origin", "Quantity", "Unit", "Unit Price", "Extended Amount");
-      (d.rows || []).forEach((row, index) => add(index + 1, row.description, row.hsCode, countryName(row.origin), num(row.quantity), row.unit, num(row.unitPrice), num(row.quantity) * num(row.unitPrice)));
+      meaningfulRows(d.rows || []).forEach((row, index) => add(index + 1, row.description, row.hsCode, countryName(row.origin), num(row.quantity), row.unit, num(row.unitPrice), num(row.quantity) * num(row.unitPrice)));
       const total = totals(id, d); add(""); add("Quoted Goods Total", total.goods); add("Freight", num(d.freight)); add("Insurance", num(d.insurance)); add("Discount", num(d.discount)); add("QUOTED TOTAL", total.total, d.currency); add("Remarks", d.remarks);
     } else if (id === "shipping-instruction") {
       add("Booking No.", d.bookingNo); add("SI Reference", d.siRef); add("B/L Type", d.blType); add("Freight Terms", d.freightTerms); add("");
