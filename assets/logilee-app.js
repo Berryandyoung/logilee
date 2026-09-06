@@ -2362,9 +2362,21 @@ function wireDictionary() {
     const copyLink = event.target.closest("[data-copy-link]");
     if (copyTerm || copyLink) {
       const value = copyTerm ? copyTerm.dataset.copyDictionary : `${location.origin}${location.pathname}?term=${copyLink.dataset.copyLink}`;
-      try { await navigator.clipboard.writeText(value); } catch (_) {}
       const feedback = document.querySelector("[data-copy-feedback]");
       if (feedback) feedback.textContent = labels.copied;
+      try {
+        if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(value);
+      } catch (_) {
+        const area = document.createElement("textarea");
+        area.value = value;
+        area.setAttribute("readonly", "");
+        area.style.position = "fixed";
+        area.style.opacity = "0";
+        document.body.appendChild(area);
+        area.select();
+        try { document.execCommand("copy"); } catch (__) {}
+        area.remove();
+      }
     }
   });
   document.addEventListener("input", (event) => {
