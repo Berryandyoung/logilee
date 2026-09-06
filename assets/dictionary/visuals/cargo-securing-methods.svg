@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 360" role="img" aria-labelledby="title desc">
+  <title id="title">Cargo securing methods inside a container</title>
+  <desc id="desc">Diagram showing cargo supported by dunnage below, blocking at the side, bracing diagonally, and lashing over the cargo.</desc>
+  <rect width="720" height="360" fill="#f4f8fc"/>
+  <rect x="46" y="58" width="628" height="244" rx="10" fill="#fff" stroke="#9db4ca" stroke-width="3"/>
+  <rect x="172" y="142" width="252" height="96" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="3"/>
+  <rect x="176" y="246" width="70" height="18" fill="#a16207"/>
+  <rect x="276" y="246" width="70" height="18" fill="#a16207"/>
+  <rect x="376" y="246" width="70" height="18" fill="#a16207"/>
+  <rect x="110" y="154" width="48" height="84" fill="#c08457"/>
+  <path d="M438 142 556 238 M556 142 438 238" stroke="#0f766e" stroke-width="12" stroke-linecap="round"/>
+  <path d="M150 126 C250 82 348 82 450 126" fill="none" stroke="#ef4444" stroke-width="8"/>
+  <circle cx="150" cy="126" r="9" fill="#ef4444"/>
+  <circle cx="450" cy="126" r="9" fill="#ef4444"/>
+  <g font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#0f2742">
+    <text x="210" y="196">Cargo</text>
+    <text x="190" y="286">Dunnage</text>
+    <text x="84" y="145">Blocking</text>
+    <text x="496" y="132">Bracing</text>
+    <text x="286" y="92">Lashing</text>
+  </g>
+</svg>

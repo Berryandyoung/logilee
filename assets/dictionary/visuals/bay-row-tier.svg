@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 360" role="img" aria-labelledby="title desc">
+  <title id="title">Bay row tier container position</title>
+  <desc id="desc">Diagram explaining bay, row, and tier positions in a container stowage plan.</desc>
+  <rect width="720" height="360" fill="#f4f8fc"/>
+  <g transform="translate(100 64)" stroke="#0f2742" stroke-width="3">
+    <g fill="#dbeafe">
+      <rect x="0" y="120" width="80" height="40"/><rect x="80" y="120" width="80" height="40"/><rect x="160" y="120" width="80" height="40"/>
+      <rect x="0" y="80" width="80" height="40"/><rect x="80" y="80" width="80" height="40"/><rect x="160" y="80" width="80" height="40"/>
+      <rect x="0" y="40" width="80" height="40"/><rect x="80" y="40" width="80" height="40"/><rect x="160" y="40" width="80" height="40"/>
+    </g>
+    <rect x="80" y="40" width="80" height="120" fill="none" stroke="#2563eb" stroke-width="7"/>
+    <path d="M288 160 V40" stroke="#ef4444" stroke-width="5"/>
+    <path d="M0 196 H240" stroke="#0f766e" stroke-width="5"/>
+  </g>
+  <g font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#0f2742">
+    <text x="205" y="46">Bay</text>
+    <text x="402" y="118">Tier</text>
+    <text x="188" y="298">Row</text>
+  </g>
+</svg>

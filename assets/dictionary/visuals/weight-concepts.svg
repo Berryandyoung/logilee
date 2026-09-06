@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 360" role="img" aria-labelledby="title desc">
+  <title id="title">Weight concepts for freight</title>
+  <desc id="desc">Diagram comparing tare weight, payload, maximum gross mass, actual weight, volumetric weight, and chargeable weight.</desc>
+  <rect width="720" height="360" fill="#f4f8fc"/>
+  <rect x="84" y="98" width="242" height="86" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="4"/>
+  <rect x="84" y="184" width="242" height="46" rx="8" fill="#e2e8f0" stroke="#64748b" stroke-width="4"/>
+  <path d="M84 258 H326" stroke="#0f2742" stroke-width="8"/>
+  <rect x="418" y="92" width="74" height="176" fill="#dcfce7"/>
+  <rect x="522" y="138" width="74" height="130" fill="#fee2e2"/>
+  <path d="M398 268 H620" stroke="#0f2742" stroke-width="5"/>
+  <g font-family="Arial, sans-serif" fill="#0f2742" font-weight="700">
+    <text x="132" y="148" font-size="18">Payload</text>
+    <text x="132" y="214" font-size="18">Tare</text>
+    <text x="104" y="292" font-size="18">Maximum Gross Mass</text>
+    <text x="396" y="64" font-size="18">Chargeable Weight = greater basis</text>
+    <text x="410" y="298" font-size="16">Actual</text>
+    <text x="518" y="298" font-size="16">Volumetric</text>
+  </g>
+</svg>

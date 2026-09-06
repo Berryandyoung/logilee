@@ -2197,8 +2197,8 @@ function wireDictionary() {
   const lang = currentLang();
   const data = window.LOGILEE_DICTIONARY;
   const categoryLabels = {
-    ko: { all: "전체", trade: "무역", ocean: "해상", air: "항공", customs: "통관·규제", operations: "선적업무", charges: "운임·비용" },
-    en: { all: "All", trade: "Trade", ocean: "Ocean", air: "Air", customs: "Customs & Compliance", operations: "Shipping Operations", charges: "Charges" }
+    ko: { all: "전체", trade: "무역", ocean: "해상", air: "항공", customs: "통관·규제", operations: "선적업무", charges: "운임·비용", cargo: "화물 취급·고정" },
+    en: { all: "All", trade: "Trade", ocean: "Ocean", air: "Air", customs: "Customs & Compliance", operations: "Shipping Operations", charges: "Charges", cargo: "Cargo Handling & Securing" }
   };
   const stages = data.stageLabels;
   const allTerms = data.terms.slice().sort((a, b) => a.term.localeCompare(b.term));
@@ -2227,6 +2227,11 @@ function wireDictionary() {
     tools: lang === "ko" ? "관련 LOGILEE 도구" : "Related LOGILEE Tools",
     sources: lang === "ko" ? "Sources / 검토일" : "Sources / Reviewed Date",
     note: lang === "ko" ? "일반적인 실무 참고 정보입니다. 계약, 통관, 운임 정산 전에는 공식 기준과 거래 조건을 확인하세요." : "General practical reference only. Confirm official rules and commercial terms before contracts, customs filing, or charge settlement."
+  };
+  const visualMarkup = (term) => {
+    const visual = term.visual;
+    if (!visual) return "";
+    return `<section class="dictionary-visual"><h3>${lang === "ko" ? "그림으로 이해하기" : "Visual Guide"}</h3><img src="${escapeAttribute(visual.src)}" alt="${escapeAttribute(lang === "ko" ? visual.altKo : visual.altEn)}" loading="lazy"><p>${escapeHtml(lang === "ko" ? visual.captionKo : visual.captionEn)}</p><small>${escapeHtml(visual.credit || "LOGILEE")}</small></section>`;
   };
   const candidates = (term) => [term.id, term.slug, term.term, term.fullName, term.koName, ...(term.aliases || [])].filter(Boolean);
   const findTerm = (value) => {
@@ -2296,6 +2301,7 @@ function wireDictionary() {
         </div>
         <section><h3>${labels.definition}</h3><p>${escapeHtml(copy.shortDefinition)}</p></section>
         <section><h3>${labels.context}</h3><p>${escapeHtml(copy.practicalContext)}</p></section>
+        ${visualMarkup(term)}
         ${copy.practicalChecks?.length ? `<section><h3>${labels.checks}</h3><ul>${copy.practicalChecks.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul></section>` : ""}
         <section class="notice"><h3>${labels.example}</h3><p>${escapeHtml(copy.example)}</p></section>
         ${copy.comparisonNotes?.length ? `<section class="dictionary-comparison"><h3>${labels.compare}</h3>${copy.comparisonNotes.map((item) => `<p>${escapeHtml(item)}</p>`).join("")}</section>` : ""}

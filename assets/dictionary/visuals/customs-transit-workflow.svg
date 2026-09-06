@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 360" role="img" aria-labelledby="title desc">
+  <title id="title">Customs transit workflow</title>
+  <desc id="desc">Diagram showing goods moving from departure customs through transit under control to destination customs before release.</desc>
+  <rect width="720" height="360" fill="#f4f8fc"/>
+  <g font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#0f2742">
+    <rect x="64" y="132" width="150" height="80" rx="10" fill="#dbeafe" stroke="#2563eb" stroke-width="4"/>
+    <text x="94" y="166">Departure</text><text x="94" y="190">Customs</text>
+    <rect x="286" y="132" width="150" height="80" rx="10" fill="#fff7ed" stroke="#f97316" stroke-width="4"/>
+    <text x="326" y="166">Transit</text><text x="314" y="190">Movement</text>
+    <rect x="508" y="132" width="150" height="80" rx="10" fill="#dcfce7" stroke="#16a34a" stroke-width="4"/>
+    <text x="538" y="166">Destination</text><text x="546" y="190">Customs</text>
+  </g>
+  <path d="M220 172 H278 M442 172 H500" stroke="#0f2742" stroke-width="5" marker-end="url(#arrow)"/>
+  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#0f2742"/></marker></defs>
+</svg>
