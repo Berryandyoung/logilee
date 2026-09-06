@@ -30,5 +30,12 @@
     </section>
     <section class="panel"><div class="data-empty">Loading template tools...</div></section>
   </main>
+  <script>
+    window.setTimeout(function () {
+      var root = document.querySelector("[data-template-builder]");
+      var waiting = root && root.querySelector(".data-empty");
+      if (waiting) waiting.textContent = "Document generation module failed to load. Please refresh the page.";
+    }, 8000);
+  </script>
 </body>
 </html>

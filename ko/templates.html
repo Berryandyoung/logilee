@@ -30,5 +30,12 @@
     </section>
     <section class="panel"><div class="data-empty">템플릿 도구를 불러오는 중입니다...</div></section>
   </main>
+  <script>
+    window.setTimeout(function () {
+      var root = document.querySelector("[data-template-builder]");
+      var waiting = root && root.querySelector(".data-empty");
+      if (waiting) waiting.textContent = "문서 생성 모듈을 불러오지 못했습니다. 페이지를 새로고침해 주세요.";
+    }, 8000);
+  </script>
 </body>
 </html>
