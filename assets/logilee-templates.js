@@ -383,6 +383,48 @@
     return num(row.length) * dimToM[row.dimensionUnit] * num(row.width) * dimToM[row.dimensionUnit] * num(row.height) * dimToM[row.dimensionUnit] * num(row.quantity);
   }
 
+  const baseFileNames = { "commercial-invoice": "commercial-invoice.xlsx", "packing-list": "packing-list.xlsx", "pro-forma-invoice": "pro-forma-invoice.xlsx", "shipment-checklist": "shipment-checklist.xlsx" };
+  const baseMarkerValues = (id, d) => {
+    const values = {};
+    const put = (key, value) => { values[key] = value ?? ""; };
+    const total = totals(id, d);
+    const countryName = (code) => (countries().find((item) => item[0] === code) || ["", code, code])[1];
+    if (id === "commercial-invoice") {
+      put("CI_REF", d.invoiceNo); put("CI_DATE", d.invoiceDate); put("CI_SELLER", d.sellerName); put("CI_SELLER_ADDRESS", d.sellerAddress); put("CI_BUYER", d.buyerName); put("CI_BUYER_ADDRESS", d.buyerAddress); put("CI_ROUTE", `${d.incoterms || ""} ${d.namedPlace || ""} / ${d.mode || ""}`.trim()); put("CI_CURRENCY", d.currency);
+      (d.rows || []).forEach((row, i) => [i + 1, row.description, row.hsCode, countryName(row.origin || d.origin), num(row.quantity), row.unit, num(row.unitPrice), num(row.quantity) * num(row.unitPrice)].forEach((value, j) => put(`CI_ITEM_${i + 1}_${j + 1}`, value)));
+      put("CI_TOTAL_1", total.goods); put("CI_TOTAL_2", num(d.freight) + num(d.insurance) + num(d.packing) + num(d.otherCharges) - num(d.discount)); put("CI_TOTAL_3", total.total);
+    } else if (id === "packing-list") {
+      put("PL_REF", d.packingNo); put("PL_DATE", d.packingDate); put("PL_SELLER", d.sellerName); put("PL_SELLER_ADDRESS", d.sellerAddress); put("PL_BUYER", d.buyerName); put("PL_BUYER_ADDRESS", d.buyerAddress); put("PL_ROUTE", `${d.loading || ""} / ${d.discharge || ""} / ${d.finalDestination || ""}`.trim()); put("PL_CURRENCY", "");
+      (d.rows || []).forEach((row, i) => { const factor = weightToKg[row.weightUnit] || 1; [row.packageNo || row.type, row.marks, row.type, row.description, num(row.quantity), row.unit, num(row.netWeight) * factor, num(row.grossWeight) * factor, `${row.length} x ${row.width} x ${row.height} ${row.dimensionUnit}`, packageCbm(row)].forEach((value, j) => put(`PL_ITEM_${i + 1}_${j + 1}`, value)); });
+      put("PL_TOTAL_1", total.packages); put("PL_TOTAL_2", total.quantity); put("PL_TOTAL_3", total.cbm);
+    } else if (id === "pro-forma-invoice") {
+      put("PF_REF", d.proformaNo); put("PF_DATE", d.issueDate); put("PF_VALID", d.validUntil); put("PF_SELLER", d.sellerName); put("PF_SELLER_ADDRESS", d.sellerAddress); put("PF_BUYER", d.buyerName); put("PF_BUYER_ADDRESS", d.buyerAddress); put("PF_ROUTE", `${d.incoterms || ""} ${d.namedPlace || ""}`.trim()); put("PF_CURRENCY", d.currency);
+      (d.rows || []).forEach((row, i) => [i + 1, row.description, row.hsCode, countryName(row.origin), num(row.quantity), row.unit, num(row.unitPrice), num(row.quantity) * num(row.unitPrice)].forEach((value, j) => put(`PF_ITEM_${i + 1}_${j + 1}`, value)));
+      put("PF_TOTAL_1", total.goods); put("PF_TOTAL_2", num(d.freight) + num(d.insurance) - num(d.discount)); put("PF_TOTAL_3", total.total);
+    } else {
+      put("SC_REF", d.reference); const items = checklistItems(); const saved = new Map((d.items || []).map((item) => [item.id, item])); items.forEach((item, i) => { const value = saved.get(item.id) || {}; [item.group, value.checked ? "Done" : "Open", item.label, value.owner || "", value.due || "", value.checked ? "Complete" : "Pending", d.notes || ""].forEach((cellValue, j) => put(`SC_ITEM_${i + 1}_${j + 1}`, cellValue)); }); put("SC_TOTAL_1", items.filter((item) => !saved.get(item.id)?.checked).length); put("SC_TOTAL_2", items.filter((item) => saved.get(item.id)?.checked).length); put("SC_TOTAL_3", "Pending / Complete");
+    }
+    return values;
+  };
+  function readStoredZip(buffer) {
+    const bytes = new Uint8Array(buffer); const view = new DataView(buffer); const decoder = new TextDecoder(); const files = {};
+    for (let offset = 0; offset + 30 < bytes.length;) { if (view.getUint32(offset, true) !== 0x04034b50) break; const nameLength = view.getUint16(offset + 26, true); const extraLength = view.getUint16(offset + 28, true); const size = view.getUint32(offset + 18, true); const name = decoder.decode(bytes.slice(offset + 30, offset + 30 + nameLength)); const start = offset + 30 + nameLength + extraLength; files[name] = decoder.decode(bytes.slice(start, start + size)); offset = start + size; }
+    return files;
+  }
+  function replaceBaseMarkers(xml, values) {
+    const filled = Object.entries(values).reduce((output, [key, value]) => output.replace(new RegExp(`<c([^>]*)>\\s*<is>\\s*<t>\\{\\{${key}\\}\\}</t>\\s*</is>\\s*</c>`), (_, attrs) => { const clean = attrs.replace(/\s+t="[^"]*"/g, "").replace(/\s+s="[^"]*"/g, ""); return typeof value === "number" && Number.isFinite(value) ? `<c${clean} s="2"><v>${value}</v></c>` : value === "" ? `<c${clean}/>` : `<c${clean} t="inlineStr"><is><t>${xmlEscape(value)}</t></is></c>`; }), xml);
+    return filled.replace(/<c([^>]*)>\s*<is>\s*<t>\{\{[^}]+\}\}<\/t>\s*<\/is>\s*<\/c>/g, "");
+  }
+  async function baseXlsxBlob(id, d) {
+    const url = new URL(`../assets/templates/${baseFileNames[id]}`, location.href);
+    const response = await fetch(url.href, { cache: "no-store" });
+    if (!response.ok) throw new Error("Template base unavailable");
+    const files = readStoredZip(await response.arrayBuffer());
+    if (!files["xl/worksheets/sheet1.xml"] || !files["xl/workbook.xml"] || !files["xl/styles.xml"]) throw new Error("Template base integrity check failed");
+    files["xl/worksheets/sheet1.xml"] = replaceBaseMarkers(files["xl/worksheets/sheet1.xml"], baseMarkerValues(id, d));
+    return zipBlob(files, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+  }
+
   // One semantic row model feeds the web preview and every downloadable format.
   function exportRows(id, d) {
     const rows = [];
@@ -431,15 +473,21 @@
     const id = state.selected;
     const d = state.data[id];
     const name = filename(id, d, format);
-    const rows = exportRows(id, d);
-    if (format === "xlsx") downloadBlob(await xlsxBlob(rows, id), name, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-    if (format === "docx") downloadBlob(await docxBlob(rows, templates.find((tpl) => tpl.id === id).title), name, "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
-    if (format === "pdf") downloadBlob(pdfBlob(rows.map((row) => row.join("  |  "))), name, "application/pdf");
-    toast(T.exported);
+    try {
+      const rows = exportRows(id, d);
+      if (format === "xlsx") downloadBlob(await baseXlsxBlob(id, d), name, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+      if (format === "docx") downloadBlob(await docxBlob(rows, templates.find((tpl) => tpl.id === id).title), name, "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+      if (format === "pdf") downloadBlob(pdfBlob(rows.map((row) => row.join("  |  "))), name, "application/pdf");
+      toast(T.exported);
+    } catch (error) {
+      console.error("Template export failed", error);
+      toast(lang === "ko" ? "문서를 생성할 수 없습니다. 잠시 후 다시 시도하세요." : "Unable to generate the document. Please try again.");
+    }
   }
   function filename(id, d, format) {
     const ref = d.invoiceNo || d.packingNo || d.proformaNo || d.bookingNo || d.siRef || d.reference || id;
-    return `${id}-${String(ref).replace(/[\\/:*?"<>|]+/g, "-")}.${format}`;
+    const labels = { "commercial-invoice": "Commercial_Invoice", "packing-list": "Packing_List", "pro-forma-invoice": "Pro_Forma_Invoice", "shipping-instruction": "Shipping_Instruction", "shipment-checklist": "Shipment_Checklist" };
+    return `${labels[id] || id}_${String(ref).replace(/[\\/:*?"<>|]+/g, "-")}.${format}`;
   }
   function downloadBlob(blob, name, type) {
     const url = URL.createObjectURL(blob instanceof Blob ? blob : new Blob([blob], { type }));
