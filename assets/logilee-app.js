@@ -205,6 +205,7 @@ function ensureGlobalHeader() {
       <button class="menu-btn" data-menu-toggle aria-expanded="false" aria-label="${menuLabel}"><i data-lucide="menu"></i></button>
     </div>
   `;
+  document.querySelector(".legacy-shell")?.classList.remove("legacy-shell");
   if (mobileNav && !shell) topbar.appendChild(mobileNav);
 }
 

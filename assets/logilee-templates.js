@@ -529,7 +529,10 @@
       toast(T.exported);
     } catch (error) {
       console.error("Template export failed", error);
-      toast(lang === "ko" ? "문서를 생성할 수 없습니다. 잠시 후 다시 시도하세요." : "Unable to generate the document. Please try again.");
+      const xlsxFailure = format === "xlsx" && /ExcelJS|Template base/i.test(String(error?.message || error));
+      toast(xlsxFailure
+        ? (lang === "ko" ? "Excel 모듈을 불러오지 못했습니다. XLSX 다운로드를 다시 시도하세요." : "The Excel module could not be loaded. Please try the XLSX download again.")
+        : (lang === "ko" ? "문서를 생성할 수 없습니다. 잠시 후 다시 시도하세요." : "Unable to generate the document. Please try again."));
     }
   }
   function filename(id, d, format) {
