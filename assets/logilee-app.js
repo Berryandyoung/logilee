@@ -27,7 +27,7 @@ const searchIndex = {
     { type: "Tool", title: "Business Day Calculator", summary: "주말과 공휴일을 제외해 예상 영업일을 계산합니다.", url: "business-day.html", keywords: "business day working day 영업일 공휴일" },
     { type: "Tool", title: "HS Code Lookup", summary: "품목분류와 HS Code 검색 페이지로 이동합니다.", url: "../hscode.html", keywords: "hs code hscode 품목분류 관세" },
     { type: "Guide", title: "Incoterms 2020", summary: "무역 조건별 비용과 위험 이전 기준을 확인합니다.", url: "../incoterms-2020.html", keywords: "incoterms fob cif fca 인코텀즈" },
-    { type: "Dictionary", title: "FOB · Free On Board", summary: "수출자가 본선 적재까지 책임지는 해상 운송 조건입니다.", url: "dictionary.html#fob", keywords: "fob free on board" },
+    { type: "Dictionary", title: "FOB · Free On Board", summary: "Incoterms® 조건과 실무 체크포인트를 확인합니다.", url: "dictionary.html?term=fob", keywords: "fob free on board 본선인도" },
     { type: "Port", title: "Port of Busan", summary: "부산항 정보 페이지로 이동합니다.", url: "ports.html", keywords: "busan port krpus 부산항 항만" },
     { type: "Country", title: "Country Guides", summary: "국가별 무역과 물류 정보 페이지로 이동합니다.", url: "countries.html", keywords: "country guide vietnam 국가 베트남 수출" },
     { type: "Trade Data", title: "Country Trade Profile", summary: "World Bank 지표로 국가별 무역 프로필을 확인합니다.", url: "country-trade-profile.html", keywords: "country trade profile world bank gdp exports imports" },
@@ -46,7 +46,7 @@ const searchIndex = {
     { type: "Tool", title: "Business Day Calculator", summary: "Calculate dates excluding weekends and public holidays.", url: "business-day.html", keywords: "business day working day holiday calculator" },
     { type: "Tool", title: "HS Code Lookup", summary: "Find HS codes and tariff classifications.", url: "../hscode-en.html", keywords: "hs code hscode tariff classification" },
     { type: "Guide", title: "Incoterms 2020", summary: "Compare cost and risk transfer by trade term.", url: "../incoterms-2020-en.html", keywords: "incoterms fob cif fca trade terms" },
-    { type: "Dictionary", title: "FOB · Free On Board", summary: "A sea freight term where the seller is responsible until goods are loaded on board.", url: "dictionary.html#fob", keywords: "fob free on board" },
+    { type: "Dictionary", title: "FOB · Free On Board", summary: "Review the Incoterms® rule and practical checks.", url: "dictionary.html?term=fob", keywords: "fob free on board" },
     { type: "Tool", title: "Shipment Tracking", summary: "Open official carrier tracking pages for courier, B/L, container, and air cargo.", url: "track.html", keywords: "tracking bl container dhl fedex ups" },
     { type: "Port", title: "Port of Busan", summary: "Open the port information page.", url: "ports.html", keywords: "busan port krpus korea" },
     { type: "Country", title: "Country Guides", summary: "Open country trade and logistics information.", url: "countries.html", keywords: "country guide vietnam export import" },
@@ -2190,64 +2190,191 @@ function wireTracking() {
   render(false);
 }
 function wireDictionary() {
-  const list = document.querySelector("[data-term-list]");
-  const detail = document.querySelector("[data-term-detail]");
-  if (!list || !detail) return;
+  const app = document.querySelector("[data-dictionary-app]");
+  let list = document.querySelector("[data-term-list]");
+  let detail = document.querySelector("[data-term-detail]");
+  if ((!app && (!list || !detail)) || !window.LOGILEE_DICTIONARY) return;
   const lang = currentLang();
-  const termCount = document.querySelector("[data-term-count]");
-  if (termCount) termCount.textContent = `${terms[lang].length} ${lang === "ko" ? "terms" : "terms"}`;
-  const normalizeTerm = (value) => (value || "").toLowerCase().replace(/[^a-z0-9가-힣]/g, "");
+  const data = window.LOGILEE_DICTIONARY;
+  const categoryLabels = {
+    ko: { all: "전체", trade: "무역", ocean: "해상", air: "항공", customs: "통관·규제", operations: "선적업무", charges: "운임·비용" },
+    en: { all: "All", trade: "Trade", ocean: "Ocean", air: "Air", customs: "Customs & Compliance", operations: "Shipping Operations", charges: "Charges" }
+  };
+  const stages = data.stageLabels;
+  const allTerms = data.terms.slice().sort((a, b) => a.term.localeCompare(b.term));
+  const byId = new Map(allTerms.map((term) => [term.id, term]));
+  const normalizeTerm = (value) => String(value || "").toLowerCase().normalize("NFKC").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9가-힣]+/g, " ").trim();
+  const compact = (value) => normalizeTerm(value).replace(/\s+/g, "");
+  const displayFull = (term) => term.fullName && compact(term.fullName) !== compact(term.term) ? term.fullName : "";
+  let state = { query: "", category: "all", az: "all", visible: 30, selected: null };
+  const labels = {
+    search: lang === "ko" ? "용어 검색" : "Term search",
+    noMatch: lang === "ko" ? "일치하는 용어를 찾지 못했습니다." : "No matching term found.",
+    noHint: lang === "ko" ? "철자나 약어를 확인하거나 다른 검색어를 사용해보세요." : "Check the spelling or abbreviation, or try a different search.",
+    results: lang === "ko" ? "개 용어" : "terms",
+    loadMore: lang === "ko" ? "더 보기" : "Load More",
+    recent: lang === "ko" ? "최근 본 용어" : "Recently Viewed",
+    clear: lang === "ko" ? "지우기" : "Clear",
+    copyTerm: lang === "ko" ? "용어 복사" : "Copy Term",
+    copyLink: lang === "ko" ? "링크 복사" : "Copy Link",
+    copied: lang === "ko" ? "복사됨" : "Copied",
+    definition: lang === "ko" ? "정의" : "Definition",
+    context: lang === "ko" ? "실무에서 언제 보는가" : "Practical Context",
+    checks: lang === "ko" ? "실무 체크" : "Practical Checks",
+    example: lang === "ko" ? "문서·메일 예시" : "Document / Email Example",
+    compare: lang === "ko" ? "헷갈리는 용어와 차이" : "Comparison Notes",
+    related: lang === "ko" ? "관련 용어" : "Related Terms",
+    tools: lang === "ko" ? "관련 LOGILEE 도구" : "Related LOGILEE Tools",
+    sources: lang === "ko" ? "Sources / 검토일" : "Sources / Reviewed Date",
+    note: lang === "ko" ? "일반적인 실무 참고 정보입니다. 계약, 통관, 운임 정산 전에는 공식 기준과 거래 조건을 확인하세요." : "General practical reference only. Confirm official rules and commercial terms before contracts, customs filing, or charge settlement."
+  };
+  const candidates = (term) => [term.id, term.slug, term.term, term.fullName, term.koName, ...(term.aliases || [])].filter(Boolean);
   const findTerm = (value) => {
-    const normalized = normalizeTerm(value);
-    return terms[lang].find((term) => {
-      const candidates = [term.id, term.term, term.name, term.korean, ...(term.aliases || [])];
-      return candidates.some((candidate) => normalizeTerm(candidate) === normalized);
-    });
+    const q = compact(value);
+    if (!q) return null;
+    return allTerms.find((term) => candidates(term).some((candidate) => compact(candidate) === q)) || null;
   };
-  const render = (term, updateUrl = false) => {
+  const rankTerm = (term, query) => {
+    const q = compact(query);
+    if (!q) return 1;
+    const values = candidates(term);
+    if (values.some((value) => compact(value) === q)) return 100;
+    if (values.some((value) => compact(value).startsWith(q))) return 80;
+    if (values.some((value) => compact(value).includes(q))) return 60;
+    const text = compact([term.en.shortDefinition, term.ko.shortDefinition, term.en.practicalContext, term.ko.practicalContext].join(" "));
+    return text.includes(q) ? 25 : 0;
+  };
+  const filtered = () => {
+    return allTerms
+      .map((term) => ({ term, score: rankTerm(term, state.query) }))
+      .filter(({ term, score }) => score > 0 && (state.category === "all" || term.categoryKey === state.category) && (state.az === "all" || compact(term.term).startsWith(state.az.toLowerCase())))
+      .sort((a, b) => b.score - a.score || a.term.term.localeCompare(b.term.term))
+      .map(({ term }) => term);
+  };
+  const setUrl = (term, push = false) => {
+    const url = new URL(location.href);
+    if (term) url.searchParams.set("term", term.id); else url.searchParams.delete("term");
+    history[push ? "pushState" : "replaceState"](null, "", `${url.pathname}?${url.searchParams.toString()}`);
+  };
+  const saveRecent = (term) => {
+    const key = `logilee-dictionary-recent-v1:${lang}`;
+    const items = JSON.parse(localStorage.getItem(key) || "[]");
+    localStorage.setItem(key, JSON.stringify([term.id, ...items.filter((id) => id !== term.id)].slice(0, 8)));
+  };
+  const recentMarkup = () => {
+    const key = `logilee-dictionary-recent-v1:${lang}`;
+    const ids = JSON.parse(localStorage.getItem(key) || "[]").filter((id) => byId.has(id));
+    if (!ids.length) return "";
+    return `<section class="dictionary-recent"><div><strong>${labels.recent}</strong><button type="button" data-clear-dictionary-recent>${labels.clear}</button></div><p>${ids.map((id) => `<button type="button" data-term="${escapeAttribute(id)}">${escapeHtml(byId.get(id).term)}</button>`).join("")}</p></section>`;
+  };
+  const termButton = (term) => `<button class="term-button dictionary-term-button" data-term="${escapeAttribute(term.id)}" aria-pressed="${state.selected?.id === term.id}"><strong>${escapeHtml(term.term)}</strong><span>${escapeHtml([displayFull(term), term.koName].filter(Boolean).join(" · "))}</span><small>${escapeHtml(categoryLabels[lang][term.categoryKey])}${term.depth === "deep" ? " · Deep" : ""}</small></button>`;
+  const renderList = () => {
+    const results = filtered();
+    const visible = results.slice(0, state.visible);
+    const termCount = document.querySelector("[data-term-count]");
+    if (termCount) termCount.textContent = `${results.length} ${labels.results}`;
+    list.innerHTML = results.length
+      ? `${visible.map(termButton).join("")}${results.length > visible.length ? `<button class="secondary-btn dictionary-load-more" type="button" data-dictionary-load>${labels.loadMore}</button>` : ""}`
+      : `<div class="empty-state"><h2>${labels.noMatch}</h2><p>${labels.noHint}</p></div>`;
+    return results;
+  };
+  const sourceMarkup = (term) => `<details class="dictionary-sources"><summary>${labels.sources}</summary><ul>${term.sources.map((source) => `<li><a href="${escapeAttribute(source.url)}" target="_blank" rel="noopener">${escapeHtml(source.organization)}</a><span>${escapeHtml(source.title)} · ${escapeHtml(term.reviewedAt)}</span></li>`).join("")}</ul></details>`;
+  const toolUrl = (tool) => lang === "en" && tool.enUrl ? tool.enUrl : tool.url;
+  const renderDetail = (term, updateUrl = false) => {
+    if (!term) return;
+    const copy = term[lang];
+    state.selected = term;
+    saveRecent(term);
+    const termLine = `${term.term}${displayFull(term) ? ` — ${displayFull(term)}` : ""}${term.koName ? ` · ${term.koName}` : ""}`;
     detail.innerHTML = `
-      <span class="kicker">${term.category}</span>
-      <h2 id="${term.id}">${term.term}</h2>
-      <p class="lead">${term.name}</p>
-      ${term.korean ? `<p class="muted"><strong>${lang === "ko" ? "한국어" : "Korean"}:</strong> ${term.korean}</p>` : ""}
-      <p>${term.definition}</p>
-      <div class="notice"><strong>${lang === "ko" ? "실무 참고" : "Practical note"}</strong><br>${term.example}</div>
-      <h3>${lang === "ko" ? "관련 용어" : "Related terms"}</h3>
-      <div class="chip-row">${term.related.map((item) => `<span class="chip">${item}</span>`).join("")}</div>
-      ${term.relatedResource ? `<p class="dictionary-resource-link"><strong>${lang === "ko" ? "관련 자료" : "Related resource"}:</strong> <a href="${term.relatedResource.url}">${term.relatedResource.label} →</a></p>` : ""}
-      <p class="muted">${lang === "ko" ? "Updated" : "Updated"}: 2026-07-26 · ${lang === "ko" ? "참고 정보입니다. 계약 확정 전 공식 기준을 확인하세요." : "For reference only. Confirm official standards before finalizing contracts."}</p>
+      <article class="dictionary-detail-card">
+        <div class="dictionary-detail-head">
+          <span class="kicker">${escapeHtml(categoryLabels[lang][term.categoryKey])}${term.depth === "deep" ? " · Deep Entry" : ""}</span>
+          <h2 id="${escapeAttribute(term.id)}">${escapeHtml(term.term)}</h2>
+          ${displayFull(term) || term.koName ? `<p class="lead">${escapeHtml([displayFull(term), term.koName].filter(Boolean).join(" · "))}</p>` : ""}
+          <div class="dictionary-actions"><button type="button" data-copy-dictionary="${escapeAttribute(termLine)}">${labels.copyTerm}</button><button type="button" data-copy-link="${escapeAttribute(term.id)}">${labels.copyLink}</button><span aria-live="polite" data-copy-feedback></span></div>
+        </div>
+        <section><h3>${labels.definition}</h3><p>${escapeHtml(copy.shortDefinition)}</p></section>
+        <section><h3>${labels.context}</h3><p>${escapeHtml(copy.practicalContext)}</p></section>
+        ${copy.practicalChecks?.length ? `<section><h3>${labels.checks}</h3><ul>${copy.practicalChecks.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul></section>` : ""}
+        <section class="notice"><h3>${labels.example}</h3><p>${escapeHtml(copy.example)}</p></section>
+        ${copy.comparisonNotes?.length ? `<section class="dictionary-comparison"><h3>${labels.compare}</h3>${copy.comparisonNotes.map((item) => `<p>${escapeHtml(item)}</p>`).join("")}</section>` : ""}
+        ${term.workflowStages?.length ? `<div class="chip-row">${term.workflowStages.map((stage) => `<span class="chip">${escapeHtml(stages[stage]?.[lang] || stage)}</span>`).join("")}</div>` : ""}
+        ${term.relatedTerms?.length ? `<section><h3>${labels.related}</h3><div class="chip-row">${term.relatedTerms.map((id) => byId.get(id)).filter(Boolean).map((related) => `<button type="button" class="chip" data-term="${escapeAttribute(related.id)}">${escapeHtml(related.term)}</button>`).join("")}</div></section>` : ""}
+        ${term.relatedTools?.length ? `<section><h3>${labels.tools}</h3><div class="dictionary-tool-grid">${term.relatedTools.map((key) => data.tools[key]).filter(Boolean).map((tool) => `<a href="${escapeAttribute(toolUrl(tool))}">${escapeHtml(tool[lang])}</a>`).join("")}</div></section>` : ""}
+        ${sourceMarkup(term)}
+        <p class="muted">${labels.note}</p>
+      </article>
     `;
-    list.querySelectorAll("button").forEach((button) => button.setAttribute("aria-pressed", String(button.dataset.term === term.id)));
-    if (updateUrl) {
-      const url = new URL(location.href);
-      url.searchParams.set("term", term.id);
-      history.replaceState(null, "", `${url.pathname}?${url.searchParams.toString()}`);
-    }
+    list.querySelectorAll("button[data-term]").forEach((button) => button.setAttribute("aria-pressed", String(button.dataset.term === term.id)));
+    if (updateUrl) setUrl(term, true);
+    refreshIcons();
   };
-  list.innerHTML = terms[lang].map((term) => `<button class="term-button" data-term="${term.id}" aria-pressed="false">${term.term} <span class="muted">${term.name}</span></button>`).join("");
-  document.querySelector("[data-dictionary-form]")?.addEventListener("submit", (event) => {
-    event.preventDefault();
-    const query = event.currentTarget.querySelector("input")?.value || "";
-    const normalized = query.toLowerCase().trim();
-    const match = findTerm(query) || terms[lang].find((term) => {
-      return [term.term, term.name, term.korean, term.definition, term.category, ...(term.aliases || [])]
-        .filter(Boolean)
-        .some((value) => value.toLowerCase().includes(normalized));
-    });
-    if (match) {
-      render(match, true);
+  if (app) {
+    app.innerHTML = `
+      <section class="dictionary-controls panel">
+        <label><span>${labels.search}</span><input type="search" data-dictionary-search placeholder="FOB, 본선인도, demurrage, HS Code" autocomplete="off"></label>
+        <div class="dictionary-tabs" data-dictionary-categories>${Object.entries(categoryLabels[lang]).map(([key, label]) => `<button type="button" data-category="${key}" aria-pressed="${key === "all"}">${escapeHtml(label)}</button>`).join("")}</div>
+        <div class="dictionary-az" data-dictionary-az><button type="button" data-az="all" aria-pressed="true">All</button>${"ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map((letter) => `<button type="button" data-az="${letter}" aria-pressed="false">${letter}</button>`).join("")}</div>
+        <p class="muted"><span data-term-count></span></p>
+      </section>
+      <section class="dictionary-grid"><aside class="panel dictionary-list-panel"><div class="term-list" data-term-list></div></aside><div class="dictionary-detail-wrap"><article class="panel" data-term-detail></article>${recentMarkup()}</div></section>
+    `;
+  }
+  const freshList = document.querySelector("[data-term-list]");
+  const freshDetail = document.querySelector("[data-term-detail]");
+  if (!freshList || !freshDetail) return;
+  const selectedFromUrl = () => findTerm(new URLSearchParams(location.search).get("term")) || findTerm(location.hash.replace("#", ""));
+  list = freshList;
+  detail = freshDetail;
+  const renderAll = (selected = null, updateUrl = false) => {
+    const results = renderList();
+    renderDetail(selected || state.selected || results[0] || allTerms[0], updateUrl);
+    const recentHost = document.querySelector(".dictionary-recent");
+    if (recentHost) recentHost.outerHTML = recentMarkup();
+    else document.querySelector(".dictionary-detail-wrap")?.insertAdjacentHTML("beforeend", recentMarkup());
+  };
+  document.addEventListener("click", async (event) => {
+    const termButtonTarget = event.target.closest("[data-term]");
+    if (termButtonTarget && termButtonTarget.closest("[data-term-list], [data-term-detail], .dictionary-recent")) {
+      renderAll(byId.get(termButtonTarget.dataset.term), true);
       return;
     }
-    detail.innerHTML = `<h2>${lang === "ko" ? "검색 결과가 없습니다" : "No matching term"}</h2><p class="muted">${lang === "ko" ? "다른 무역·물류 용어로 다시 검색해 보세요." : "Try another trade or logistics term."}</p>`;
+    const category = event.target.closest("[data-category]");
+    if (category) {
+      state.category = category.dataset.category;
+      state.visible = 30;
+      document.querySelectorAll("[data-category]").forEach((btn) => btn.setAttribute("aria-pressed", String(btn === category)));
+      renderAll(null, false);
+      return;
+    }
+    const az = event.target.closest("[data-az]");
+    if (az) {
+      state.az = az.dataset.az;
+      state.visible = 30;
+      document.querySelectorAll("[data-az]").forEach((btn) => btn.setAttribute("aria-pressed", String(btn === az)));
+      renderAll(null, false);
+      return;
+    }
+    if (event.target.closest("[data-dictionary-load]")) { state.visible += 30; renderAll(null, false); return; }
+    if (event.target.closest("[data-clear-dictionary-recent]")) { localStorage.removeItem(`logilee-dictionary-recent-v1:${lang}`); event.target.closest(".dictionary-recent")?.remove(); return; }
+    const copyTerm = event.target.closest("[data-copy-dictionary]");
+    const copyLink = event.target.closest("[data-copy-link]");
+    if (copyTerm || copyLink) {
+      const value = copyTerm ? copyTerm.dataset.copyDictionary : `${location.origin}${location.pathname}?term=${copyLink.dataset.copyLink}`;
+      try { await navigator.clipboard.writeText(value); } catch (_) {}
+      const feedback = document.querySelector("[data-copy-feedback]");
+      if (feedback) feedback.textContent = labels.copied;
+    }
   });
-  list.addEventListener("click", (event) => {
-    const button = event.target.closest("button");
-    if (!button) return;
-    render(terms[lang].find((term) => term.id === button.dataset.term), true);
+  document.addEventListener("input", (event) => {
+    if (!event.target.matches("[data-dictionary-search]")) return;
+    state.query = event.target.value;
+    state.visible = 30;
+    renderAll(null, false);
   });
-  const params = new URLSearchParams(location.search);
-  const hash = location.hash.replace("#", "");
-  render(findTerm(params.get("term")) || findTerm(hash) || terms[lang][0]);
+  window.addEventListener("popstate", () => renderAll(selectedFromUrl(), false));
+  renderAll(selectedFromUrl(), false);
 }
 
 function populateCurrencyOptions() {

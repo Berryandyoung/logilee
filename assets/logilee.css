@@ -749,6 +749,216 @@ h1 {
   background: var(--sky-surface);
 }
 
+.dictionary-controls {
+  display: grid;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.dictionary-controls label {
+  display: grid;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.dictionary-controls input {
+  width: 100%;
+  min-height: 48px;
+  padding: 0 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--deep-navy);
+  font: inherit;
+  font-weight: 800;
+}
+
+.dictionary-tabs,
+.dictionary-az {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.dictionary-tabs button,
+.dictionary-az button,
+.dictionary-actions button,
+.dictionary-recent button {
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--deep-navy);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.dictionary-tabs button[aria-pressed="true"],
+.dictionary-az button[aria-pressed="true"] {
+  border-color: var(--signal-blue);
+  background: var(--signal-blue);
+  color: #fff;
+}
+
+.dictionary-grid {
+  display: grid;
+  grid-template-columns: minmax(260px, 360px) minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.dictionary-list-panel {
+  align-self: start;
+}
+
+.dictionary-term-button {
+  display: grid;
+  gap: 3px;
+  height: auto;
+  min-height: 72px;
+  padding: 10px 12px;
+}
+
+.dictionary-term-button strong,
+.dictionary-term-button span,
+.dictionary-term-button small {
+  display: block;
+}
+
+.dictionary-term-button span {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.dictionary-term-button small {
+  color: var(--steel);
+  font-size: 12px;
+}
+
+.dictionary-load-more {
+  width: 100%;
+  justify-content: center;
+}
+
+.dictionary-detail-wrap {
+  display: grid;
+  gap: 14px;
+  align-self: start;
+  position: sticky;
+  top: 88px;
+}
+
+.dictionary-detail-card {
+  display: grid;
+  gap: 18px;
+}
+
+.dictionary-detail-card section {
+  display: grid;
+  gap: 8px;
+}
+
+.dictionary-detail-card h3 {
+  margin: 0;
+  color: var(--deep-navy);
+  font-size: 15px;
+}
+
+.dictionary-detail-card p,
+.dictionary-detail-card li {
+  line-height: 1.65;
+}
+
+.dictionary-detail-head {
+  display: grid;
+  gap: 8px;
+}
+
+.dictionary-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.dictionary-actions [aria-live],
+.dictionary-actions [data-copy-feedback] {
+  color: var(--signal-blue);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.dictionary-comparison {
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--sky-surface);
+}
+
+.dictionary-tool-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 8px;
+}
+
+.dictionary-tool-grid a {
+  padding: 11px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--deep-navy);
+  font-weight: 900;
+}
+
+.dictionary-sources {
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+}
+
+.dictionary-sources summary {
+  cursor: pointer;
+  color: var(--deep-navy);
+  font-weight: 900;
+}
+
+.dictionary-sources ul {
+  display: grid;
+  gap: 8px;
+  margin: 12px 0 0;
+  padding-left: 18px;
+}
+
+.dictionary-sources li span {
+  display: block;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.dictionary-recent {
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: #fff;
+}
+
+.dictionary-recent div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+}
+
+.dictionary-recent p {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0 0;
+}
+
 .empty-state {
   padding: 28px;
   border: 1px solid var(--border);
@@ -768,6 +978,22 @@ h1 {
   .rail { display: none; }
   .mobile-logo { display: block; }
   .menu-btn { display: inline-grid; place-items: center; }
+  .dictionary-grid {
+    grid-template-columns: 1fr;
+  }
+  .dictionary-detail-wrap {
+    position: static;
+  }
+  .dictionary-tabs,
+  .dictionary-az {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 4px;
+  }
+  .dictionary-tabs button,
+  .dictionary-az button {
+    flex: 0 0 auto;
+  }
   .topbar nav {
     position: fixed;
     inset: 58px 16px auto;
