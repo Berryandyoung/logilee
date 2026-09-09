@@ -1,4 +1,5 @@
 (function () {
+  function initializeDocuments() {
   const lang = document.documentElement.lang === "ko" ? "ko" : "en";
   const root = document.querySelector("[data-template-builder]");
   if (!root) return;
@@ -45,6 +46,20 @@
   const dimToM = { mm: 0.001, cm: 0.01, m: 1, in: 0.0254, ft: 0.3048 };
   const weightToKg = { kg: 1, lb: 0.45359237 };
   const xlsxPdfEndpoint = "https://logilee-xlsx-pdf-sirnfhy77q-uc.a.run.app/convert/xlsx-to-pdf";
+  let excelJsPromise;
+  function ensureExcelJs() {
+    if (window.ExcelJS) return Promise.resolve(window.ExcelJS);
+    if (!excelJsPromise) {
+      excelJsPromise = new Promise((resolve, reject) => {
+        const script = document.createElement("script");
+        script.src = new URL("../assets/vendor/exceljs.min.js?v=exceljs-4.4.0", location.href).href;
+        script.onload = () => window.ExcelJS ? resolve(window.ExcelJS) : reject(new Error("ExcelJS runtime unavailable"));
+        script.onerror = () => reject(new Error("ExcelJS runtime unavailable"));
+        document.head.appendChild(script);
+      });
+    }
+    return excelJsPromise;
+  }
   const templates = [
     { id: "commercial-invoice", category: "trade", formats: ["XLSX", "PDF"], title: "Commercial Invoice", ko: "상업송장", descKo: "수출입 거래와 통관에 활용되는 기본 거래 서류", descEn: "Sales and customs value document for trade shipments.", aliases: "commercial invoice 상업송장 invoice ci customs value" },
     { id: "packing-list", category: "trade", formats: ["XLSX", "PDF"], title: "Packing List", ko: "포장명세서", descKo: "포장 수량, 중량, 치수, 마크 정보를 정리하는 서류", descEn: "Package, weight, dimension, and marks reference for the physical cargo.", aliases: "packing list 포장명세서 package cbm" },
@@ -460,6 +475,7 @@
     return { A4: [d.sellerName || d.shipperName, d.sellerAddress || d.shipperAddress].filter(Boolean).join("\n"), A9: [d.buyerName || d.consigneeName, d.buyerAddress || d.consigneeAddress].filter(Boolean).join("\n"), A14: [notifyName, notifyAddress].filter(Boolean).join("\n"), H4: [d.invoiceNo || d.packingNo || d.proformaNo, d.invoiceDate || d.packingDate || d.issueDate].filter(Boolean).join(" / "), H6: id === "packing-list" ? (d.remarks || "") : [d.lcNo, d.lcDate].filter(Boolean).join(" / "), H9: d.lcBank || "", H12: id === "packing-list" ? "" : (d.remarks || d.notes || ""), E19: route.loading || "", E21: [route.carrier, route.sailing].filter(Boolean).join(" / ") };
   }
   async function shippingInstructionXlsxBlob(d) {
+    await ensureExcelJs();
     const response = await fetch(new URL("../assets/templates/shipping-instruction.xlsx", location.href).href, { cache: "no-store" });
     if (!response.ok) throw new Error("Template base unavailable");
     const workbook = new window.ExcelJS.Workbook(); await workbook.xlsx.load(await response.arrayBuffer());
@@ -489,6 +505,7 @@
     return new Blob([await workbook.xlsx.writeBuffer()], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
   }
   async function checklistXlsxBlob(d) {
+    await ensureExcelJs();
     const workbook=new window.ExcelJS.Workbook(),sheet=workbook.addWorksheet("CHECKLIST");
     sheet.pageSetup={paperSize:9,orientation:"portrait",fitToPage:true,fitToWidth:1,fitToHeight:0,margins:{left:.25,right:.25,top:.35,bottom:.35,header:.1,footer:.1},printArea:`A1:F${12+(d.items||[]).length}`,printTitlesRow:"10:10"};sheet.views=[{showGridLines:false}];
     [12,18,48,15,15,32].forEach((width,index)=>sheet.getColumn(index+1).width=width);
@@ -816,4 +833,11 @@
   }
 
   render();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initializeDocuments, { once: true });
+  } else {
+    initializeDocuments();
+  }
 })();
