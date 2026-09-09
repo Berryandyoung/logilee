@@ -9377,7 +9377,7 @@ function wireLearnPage() {
   render();
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+function initializeLogileeApp() {
   ensureIconLibrary();
   ensureSkipLink();
   ensureGlobalSidebar();
@@ -9415,6 +9415,12 @@ document.addEventListener("DOMContentLoaded", () => {
   wireTradeExplorerParams();
   wireHsClassificationPage();
   wireNewsPage();
-});
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initializeLogileeApp, { once: true });
+} else {
+  initializeLogileeApp();
+}
 
 window.addEventListener("hashchange", updateComplianceSidebarActiveState);
