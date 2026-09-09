@@ -17,7 +17,7 @@ headers = {'Origin': 'https://www.logilee.com', 'Content-Type': service.MIME}
 results = {'version': subprocess.check_output(['libreoffice', '--version'], text=True).strip(), 'conversions': []}
 baseline = set(Path(tempfile.gettempdir()).glob('logilee-*'))
 
-for kind in ['CI', 'PL']:
+for kind in ['CI', 'PL', 'PI', 'SI']:
     data = (root / (kind + '.xlsx')).read_bytes()
     started = time.monotonic()
     pdf = service.convert(data)
@@ -33,6 +33,29 @@ for kind in ['CI', 'PL']:
                     content = content.replace(b'GANGNAM-GU, SEOUL', '\uc11c\uc6b8\ud2b9\ubcc4\uc2dc'.encode()).replace(b'REPUBLIC OF KOREA', '\ub300\ud55c\ubbfc\uad6d'.encode()).replace(b'BUSAN', '\ubd80\uc0b0\ud56d'.encode())
                 target.writestr(name, content)
     (root / (kind + '-korean.pdf')).write_bytes(service.convert(destination.getvalue()))
+
+def rewrite_xlsx(data, transform, extra=None):
+    source = zipfile.ZipFile(io.BytesIO(data))
+    destination = io.BytesIO()
+    with source, zipfile.ZipFile(destination, 'w', zipfile.ZIP_DEFLATED) as target:
+        for name in source.namelist():
+            target.writestr(name, transform(name, source.read(name)))
+        if extra:
+            for name, content in extra.items():
+                target.writestr(name, content)
+    return destination.getvalue()
+
+ci_data = (root / 'CI.xlsx').read_bytes()
+unknown = rewrite_xlsx(ci_data, lambda name, content: content.replace(b'name="CI"', b'name="UNKNOWN"') if name == 'xl/workbook.xml' else content)
+macro = rewrite_xlsx(ci_data, lambda _name, content: content, {'xl/vbaProject.bin': b'not-a-real-macro'})
+external = rewrite_xlsx(ci_data, lambda name, content: content.replace(b'</Relationships>', b'<Relationship Id="externalQA" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/externalLink" Target="https://example.invalid/book.xlsx" TargetMode="External"/></Relationships>') if name == 'xl/_rels/workbook.xml.rels' else content)
+for label, payload in [('unknown-sheet', unknown), ('macro', macro), ('external-link', external), ('corrupt', b'PK\x03\x04broken')]:
+    try:
+        service.validate_xlsx(payload)
+        raise AssertionError(label + ' accepted')
+    except service.ConversionError as error:
+        assert error.status == 400, label
+results['rejections'] = {'unknownSheet': 'PASS', 'macro': 'PASS', 'externalLink': 'PASS', 'corrupt': 'PASS'}
 
 with service.app.test_client() as client:
     assert client.post('/convert/xlsx-to-pdf', data=b'bad', headers=headers).status_code == 400
@@ -56,6 +79,6 @@ with concurrent.futures.ThreadPoolExecutor(max_workers=2) as pool:
 assert 200 in results['concurrentStatuses']
 assert set(Path(tempfile.gettempdir()).glob('logilee-*')) == baseline
 results['cleanup'] = 'PASS'
-results['validation'] = 'PASS'
+results['validation'] = {'CI': 'PASS', 'PL': 'PASS', 'PI': 'PASS', 'SI': 'PASS', 'oversized': 'PASS'}
 (root / 'container-qa.json').write_text(json.dumps(results, indent=2))
 print(json.dumps(results))

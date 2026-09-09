@@ -63,7 +63,7 @@ def validate_xlsx(payload):
                             raise ValueError('macro')
             workbook = XML.fromstring(package.read('xl/workbook.xml'))
             sheets = [n for n in workbook.iter() if n.tag.rsplit('}', 1)[-1] == 'sheet']
-            if len(sheets) != 1 or sheets[0].attrib.get('name') not in {'CI', 'PL'}:
+            if len(sheets) != 1 or sheets[0].attrib.get('name') not in {'CI', 'PL', 'SI'}:
                 raise ValueError('unsupported template')
     except ConversionError:
         raise
