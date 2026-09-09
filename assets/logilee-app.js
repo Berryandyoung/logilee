@@ -443,9 +443,10 @@ function wireSidebarAccordion(activeGroupId) {
   }
 
   const state = {};
+  const defaultAllOpen = !saved && (location.pathname === "/ko/" || location.pathname === "/en/" || /\/(?:ko|en)\/index\.html$/.test(location.pathname));
   groups.forEach((group) => {
     const groupId = group.dataset.navGroup;
-    state[groupId] = saved ? Boolean(saved[groupId]) : groupId === activeGroupId;
+    state[groupId] = saved ? Boolean(saved[groupId]) : defaultAllOpen || groupId === activeGroupId;
     if (groupId === activeGroupId) state[groupId] = true;
   });
 

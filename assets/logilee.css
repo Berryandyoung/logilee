@@ -7337,7 +7337,7 @@ body.sidebar-drawer-active {
 .home-page .home-layout > .trade-hero,
 .home-page .home-layout > .quick-tools-column,
 .home-page .home-layout > .home-market-dashboard {
-  min-height: 520px;
+  min-height: 458px;
   height: 100%;
 }
 
@@ -7381,13 +7381,13 @@ body.sidebar-drawer-active {
 
 .home-page .hero-search {
   max-width: 640px;
-  margin-top: 34px;
+  margin-top: 28px;
 }
 
 .home-page .quick-tools-column .quick-tools-home,
 .home-page .home-market-dashboard,
 .home-page .home-latest-column,
-.home-page .tracking-panel-home,
+.home-page .workspace-tools-home,
 .home-page .guide-panel,
 .home-page .explore-global-trade {
   height: 100%;
@@ -7400,7 +7400,7 @@ body.sidebar-drawer-active {
 .home-page .quick-tools-column .quick-tools-home {
   display: flex;
   flex-direction: column;
-  padding: 24px 18px;
+  padding: 20px 18px;
 }
 
 .home-page .quick-tools-column .quick-tools-home .section-head p {
@@ -7415,13 +7415,13 @@ body.sidebar-drawer-active {
 }
 
 .home-page .quick-tools-column .tool-icons a {
-  min-height: 100px;
+  min-height: 74px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 7px;
-  padding: 20px 8px 12px;
+  padding: 12px 8px 10px;
   border-radius: 8px;
 }
 
@@ -8877,46 +8877,68 @@ body.sidebar-drawer-active {
   background: var(--signal-blue);
 }
 
-.home-page .tracking-panel-home {
+.home-page .workspace-tools-home {
   padding: 26px 24px;
 }
 
-.home-page .tracking-panel-home .section-head {
+.home-page .workspace-tools-home .section-head {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: start;
   gap: 12px;
 }
 
-.home-page .tracking-panel-home .tracking-actions {
+.home-page .workspace-tool-grid {
+  display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 12px;
 }
 
-.home-page .tracking-panel-home .tracking-actions a {
-  min-height: 86px;
+.home-page .workspace-tool-grid a {
+  min-height: 128px;
   display: grid;
-  grid-template-columns: 34px minmax(0, 1fr);
-  gap: 4px 10px;
-  align-items: center;
-  padding: 14px;
+  grid-template-rows: 34px auto auto auto;
+  align-content: start;
+  gap: 6px;
+  padding: 16px;
+  border: 1px solid #dbe6f3;
   border-radius: 8px;
+  color: var(--ink-navy);
+  background: #fff;
 }
 
-.home-page .tracking-panel-home .tracking-actions .icon {
-  grid-row: span 2;
+.home-page .workspace-tool-grid .icon {
   width: 34px;
   height: 34px;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 7px;
+  color: var(--signal-blue);
+  background: var(--sky-surface);
 }
 
-.home-page .tracking-panel-home .tracking-actions strong {
+.home-page .workspace-tool-grid strong {
   font-size: 14px;
-  line-height: 1.2;
+  line-height: 1.3;
 }
 
-.home-page .tracking-panel-home .tracking-actions small {
+.home-page .workspace-tool-grid small,
+.home-page .workspace-tool-grid em {
+  color: var(--secondary-text);
   font-size: 12px;
-  line-height: 1.3;
+  font-style: normal;
+  line-height: 1.4;
+}
+
+.home-page .workspace-tool-grid em {
+  color: var(--signal-blue);
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.home-page .workspace-tool-grid a:hover {
+  border-color: #9fc2f5;
+  background: #f7fbff;
 }
 
 .home-page .home-resource-grid .panel {
@@ -8924,7 +8946,7 @@ body.sidebar-drawer-active {
 }
 
 .home-page .guide-list {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 12px;
 }
 
@@ -8972,7 +8994,7 @@ body.sidebar-drawer-active {
   .home-page .home-layout > .trade-hero,
   .home-page .home-layout > .quick-tools-column,
   .home-page .home-layout > .home-market-dashboard {
-    min-height: 566px;
+    min-height: 500px;
   }
 }
 
@@ -9004,7 +9026,7 @@ body.sidebar-drawer-active {
     min-height: 86px;
   }
 
-  .home-page .tracking-panel-home .tracking-actions {
+  .home-page .workspace-tool-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
@@ -9043,7 +9065,8 @@ body.sidebar-drawer-active {
     border-left: 1px solid #dbe6f3;
   }
 
-  .home-page .tracking-panel-home .tracking-actions {
+  .home-page .workspace-tool-grid,
+  .home-page .guide-list {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -9112,10 +9135,9 @@ body.sidebar-drawer-active {
     min-height: 390px;
   }
 
-  .home-page .tracking-panel-home .tracking-actions {
-    grid-template-columns: repeat(2, minmax(150px, 1fr));
-    overflow-x: auto;
-    padding-bottom: 4px;
+  .home-page .workspace-tool-grid,
+  .home-page .guide-list {
+    grid-template-columns: 1fr;
   }
 
   .news-result-card {
