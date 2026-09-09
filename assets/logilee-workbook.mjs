@@ -28,9 +28,11 @@ function numeric(value, label) {
 
 // Preserve original package geometry/print parts; never serialize a reconstructed workbook.
 export async function buildTradeWorkbook(id, data) {
-  if (!['commercial-invoice', 'packing-list'].includes(id)) throw new Error('Unsupported workbook');
+  if (!['commercial-invoice', 'packing-list', 'pro-forma-invoice'].includes(id)) throw new Error('Unsupported workbook');
   const pl = id === 'packing-list';
-  const response = await fetch(new URL(`./templates/${id}.xlsx`, import.meta.url), { cache: 'no-store' });
+  const pi = id === 'pro-forma-invoice';
+  const base = pi ? 'commercial-invoice' : id;
+  const response = await fetch(new URL(`./templates/${base}.xlsx`, import.meta.url), { cache: 'no-store' });
   if (!response.ok) throw new Error('Template base unavailable');
   const zip = await globalThis.JSZip.loadAsync(await response.arrayBuffer());
   const sheet = parse(await zip.file('xl/worksheets/sheet1.xml').async('string'));
@@ -117,6 +119,20 @@ export async function buildTradeWorkbook(id, data) {
       inline.appendChild(text); cell.appendChild(inline);
     }
   };
+  const replaceText = (address, value) => {
+    const cell = getCell(address);
+    for (const child of Array.from(cell.children)) if (['v', 'f', 'is'].includes(child.localName)) child.remove();
+    cell.setAttribute('t', 'inlineStr');
+    const inline = make(sheet, 'is'), text = make(sheet, 't');
+    text.setAttributeNS('http://www.w3.org/XML/1998/namespace', 'xml:space', 'preserve'); text.textContent = value;
+    inline.appendChild(text); cell.appendChild(inline);
+  };
+  const copyStyle = (target, source) => getCell(target).setAttribute('s', getCell(source).getAttribute('s') || '0');
+  const addMerge = ref => {
+    const merges = one(root, 'mergeCells');
+    if (!direct(merges, 'mergeCell').some(node => node.getAttribute('ref') === ref)) merges.appendChild(make(sheet, 'mergeCell', { ref }));
+    merges.setAttribute('count', direct(merges, 'mergeCell').length);
+  };
   const block = (column, start, end, value, endColumn) => {
     const lines = logicalLines(value);
     if (lines.length > end - start + 1) validation(`${column}${start}:${column}${end}: maximum ${end - start + 1} lines; received ${lines.length}.`);
@@ -124,15 +140,27 @@ export async function buildTradeWorkbook(id, data) {
   };
   // Blank template placeholders must not block normal Excel text overflow into adjacent cells.
   for (const [address, cell] of cells) if (cellText(cell) !== undefined && !cellText(cell).trim()) put(address, null);
+  if (pi) {
+    replaceText('A1', 'PRO FORMA INVOICE');
+    replaceText('E3', '8.Pro Forma No. & Date');
+    replaceText('E5', '9.Buyer Reference / Valid Until');
+    replaceText('E8', '10.Currency / Payment / Incoterms');
+    replaceText('E11', '11.Remarks :');
+    replaceText('C20', '7.Estimated Ship Date');
+  }
   const party = (name, address) => [name, address].filter(Boolean).join('\n');
   block('A', 4, 7, party(data.sellerName, data.sellerAddress), 4);
   block('A', 9, 12, party(data.buyerName, data.buyerAddress), 4);
   block('A', 14, 17, party(data.notifySame ? data.buyerName : data.notifyName, data.notifySame ? data.buyerAddress : data.notifyAddress), 4);
   block('E', pl ? 6 : 12, 21, data.remarks || '', 9);
   put('A19', data.loading || '', 2); put('C19', data.finalDestination || '', 4);
-  put('A21', data.carrier || '', 2); put('C21', (pl ? data.sailingDate || data.packingDate : data.sailingDate) || '', 4);
-  put('E4', data.invoiceNo || '', 7); put('H4', (pl ? data.invoiceDate || data.packingDate : data.invoiceDate) || '', 9);
-  if (!pl) { put('E6', data.lcNo || '', 7); put('H6', data.lcDate || '', 9); block('E', 9, 10, data.lcBank || '', 9); }
+  put('A21', data.carrier || '', 2); put('C21', (pl ? data.sailingDate || data.packingDate : pi ? data.estimatedShipDate : data.sailingDate) || '', 4);
+  put('E4', pi ? data.proformaNo || '' : data.invoiceNo || '', 7); put('H4', (pl ? data.invoiceDate || data.packingDate : pi ? data.issueDate : data.invoiceDate) || '', 9);
+  if (pi) {
+    put('E6', data.buyerRef || '', 7); put('H6', data.validUntil || '', 9);
+    put('E9', [data.currency, data.paymentTerms].filter(Boolean).join(' | '), 9);
+    put('E10', [data.incoterms, data.namedPlace].filter(Boolean).join(' '), 9);
+  } else if (!pl) { put('E6', data.lcNo || '', 7); put('H6', data.lcDate || '', 9); block('E', 9, 10, data.lcBank || '', 9); }
   const goods = (data.rows || []).filter(row => [row.description, row.quantity, row.unitPrice, row.netWeight, row.grossWeight, row.hsCode, row.marks, row.packageNo].some(value => value !== '' && value !== undefined && value !== null));
   const capacity = pl ? 20 : 22;
   if (goods.length > capacity) validation(`Goods: maximum ${capacity} rows; received ${goods.length}.`);
@@ -158,12 +186,22 @@ export async function buildTradeWorkbook(id, data) {
       put(`G${rowNumber}`, price, 7, '#,##0.00'); put(`H${rowNumber}`, value, 8, '#,##0.00'); put(`I${rowNumber}`, String(row.hsCode || ''), 9);
     }
   }
+  if (pi) {
+    for (const row of [48, 49, 50]) { copyStyle(`E${row}`, 'E47'); copyStyle(`F${row}`, 'F47'); copyStyle(`H${row}`, 'H47'); addMerge(`E${row}:F${row}`); }
+    copyStyle('A50', 'E50'); copyStyle('B50', 'F50'); copyStyle('C50', 'G50'); copyStyle('D50', 'H50'); addMerge('A50:B50');
+    replaceText('E47', `SUBTOTAL (${data.currency || ''}) :`); replaceText('E48', 'DISCOUNT :'); replaceText('E49', 'ADD. CHARGES :'); replaceText('E50', 'GRAND TOTAL :'); replaceText('A50', 'Authorized Signature');
+  }
   if (goods.length) {
     if (pl) { put('E44', qty, 6, Number.isInteger(qty) ? '#,##0' : '#,##0.000'); put('G44', net, 7, '#,##0.00'); put('H44', gross, 8, '#,##0.00'); put('I44', cbm, 9, '0.000'); }
     else {
-      const total = amount + numeric(data.freight, 'Freight') + numeric(data.insurance, 'Insurance') + numeric(data.packing, 'Packing') + numeric(data.otherCharges, 'Other charges') - numeric(data.discount, 'Discount');
+      const charges = pi ? numeric(data.additionalCharges, 'Additional charges') : numeric(data.freight, 'Freight') + numeric(data.insurance, 'Insurance') + numeric(data.packing, 'Packing') + numeric(data.otherCharges, 'Other charges');
+      const discount = numeric(data.discount, 'Discount');
+      const total = amount + charges - discount;
       if (!Number.isFinite(total) || total < 0) validation('Invalid invoice total.');
-      put('H46', qty, 9, Number.isInteger(qty) ? '#,##0' : '#,##0.000'); put('H47', Math.round(total * 100) / 100, 9, '#,##0.00');
+      put('H46', qty, 9, Number.isInteger(qty) ? '#,##0' : '#,##0.000');
+      if (pi) {
+        put('H47', Math.round(amount * 100) / 100, 9, '#,##0.00'); put('H48', discount, 9, '#,##0.00'); put('H49', charges, 9, '#,##0.00'); put('H50', Math.round(total * 100) / 100, 9, '#,##0.00');
+      } else put('H47', Math.round(total * 100) / 100, 9, '#,##0.00');
     }
   }
   if (pl) {

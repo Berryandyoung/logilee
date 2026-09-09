@@ -56,7 +56,7 @@
   const defaults = {
     "commercial-invoice": () => ({ invoiceNo: "INV-2026-001", invoiceDate: today(), buyerRef: "", currency: "USD", paymentTerms: "T/T", sellerName: "", sellerAddress: "", sellerCountry: "KR", sellerContact: "", sellerTax: "", buyerName: "", buyerAddress: "", buyerCountry: "US", buyerContact: "", notifySame: true, notifyName: "", notifyAddress: "", notifyCountry: "US", notifyContact: "", shipSame: true, shipName: "", shipAddress: "", shipCountry: "US", lcNo: "", lcDate: "", lcBank: "", remarks: "", incoterms: "FOB", namedPlace: "Busan", mode: "Ocean", origin: "KR", destination: "US", freight: 0, insurance: 0, packing: 0, otherCharges: 0, discount: 0, rows: [goodsRow(), goodsRow()] }),
     "packing-list": () => ({ packingNo: "PL-2026-001", invoiceNo: "", packingDate: today(), sellerName: "", sellerAddress: "", buyerName: "", buyerAddress: "", notifySame: true, notifyName: "", notifyAddress: "", mode: "Ocean", carrier: "", loading: "Busan", discharge: "", finalDestination: "", remarks: "", rows: [packageRow(), packageRow()] }),
-    "pro-forma-invoice": () => ({ proformaNo: "PF-2026-001", issueDate: today(), validUntil: "", buyerRef: "", estimatedShipDate: "", sellerName: "", sellerAddress: "", sellerCountry: "KR", buyerName: "", buyerAddress: "", buyerCountry: "US", notifySame: true, notifyName: "", notifyAddress: "", currency: "USD", incoterms: "FOB", namedPlace: "Busan", paymentTerms: "T/T", lcNo: "", lcDate: "", lcBank: "", discount: 0, freight: 0, insurance: 0, remarks: "", rows: [goodsRow()] }),
+    "pro-forma-invoice": () => ({ proformaNo: "", issueDate: "", validUntil: "", buyerRef: "", estimatedShipDate: "", sellerName: "", sellerAddress: "", sellerCountry: "KR", buyerName: "", buyerAddress: "", buyerCountry: "US", notifySame: true, notifyName: "", notifyAddress: "", currency: "USD", incoterms: "FOB", namedPlace: "Busan", paymentTerms: "T/T", loading: "", finalDestination: "", carrier: "", discount: 0, additionalCharges: 0, remarks: "", rows: [goodsRow()] }),
     "shipping-instruction": () => ({ bookingNo: "BOOKING123", siRef: "SI-2026-001", blType: "Sea Waybill", freightTerms: "Prepaid", shipperName: "", shipperAddress: "", shipperCountry: "KR", shipperContact: "", consigneeName: "", consigneeAddress: "", consigneeCountry: "US", consigneeContact: "", notifyName: "", notifyAddress: "", notifyCountry: "US", notifyContact: "", receipt: "", loading: "Busan", discharge: "", delivery: "", vessel: "", containerNo: "", containerType: "", seal: "", vgm: "", vgmMethod: "", rows: [cargoRow()] }),
     "shipment-checklist": () => ({ reference: "SHIP-2026-001", notes: "", items: checklistItems().map((item) => ({ id: item.id, checked: false, owner: "", due: "" })) })
   };
@@ -191,7 +191,8 @@
       `<p class="template-guardrail">${lang === "ko" ? "견적 및 거래조건 협의를 위한 참고 문서입니다. 최종 Commercial Invoice와 용도를 혼동하지 마세요." : "A pro forma invoice is used to present proposed transaction terms and should not be confused with the final commercial invoice."}</p>`,
       section("Document", field("proformaNo", "Pro Forma No.", d.proformaNo, commonHelp.ref) + field("issueDate", "Issue Date", d.issueDate, commonHelp.ref, "date") + field("validUntil", "Valid Until", d.validUntil, "Date through which the proposal is valid.", "date") + field("buyerRef", "Buyer Reference", d.buyerRef, "Optional buyer reference.") + field("estimatedShipDate", "Estimated Shipping Date", d.estimatedShipDate, "Estimated shipment timing.", "date")),
       `<div class="template-party-pair">${partyFields("seller", "Seller / Exporter", d, true)}${partyFields("buyer", "Consignee / Importer", d, false)}</div>`, optionalSection("Notify Party", `<label class="template-check"><input type="checkbox" name="notifySame" ${d.notifySame ? "checked" : ""}> ${lang === "ko" ? "Consignee와 동일" : "Same as Consignee"}</label><div data-notify-fields ${d.notifySame ? "hidden" : ""}>${field("notifyName", "Company Name", d.notifyName, "Notify party name.") + field("notifyAddress", "Address", d.notifyAddress, "Notify party address.")}</div>`, !d.notifySame || Boolean(d.notifyName || d.notifyAddress)), goodsRows(id, d.rows, commonHelp),
-      section("Commercial Terms", selectField("currency", "Currency", currencyOptions(d.currency), commonHelp.currency) + selectField("incoterms", "Incoterms", incotermsOptions(d.incoterms), commonHelp.incoterms) + field("namedPlace", "Named Place", d.namedPlace, commonHelp.incoterms) + field("paymentTerms", "Payment Terms", d.paymentTerms, "Proposed payment terms.") + field("discount", "Discount", d.discount, "Estimated discount.", "number") + field("freight", "Estimated Freight", d.freight, "Estimated freight amount.", "number") + field("insurance", "Estimated Insurance", d.insurance, "Estimated insurance amount.", "number") + field("remarks", "Remarks", d.remarks, "Optional commercial note."))
+      section("Shipment", field("loading", "Port of Loading", d.loading, "Optional loading port.") + field("finalDestination", "Final Destination", d.finalDestination, "Optional final destination.") + field("carrier", "Carrier", d.carrier, "Optional carrier if known.")),
+      section("Commercial Terms", selectField("currency", "Currency", currencyOptions(d.currency), commonHelp.currency) + selectField("incoterms", "Incoterms", incotermsOptions(d.incoterms), commonHelp.incoterms) + field("namedPlace", "Named Place / Port", d.namedPlace, commonHelp.incoterms) + field("paymentTerms", "Payment Terms", d.paymentTerms, "Proposed payment terms.") + field("discount", "Discount", d.discount, "Discount deducted from the subtotal.", "number") + field("additionalCharges", "Additional Charges", d.additionalCharges, "Charges added to the subtotal.", "number") + field("remarks", "Remarks", d.remarks, "Optional commercial note."))
     ].join("");
     return [
       `<p class="template-guardrail">${lang === "ko" ? "선사·포워더에 전달할 선적 정보를 정리하는 범용 참고 양식입니다. 실제 제출 전 선택한 선사 또는 포워더의 공식 요구사항을 확인하세요." : "This is a general reference form for preparing shipping instruction data. Verify the selected carrier or forwarder's official requirements before submission."}</p>`,
@@ -239,7 +240,8 @@
       }, { packages: 0, quantity: 0, net: 0, gross: 0, cbm: 0 });
     }
     const goods = rows.reduce((sum, row) => sum + num(row.quantity) * num(row.unitPrice), 0);
-    return { goods, total: goods + num(d.freight) + num(d.insurance) + num(d.packing) + num(d.otherCharges) - num(d.discount) };
+    const charges = id === "pro-forma-invoice" ? num(d.additionalCharges) : num(d.freight) + num(d.insurance) + num(d.packing) + num(d.otherCharges);
+    return { goods, total: goods + charges - num(d.discount) };
   }
   function meaningfulRow(row) {
     const textValues = [row.description, row.hsCode, row.origin, row.marks, row.packageNo, row.containerNo, row.sealNo];
@@ -290,7 +292,7 @@
     const notify = d.notifySame ? buyer : d.notifyName;
     const notifyAddress = d.notifySame ? (d.buyerAddress || d.consigneeAddress || "") : d.notifyAddress;
     const labels = id === "commercial-invoice" || id === "pro-forma-invoice" ? ["Shipper / Exporter", "Consignee / Importer"] : ["Seller / Shipper", "Buyer / Consignee"];
-    return `<div class="doc-party-grid"><section><h3>${labels[0]}</h3><p>${esc(seller)}<br>${esc(d.sellerAddress || d.shipperAddress || "")}</p></section><section><h3>${labels[1]}</h3><p>${esc(buyer)}<br>${esc(d.buyerAddress || d.consigneeAddress || "")}</p></section>${id === "commercial-invoice" ? `<section><h3>Notify Party</h3><p>${esc(notify)}<br>${esc(notifyAddress)}</p></section>` : ""}</div>`;
+    return `<div class="doc-party-grid"><section><h3>${labels[0]}</h3><p>${esc(seller)}<br>${esc(d.sellerAddress || d.shipperAddress || "")}</p></section><section><h3>${labels[1]}</h3><p>${esc(buyer)}<br>${esc(d.buyerAddress || d.consigneeAddress || "")}</p></section>${id === "commercial-invoice" || id === "pro-forma-invoice" ? `<section><h3>Notify Party</h3><p>${esc(notify)}<br>${esc(notifyAddress)}</p></section>` : ""}</div>`;
   }
   function previewHeaders(id) {
     if (id === "commercial-invoice") return ["Marks / Pkgs", "Description", "Quantity", "Unit Price", "Amount", "HS CODE"];
@@ -454,8 +456,8 @@
     return { A4: [d.sellerName || d.shipperName, d.sellerAddress || d.shipperAddress].filter(Boolean).join("\n"), A9: [d.buyerName || d.consigneeName, d.buyerAddress || d.consigneeAddress].filter(Boolean).join("\n"), A14: [notifyName, notifyAddress].filter(Boolean).join("\n"), H4: [d.invoiceNo || d.packingNo || d.proformaNo, d.invoiceDate || d.packingDate || d.issueDate].filter(Boolean).join(" / "), H6: id === "packing-list" ? (d.remarks || "") : [d.lcNo, d.lcDate].filter(Boolean).join(" / "), H9: d.lcBank || "", H12: id === "packing-list" ? "" : (d.remarks || d.notes || ""), E19: route.loading || "", E21: [route.carrier, route.sailing].filter(Boolean).join(" / ") };
   }
   async function baseXlsxBlob(id, d) {
-    if (id === "commercial-invoice" || id === "packing-list") {
-      const { buildTradeWorkbook } = await import("./logilee-workbook.mjs?v=templates-xlsx-v32-20260909");
+    if (id === "commercial-invoice" || id === "packing-list" || id === "pro-forma-invoice") {
+      const { buildTradeWorkbook } = await import("./logilee-workbook.mjs?v=templates-xlsx-pi-v33-20260909");
       return buildTradeWorkbook(id, d);
     }
     const layout = xlsxLayouts[id]; const ExcelJS = window.ExcelJS;
@@ -536,7 +538,7 @@
     const id = state.selected;
     const d = state.data[id];
     const name = filename(id, d, format);
-    const cloudPdf = format === "pdf" && (id === "commercial-invoice" || id === "packing-list");
+    const cloudPdf = format === "pdf" && (id === "commercial-invoice" || id === "packing-list" || id === "pro-forma-invoice");
     const buttonLabel = button?.textContent;
     if (cloudPdf && button) {
       button.disabled = true;
