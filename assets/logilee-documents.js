@@ -58,24 +58,29 @@
     "packing-list": () => ({ packingNo: "PL-2026-001", invoiceNo: "", packingDate: today(), sellerName: "", sellerAddress: "", buyerName: "", buyerAddress: "", notifySame: true, notifyName: "", notifyAddress: "", mode: "Ocean", carrier: "", loading: "Busan", discharge: "", finalDestination: "", remarks: "", rows: [packageRow(), packageRow()] }),
     "pro-forma-invoice": () => ({ proformaNo: "", issueDate: "", validUntil: "", buyerRef: "", estimatedShipDate: "", sellerName: "", sellerAddress: "", sellerCountry: "KR", buyerName: "", buyerAddress: "", buyerCountry: "US", notifySame: true, notifyName: "", notifyAddress: "", currency: "USD", incoterms: "FOB", namedPlace: "Busan", paymentTerms: "T/T", loading: "", finalDestination: "", carrier: "", discount: 0, additionalCharges: 0, remarks: "", rows: [goodsRow()] }),
     "shipping-instruction": () => ({ siRef: "", siDate: "", bookingNo: "", shipperRef: "", customerRef: "", mode: "Ocean", shipperName: "", shipperAddress: "", shipperContact: "", consigneeName: "", consigneeAddress: "", consigneeContact: "", notifyName: "", notifyAddress: "", notifyContact: "", forwarderName: "", forwarderAddress: "", carrier: "", vessel: "", voyage: "", receipt: "", loading: "", discharge: "", delivery: "", etd: "", eta: "", freightTerms: "", freightPayableAt: "", blType: "", originalBlCount: "", chargeInstructions: "", releaseInstructions: "", specialInstructions: "", dangerousGoods: "Not specified", regulatoryInfo: "", preparedBy: "", preparedCompany: "", preparedDate: "", rows: [cargoRow()] }),
-    "shipment-checklist": () => ({ reference: "SHIP-2026-001", notes: "", items: checklistItems().map((item) => ({ id: item.id, checked: false, owner: "", due: "" })) })
+    "shipment-checklist": () => ({ reference: "", customer: "", consignee: "", origin: "", destination: "", mode: "", incoterms: "", namedPlace: "", etd: "", eta: "", carrier: "", preparedBy: "", updated: "", items: checklistItems().map((item) => ({ ...item, status: "Pending", owner: "", due: "", notes: "", custom: false })) })
   };
 
   function goodsRow() { return { description: "", hsCode: "", quantity: "", unit: "", unitPrice: "", origin: "" }; }
   function packageRow() { return { packageNo: "", type: "Carton", marks: "", description: "", quantity: "", unit: "", netWeight: "", grossWeight: "", weightUnit: "kg", length: "", width: "", height: "", dimensionUnit: "cm" }; }
   function cargoRow() { return { containerNo: "", sealNo: "", containerType: "", marks: "", packages: "", packageType: "", description: "", hsCode: "", grossWeight: "", weightUnit: "kg", cbm: "" }; }
-  function checklistItems() {
-    const groups = lang === "ko"
-      ? [["Before Booking", ["Buyer/order details confirmed", "Incoterms confirmed", "Cargo dimensions / weight confirmed", "HS classification reviewed", "DG / Reefer / OOG applicability reviewed"]], ["Booking", ["Carrier / forwarder selected", "Booking confirmation received", "Cut-off checked", "Equipment confirmed"]], ["Documentation", ["Commercial Invoice prepared", "Packing List prepared", "Shipping Instruction prepared/submitted externally", "Certificate of Origin requirement checked", "Export/customs requirements checked"]], ["Before Departure", ["Cargo delivered", "VGM submitted if applicable", "Draft B/L reviewed", "Export clearance status checked"]], ["After Departure", ["Final B/L or AWB received", "Buyer notified", "Document dispatch checked", "Payment milestone checked"]], ["Destination", ["Import documents shared", "Arrival information checked", "DEM/DET free time checked", "Customs / broker coordination checked"]]]
-      : [["Before Booking", ["Buyer/order details confirmed", "Incoterms confirmed", "Cargo dimensions / weight confirmed", "HS classification reviewed", "DG / Reefer / OOG applicability reviewed"]], ["Booking", ["Carrier / forwarder selected", "Booking confirmation received", "Cut-off checked", "Equipment confirmed"]], ["Documentation", ["Commercial Invoice prepared", "Packing List prepared", "Shipping Instruction prepared/submitted externally", "Certificate of Origin requirement checked", "Export/customs requirements checked"]], ["Before Departure", ["Cargo delivered", "VGM submitted if applicable", "Draft B/L reviewed", "Export clearance status checked"]], ["After Departure", ["Final B/L or AWB received", "Buyer notified", "Document dispatch checked", "Payment milestone checked"]], ["Destination", ["Import documents shared", "Arrival information checked", "DEM/DET free time checked", "Customs / broker coordination checked"]]];
-    return groups.flatMap(([group, rows]) => rows.map((label, index) => ({ id: `${group}-${index}`.toLowerCase().replace(/[^a-z0-9]+/g, "-"), group, label })));
-  }
+  const checklistDefinition = [
+    ["setup","ORDER / SHIPMENT SETUP","주문 / 선적 설정",[["buyer","Confirm buyer / consignee details","구매자 / 수하인 정보 확인"],["reference","Confirm shipment reference / PO","선적 참조번호 / PO 확인"],["goods","Confirm goods and quantity","품명과 수량 확인"],["incoterms","Confirm Incoterms and named place","Incoterms와 지정 장소 확인"],["payment","Confirm payment terms","결제 조건 확인"],["ship-date","Confirm requested shipping date","요청 선적일 확인"],["destination","Confirm destination","도착지 확인"]]],
+    ["compliance","PRODUCT & COMPLIANCE CHECK","제품 / 규제 확인",[["hs","Review HS classification","HS 분류 검토"],["import","Review destination import requirements","도착국 수입 요건 검토"],["controlled","Review restricted / controlled goods status","제한·통제 품목 여부 검토"],["dg","Review dangerous-goods status if applicable","해당 시 위험물 여부 검토"],["product-docs","Review product-specific documentation if applicable","해당 시 제품별 서류 검토"],["origin","Confirm country-of-origin information if needed","필요 시 원산지 정보 확인"]]],
+    ["booking","BOOKING & ROUTING","부킹 / 운송 경로",[["quote","Request / confirm freight quotation","운임 견적 요청 / 확인"],["mode","Confirm transport mode","운송 모드 확인"],["provider","Confirm carrier / forwarder","선사 / 포워더 확인"],["booking","Confirm booking","부킹 확인"],["route","Confirm route","운송 경로 확인"],["cutoff","Confirm cut-off dates","마감일 확인"],["schedule","Confirm ETD / ETA","ETD / ETA 확인"],["freight","Confirm freight terms / charge responsibility","운임 조건 / 비용 부담 확인"]]],
+    ["cargo","CARGO PREPARATION","화물 준비",[["packing","Confirm packing method","포장 방식 확인"],["packages","Confirm package count","포장 수량 확인"],["marks","Confirm marks / labels","화인 / 라벨 확인"],["weight","Confirm gross / net weight","총중량 / 순중량 확인"],["dimensions","Confirm dimensions / CBM","치수 / CBM 확인"],["securing","Review cargo securing requirements where applicable","해당 시 화물 고정 요건 검토"],["container","Confirm container / seal details where applicable","해당 시 컨테이너 / 봉인 정보 확인"]]],
+    ["origin-docs","EXPORT / ORIGIN DOCUMENTS","수출 / 출발지 서류",[["ci","Prepare Commercial Invoice","Commercial Invoice 준비"],["pl","Prepare Packing List","Packing List 준비"],["si","Prepare Shipping Instruction where applicable","해당 시 Shipping Instruction 준비"],["co","Review Certificate of Origin requirement","원산지증명서 필요 여부 검토"],["export-decl","Review export declaration requirement","수출신고 필요 여부 검토"],["permits","Review permit / certificate requirements where applicable","해당 시 허가 / 인증서 요건 검토"],["crosscheck","Cross-check document consistency","서류 간 일관성 교차 확인"]]],
+    ["departure","HANDOVER / DEPARTURE","인계 / 출발",[["handover","Confirm cargo handover","화물 인계 확인"],["receipt","Confirm terminal / warehouse receipt where applicable","해당 시 터미널 / 창고 입고 확인"],["clearance","Confirm export clearance status where applicable","해당 시 수출통관 상태 확인"],["departed","Confirm departure / uplift","출항 / 항공기 탑재 확인"],["draft","Check draft transport document","운송서류 초안 확인"],["bl-awb","Review B/L or AWB details","B/L 또는 AWB 정보 검토"],["release","Confirm document release instructions","서류 발행 / release 지시 확인"]]],
+    ["destination","DESTINATION / IMPORT PREPARATION","도착지 / 수입 준비",[["send-docs","Send document set to buyer / broker","구매자 / 관세사에게 서류 전달"],["clearance-docs","Review destination clearance documents","도착지 통관서류 검토"],["arrival","Confirm arrival information","도착 정보 확인"],["charges","Review destination charges where applicable","해당 시 도착지 비용 검토"],["delivery","Confirm delivery arrangement","배송 계획 확인"],["exceptions","Follow up exceptions / holds","예외 / 보류 사항 후속 확인"]]],
+    ["post","POST-SHIPMENT DOCUMENTS","선적 후 서류",[["final-transport","Receive final B/L / AWB","최종 B/L / AWB 수령"],["archive-ci","Archive final Commercial Invoice","최종 Commercial Invoice 보관"],["archive-pl","Archive final Packing List","최종 Packing List 보관"],["archive-cert","Archive supporting certificates","관련 인증서 보관"],["receipt-confirm","Confirm buyer / consignee document receipt","구매자 / 수하인 서류 수령 확인"],["completion","Record shipment completion notes","선적 완료 메모 기록"]]]
+  ];
+  function checklistItems() { return checklistDefinition.flatMap(([stageId,enStage,koStage,rows]) => rows.map(([id,en,ko]) => ({ id:`${stageId}-${id}`, stageId, stage:lang === "ko" ? koStage : enStage, task:lang === "ko" ? ko : en }))); }
 
   let state = { selected: new URLSearchParams(location.search).get("template") || "", category: "all", query: "", mobile: "form", data: {} };
   templates.forEach((tpl) => state.data[tpl.id] = loadDraft(tpl.id));
 
   function loadDraft(id) {
-    try { return { ...defaults[id](), ...(JSON.parse(localStorage.getItem(storageKey(id)) || "null") || {}) }; }
+    try { const value={ ...defaults[id](), ...(JSON.parse(localStorage.getItem(storageKey(id)) || "null") || {}) }; if(id==="shipment-checklist"){const canonical=new Map(checklistItems().map(item=>[item.id,item]));value.items=(value.items||[]).map(item=>({...canonical.get(item.id),...item,status:item.status||(item.checked?"Done":"Pending"),task:item.task||canonical.get(item.id)?.task||item.label||"",stage:item.stage||canonical.get(item.id)?.stage||""}));} return value; }
     catch { return defaults[id](); }
   }
   function saveDraft(id) {
@@ -225,13 +230,11 @@
     return section("Container / Package / Cargo Details", `<div class="template-row-table">${rows.map((row, i) => `<div class="template-row" data-row="${i}">${field(`rows.${i}.containerNo`, "Container No.", row.containerNo, "Optional container number.")}${field(`rows.${i}.sealNo`, "Seal No.", row.sealNo, "Optional seal number.")}${field(`rows.${i}.containerType`, "Container Type / Size", row.containerType, "Example: 20GP or 40HC.")}${field(`rows.${i}.marks`, "Marks & Numbers", row.marks, "Cargo marks.")}${field(`rows.${i}.packages`, "Number of Packages", row.packages, "Package count.", "number")}${field(`rows.${i}.packageType`, "Package Type", row.packageType, "Package type.")}${field(`rows.${i}.description`, "Cargo Description", row.description, "Cargo description.")}${field(`rows.${i}.hsCode`, "HS Code", row.hsCode, "Optional HS Code reference.")}${field(`rows.${i}.grossWeight`, "Gross Weight", row.grossWeight, "Gross weight.", "number")}${selectField(`rows.${i}.weightUnit`, "Weight Unit", weightOptions(row.weightUnit), "kg or lb.")}${field(`rows.${i}.cbm`, "Measurement / CBM", row.cbm, "Measurement in CBM.", "number")}<button type="button" data-remove-row="${i}">${T.remove}</button></div>`).join("")}</div><button type="button" class="secondary-btn" data-add-row="shipping-instruction">${T.addRow}</button>`);
   }
   function checklistForm(d) {
-    const items = checklistItems();
-    const checked = new Set((d.items || []).filter((item) => item.checked).map((item) => item.id));
-    return `<p class="template-guardrail">${lang === "ko" ? "선적 업무의 주요 확인사항을 단계별로 정리하는 LOGILEE 실무 체크리스트입니다." : "A LOGILEE operational checklist for tracking common shipment preparation and follow-up tasks."}</p>${field("reference", "Shipment Reference", d.reference, "Internal shipment reference.")}${section("Notes", `<textarea name="notes">${esc(d.notes || "")}</textarea>`)}${[...new Set(items.map((item) => item.group))].map((group) => {
-      const groupItems = items.filter((item) => item.group === group);
-      const done = groupItems.filter((item) => checked.has(item.id)).length;
-      return section(`${group} (${done}/${groupItems.length})`, groupItems.map((item) => `<label class="template-check"><input type="checkbox" name="items.${item.id}" ${checked.has(item.id) ? "checked" : ""}> ${esc(item.label)}</label>`).join(""));
-    }).join("")}`;
+    const items=d.items||[];
+    const header=section(lang==="ko"?"선적 정보":"Shipment Information",field("reference","Shipment Reference",d.reference,"Internal shipment reference.")+field("customer","Customer / Buyer",d.customer,"Customer or buyer.")+field("consignee","Consignee",d.consignee,"Consignee.")+field("origin","Origin",d.origin,"Origin.")+field("destination","Destination",d.destination,"Destination.")+field("mode","Mode",d.mode,"Transport mode.")+field("incoterms","Incoterms",d.incoterms,"Rule, if applicable.")+field("namedPlace","Named Place",d.namedPlace,"Named place.")+field("etd","ETD",d.etd,"Estimated departure.","date")+field("eta","ETA",d.eta,"Estimated arrival.","date")+field("carrier","Carrier / Forwarder",d.carrier,"Carrier or forwarder.")+field("preparedBy","Prepared By",d.preparedBy,"Preparer.")+field("updated","Last Updated",d.updated,"Last updated date.","date"));
+    const stages=[...new Set(items.map(item=>item.stage))];
+    const rows=stages.map(stage=>section(stage,items.map((item,index)=>item.stage===stage?`<div class="checklist-edit-row"><select name="checklist.${index}.status"><option ${item.status==="Pending"?"selected":""}>Pending</option><option ${item.status==="Done"?"selected":""}>Done</option><option ${item.status==="N/A"?"selected":""}>N/A</option></select><input name="checklist.${index}.task" value="${attr(item.task)}" aria-label="Task"><input name="checklist.${index}.owner" value="${attr(item.owner)}" placeholder="Owner"><input name="checklist.${index}.due" type="date" value="${attr(item.due)}"><input name="checklist.${index}.notes" value="${attr(item.notes)}" placeholder="Notes">${item.custom?`<button type="button" data-remove-checklist="${index}">${T.remove}</button>`:""}</div>`:"").join(""))).join("");
+    return `<p class="template-guardrail">${lang==="ko"?"LOGILEE Shipment Checklist는 운영 계획 지원 도구입니다. 선적, 운송사, 통관, 규제 및 도착지 요건은 달라질 수 있습니다.":"LOGILEE Shipment Checklist is an operational planning aid. Shipment, carrier, customs, regulatory, and destination requirements may vary."}</p>${header}${rows}<button type="button" class="secondary-btn" data-add-checklist>${lang==="ko"?"사용자 작업 추가":"Add custom task"}</button>`;
   }
 
   function totals(id, d) {
@@ -318,10 +321,8 @@
     return `<dl class="doc-totals"><div><dt>Goods Total</dt><dd>${esc(d.currency || "USD")} ${money(total.goods)}</dd></div><div><dt>Document Total</dt><dd>${esc(d.currency || "USD")} ${money(total.total)}</dd></div></dl>`;
   }
   function checklistPreview(d) {
-    const items = checklistItems();
-    const saved = new Map((d.items || []).map((item) => [item.id, item]));
-    const done = items.filter((item) => saved.get(item.id)?.checked).length;
-    return `<article class="doc-preview" data-doc-preview><h2>SHIPMENT CHECKLIST</h2><p>${lang === "ko" ? "선적 업무의 주요 확인사항을 단계별로 정리하는 LOGILEE 실무 체크리스트입니다." : "A LOGILEE operational checklist for tracking common shipment preparation and follow-up tasks."}</p><dl><div><dt>Reference</dt><dd>${esc(d.reference)}</dd></div><div><dt>Progress</dt><dd>${done}/${items.length}</dd></div></dl>${[...new Set(items.map((item) => item.group))].map((group) => `<section><h3>${esc(group)}</h3><ul>${items.filter((item) => item.group === group).map((item) => `<li>${saved.get(item.id)?.checked ? "☑" : "☐"} ${esc(item.label)}</li>`).join("")}</ul></section>`).join("")}<p>${esc(d.notes || "")}</p><footer>Created with LOGILEE</footer></article>`;
+    const items=d.items||[],done=items.filter(item=>item.status==="Done").length;
+    return `<article class="doc-preview" data-doc-preview><h2>SHIPMENT CHECKLIST</h2><dl><div><dt>Reference</dt><dd>${esc(d.reference)}</dd></div><div><dt>Progress</dt><dd>${done}/${items.length}</dd></div></dl><table><thead><tr><th>Status</th><th>Stage</th><th>Task</th></tr></thead><tbody>${items.map(item=>`<tr><td>${esc(item.status)}</td><td>${esc(item.stage)}</td><td>${esc(item.task)}</td></tr>`).join("")}</tbody></table><footer>Created with LOGILEE</footer></article>`;
   }
 
   function actionMarkup(tpl) {
@@ -350,6 +351,8 @@
     root.querySelector("[data-reset-template]")?.addEventListener("click", () => { if (confirm(T.clearConfirm)) { localStorage.removeItem(storageKey(state.selected)); state.data[state.selected] = defaults[state.selected](); toast(T.resetDone); render(); } });
     root.querySelector("[data-add-row]")?.addEventListener("click", () => { const rows = state.data[state.selected].rows; rows.push(state.selected === "packing-list" ? packageRow() : state.selected === "shipping-instruction" ? cargoRow() : goodsRow()); render(); });
     root.querySelectorAll("[data-remove-row]").forEach((btn) => btn.addEventListener("click", () => { const rows = state.data[state.selected].rows; if (rows.length > 1) rows.splice(Number(btn.dataset.removeRow), 1); render(); }));
+    root.querySelector("[data-add-checklist]")?.addEventListener("click",()=>{const d=state.data["shipment-checklist"],stage=checklistDefinition[0][lang==="ko"?2:1];d.items.push({id:`custom-${Date.now()}`,stageId:"custom",stage,status:"Pending",task:"",owner:"",due:"",notes:"",custom:true});render();});
+    root.querySelectorAll("[data-remove-checklist]").forEach(btn=>btn.addEventListener("click",()=>{state.data["shipment-checklist"].items.splice(Number(btn.dataset.removeChecklist),1);render();}));
     root.querySelector("[data-import-ci]")?.addEventListener("click", importCommercialInvoice);
     root.querySelectorAll("[data-flow-target]").forEach((btn) => btn.addEventListener("click", () => transferTo(btn.dataset.flowTarget)));
     root.querySelectorAll("[data-export-template]").forEach((btn) => btn.addEventListener("click", () => exportTemplate(btn.dataset.exportTemplate, btn)));
@@ -359,10 +362,8 @@
     const d = state.data[state.selected];
     const target = event.target;
     if (!target.name) return;
-    if (state.selected === "shipment-checklist" && target.name.startsWith("items.")) {
-      const id = target.name.slice(6);
-      const item = d.items.find((row) => row.id === id);
-      if (item) item.checked = target.checked;
+    if (state.selected === "shipment-checklist" && target.name.startsWith("checklist.")) {
+      const [,index,key]=target.name.split("."); if(d.items[Number(index)])d.items[Number(index)][key]=target.value;
     } else if (target.name.includes(".")) {
       const [, index, key] = target.name.split(".");
       d.rows[Number(index)][key] = target.type === "number" ? num(target.value) : target.value;
@@ -487,12 +488,27 @@
     put("A48", [d.preparedBy,d.preparedCompany].filter(Boolean).join(" / ")); put("E48", d.preparedDate);
     return new Blob([await workbook.xlsx.writeBuffer()], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
   }
+  async function checklistXlsxBlob(d) {
+    const workbook=new window.ExcelJS.Workbook(),sheet=workbook.addWorksheet("CHECKLIST");
+    sheet.pageSetup={paperSize:9,orientation:"portrait",fitToPage:true,fitToWidth:1,fitToHeight:0,margins:{left:.25,right:.25,top:.35,bottom:.35,header:.1,footer:.1},printArea:`A1:F${12+(d.items||[]).length}`,printTitlesRow:"10:10"};sheet.views=[{showGridLines:false}];
+    [12,18,48,15,15,32].forEach((width,index)=>sheet.getColumn(index+1).width=width);
+    const thin={style:"thin",color:{argb:"FF60758A"}},border={top:thin,left:thin,bottom:thin,right:thin},fill={type:"pattern",pattern:"solid",fgColor:{argb:"FFDCE6EF"}},label={type:"pattern",pattern:"solid",fgColor:{argb:"FFF1F4F7"}};
+    sheet.mergeCells("A1:F2");Object.assign(sheet.getCell("A1"),{value:lang==="ko"?"선적 체크리스트":"SHIPMENT CHECKLIST",font:{name:"Arial",size:18,bold:true},alignment:{horizontal:"center",vertical:"middle"},border});
+    const headers=[["Shipment Reference",d.reference],["Customer / Buyer",d.customer],["Consignee",d.consignee],["Origin / Destination",[d.origin,d.destination].filter(Boolean).join(" / ")],["Mode / Incoterms",[d.mode,d.incoterms,d.namedPlace].filter(Boolean).join(" / ")],["ETD / ETA",[d.etd,d.eta].filter(Boolean).join(" / ")],["Carrier / Forwarder",d.carrier],["Prepared By / Last Updated",[d.preparedBy,d.updated].filter(Boolean).join(" / ")]];
+    for(let i=0;i<4;i++){const row=3+i,left=headers[i*2],right=headers[i*2+1];sheet.getCell(`A${row}`).value=left[0];sheet.mergeCells(`A${row}:B${row}`);sheet.getCell(`C${row}`).value=left[1];sheet.getCell(`D${row}`).value=right[0];sheet.getCell(`E${row}`).value=right[1];sheet.mergeCells(`E${row}:F${row}`);for(let c=1;c<=6;c++){const cell=sheet.getCell(row,c);cell.font={name:"Arial",size:8,bold:c===1||c===4};cell.fill=c===1||c===4?label:undefined;cell.border=border;cell.alignment={vertical:"middle",wrapText:true};}}
+    sheet.mergeCells("A8:F8");Object.assign(sheet.getCell("A8"),{value:lang==="ko"?"운영 계획 지원 도구입니다. 선적, 운송사, 통관, 규제 및 도착지 요건은 달라질 수 있습니다.":"Operational planning aid. Shipment, carrier, customs, regulatory, and destination requirements may vary.",font:{name:"Arial",size:8,italic:true,color:{argb:"FF40566D"}},alignment:{vertical:"middle"},border});
+    ["STATUS","STAGE","TASK","OWNER","TARGET DATE","NOTES"].forEach((v,i)=>{const cell=sheet.getCell(10,i+1);cell.value=lang==="ko"?["상태","단계","작업","담당자","목표일","메모"][i]:v;cell.font={name:"Arial",size:8,bold:true};cell.fill=fill;cell.border=border;cell.alignment={horizontal:"center",vertical:"middle",wrapText:true};});
+    (d.items||[]).forEach((item,index)=>{const row=11+index,[status,stage,task,owner,due,notes]=[item.status||"Pending",item.stage,item.task,item.owner,item.due,item.notes];[status,stage,task,owner,due,notes].forEach((v,i)=>{const cell=sheet.getCell(row,i+1);cell.value=v||"";cell.font={name:"Arial",size:9};cell.border=border;cell.alignment={vertical:"middle",wrapText:true};});sheet.getRow(row).height=32;});
+    const footer=11+(d.items||[]).length;sheet.mergeCells(`A${footer}:F${footer+1}`);Object.assign(sheet.getCell(`A${footer}`),{value:lang==="ko"?"LOGILEE Shipment Checklist는 운영 계획 지원 도구입니다. 법률·통관·운송사 요건의 완전성을 보증하지 않습니다.":"LOGILEE Shipment Checklist is an operational planning aid and does not guarantee complete legal, customs, or carrier requirements.",font:{name:"Arial",size:8,color:{argb:"FF40566D"}},alignment:{vertical:"middle",wrapText:true},border});
+    return new Blob([await workbook.xlsx.writeBuffer()],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
+  }
   async function baseXlsxBlob(id, d) {
     if (id === "commercial-invoice" || id === "packing-list" || id === "pro-forma-invoice") {
       const { buildTradeWorkbook } = await import("./logilee-workbook.mjs?v=templates-pi-border-v34-20260909");
       return buildTradeWorkbook(id, d);
     }
     if (id === "shipping-instruction") return shippingInstructionXlsxBlob(d);
+    if (id === "shipment-checklist") return checklistXlsxBlob(d);
     const layout = xlsxLayouts[id]; const ExcelJS = window.ExcelJS;
     if (!layout || !ExcelJS) throw new Error("ExcelJS runtime unavailable");
     const response = await fetch(new URL(`../assets/templates/${layout.file}`, location.href).href, { cache: "no-store" });
@@ -571,7 +587,7 @@
     const id = state.selected;
     const d = state.data[id];
     const name = filename(id, d, format);
-    const cloudPdf = format === "pdf" && (id === "commercial-invoice" || id === "packing-list" || id === "pro-forma-invoice" || id === "shipping-instruction");
+    const cloudPdf = format === "pdf" && (id === "commercial-invoice" || id === "packing-list" || id === "pro-forma-invoice" || id === "shipping-instruction" || id === "shipment-checklist");
     const buttonLabel = button?.textContent;
     if (cloudPdf && button) {
       button.disabled = true;

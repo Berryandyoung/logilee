@@ -3190,6 +3190,15 @@ body.sidebar-drawer-active {
   align-self: end;
 }
 
+.checklist-edit-row {
+  display: grid;
+  grid-template-columns: 110px minmax(240px, 2fr) minmax(110px, .7fr) 145px minmax(180px, 1fr) auto;
+  gap: 8px;
+  grid-column: 1 / -1;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
 .template-actions {
   padding-bottom: 10px;
   border-bottom: 1px solid var(--border);
@@ -3510,6 +3519,12 @@ body.sidebar-drawer-active {
 }
 
 @media (max-width: 640px) {
+  .checklist-edit-row {
+    grid-template-columns: 1fr;
+    padding: 10px;
+    border: 1px solid var(--border);
+  }
+
   [data-template-builder] {
     min-width: 0;
     max-width: 100%;
