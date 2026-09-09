@@ -188,7 +188,7 @@ export async function buildTradeWorkbook(id, data) {
   }
   if (pi) {
     for (const row of [48, 49, 50]) { copyStyle(`E${row}`, 'E47'); copyStyle(`F${row}`, 'F47'); copyStyle(`H${row}`, 'H47'); addMerge(`E${row}:F${row}`); }
-    copyStyle('A50', 'E50'); copyStyle('B50', 'F50'); copyStyle('C50', 'G50'); copyStyle('D50', 'H50'); addMerge('A50:B50');
+    copyStyle('A50', 'E50'); copyStyle('B50', 'F50'); copyStyle('C50', 'G50'); copyStyle('D50', 'G50'); addMerge('A50:B50');
     replaceText('E47', `SUBTOTAL (${data.currency || ''}) :`); replaceText('E48', 'DISCOUNT :'); replaceText('E49', 'ADD. CHARGES :'); replaceText('E50', 'GRAND TOTAL :'); replaceText('A50', 'Authorized Signature');
   }
   if (goods.length) {
