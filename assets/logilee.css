@@ -3400,6 +3400,16 @@ body.sidebar-drawer-active {
   border-color: #444;
 }
 
+.doc-preview table {
+  width: 100%;
+  table-layout: fixed;
+}
+
+.doc-preview th,
+.doc-preview td {
+  overflow-wrap: anywhere;
+}
+
 .doc-preview th {
   background: #f2f2f2;
   color: #111;
@@ -3500,6 +3510,12 @@ body.sidebar-drawer-active {
 }
 
 @media (max-width: 640px) {
+  [data-template-builder] {
+    min-width: 0;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
   .compact-form {
     grid-template-columns: 1fr;
   }
@@ -3552,8 +3568,14 @@ body.sidebar-drawer-active {
 
   .doc-preview {
     min-height: 0;
+    min-width: 0;
+    max-width: 100%;
     padding: 16px;
     overflow-x: auto;
+  }
+
+  .doc-preview table {
+    min-width: 0;
   }
 
   .compact-form .field,
