@@ -44,6 +44,7 @@
   const dimensionOptions = (value = "cm") => ["mm", "cm", "m", "in", "ft"].map((code) => `<option value="${code}" ${value === code ? "selected" : ""}>${code}</option>`).join("");
   const dimToM = { mm: 0.001, cm: 0.01, m: 1, in: 0.0254, ft: 0.3048 };
   const weightToKg = { kg: 1, lb: 0.45359237 };
+  const xlsxPdfEndpoint = "https://logilee-xlsx-pdf-sirnfhy77q-uc.a.run.app/convert/xlsx-to-pdf";
   const templates = [
     { id: "commercial-invoice", category: "trade", formats: ["XLSX", "PDF"], title: "Commercial Invoice", ko: "상업송장", descKo: "수출입 거래와 통관에 활용되는 기본 거래 서류", descEn: "Sales and customs value document for trade shipments.", aliases: "commercial invoice 상업송장 invoice ci customs value" },
     { id: "packing-list", category: "trade", formats: ["XLSX", "PDF"], title: "Packing List", ko: "포장명세서", descKo: "포장 수량, 중량, 치수, 마크 정보를 정리하는 서류", descEn: "Package, weight, dimension, and marks reference for the physical cargo.", aliases: "packing list 포장명세서 package cbm" },
@@ -346,7 +347,7 @@
     root.querySelectorAll("[data-remove-row]").forEach((btn) => btn.addEventListener("click", () => { const rows = state.data[state.selected].rows; if (rows.length > 1) rows.splice(Number(btn.dataset.removeRow), 1); render(); }));
     root.querySelector("[data-import-ci]")?.addEventListener("click", importCommercialInvoice);
     root.querySelectorAll("[data-flow-target]").forEach((btn) => btn.addEventListener("click", () => transferTo(btn.dataset.flowTarget)));
-    root.querySelectorAll("[data-export-template]").forEach((btn) => btn.addEventListener("click", () => exportTemplate(btn.dataset.exportTemplate)));
+    root.querySelectorAll("[data-export-template]").forEach((btn) => btn.addEventListener("click", () => exportTemplate(btn.dataset.exportTemplate, btn)));
   }
 
   function updateFromForm(event, rerender = true) {
@@ -454,7 +455,7 @@
   }
   async function baseXlsxBlob(id, d) {
     if (id === "commercial-invoice" || id === "packing-list") {
-      const { buildTradeWorkbook } = await import("./logilee-workbook.mjs");
+      const { buildTradeWorkbook } = await import("./logilee-workbook.mjs?v=templates-xlsx-v31-20260909");
       return buildTradeWorkbook(id, d);
     }
     const layout = xlsxLayouts[id]; const ExcelJS = window.ExcelJS;
@@ -520,15 +521,33 @@
     }
     return rows;
   }
-  async function exportTemplate(format) {
+  async function requestPdfConversion(workbookBlob) {
+    const response = await fetch(xlsxPdfEndpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" },
+      body: workbookBlob
+    });
+    if (!response.ok || !String(response.headers.get("Content-Type") || "").toLowerCase().startsWith("application/pdf")) {
+      throw new Error(`PDF conversion failed (${response.status})`);
+    }
+    return response.blob();
+  }
+  async function exportTemplate(format, button) {
     const id = state.selected;
     const d = state.data[id];
     const name = filename(id, d, format);
+    const cloudPdf = format === "pdf" && (id === "commercial-invoice" || id === "packing-list");
+    const buttonLabel = button?.textContent;
+    if (cloudPdf && button) {
+      button.disabled = true;
+      button.textContent = lang === "ko" ? "PDF 생성 중..." : "Generating PDF...";
+    }
     try {
       const rows = exportRows(id, d);
       if (format === "xlsx") downloadBlob(await baseXlsxBlob(id, d), name, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
       if (format === "docx") downloadBlob(await docxBlob(rows, templates.find((tpl) => tpl.id === id).title), name, "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
-      if (format === "pdf") downloadBlob(pdfBlob(id, d), name, "application/pdf");
+      if (cloudPdf) downloadBlob(await requestPdfConversion(await baseXlsxBlob(id, d)), name, "application/pdf");
+      else if (format === "pdf") downloadBlob(pdfBlob(id, d), name, "application/pdf");
       toast(T.exported);
     } catch (error) {
       if (format === "xlsx" && error?.code === "WORKBOOK_VALIDATION") {
@@ -536,10 +555,21 @@
         return;
       }
       console.error("Template export failed", error);
+      if (cloudPdf) {
+        toast(lang === "ko"
+          ? "PDF 변환에 실패했습니다. XLSX 다운로드는 계속 사용할 수 있습니다."
+          : "PDF conversion failed. XLSX download is still available.");
+        return;
+      }
       const xlsxFailure = format === "xlsx" && /ExcelJS|Template base/i.test(String(error?.message || error));
       toast(xlsxFailure
         ? (lang === "ko" ? "Excel 모듈을 불러오지 못했습니다. XLSX 다운로드를 다시 시도하세요." : "The Excel module could not be loaded. Please try the XLSX download again.")
         : (lang === "ko" ? "문서를 생성할 수 없습니다. 잠시 후 다시 시도하세요." : "Unable to generate the document. Please try again."));
+    } finally {
+      if (cloudPdf && button) {
+        button.disabled = false;
+        button.textContent = buttonLabel;
+      }
     }
   }
   function filename(id, d, format) {
