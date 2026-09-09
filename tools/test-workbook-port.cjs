@@ -1,0 +1,42 @@
+const fs=require('fs'),path=require('path'),http=require('http'),assert=require('assert/strict'),crypto=require('crypto');
+const repo=path.resolve(__dirname,'..'),deps=process.env.LOGILEE_TEST_DEPS||'C:/Users/Diana/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules';
+const {chromium}=require(path.join(deps,'playwright')),Zip=require(path.join(deps,'jszip')),xml=require(path.join(deps,'xml-js')),ExcelJS=require(path.join(repo,'node_modules/exceljs'));
+const out=process.env.LOGILEE_TEST_OUTPUT; if(!out)throw Error('Set LOGILEE_TEST_OUTPUT outside production assets');fs.mkdirSync(out,{recursive:true});
+const sha=p=>crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex');
+const masters=['commercial-invoice','packing-list'].map(id=>path.join(repo,'assets/templates',id+'.xlsx'));
+const hashes=masters.map(sha);
+const sample={sellerName:'BERRY & YOUNG CO., LTD.',sellerAddress:'123 TEHERAN-RO\r\nGANGNAM-GU, SEOUL\rREPUBLIC OF KOREA',buyerName:'HANSE TRADING GMBH',buyerAddress:'18 HAFENSTRASSE\n20457 HAMBURG\nGERMANY',notifySame:false,notifyName:'HANSE LOGISTICS GMBH',notifyAddress:'24 AM SANDTORKAI\n20457 HAMBURG\nGERMANY',loading:'BUSAN',finalDestination:'HAMBURG',carrier:'HMM',sailingDate:'2026-09-15',invoiceNo:'BY-2026-0907',invoiceDate:'2026-09-07',packingDate:'2026-09-07',lcNo:'LC-2026-184',lcDate:'2026-09-01',lcBank:'HANSE BANK AG',remarks:'PO NO. HB-2026-184\r\nCOUNTRY OF ORIGIN: KOREA\rHANDLE WITH CARE\nKEEP DRY'};
+const ci=[{marks:'BY / 1',description:'Cotton shirts',unit:'PCS',quantity:100,unitPrice:12.5,hsCode:'610910'},{marks:'BY / 2',description:'Cotton caps',unit:'PCS',quantity:50,unitPrice:5,hsCode:'650500'}];
+const pl=[{marks:'BY / 1',description:'Cotton shirts',quantity:10,netWeight:60,grossWeight:72,length:.6,width:.1,height:1,dimensionUnit:'m',weightUnit:'kg'},{marks:'BY / 2',description:'Cotton caps',quantity:5,netWeight:25,grossWeight:30,length:.6,width:.1,height:1,dimensionUnit:'m',weightUnit:'kg'}];
+async function packageXml(p){const z=await Zip.loadAsync(fs.readFileSync(p));const s=xml.xml2js(await z.file('xl/worksheets/sheet1.xml').async('string'),{compact:true}).worksheet;const w=xml.xml2js(await z.file('xl/workbook.xml').async('string'),{compact:true}).workbook;return {z,s,w};}
+async function main(){const server=http.createServer((req,res)=>{const name=decodeURIComponent(new URL(req.url,'http://localhost').pathname);const file=path.resolve(repo,'.'+name);if(!file.startsWith(repo+path.sep)){res.writeHead(403).end();return;}try{const bytes=fs.readFileSync(file);res.setHeader('Content-Type',file.endsWith('.mjs')||file.endsWith('.js')?'text/javascript':file.endsWith('.html')?'text/html':'application/octet-stream');res.end(bytes);}catch{res.writeHead(404).end();}});await new Promise(r=>server.listen(0,'127.0.0.1',r));const origin=`http://127.0.0.1:${server.address().port}`;let browser;
+ try{browser=await chromium.launch({headless:true,channel:'chrome'});const page=await browser.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ // Test-only instrumentation of the actual closure; generator implementation is never replaced.
+ await page.route('**/assets/logilee-documents.js*',async route=>{let source=fs.readFileSync(path.join(repo,'assets/logilee-documents.js'),'utf8');source=source.replace(/  render\(\);\s*\}\)\(\);\s*$/,'  window.__workbookTest = { baseXlsxBlob };\n  render();\n})();');await route.fulfill({body:source,contentType:'text/javascript'});});
+ await page.goto(origin+'/en/templates.html?template=packing-list');await page.waitForSelector('[data-template-form]');
+ const generate=async(id,data)=>Buffer.from(await page.evaluate(async({id,data})=>Array.from(new Uint8Array(await(await window.__workbookTest.baseXlsxBlob(id,data)).arrayBuffer())),{id,data}));
+ const reports=[];
+ for(const [id,rows,kind]of [['commercial-invoice',ci,'CI'],['packing-list',pl,'PL']])for(const populated of [false,true]){const file=path.join(out,`${kind}-${populated?'fully-populated':'blank'}.xlsx`);fs.writeFileSync(file,await generate(id,populated?{...sample,rows}:{rows:[]}));const a=await packageXml(masters[kind==='CI'?0:1]),b=await packageXml(file);
+ for(const key of ['cols','mergeCells','pageSetup','pageMargins','sheetPr','printOptions','rowBreaks','colBreaks'])assert.deepEqual(b.s[key],a.s[key],key);
+ assert.deepEqual(b.s.sheetData.row.map(r=>r._attributes),a.s.sheetData.row.map(r=>r._attributes));assert.deepEqual(b.w.definedNames,a.w.definedNames);
+ const w=new ExcelJS.Workbook();await w.xlsx.readFile(file);const s=w.worksheets[0];assert(!s.getCell('A14').formula);
+ if(populated){for(const [cell,value]of Object.entries({A4:sample.sellerName,A5:'123 TEHERAN-RO',A6:'GANGNAM-GU, SEOUL',A7:'REPUBLIC OF KOREA',A19:'BUSAN',C19:'HAMBURG',A21:'HMM',C21:'2026-09-15',E4:sample.invoiceNo,H4:sample.invoiceDate}))assert.equal(s.getCell(cell).value,value,cell);
+ const start=kind==='CI'?12:6;for(let i=0;i<4;i++){assert.equal(s.getCell('E'+(start+i)).alignment.horizontal,'left');assert.equal(s.getCell('E'+(start+i)).value,sample.remarks.replace(/\r\n?/g,'\n').split('\n')[i]);}
+ if(kind==='CI'){assert.equal(s.getCell('H46').value,150);assert.equal(s.getCell('H47').value,1500);assert.equal(s.getCell('E6').value,sample.lcNo);}else{assert.equal(s.getCell('E44').value,15);assert.equal(s.getCell('G44').value,85);assert.equal(s.getCell('H44').value,102);assert(Math.abs(s.getCell('I44').value-.9)<1e-10);assert(!Object.keys(b.z.files).some(n=>n.startsWith('xl/externalLinks/')));}
+ }else assert.equal(s.getCell('A14').value,null);
+ reports.push({file,structure:'PASS',values:'PASS',hash:sha(file)});
+ }
+ for(const [id,data]of [['packing-list',{...sample,rows:pl,remarks:Array(17).fill('LINE').join('\n')}],['commercial-invoice',{...sample,rows:ci,sellerAddress:'1\n2\n3\n4'}],['packing-list',{...sample,rows:Array(21).fill(pl[0])}],['commercial-invoice',{...sample,rows:ci,remarks:'LONG '.repeat(100)}]]){const result=await page.evaluate(async({id,data})=>{try{await window.__workbookTest.baseXlsxBlob(id,data);return 'UNEXPECTED';}catch(e){return e.code;}},{id,data});assert.equal(result,'WORKBOOK_VALIDATION');}
+ await page.unroute('**/assets/logilee-documents.js*');
+ page.on('dialog',dialog=>dialog.accept());
+ for(const language of ['ko','en'])for(const width of [1440,390]){await page.setViewportSize({width,height:900});for(const id of ['commercial-invoice','packing-list']){
+ await page.goto(`${origin}/${language}/templates.html?template=${id}`);await page.waitForSelector('[data-template-form]');
+ await page.locator('[name="sellerName"]').fill('SAVED TEST');await page.locator('[data-save-template]').first().click();await page.reload();await page.waitForSelector('[data-template-form]');assert.equal(await page.locator('[name="sellerName"]').inputValue(),'SAVED TEST');
+ const count=await page.locator('[data-remove-row]').count();await page.locator('[data-add-row]').click();assert.equal(await page.locator('[data-remove-row]').count(),count+1);await page.locator('[data-remove-row]').last().click();assert.equal(await page.locator('[data-remove-row]').count(),count);
+ const download=page.waitForEvent('download');await page.locator('[data-export-template="xlsx"]').first().click();await(await download).saveAs(path.join(out,`${language}-${width}-${id}-download.xlsx`));
+ await page.locator('[data-reset-template]').first().click();assert.equal(await page.locator('[name="sellerName"]').inputValue(),'');
+ await page.screenshot({path:path.join(out,`${language}-${width}-${id}.png`)});
+ }await page.goto(`${origin}/${language}/templates.html`);await page.waitForSelector('[data-template-search]');}
+ assert.equal(errors.length,0,errors.join('\n'));assert.deepEqual(masters.map(sha),hashes);fs.writeFileSync(path.join(out,'tests.json'),JSON.stringify({reports,overflow:'PASS',routes:'PASS KO/EN 1440/390',masterHashes:hashes,errors},null,2));console.log(JSON.stringify(reports,null,2));
+ }finally{await browser?.close();await new Promise(r=>server.close(r));}}
+main().catch(e=>{console.error(e);process.exitCode=1;});

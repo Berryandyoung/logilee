@@ -453,6 +453,10 @@
     return { A4: [d.sellerName || d.shipperName, d.sellerAddress || d.shipperAddress].filter(Boolean).join("\n"), A9: [d.buyerName || d.consigneeName, d.buyerAddress || d.consigneeAddress].filter(Boolean).join("\n"), A14: [notifyName, notifyAddress].filter(Boolean).join("\n"), H4: [d.invoiceNo || d.packingNo || d.proformaNo, d.invoiceDate || d.packingDate || d.issueDate].filter(Boolean).join(" / "), H6: id === "packing-list" ? (d.remarks || "") : [d.lcNo, d.lcDate].filter(Boolean).join(" / "), H9: d.lcBank || "", H12: id === "packing-list" ? "" : (d.remarks || d.notes || ""), E19: route.loading || "", E21: [route.carrier, route.sailing].filter(Boolean).join(" / ") };
   }
   async function baseXlsxBlob(id, d) {
+    if (id === "commercial-invoice" || id === "packing-list") {
+      const { buildTradeWorkbook } = await import("./logilee-workbook.mjs");
+      return buildTradeWorkbook(id, d);
+    }
     const layout = xlsxLayouts[id]; const ExcelJS = window.ExcelJS;
     if (!layout || !ExcelJS) throw new Error("ExcelJS runtime unavailable");
     const response = await fetch(new URL(`../assets/templates/${layout.file}`, location.href).href, { cache: "no-store" });
@@ -527,6 +531,10 @@
       if (format === "pdf") downloadBlob(pdfBlob(id, d), name, "application/pdf");
       toast(T.exported);
     } catch (error) {
+      if (format === "xlsx" && error?.code === "WORKBOOK_VALIDATION") {
+        toast((lang === "ko" ? "XLSX 입력 확인: " : "Check XLSX input: ") + error.message);
+        return;
+      }
       console.error("Template export failed", error);
       const xlsxFailure = format === "xlsx" && /ExcelJS|Template base/i.test(String(error?.message || error));
       toast(xlsxFailure
