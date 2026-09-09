@@ -17,7 +17,7 @@ headers = {'Origin': 'https://www.logilee.com', 'Content-Type': service.MIME}
 results = {'version': subprocess.check_output(['libreoffice', '--version'], text=True).strip(), 'conversions': []}
 baseline = set(Path(tempfile.gettempdir()).glob('logilee-*'))
 
-for kind in ['CI', 'PL', 'PI', 'SI']:
+for kind in ['CI', 'PL', 'PI', 'SI', 'CHECKLIST']:
     data = (root / (kind + '.xlsx')).read_bytes()
     started = time.monotonic()
     pdf = service.convert(data)
@@ -79,6 +79,6 @@ with concurrent.futures.ThreadPoolExecutor(max_workers=2) as pool:
 assert 200 in results['concurrentStatuses']
 assert set(Path(tempfile.gettempdir()).glob('logilee-*')) == baseline
 results['cleanup'] = 'PASS'
-results['validation'] = {'CI': 'PASS', 'PL': 'PASS', 'PI': 'PASS', 'SI': 'PASS', 'oversized': 'PASS'}
+results['validation'] = {'CI': 'PASS', 'PL': 'PASS', 'PI': 'PASS', 'SI': 'PASS', 'CHECKLIST': 'PASS', 'oversized': 'PASS'}
 (root / 'container-qa.json').write_text(json.dumps(results, indent=2))
 print(json.dumps(results))
