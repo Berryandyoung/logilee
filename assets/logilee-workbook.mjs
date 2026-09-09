@@ -130,7 +130,7 @@ export async function buildTradeWorkbook(id, data) {
   block('A', 14, 17, party(data.notifySame ? data.buyerName : data.notifyName, data.notifySame ? data.buyerAddress : data.notifyAddress), 4);
   block('E', pl ? 6 : 12, 21, data.remarks || '', 9);
   put('A19', data.loading || '', 2); put('C19', data.finalDestination || '', 4);
-  put('A21', data.carrier || '', 2); put('C21', data.sailingDate || '', 4);
+  put('A21', data.carrier || '', 2); put('C21', (pl ? data.sailingDate || data.packingDate : data.sailingDate) || '', 4);
   put('E4', data.invoiceNo || '', 7); put('H4', (pl ? data.invoiceDate || data.packingDate : data.invoiceDate) || '', 9);
   if (!pl) { put('E6', data.lcNo || '', 7); put('H6', data.lcDate || '', 9); block('E', 9, 10, data.lcBank || '', 9); }
   const goods = (data.rows || []).filter(row => [row.description, row.quantity, row.unitPrice, row.netWeight, row.grossWeight, row.hsCode, row.marks, row.packageNo].some(value => value !== '' && value !== undefined && value !== null));

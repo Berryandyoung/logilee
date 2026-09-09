@@ -455,7 +455,7 @@
   }
   async function baseXlsxBlob(id, d) {
     if (id === "commercial-invoice" || id === "packing-list") {
-      const { buildTradeWorkbook } = await import("./logilee-workbook.mjs?v=templates-xlsx-v31-20260909");
+      const { buildTradeWorkbook } = await import("./logilee-workbook.mjs?v=templates-xlsx-v32-20260909");
       return buildTradeWorkbook(id, d);
     }
     const layout = xlsxLayouts[id]; const ExcelJS = window.ExcelJS;
