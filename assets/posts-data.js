@@ -3,7 +3,7 @@ window.LOGILEE_POSTS = [
     "slug": "eu-customs-reform-small-parcel-fee-2026",
     "language": "ko",
     "status": "published",
-    "title": "참고해서 이미지를 생성해줬으면 좋겠어.",
+    "title": "EU 직구 통관 바뀐다…11월부터 소액소포 처리수수료, 한국 판매자가 알아둘 변화",
     "description": "EU가 관세제도 대개편을 승인했습니다. 11월까지 도입될 소액소포 처리수수료와 €150 관세면제 폐지, 비EU 플랫폼의 수입자 책임 등 한국 온라인 판매자가 준비할 사항을 정리합니다.",
     "category": "customs",
     "date": "2026-09-10",
