@@ -92,7 +92,118 @@
   function checklistItems() { return checklistDefinition.flatMap(([stageId,enStage,koStage,rows]) => rows.map(([id,en,ko]) => ({ id:`${stageId}-${id}`, stageId, stage:lang === "ko" ? koStage : enStage, task:lang === "ko" ? ko : en }))); }
 
   let state = { selected: new URLSearchParams(location.search).get("template") || "", category: "all", query: "", mobile: "form", data: {} };
+  let fieldHelpCounter = 0;
   templates.forEach((tpl) => state.data[tpl.id] = loadDraft(tpl.id));
+
+  const fieldHelp = {
+    ko: {
+      "Port of Loading": "국제운송을 위해 화물을 선적하는 항만 또는 장소를 입력하세요.",
+      "Port/Airport of Loading": "화물을 선적하는 항만 또는 공항을 입력하세요.",
+      "Port/Airport of Discharge": "화물을 내리는 도착 항만 또는 공항을 입력하세요.",
+      "Port of Discharge": "화물을 내리는 도착 항만을 입력하세요.",
+      "Final Destination": "거래와 운송 조건에 따른 화물의 최종 목적지를 입력하세요.",
+      "Place of Receipt": "운송인이 화물을 인수하는 장소를 입력하세요.",
+      "Place of Delivery / Final Destination": "운송인이 화물을 인도할 최종 장소를 입력하세요.",
+      "Carrier": "해당 화물을 운송하는 운송사 또는 운송 제공자를 입력하세요.",
+      "Sailing on or about": "현재 확인 가능한 최선의 예상 출항일을 입력하세요.",
+      "Incoterms": "합의한 Incoterms® 조건을 선택하세요. 비용·위험 분담을 검토할 때 Named Place도 함께 확인해야 합니다.",
+      "Named Place": "선택한 Incoterms® 조건에 연결되는 장소를 입력하세요. 예: Busan, Shanghai, Hamburg.",
+      "Named Place / Port": "제안한 Incoterms® 조건에 연결되는 지정 장소 또는 항만을 입력하세요.",
+      "Mode of Transport": "화물의 주된 운송 방식을 입력하거나 선택하세요.",
+      "Mode": "해당 선적의 주된 운송 방식을 입력하세요.",
+      "Country of Origin": "적용 가능한 원산지 기준에 따른 상품 원산지를 선택하세요. 선택만으로 원산지가 입증되지는 않습니다.",
+      "Country of Destination": "화물이 도착할 목적지 국가를 선택하세요.",
+      "Description": "거래 및 물류 관계자가 상품을 식별할 수 있도록 명확한 상업적 품명을 입력하세요.",
+      "Cargo Description": "선사 또는 포워더가 화물을 식별할 수 있도록 구체적인 화물 설명을 입력하세요.",
+      "HS Code": "상품의 HS 분류 참고번호를 입력하세요. 최종 품목분류 요건은 목적지에 따라 달라질 수 있으며 자동 검증되지 않습니다.",
+      "Quantity": "이 품목 행에 적용되는 상업 수량을 입력하세요.",
+      "Unit": "입력한 수량에 사용하는 단위를 선택하세요.",
+      "Unit Price": "선택한 수량 단위당 가격을 입력하세요.",
+      "Origin Override": "이 품목의 원산지가 문서 기본 원산지와 다를 때만 행별 원산지를 입력하세요.",
+      "Currency": "거래 또는 견적 금액에 적용되는 통화를 선택하세요.",
+      "Terms of Payment": "송장에 표시할 합의된 결제 조건을 입력하세요.",
+      "Payment Terms": "견적 단계에서 제안하는 결제 조건을 입력하세요.",
+      "Valid Until": "이 견적 조건이 유효한 마지막 날짜를 입력하세요.",
+      "Estimated Shipping Date": "현재 예상하는 선적일을 입력하세요.",
+      "Discount": "소계에서 차감할 할인 금액을 입력하세요.",
+      "Additional Charges": "견적 소계에 추가할 비용을 입력하세요.",
+      "Marks & Numbers": "포장 또는 화물을 식별하는 마크와 번호를 입력하세요.",
+      "Package No.": "각 포장을 구분할 수 있는 포장 번호를 입력하세요.",
+      "Package Type": "Carton, pallet 등 포장 형태를 입력하세요.",
+      "Net Weight": "포장재를 제외한 상품의 순중량을 입력하세요.",
+      "Gross Weight": "포장재를 포함한 화물의 총중량을 입력하세요.",
+      "Measurement / CBM": "해당 화물의 용적을 CBM 단위로 입력하세요.",
+      "Container No.": "해당되는 경우 컨테이너 식별번호를 입력하세요.",
+      "Seal No.": "해당되는 경우 컨테이너 봉인번호를 입력하세요.",
+      "Container Type / Size": "컨테이너 규격을 입력하세요. 예: 20GP, 40HC.",
+      "Number of Packages": "이 화물 행에 포함된 포장 수량을 입력하세요.",
+      "Booking No.": "선사 또는 포워더가 부여한 Booking 번호를 입력하세요.",
+      "Shipper Reference": "화주가 내부적으로 사용하는 선적 참조번호를 입력하세요.",
+      "Vessel": "해상운송에 해당하는 선박명을 입력하세요.",
+      "Voyage": "해당 선박의 Voyage 번호를 입력하세요.",
+      "Freight Terms": "해당되는 경우 운임 지불 조건(예: Prepaid 또는 Collect)을 입력하세요.",
+      "B/L Type / Release Instruction": "요청할 B/L 형태 또는 release 지시사항을 입력하세요. LOGILEE가 B/L을 발행하지는 않습니다.",
+      "Special Instructions": "운송사나 포워더가 확인해야 할 추가 운영 지시사항을 입력하세요.",
+      "Dangerous Goods": "위험물 해당 여부를 선택하세요. 해당 시 별도 운송사·규제 서류가 필요할 수 있습니다.",
+      "Remarks": "문서에 함께 전달할 필요한 추가 참고사항을 입력하세요."
+    },
+    en: {
+      "Port of Loading": "Enter the port or place where the goods are loaded for international transport.",
+      "Final Destination": "Enter the shipment's final destination as applicable to the transaction.",
+      "Carrier": "Enter the carrier or transport provider handling the shipment.",
+      "Sailing on or about": "Enter the best available planned departure or sailing date.",
+      "Incoterms": "Select the agreed Incoterms® rule and confirm its Named Place for cost and risk allocation.",
+      "Named Place": "Enter the place associated with the selected Incoterms® rule, such as Busan, Shanghai, or Hamburg.",
+      "Country of Origin": "Select the country of origin under the applicable origin rules. Selection alone does not prove origin.",
+      "Description": "Enter a clear commercial description that identifies the goods.",
+      "HS Code": "Enter the HS classification reference. Final tariff classification requirements may vary by destination and are not automatically validated.",
+      "Quantity": "Enter the commercial quantity for this line item.",
+      "Unit": "Select the unit used for the entered quantity.",
+      "Unit Price": "Enter the price per selected unit for this line item.",
+      "Origin Override": "Optionally enter a line-level country of origin when this item differs from the document-level origin.",
+      "B/L Type / Release Instruction": "Enter the requested B/L type or release instruction. LOGILEE does not issue a Bill of Lading."
+    }
+  };
+
+  function localizedFieldHelp(label, fallback) {
+    if (!fallback) return "";
+    return fieldHelp[lang][label] || (lang === "ko" ? "이 항목에 해당하는 정보를 입력하세요. 거래처·운송사 또는 관계 기관의 요구사항이 있으면 함께 확인하세요." : fallback);
+  }
+
+  function closeFieldHelp() {
+    root.querySelectorAll("[data-field-help][aria-expanded='true']").forEach((button) => button.setAttribute("aria-expanded", "false"));
+    root.querySelectorAll(".template-help-popover:not([hidden])").forEach((popover) => { popover.hidden = true; });
+  }
+
+  function positionFieldHelp(button, popover) {
+    popover.hidden = false;
+    const buttonRect = button.getBoundingClientRect();
+    const popoverRect = popover.getBoundingClientRect();
+    const margin = 12;
+    const left = Math.max(margin, Math.min(buttonRect.left, window.innerWidth - popoverRect.width - margin));
+    let top = buttonRect.bottom + 8;
+    if (top + popoverRect.height > window.innerHeight - margin) top = Math.max(margin, buttonRect.top - popoverRect.height - 8);
+    popover.style.left = `${Math.round(left)}px`;
+    popover.style.top = `${Math.round(top)}px`;
+  }
+
+  root.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-field-help]");
+    if (!button) return;
+    event.preventDefault();
+    event.stopPropagation();
+    const wasOpen = button.getAttribute("aria-expanded") === "true";
+    closeFieldHelp();
+    if (wasOpen) return;
+    const popover = document.getElementById(button.getAttribute("aria-controls"));
+    if (!popover) return;
+    button.setAttribute("aria-expanded", "true");
+    positionFieldHelp(button, popover);
+  });
+  document.addEventListener("click", (event) => { if (!event.target.closest("[data-field-help], .template-help-popover")) closeFieldHelp(); });
+  document.addEventListener("keydown", (event) => { if (event.key === "Escape") closeFieldHelp(); });
+  window.addEventListener("resize", closeFieldHelp);
+  window.addEventListener("scroll", closeFieldHelp, true);
 
   function loadDraft(id) {
     try { const value={ ...defaults[id](), ...(JSON.parse(localStorage.getItem(storageKey(id)) || "null") || {}) }; if(id==="shipment-checklist"){const canonical=new Map(checklistItems().map(item=>[item.id,item]));value.items=(value.items||[]).map(item=>({...canonical.get(item.id),...item,status:item.status||(item.checked?"Done":"Pending"),task:item.task||canonical.get(item.id)?.task||item.label||"",stage:item.stage||canonical.get(item.id)?.stage||""}));} return value; }
@@ -114,6 +225,7 @@
 
   function render() {
     setUrl();
+    fieldHelpCounter = 0;
     root.innerHTML = `${titleMarkup()}${state.selected ? builderMarkup() : hubMarkup()}<p class="sr-only" aria-live="polite" data-template-status></p>`;
     bind();
   }
@@ -176,10 +288,16 @@
   }
 
   function field(name, label, value, help, type = "text") {
-    return `<label class="template-field"><span>${label}<button type="button" aria-label="${attr(help)}" title="${attr(help)}">i</button></span><input name="${name}" type="${type}" value="${attr(value)}"><small>${help}</small></label>`;
+    const guidance = localizedFieldHelp(label, help);
+    const helpId = `template-help-${state.selected || "document"}-${++fieldHelpCounter}`;
+    const info = guidance ? `<button class="template-info-button" type="button" data-field-help aria-label="${attr(`${label} ${lang === "ko" ? "도움말" : "help"}`)}" aria-expanded="false" aria-controls="${helpId}">i</button><span class="template-help-popover" id="${helpId}" role="tooltip" hidden>${esc(guidance)}</span>` : "";
+    return `<label class="template-field"><span>${label}${info}</span><input name="${name}" type="${type}" value="${attr(value)}"><small>${esc(guidance)}</small></label>`;
   }
   function selectField(name, label, options, help) {
-    return `<label class="template-field"><span>${label}<button type="button" aria-label="${attr(help)}" title="${attr(help)}">i</button></span><select name="${name}">${options}</select><small>${help}</small></label>`;
+    const guidance = localizedFieldHelp(label, help);
+    const helpId = `template-help-${state.selected || "document"}-${++fieldHelpCounter}`;
+    const info = guidance ? `<button class="template-info-button" type="button" data-field-help aria-label="${attr(`${label} ${lang === "ko" ? "도움말" : "help"}`)}" aria-expanded="false" aria-controls="${helpId}">i</button><span class="template-help-popover" id="${helpId}" role="tooltip" hidden>${esc(guidance)}</span>` : "";
+    return `<label class="template-field"><span>${label}${info}</span><select name="${name}">${options}</select><small>${esc(guidance)}</small></label>`;
   }
   function section(title, body) { return `<fieldset class="template-section"><legend>${title}</legend>${body}</fieldset>`; }
   function optionalSection(title, body, open = false) { return `<details class="template-optional" ${open ? "open" : ""}><summary>${title}</summary><div class="template-optional-body">${body}</div></details>`; }
