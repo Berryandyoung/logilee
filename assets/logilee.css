@@ -3403,6 +3403,8 @@ body.sidebar-drawer-active {
   position: fixed;
   z-index: 30;
   width: min(288px, calc(100vw - 24px));
+  max-height: calc(100vh - 24px);
+  overflow-y: auto;
   display: block;
   padding: 10px 12px;
   border: 1px solid #c9d9ec;

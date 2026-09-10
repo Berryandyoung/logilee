@@ -183,6 +183,7 @@
     const left = Math.max(margin, Math.min(buttonRect.left, window.innerWidth - popoverRect.width - margin));
     let top = buttonRect.bottom + 8;
     if (top + popoverRect.height > window.innerHeight - margin) top = Math.max(margin, buttonRect.top - popoverRect.height - 8);
+    top = Math.max(margin, Math.min(top, window.innerHeight - popoverRect.height - margin));
     popover.style.left = `${Math.round(left)}px`;
     popover.style.top = `${Math.round(top)}px`;
   }
