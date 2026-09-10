@@ -492,7 +492,7 @@ window.LOGILEE_POSTS = [
   {
     "slug": "cbm-calculation",
     "language": "ko",
-    "status": "published",
+    "status": "archived",
     "title": "CBM 계산법 완전 정리",
     "description": "물류에서 부피를 산정하는 기본 방식과 CBM 계산 예시를 정리한 기존 포스트입니다.",
     "category": "Logistics",
@@ -506,7 +506,7 @@ window.LOGILEE_POSTS = [
   {
     "slug": "cbm-calculation",
     "language": "en",
-    "status": "published",
+    "status": "archived",
     "title": "Complete Guide to CBM Calculation",
     "description": "A legacy LOGILEE post explaining the basic logistics formula for calculating cargo volume in CBM.",
     "category": "Logistics",
@@ -520,7 +520,7 @@ window.LOGILEE_POSTS = [
   {
     "slug": "hs-code-search",
     "language": "en",
-    "status": "published",
+    "status": "archived",
     "title": "How to Find an HS Code More Easily",
     "description": "A legacy LOGILEE post introducing basic reference paths for product classification and HS Code search.",
     "category": "Customs",
@@ -534,7 +534,7 @@ window.LOGILEE_POSTS = [
   {
     "slug": "hs-code-search",
     "language": "ko",
-    "status": "published",
+    "status": "archived",
     "title": "HS CODE 쉽게 찾는 방법",
     "description": "상품 분류와 HS Code 검색을 위한 기본 확인 경로를 소개하는 기존 포스트입니다.",
     "category": "Customs",
@@ -548,7 +548,7 @@ window.LOGILEE_POSTS = [
   {
     "slug": "trade-terms",
     "language": "en",
-    "status": "published",
+    "status": "archived",
     "title": "Trade Terms Every Practitioner Should Know",
     "description": "A legacy LOGILEE post summarizing common trade terms such as FOB, CIF, and EXW.",
     "category": "Trade",
@@ -562,7 +562,7 @@ window.LOGILEE_POSTS = [
   {
     "slug": "trade-terms",
     "language": "ko",
-    "status": "published",
+    "status": "archived",
     "title": "무역 실무자가 꼭 알아야 할 용어",
     "description": "FOB, CIF, EXW 등 무역 실무에서 자주 쓰이는 조건을 정리한 기존 포스트입니다.",
     "category": "Trade",
