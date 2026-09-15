@@ -1,5 +1,21 @@
 window.LOGILEE_POSTS = [
   {
+    "slug": "wto-imf-tariff-tracker-latest-data-hs6-effective-date-check-en",
+    "language": "en",
+    "status": "published",
+    "title": "WTO-IMF Tariff Tracker Releases Latest Data for HS 6-Digit and Effective-Date Checks",
+    "description": "The WTO released the latest WTO-IMF Tariff Tracker data on September 9, 2026.",
+    "category": "customs",
+    "date": "2026-09-15",
+    "publishedAt": "2026-09-15T13:26:13.697Z",
+    "readingTime": "2 min read",
+    "path": "en/posts/wto-imf-tariff-tracker-latest-data-hs6-effective-date-check-en/",
+    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_af_c40ee1a9acd0440234955d74b1330a75-asset_3446ff4a973a411a.png?alt=media&token=11b0a7a4-e9cb-4864-986a-ef0b5439f276",
+    "imageAlt": "Arrangement of magnifying glass, balance scale, tokens, colored markers, globe",
+    "imageCredit": "LOGILEE",
+    "imageLicense": "AI Generated"
+  },
+  {
     "slug": "wto-imf-tariff-tracker-latest-data-hs6-effective-date-check",
     "language": "ko",
     "status": "published",
