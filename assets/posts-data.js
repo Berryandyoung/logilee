@@ -1,5 +1,21 @@
 window.LOGILEE_POSTS = [
   {
+    "slug": "wto-imf-tariff-tracker-latest-data-hs6-effective-date-check",
+    "language": "ko",
+    "status": "published",
+    "title": "WTO-IMF 관세 트래커 최신 데이터 공개…HS 6단위·시행일별 관세 변화 점검",
+    "description": "WTO가 2026년 9월 9일 최신 관세 트래커 데이터를 공개했다. 기업은 HS 6단위와 시행일을 기준으로 주요 시장의 최근 관세 변화 및 거래상대국별 적용세율을 재점검할 수 있다.",
+    "category": "customs",
+    "date": "2026-09-15",
+    "publishedAt": "2026-09-15T13:26:02.471Z",
+    "readingTime": "2遺??쎄린",
+    "path": "ko/posts/wto-imf-tariff-tracker-latest-data-hs6-effective-date-check/",
+    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_af_9e033071372047073e968d30b8737c04-asset_53176b59c3344ce6.png?alt=media&token=6c35eb3a-e473-457a-bdba-ff6d7ec30ca4",
+    "imageAlt": "돋보기 및 저울 및 표식 및 색상 표식 및 지구본의 배치",
+    "imageCredit": "LOGILEE",
+    "imageLicense": "AI Generated"
+  },
+  {
     "slug": "eu-customs-reform-small-parcel-fee-2026",
     "language": "en",
     "status": "published",
