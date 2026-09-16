@@ -1,5 +1,21 @@
 window.LOGILEE_POSTS = [
   {
+    "slug": "eu-2026-dual-use-control-list-update",
+    "language": "ko",
+    "status": "published",
+    "title": "EU, 2026년 이중용도 품목 통제목록 개정 추진",
+    "description": "유럽연합이 규정 2021/821 부속서 I의 이중용도 품목 통제목록 개정을 추진한다. 개정안에는 2025년 바세나르체제, 오스트레일리아 그룹, 원자력공급국그룹의 결정이 반영될 예정이며, 관보 게재 전 유럽의회와 이사회의 2개월 심사 절차가 예정돼 있다.",
+    "category": "logistics",
+    "date": "2026-09-16",
+    "publishedAt": "2026-09-16T02:06:08.288Z",
+    "readingTime": "2遺??쎄린",
+    "path": "ko/posts/eu-2026-dual-use-control-list-update/",
+    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_af_8074f8fb04a76cb9e576ab04207ce902-asset_a35fa29aed204359.png?alt=media&token=7b005693-b833-45a0-a16a-9b33f664d93e",
+    "imageAlt": "서류 및 손 및 책상 및 부품 견본 및 돋보기의 배치",
+    "imageCredit": "LOGILEE",
+    "imageLicense": "AI Generated"
+  },
+  {
     "slug": "wto-imf-tariff-tracker-latest-data-hs6-effective-date-check-en",
     "language": "en",
     "status": "published",
