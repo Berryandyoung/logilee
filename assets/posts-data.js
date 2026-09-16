@@ -1,5 +1,21 @@
 window.LOGILEE_POSTS = [
   {
+    "slug": "eu-2026-dual-use-control-list-update-en",
+    "language": "en",
+    "status": "published",
+    "title": "EU Plans 2026 Revision of Dual-Use Control List",
+    "description": "The European Union plans to revise the dual-use item control list in Annex I to Regulation 2021/821.",
+    "category": "trade",
+    "date": "2026-09-16",
+    "publishedAt": "2026-09-16T02:06:18.616Z",
+    "readingTime": "2 min read",
+    "path": "en/posts/eu-2026-dual-use-control-list-update-en/",
+    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_af_f33e4dd7f4502b9d42fafb6e3f11dbe7-asset_8ce8c422b98d47da.png?alt=media&token=6f1ba4ba-55c4-44bd-b4f7-476578e9a5af",
+    "imageAlt": "Arrangement of documents, hands, desk, component samples, magnifying glass",
+    "imageCredit": "LOGILEE",
+    "imageLicense": "AI Generated"
+  },
+  {
     "slug": "eu-2026-dual-use-control-list-update",
     "language": "ko",
     "status": "published",
