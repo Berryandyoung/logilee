@@ -10,8 +10,8 @@ window.LOGILEE_POSTS = [
     "publishedAt": "2026-09-18T05:52:21.205Z",
     "readingTime": "2 min read",
     "path": "en/posts/us-changes-scope-additional-duties-canadian-motor-vehicle-products/",
-    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_af_74d3ebdaf19402e1ecd00bfc4e5bb292-asset_49110f9b9bc34462.png?alt=media&token=1fbe9bd5-cf06-43bd-b80b-93173471db50",
-    "imageAlt": "Arrangement of checklist, documents, hands, component samples",
+    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_a11cdfe9-6bc7-486f-a9a5-42152739f05b-ChatGPT%20Image%202026%EB%85%84%209%EC%9B%94%201%EC%9D%BC%20%EC%98%A4%EC%A0%84%2010_49_50.png?alt=media&token=f3b52dc7-eee4-4dda-8594-5f0df1191e90",
+    "imageAlt": "conveyor belt",
     "imageCredit": "LOGILEE",
     "imageLicense": "AI Generated"
   },
