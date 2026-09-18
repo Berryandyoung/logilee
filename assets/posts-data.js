@@ -1,5 +1,21 @@
 window.LOGILEE_POSTS = [
   {
+    "slug": "canada-motor-vehicle-products-additional-duties-scope-change",
+    "language": "ko",
+    "status": "published",
+    "title": "캐나다산 자동차 관련 제품 추가관세 범위 변경…수입자는 HTSUS와 Section 232 적용 여부 재확인해야",
+    "description": "미국은 캐나다 제품 중 자동차 관련 추가관세 적용 범위를 변경했다. 2026년 9월 15일 오전 12시 1분(미 동부시간)부터 소비용으로 신고되거나 보세창고에서 반출되는 물품에 적용되므로, 수입자는 해당 HTSUS 품목번호와 Section 232 관세 적용 여부를 다시 확인해야 한다.",
+    "category": "customs",
+    "date": "2026-09-18",
+    "publishedAt": "2026-09-18T05:51:54.584Z",
+    "readingTime": "2遺??쎄린",
+    "path": "ko/posts/canada-motor-vehicle-products-additional-duties-scope-change/",
+    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_af_a03d17f401424116a946ab2ad23625a8-asset_6cec802992d54877.png?alt=media&token=4faf878d-7c7b-447d-82b4-2c10f7433d69",
+    "imageAlt": "체크리스트 및 서류 및 손 및 부품 견본의 배치",
+    "imageCredit": "LOGILEE",
+    "imageLicense": "AI Generated"
+  },
+  {
     "slug": "eu-2026-dual-use-control-list-update-en",
     "language": "en",
     "status": "published",
