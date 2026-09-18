@@ -1,5 +1,21 @@
 window.LOGILEE_POSTS = [
   {
+    "slug": "us-changes-scope-additional-duties-canadian-motor-vehicle-products",
+    "language": "en",
+    "status": "published",
+    "title": "U.S. Changes Scope of Additional Duties on Canadian Motor-Vehicle-Related Products",
+    "description": "The United States modified the scope of additional duties related to motor vehicles for products of Canada.",
+    "category": "customs",
+    "date": "2026-09-18",
+    "publishedAt": "2026-09-18T05:52:21.205Z",
+    "readingTime": "2 min read",
+    "path": "en/posts/us-changes-scope-additional-duties-canadian-motor-vehicle-products/",
+    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_af_74d3ebdaf19402e1ecd00bfc4e5bb292-asset_49110f9b9bc34462.png?alt=media&token=1fbe9bd5-cf06-43bd-b80b-93173471db50",
+    "imageAlt": "Arrangement of checklist, documents, hands, component samples",
+    "imageCredit": "LOGILEE",
+    "imageLicense": "AI Generated"
+  },
+  {
     "slug": "canada-motor-vehicle-products-additional-duties-scope-change",
     "language": "ko",
     "status": "published",
