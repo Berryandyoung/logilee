@@ -1,5 +1,21 @@
 window.LOGILEE_POSTS = [
   {
+    "slug": "uk-import-controls-guidance-updated-september-2026",
+    "language": "ko",
+    "status": "published",
+    "title": "영국 수입통제 지침 업데이트: 무기·제재·고문 관련 물품 점검",
+    "description": "영국 정부가 국가 또는 유엔 수준의 수입통제 대상 물품을 다루는 지침을 2026년 9월 18일 업데이트했다. 이번 업데이트는 총기 관련 법령 인용을 바로잡은 것으로, 해당 품목을 영국으로 수출·수입하는 기업은 최신 지침과 내부 통제 절차의 정합성을 확인해야 한다.",
+    "category": "customs",
+    "date": "2026-09-20",
+    "publishedAt": "2026-09-20T15:00:26.691Z",
+    "readingTime": "2遺??쎄린",
+    "path": "ko/posts/uk-import-controls-guidance-updated-september-2026/",
+    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_af_4d9ab31b4181818d854ed80071f3af77-asset_8a7f68bab2034993.png?alt=media&token=0812b709-120a-4074-a520-12c56f65b1ac",
+    "imageAlt": "체크리스트 및 서류 및 손 및 소포 및 서류철의 배치",
+    "imageCredit": "LOGILEE",
+    "imageLicense": "AI Generated"
+  },
+  {
     "slug": "us-changes-scope-additional-duties-canadian-motor-vehicle-products",
     "language": "en",
     "status": "published",
