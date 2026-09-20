@@ -1,5 +1,21 @@
 window.LOGILEE_POSTS = [
   {
+    "slug": "uk-import-controls-guidance-updated-september-2026-en",
+    "language": "en",
+    "status": "published",
+    "title": "UK Import Controls Guidance Updated: Review Weapons, Sanctions and Torture-Related Goods",
+    "description": "The UK government updated its import controls guidance on 18 September 2026.",
+    "category": "customs",
+    "date": "2026-09-20",
+    "publishedAt": "2026-09-20T15:00:52.460Z",
+    "readingTime": "2 min read",
+    "path": "en/posts/uk-import-controls-guidance-updated-september-2026-en/",
+    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_af_bfd19d441d2f1268d829e231ead9d1bb-asset_841698a7eeb547a5.png?alt=media&token=3884ecb5-1479-476d-8770-9111516e0880",
+    "imageAlt": "Arrangement of checklist, documents, hands, parcels, folders",
+    "imageCredit": "LOGILEE",
+    "imageLicense": "AI Generated"
+  },
+  {
     "slug": "uk-import-controls-guidance-updated-september-2026",
     "language": "ko",
     "status": "published",
