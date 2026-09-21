@@ -2,14 +2,14 @@
 
 Status: **WARN**
 
-Generated: 2026-09-21T09:52:39.770Z
+Generated: 2026-09-21T10:44:41.356Z
 
 ## Summary
 
-- Posts: 41
-- HTML files: 145
+- Posts: 49
+- HTML files: 153
 - Blockers: 0
-- Warnings: 41
+- Warnings: 49
 
 ## Blockers
 
@@ -22,6 +22,7 @@ Generated: 2026-09-21T09:52:39.770Z
 - `CONTEXTUAL_LINKING_WEAK` — `en/posts/china-port-congestion-typhoon-shipping-2026/index.html`: No contextual internal link found in article body.
 - `CONTEXTUAL_LINKING_WEAK` — `en/posts/china-typhoon-port-delay-shipment-impact/index.html`: No contextual internal link found in article body.
 - `CONTEXTUAL_LINKING_WEAK` — `en/posts/commercial-invoice-common-mistakes/index.html`: No contextual internal link found in article body.
+- `CONTEXTUAL_LINKING_WEAK` — `en/posts/eu-2026-dual-use-control-list-update-en/index.html`: No contextual internal link found in article body.
 - `CONTEXTUAL_LINKING_WEAK` — `en/posts/eu-cbam-2026-non-eu-manufacturer-guidance/index.html`: No contextual internal link found in article body.
 - `CONTEXTUAL_LINKING_WEAK` — `en/posts/eu-customs-data-model-7-0-11-what-customs-and-logistics-teams-need-to-update-eucdm/index.html`: No contextual internal link found in article body.
 - `CONTEXTUAL_LINKING_WEAK` — `en/posts/eu-customs-reform-small-parcel-fee-2026/index.html`: No contextual internal link found in article body.
@@ -34,15 +35,20 @@ Generated: 2026-09-21T09:52:39.770Z
 - `CONTEXTUAL_LINKING_WEAK` — `en/posts/rhine-low-water-logistics-impact/index.html`: No contextual internal link found in article body.
 - `CONTEXTUAL_LINKING_WEAK` — `en/posts/trade-terms/index.html`: No contextual internal link found in article body.
 - `CONTEXTUAL_LINKING_WEAK` — `en/posts/uk-canada-cptpp-tca-trade-guide-2026/index.html`: No contextual internal link found in article body.
+- `CONTEXTUAL_LINKING_WEAK` — `en/posts/uk-import-controls-guidance-updated-september-2026-en/index.html`: No contextual internal link found in article body.
 - `CONTEXTUAL_LINKING_WEAK` — `en/posts/us-cbp-foreign-export-documents-supply-chain-visibility-2026/index.html`: No contextual internal link found in article body.
+- `CONTEXTUAL_LINKING_WEAK` — `en/posts/us-changes-scope-additional-duties-canadian-motor-vehicle-products/index.html`: No contextual internal link found in article body.
 - `CONTEXTUAL_LINKING_WEAK` — `en/posts/us-de-minimis-2026/index.html`: No contextual internal link found in article body.
 - `CONTEXTUAL_LINKING_WEAK` — `en/posts/us-illegal-transshipment-origin-2026/index.html`: No contextual internal link found in article body.
 - `CONTEXTUAL_LINKING_WEAK` — `en/posts/vietnam-decree-292-takes-effect-september-5-what-importers-and-exporters-need-to-review/index.html`: No contextual internal link found in article body.
+- `CONTEXTUAL_LINKING_WEAK` — `en/posts/wto-imf-tariff-tracker-latest-data-hs6-effective-date-check-en/index.html`: No contextual internal link found in article body.
 - `CONTEXTUAL_LINKING_WEAK` — `ko/posts/aqaba-iraq-hormuz-alternative-route-2026/index.html`: No contextual internal link found in article body.
+- `CONTEXTUAL_LINKING_WEAK` — `ko/posts/canada-motor-vehicle-products-additional-duties-scope-change/index.html`: No contextual internal link found in article body.
 - `CONTEXTUAL_LINKING_WEAK` — `ko/posts/cbm-calculation/index.html`: No contextual internal link found in article body.
 - `CONTEXTUAL_LINKING_WEAK` — `ko/posts/china-kfood-overseas-food-manufacturer-registration2026/index.html`: No contextual internal link found in article body.
 - `CONTEXTUAL_LINKING_WEAK` — `ko/posts/china-typhoon-port-delay-shipment-impact/index.html`: No contextual internal link found in article body.
 - `CONTEXTUAL_LINKING_WEAK` — `ko/posts/commercial-invoice-common-mistakes/index.html`: No contextual internal link found in article body.
+- `CONTEXTUAL_LINKING_WEAK` — `ko/posts/eu-2026-dual-use-control-list-update/index.html`: No contextual internal link found in article body.
 - `CONTEXTUAL_LINKING_WEAK` — `ko/posts/eu-customs-reform-small-parcel-fee-2026/index.html`: No contextual internal link found in article body.
 - `CONTEXTUAL_LINKING_WEAK` — `ko/posts/eu-korea-terephthalic-acid-antidumping-duty-2026/index.html`: No contextual internal link found in article body.
 - `CONTEXTUAL_LINKING_WEAK` — `ko/posts/fob-vs-cif/index.html`: No contextual internal link found in article body.
@@ -55,9 +61,11 @@ Generated: 2026-09-21T09:52:39.770Z
 - `CONTEXTUAL_LINKING_WEAK` — `ko/posts/lcl-vs-fcl/index.html`: No contextual internal link found in article body.
 - `CONTEXTUAL_LINKING_WEAK` — `ko/posts/rhine-low-water-logistics-impact/index.html`: No contextual internal link found in article body.
 - `CONTEXTUAL_LINKING_WEAK` — `ko/posts/trade-terms/index.html`: No contextual internal link found in article body.
+- `CONTEXTUAL_LINKING_WEAK` — `ko/posts/uk-import-controls-guidance-updated-september-2026/index.html`: No contextual internal link found in article body.
 - `CONTEXTUAL_LINKING_WEAK` — `ko/posts/us-cbp-foreign-export-documents-supply-chain-visibility-2026/index.html`: No contextual internal link found in article body.
 - `CONTEXTUAL_LINKING_WEAK` — `ko/posts/us-de-minimis-2026/index.html`: No contextual internal link found in article body.
 - `CONTEXTUAL_LINKING_WEAK` — `ko/posts/us-illegal-transshipment-origin-2026/index.html`: No contextual internal link found in article body.
+- `CONTEXTUAL_LINKING_WEAK` — `ko/posts/wto-imf-tariff-tracker-latest-data-hs6-effective-date-check/index.html`: No contextual internal link found in article body.
 
 ## URL / Legacy Matrix
 

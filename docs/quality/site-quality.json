@@ -1,24 +1,24 @@
 {
   "status": "WARN",
-  "generatedAt": "2026-09-21T09:52:39.770Z",
+  "generatedAt": "2026-09-21T10:44:41.356Z",
   "summary": {
-    "posts": 41,
-    "htmlFiles": 145,
+    "posts": 49,
+    "htmlFiles": 153,
     "blockers": 0,
-    "warnings": 41
+    "warnings": 49
   },
   "checks": [
     {
       "name": "post inventory",
-      "result": "41 generated KO/EN posts inspected"
+      "result": "49 generated KO/EN posts inspected"
     },
     {
       "name": "HTML structure",
-      "result": "145 HTML files inspected"
+      "result": "153 HTML files inspected"
     },
     {
       "name": "sitemap",
-      "result": "105 URLs inventoried"
+      "result": "113 URLs inventoried"
     },
     {
       "name": "canonical source",
@@ -50,6 +50,11 @@
     {
       "code": "CONTEXTUAL_LINKING_WEAK",
       "file": "en/posts/commercial-invoice-common-mistakes/index.html",
+      "message": "No contextual internal link found in article body."
+    },
+    {
+      "code": "CONTEXTUAL_LINKING_WEAK",
+      "file": "en/posts/eu-2026-dual-use-control-list-update-en/index.html",
       "message": "No contextual internal link found in article body."
     },
     {
@@ -114,7 +119,17 @@
     },
     {
       "code": "CONTEXTUAL_LINKING_WEAK",
+      "file": "en/posts/uk-import-controls-guidance-updated-september-2026-en/index.html",
+      "message": "No contextual internal link found in article body."
+    },
+    {
+      "code": "CONTEXTUAL_LINKING_WEAK",
       "file": "en/posts/us-cbp-foreign-export-documents-supply-chain-visibility-2026/index.html",
+      "message": "No contextual internal link found in article body."
+    },
+    {
+      "code": "CONTEXTUAL_LINKING_WEAK",
+      "file": "en/posts/us-changes-scope-additional-duties-canadian-motor-vehicle-products/index.html",
       "message": "No contextual internal link found in article body."
     },
     {
@@ -134,7 +149,17 @@
     },
     {
       "code": "CONTEXTUAL_LINKING_WEAK",
+      "file": "en/posts/wto-imf-tariff-tracker-latest-data-hs6-effective-date-check-en/index.html",
+      "message": "No contextual internal link found in article body."
+    },
+    {
+      "code": "CONTEXTUAL_LINKING_WEAK",
       "file": "ko/posts/aqaba-iraq-hormuz-alternative-route-2026/index.html",
+      "message": "No contextual internal link found in article body."
+    },
+    {
+      "code": "CONTEXTUAL_LINKING_WEAK",
+      "file": "ko/posts/canada-motor-vehicle-products-additional-duties-scope-change/index.html",
       "message": "No contextual internal link found in article body."
     },
     {
@@ -155,6 +180,11 @@
     {
       "code": "CONTEXTUAL_LINKING_WEAK",
       "file": "ko/posts/commercial-invoice-common-mistakes/index.html",
+      "message": "No contextual internal link found in article body."
+    },
+    {
+      "code": "CONTEXTUAL_LINKING_WEAK",
+      "file": "ko/posts/eu-2026-dual-use-control-list-update/index.html",
       "message": "No contextual internal link found in article body."
     },
     {
@@ -219,6 +249,11 @@
     },
     {
       "code": "CONTEXTUAL_LINKING_WEAK",
+      "file": "ko/posts/uk-import-controls-guidance-updated-september-2026/index.html",
+      "message": "No contextual internal link found in article body."
+    },
+    {
+      "code": "CONTEXTUAL_LINKING_WEAK",
       "file": "ko/posts/us-cbp-foreign-export-documents-supply-chain-visibility-2026/index.html",
       "message": "No contextual internal link found in article body."
     },
@@ -230,6 +265,11 @@
     {
       "code": "CONTEXTUAL_LINKING_WEAK",
       "file": "ko/posts/us-illegal-transshipment-origin-2026/index.html",
+      "message": "No contextual internal link found in article body."
+    },
+    {
+      "code": "CONTEXTUAL_LINKING_WEAK",
+      "file": "ko/posts/wto-imf-tariff-tracker-latest-data-hs6-effective-date-check/index.html",
       "message": "No contextual internal link found in article body."
     }
   ],
@@ -371,6 +411,36 @@
       ],
       "articleJsonLd": true,
       "jsonLdUrl": "https://www.logilee.com/en/posts/commercial-invoice-common-mistakes/",
+      "internalContextualLinks": [],
+      "externalSourceLinks": [],
+      "listing": "included",
+      "canonicalIntent": ""
+    },
+    {
+      "file": "en/posts/eu-2026-dual-use-control-list-update-en/index.html",
+      "publishedUrl": "https://www.logilee.com/en/posts/eu-2026-dual-use-control-list-update-en/",
+      "slug": "eu-2026-dual-use-control-list-update-en",
+      "language": "en",
+      "title": "EU Plans 2026 Revision of Dual-Use Control List",
+      "pageTitle": "EU Plans 2026 Revision of Dual-Use Control List | LOGILEE",
+      "description": "The European Union plans to revise the dual-use item control list in Annex I to Regulation 2021/821.",
+      "publishedDate": "2026-09-16T02:06:18.616Z",
+      "modifiedDate": "2026-09-16",
+      "category": "trade",
+      "readingTime": "2 min read",
+      "canonical": "https://www.logilee.com/en/posts/eu-2026-dual-use-control-list-update-en/",
+      "hreflang": [
+        {
+          "hreflang": "en",
+          "href": "https://www.logilee.com/en/posts/eu-2026-dual-use-control-list-update-en/"
+        },
+        {
+          "hreflang": "ko",
+          "href": "https://www.logilee.com/ko/posts/eu-2026-dual-use-control-list-update/"
+        }
+      ],
+      "articleJsonLd": true,
+      "jsonLdUrl": "https://www.logilee.com/en/posts/eu-2026-dual-use-control-list-update-en/",
       "internalContextualLinks": [],
       "externalSourceLinks": [],
       "listing": "included",
@@ -717,6 +787,36 @@
       "canonicalIntent": ""
     },
     {
+      "file": "en/posts/uk-import-controls-guidance-updated-september-2026-en/index.html",
+      "publishedUrl": "https://www.logilee.com/en/posts/uk-import-controls-guidance-updated-september-2026-en/",
+      "slug": "uk-import-controls-guidance-updated-september-2026-en",
+      "language": "en",
+      "title": "UK Import Controls Guidance Updated: Review Weapons,",
+      "pageTitle": "UK Import Controls Guidance Updated: Review Weapons, | LOGILEE",
+      "description": "The UK government updated its import controls guidance on 18 September 2026.",
+      "publishedDate": "2026-09-20T15:00:52.460Z",
+      "modifiedDate": "2026-09-20",
+      "category": "customs",
+      "readingTime": "2 min read",
+      "canonical": "https://www.logilee.com/en/posts/uk-import-controls-guidance-updated-september-2026-en/",
+      "hreflang": [
+        {
+          "hreflang": "en",
+          "href": "https://www.logilee.com/en/posts/uk-import-controls-guidance-updated-september-2026-en/"
+        },
+        {
+          "hreflang": "ko",
+          "href": "https://www.logilee.com/ko/posts/uk-import-controls-guidance-updated-september-2026/"
+        }
+      ],
+      "articleJsonLd": true,
+      "jsonLdUrl": "https://www.logilee.com/en/posts/uk-import-controls-guidance-updated-september-2026-en/",
+      "internalContextualLinks": [],
+      "externalSourceLinks": [],
+      "listing": "included",
+      "canonicalIntent": ""
+    },
+    {
       "file": "en/posts/us-cbp-foreign-export-documents-supply-chain-visibility-2026/index.html",
       "publishedUrl": "https://www.logilee.com/en/posts/us-cbp-foreign-export-documents-supply-chain-visibility-2026/",
       "slug": "us-cbp-foreign-export-documents-supply-chain-visibility-2026",
@@ -741,6 +841,36 @@
       ],
       "articleJsonLd": true,
       "jsonLdUrl": "https://www.logilee.com/en/posts/us-cbp-foreign-export-documents-supply-chain-visibility-2026/",
+      "internalContextualLinks": [],
+      "externalSourceLinks": [],
+      "listing": "included",
+      "canonicalIntent": ""
+    },
+    {
+      "file": "en/posts/us-changes-scope-additional-duties-canadian-motor-vehicle-products/index.html",
+      "publishedUrl": "https://www.logilee.com/en/posts/us-changes-scope-additional-duties-canadian-motor-vehicle-products/",
+      "slug": "us-changes-scope-additional-duties-canadian-motor-vehicle-products",
+      "language": "en",
+      "title": "U.S. Changes Scope of Additional Duties on Canadian",
+      "pageTitle": "U.S. Changes Scope of Additional Duties on Canadian | LOGILEE",
+      "description": "The United States modified the scope of additional duties related to motor vehicles for products of Canada.",
+      "publishedDate": "2026-09-18T05:52:21.205Z",
+      "modifiedDate": "2026-09-18",
+      "category": "customs",
+      "readingTime": "2 min read",
+      "canonical": "https://www.logilee.com/en/posts/us-changes-scope-additional-duties-canadian-motor-vehicle-products/",
+      "hreflang": [
+        {
+          "hreflang": "en",
+          "href": "https://www.logilee.com/en/posts/us-changes-scope-additional-duties-canadian-motor-vehicle-products/"
+        },
+        {
+          "hreflang": "ko",
+          "href": "https://www.logilee.com/ko/posts/canada-motor-vehicle-products-additional-duties-scope-change/"
+        }
+      ],
+      "articleJsonLd": true,
+      "jsonLdUrl": "https://www.logilee.com/en/posts/us-changes-scope-additional-duties-canadian-motor-vehicle-products/",
       "internalContextualLinks": [],
       "externalSourceLinks": [],
       "listing": "included",
@@ -833,6 +963,36 @@
       "canonicalIntent": ""
     },
     {
+      "file": "en/posts/wto-imf-tariff-tracker-latest-data-hs6-effective-date-check-en/index.html",
+      "publishedUrl": "https://www.logilee.com/en/posts/wto-imf-tariff-tracker-latest-data-hs6-effective-date-check-en/",
+      "slug": "wto-imf-tariff-tracker-latest-data-hs6-effective-date-check-en",
+      "language": "en",
+      "title": "WTO-IMF Tariff Tracker Releases Latest Data for HS 6-Digit",
+      "pageTitle": "WTO-IMF Tariff Tracker Releases Latest Data for HS 6-Digit | LOGILEE",
+      "description": "The WTO released the latest WTO-IMF Tariff Tracker data on September 9, 2026.",
+      "publishedDate": "2026-09-15T13:26:13.697Z",
+      "modifiedDate": "2026-09-15",
+      "category": "customs",
+      "readingTime": "2 min read",
+      "canonical": "https://www.logilee.com/en/posts/wto-imf-tariff-tracker-latest-data-hs6-effective-date-check-en/",
+      "hreflang": [
+        {
+          "hreflang": "en",
+          "href": "https://www.logilee.com/en/posts/wto-imf-tariff-tracker-latest-data-hs6-effective-date-check-en/"
+        },
+        {
+          "hreflang": "ko",
+          "href": "https://www.logilee.com/ko/posts/wto-imf-tariff-tracker-latest-data-hs6-effective-date-check/"
+        }
+      ],
+      "articleJsonLd": true,
+      "jsonLdUrl": "https://www.logilee.com/en/posts/wto-imf-tariff-tracker-latest-data-hs6-effective-date-check-en/",
+      "internalContextualLinks": [],
+      "externalSourceLinks": [],
+      "listing": "included",
+      "canonicalIntent": ""
+    },
+    {
       "file": "ko/posts/aqaba-iraq-hormuz-alternative-route-2026/index.html",
       "publishedUrl": "https://www.logilee.com/ko/posts/aqaba-iraq-hormuz-alternative-route-2026/",
       "slug": "aqaba-iraq-hormuz-alternative-route-2026",
@@ -853,6 +1013,36 @@
       ],
       "articleJsonLd": true,
       "jsonLdUrl": "https://www.logilee.com/ko/posts/aqaba-iraq-hormuz-alternative-route-2026/",
+      "internalContextualLinks": [],
+      "externalSourceLinks": [],
+      "listing": "included",
+      "canonicalIntent": ""
+    },
+    {
+      "file": "ko/posts/canada-motor-vehicle-products-additional-duties-scope-change/index.html",
+      "publishedUrl": "https://www.logilee.com/ko/posts/canada-motor-vehicle-products-additional-duties-scope-change/",
+      "slug": "canada-motor-vehicle-products-additional-duties-scope-change",
+      "language": "ko",
+      "title": "캐나다산 자동차 관련 제품 추가관세 범위 변경…수입자는 HTSUS와 Section",
+      "pageTitle": "캐나다산 자동차 관련 제품 추가관세 범위 변경…수입자는 HTSUS와 Section | LOGILEE",
+      "description": "미국은 캐나다 제품 중 자동차 관련 추가관세 적용 범위를 변경했다. 2026년 9월 15일 오전 12시 1분(미 동부시간)부터 소비용으로 신고되거나 보세창고에서 반출되는 물품에 적용되므로, 수입자는 해당 HTSUS 품목번호와 Section 232 관세 적용 여부를 다시 확인해야 한다.",
+      "publishedDate": "2026-09-18T05:51:54.584Z",
+      "modifiedDate": "2026-09-18",
+      "category": "customs",
+      "readingTime": "2분 읽기",
+      "canonical": "https://www.logilee.com/ko/posts/canada-motor-vehicle-products-additional-duties-scope-change/",
+      "hreflang": [
+        {
+          "hreflang": "ko",
+          "href": "https://www.logilee.com/ko/posts/canada-motor-vehicle-products-additional-duties-scope-change/"
+        },
+        {
+          "hreflang": "en",
+          "href": "https://www.logilee.com/en/posts/us-changes-scope-additional-duties-canadian-motor-vehicle-products/"
+        }
+      ],
+      "articleJsonLd": true,
+      "jsonLdUrl": "https://www.logilee.com/ko/posts/canada-motor-vehicle-products-additional-duties-scope-change/",
       "internalContextualLinks": [],
       "externalSourceLinks": [],
       "listing": "included",
@@ -969,6 +1159,36 @@
       ],
       "articleJsonLd": true,
       "jsonLdUrl": "https://www.logilee.com/ko/posts/commercial-invoice-common-mistakes/",
+      "internalContextualLinks": [],
+      "externalSourceLinks": [],
+      "listing": "included",
+      "canonicalIntent": ""
+    },
+    {
+      "file": "ko/posts/eu-2026-dual-use-control-list-update/index.html",
+      "publishedUrl": "https://www.logilee.com/ko/posts/eu-2026-dual-use-control-list-update/",
+      "slug": "eu-2026-dual-use-control-list-update",
+      "language": "ko",
+      "title": "EU, 2026년 이중용도 품목 통제목록 개정 추진",
+      "pageTitle": "EU, 2026년 이중용도 품목 통제목록 개정 추진 | LOGILEE",
+      "description": "유럽연합이 규정 2021/821 부속서 I의 이중용도 품목 통제목록 개정을 추진한다. 개정안에는 2025년 바세나르체제, 오스트레일리아 그룹, 원자력공급국그룹의 결정이 반영될 예정이며, 관보 게재 전 유럽의회와 이사회의 2개월 심사 절차가 예정돼 있다.",
+      "publishedDate": "2026-09-16T02:06:08.288Z",
+      "modifiedDate": "2026-09-16",
+      "category": "logistics",
+      "readingTime": "2분 읽기",
+      "canonical": "https://www.logilee.com/ko/posts/eu-2026-dual-use-control-list-update/",
+      "hreflang": [
+        {
+          "hreflang": "ko",
+          "href": "https://www.logilee.com/ko/posts/eu-2026-dual-use-control-list-update/"
+        },
+        {
+          "hreflang": "en",
+          "href": "https://www.logilee.com/en/posts/eu-2026-dual-use-control-list-update-en/"
+        }
+      ],
+      "articleJsonLd": true,
+      "jsonLdUrl": "https://www.logilee.com/ko/posts/eu-2026-dual-use-control-list-update/",
       "internalContextualLinks": [],
       "externalSourceLinks": [],
       "listing": "included",
@@ -1315,6 +1535,36 @@
       "canonicalIntent": ""
     },
     {
+      "file": "ko/posts/uk-import-controls-guidance-updated-september-2026/index.html",
+      "publishedUrl": "https://www.logilee.com/ko/posts/uk-import-controls-guidance-updated-september-2026/",
+      "slug": "uk-import-controls-guidance-updated-september-2026",
+      "language": "ko",
+      "title": "영국 수입통제 지침 업데이트: 무기·제재·고문 관련 물품 점검",
+      "pageTitle": "영국 수입통제 지침 업데이트: 무기·제재·고문 관련 물품 점검 | LOGILEE",
+      "description": "영국 정부가 국가 또는 유엔 수준의 수입통제 대상 물품을 다루는 지침을 2026년 9월 18일 업데이트했다. 이번 업데이트는 총기 관련 법령 인용을 바로잡은 것으로, 해당 품목을 영국으로 수출·수입하는 기업은 최신 지침과 내부 통제 절차의 정합성을 확인해야 한다.",
+      "publishedDate": "2026-09-20T15:00:26.691Z",
+      "modifiedDate": "2026-09-20",
+      "category": "customs",
+      "readingTime": "2분 읽기",
+      "canonical": "https://www.logilee.com/ko/posts/uk-import-controls-guidance-updated-september-2026/",
+      "hreflang": [
+        {
+          "hreflang": "ko",
+          "href": "https://www.logilee.com/ko/posts/uk-import-controls-guidance-updated-september-2026/"
+        },
+        {
+          "hreflang": "en",
+          "href": "https://www.logilee.com/en/posts/uk-import-controls-guidance-updated-september-2026-en/"
+        }
+      ],
+      "articleJsonLd": true,
+      "jsonLdUrl": "https://www.logilee.com/ko/posts/uk-import-controls-guidance-updated-september-2026/",
+      "internalContextualLinks": [],
+      "externalSourceLinks": [],
+      "listing": "included",
+      "canonicalIntent": ""
+    },
+    {
       "file": "ko/posts/us-cbp-foreign-export-documents-supply-chain-visibility-2026/index.html",
       "publishedUrl": "https://www.logilee.com/ko/posts/us-cbp-foreign-export-documents-supply-chain-visibility-2026/",
       "slug": "us-cbp-foreign-export-documents-supply-chain-visibility-2026",
@@ -1399,6 +1649,36 @@
       ],
       "articleJsonLd": true,
       "jsonLdUrl": "https://www.logilee.com/ko/posts/us-illegal-transshipment-origin-2026/",
+      "internalContextualLinks": [],
+      "externalSourceLinks": [],
+      "listing": "included",
+      "canonicalIntent": ""
+    },
+    {
+      "file": "ko/posts/wto-imf-tariff-tracker-latest-data-hs6-effective-date-check/index.html",
+      "publishedUrl": "https://www.logilee.com/ko/posts/wto-imf-tariff-tracker-latest-data-hs6-effective-date-check/",
+      "slug": "wto-imf-tariff-tracker-latest-data-hs6-effective-date-check",
+      "language": "ko",
+      "title": "WTO-IMF 관세 트래커 최신 데이터 공개…HS 6단위·시행일별 관세 변화 점검",
+      "pageTitle": "WTO-IMF 관세 트래커 최신 데이터 공개…HS 6단위·시행일별 관세 변화 점검 | LOGILEE",
+      "description": "WTO가 2026년 9월 9일 최신 관세 트래커 데이터를 공개했다. 기업은 HS 6단위와 시행일을 기준으로 주요 시장의 최근 관세 변화 및 거래상대국별 적용세율을 재점검할 수 있다.",
+      "publishedDate": "2026-09-15T13:26:02.471Z",
+      "modifiedDate": "2026-09-15",
+      "category": "customs",
+      "readingTime": "2분 읽기",
+      "canonical": "https://www.logilee.com/ko/posts/wto-imf-tariff-tracker-latest-data-hs6-effective-date-check/",
+      "hreflang": [
+        {
+          "hreflang": "ko",
+          "href": "https://www.logilee.com/ko/posts/wto-imf-tariff-tracker-latest-data-hs6-effective-date-check/"
+        },
+        {
+          "hreflang": "en",
+          "href": "https://www.logilee.com/en/posts/wto-imf-tariff-tracker-latest-data-hs6-effective-date-check-en/"
+        }
+      ],
+      "articleJsonLd": true,
+      "jsonLdUrl": "https://www.logilee.com/ko/posts/wto-imf-tariff-tracker-latest-data-hs6-effective-date-check/",
       "internalContextualLinks": [],
       "externalSourceLinks": [],
       "listing": "included",
