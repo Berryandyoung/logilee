@@ -5,6 +5,14 @@ const root = process.cwd();
 const dataPath = path.join(root, "assets", "posts-data.js");
 const postLanguages = ["ko", "en"];
 const nonPublicStatuses = new Set(["draft", "private", "archived"]);
+const editorialListingBacklog = new Set([
+  "ko:ko/posts/cbm-calculation/",
+  "en:en/posts/cbm-calculation/",
+  "ko:ko/posts/hs-code-search/",
+  "en:en/posts/hs-code-search/",
+  "ko:ko/posts/trade-terms/",
+  "en:en/posts/trade-terms/"
+]);
 
 function read(file) {
   return fs.readFileSync(file, "utf8");
@@ -17,6 +25,7 @@ function decodeHtml(value = "") {
     .replace(/&gt;/g, ">")
     .replace(/&quot;/g, '"')
     .replace(/&#39;/g, "'")
+    .replace(/&middot;/g, "·")
     .replace(/&#(\d+);/g, (_, code) => String.fromCharCode(Number(code)));
 }
 
@@ -87,6 +96,11 @@ function compact(value) {
   return String(value || "").replace(/\s+/g, " ").trim();
 }
 
+function validReadingTime(value, language) {
+  const pattern = language === "ko" ? /^\d+분 읽기$/ : /^\d+ min read$/;
+  return pattern.test(compact(value));
+}
+
 function imagePathFromOg(html) {
   const ogImage = meta(html, "og:image");
   if (!ogImage) return "";
@@ -99,6 +113,7 @@ function extractPost(file, language) {
   const html = read(file);
   const jsonLd = parseJsonLd(html);
   const status = compact(meta(html, "logilee:status") || meta(html, "article:status") || textMatch(html, /data-post-status=["']([^"']+)["']/i) || "published").toLowerCase();
+  const listing = compact(meta(html, "logilee:listing") || "included").toLowerCase();
   const category = compact(
     meta(html, "logilee:category") ||
     jsonLd.articleSection ||
@@ -106,9 +121,9 @@ function extractPost(file, language) {
     "Guides"
   );
   const title = compact(
-    meta(html, "og:title") ||
     jsonLd.headline ||
     textMatch(html, /<h1[^>]*>([\s\S]*?)<\/h1>/i) ||
+    meta(html, "og:title") ||
     textMatch(html, /<title[^>]*>([\s\S]*?)<\/title>/i).replace(/\s*\|\s*LOGILEE$/i, "")
   );
   const description = compact(meta(html, "og:description") || meta(html, "description") || jsonLd.description || "");
@@ -124,14 +139,17 @@ function extractPost(file, language) {
     meta(html, "logilee:reading-time") ||
     textMatch(html, /<div[^>]*class=["'][^"']*\bpost-meta\b[^"']*["'][^>]*>[\s\S]*?<span[^>]*>[\s\S]*?<\/span>\s*<span[^>]*>([\s\S]*?)<\/span>/i)
   );
-  const heroImg = html.match(/<figure[^>]*class=["'][^"']*\bpost-hero-image\b[^"']*["'][^>]*>[\s\S]*?<img\b([^>]*)>/i);
+  const heroImg = html.match(/<figure[^>]*class=["'][^"']*\b(?:post-hero-image|article-hero-figure)\b[^"']*["'][^>]*>[\s\S]*?<img\b([^>]*)>/i);
   const heroAlt = heroImg ? attr(heroImg[1], "alt") : "";
   const image = imagePathFromOg(html);
+  const attribution = textMatch(html, /<p[^>]*class=["'][^"']*\bimage-attribution\b[^"']*["'][^>]*>([\s\S]*?)<\/p>/i);
+  const [, imageCredit = "", imageLicense = ""] = attribution.match(/^Photo:\s*(.*?)(?:\s*[·•]\s*(.+))?$/i) || [];
 
   return {
     slug: slugFromPath(file),
     language,
     status,
+    listing,
     title,
     description,
     category,
@@ -140,7 +158,9 @@ function extractPost(file, language) {
     readingTime,
     path: relativeUrl(file),
     image,
-    imageAlt: heroAlt || title
+    imageAlt: heroAlt,
+    ...(imageCredit ? { imageCredit } : {}),
+    ...(imageLicense ? { imageLicense } : {})
   };
 }
 
@@ -175,7 +195,10 @@ function postKey(post) {
 }
 
 function isValidPost(post) {
-  return Boolean(post.slug && post.language && post.title && post.path);
+  return Boolean(
+    post.slug && post.language && post.title && post.description && post.path &&
+    validReadingTime(post.readingTime, post.language)
+  );
 }
 
 function timestamp(post) {
@@ -183,12 +206,32 @@ function timestamp(post) {
   return Number.isFinite(value) ? value : 0;
 }
 
-const generated = scanGeneratedPosts();
+const existing = loadExisting();
+const existingByKey = new Map(existing.map((post) => [postKey(post), post]));
+const generated = scanGeneratedPosts().map((post) => {
+  const previous = existingByKey.get(postKey(post));
+  return {
+    ...post,
+    imageAlt: previous?.imageAlt || post.imageAlt || post.title,
+    ...(post.imageCredit || previous?.imageCredit ? { imageCredit: post.imageCredit || previous.imageCredit } : {}),
+    ...(post.imageLicense || previous?.imageLicense ? { imageLicense: post.imageLicense || previous.imageLicense } : {})
+  };
+});
+const invalidGenerated = generated.filter((post) => !isValidPost(post));
+if (invalidGenerated.length) {
+  for (const post of invalidGenerated) {
+    console.error(`Invalid generated post metadata: ${post.path} (readingTime=${JSON.stringify(post.readingTime)})`);
+  }
+  throw new Error("Post sync stopped because generated metadata failed validation.");
+}
 const generatedKeys = new Set(generated.map(postKey));
-const legacy = loadExisting().filter((post) => !generatedKeys.has(postKey(post)));
+const legacy = existing.filter((post) => !generatedKeys.has(postKey(post)));
 const posts = [...generated, ...legacy]
   .filter(isValidPost)
   .filter((post) => !nonPublicStatuses.has(String(post.status || "published").toLowerCase()))
+  .filter((post) => String(post.listing || "included").toLowerCase() !== "excluded")
+  .filter((post) => !editorialListingBacklog.has(postKey(post)))
+  .map(({ listing, ...post }) => post)
   .sort((a, b) => timestamp(b) - timestamp(a) || String(a.language).localeCompare(String(b.language)) || String(a.title).localeCompare(String(b.title)));
 
 const nextSource = `window.LOGILEE_POSTS = ${JSON.stringify(posts, null, 2)};\n`;

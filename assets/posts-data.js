@@ -144,22 +144,6 @@ window.LOGILEE_POSTS = [
     "imageLicense": "AI Generated"
   },
   {
-    "slug": "eu-customs-reform-small-parcel-fee-overhaul-2026",
-    "language": "en",
-    "status": "published",
-    "title": "EU Customs Reform 2026: Small-Parcel Fee, Platform Liability and the New Data Hub",
-    "description": "EU Customs Reform 2026: Small-Parcel Fee and Platform Rules",
-    "category": "customs",
-    "date": "2026-09-10",
-    "publishedAt": "2026-09-10T09:55:10.355Z",
-    "readingTime": "6 min read",
-    "path": "en/posts/eu-customs-reform-small-parcel-fee-overhaul-2026/",
-    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_b900b3b6-9dcb-450c-a18e-7848d28fe885-ChatGPT%20Image%202026%EB%85%84%209%EC%9B%94%2010%EC%9D%BC%20%EC%98%A4%ED%9B%84%2005_59_21.png?alt=media&token=9debfab9-8dd4-45e1-8f90-23223fcbeea5",
-    "imageAlt": "International e-commerce freight moving through an intermodal logistics terminal serving the European market",
-    "imageCredit": "LOGILEE",
-    "imageLicense": "AI Generated"
-  },
-  {
     "slug": "eu-customs-reform-small-parcel-fee-2026",
     "language": "ko",
     "status": "published",
@@ -168,7 +152,7 @@ window.LOGILEE_POSTS = [
     "category": "customs",
     "date": "2026-09-10",
     "publishedAt": "2026-09-10T09:03:34.380Z",
-    "readingTime": "4遺??쎄린",
+    "readingTime": "4분 읽기",
     "path": "ko/posts/eu-customs-reform-small-parcel-fee-2026/",
     "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_88b11a00-c298-4a8a-ba7b-a9146bfa6686-ChatGPT%20Image%202026%EB%85%84%209%EC%9B%94%2010%EC%9D%BC%20%EC%98%A4%ED%9B%84%2005_59_21.png?alt=media&token=d8dd8f76-d9d5-4fea-bbfa-4fca50f1dda9",
     "imageAlt": "EU 시장으로 향하는 국제 전자상거래 화물이 선적되는 물류 현장",

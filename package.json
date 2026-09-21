@@ -1,4 +1,10 @@
 {
+  "scripts": {
+    "quality": "node tools/site-quality.mjs",
+    "quality:report": "node tools/site-quality.mjs --report",
+    "sync:posts": "node tools/sync-posts-data.mjs",
+    "test:quality": "node tools/test-site-quality.mjs"
+  },
   "devDependencies": {
     "exceljs": "^4.4.0"
   }

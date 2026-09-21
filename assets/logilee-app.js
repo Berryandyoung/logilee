@@ -9086,11 +9086,11 @@ async function wireNewsPage() {
           </div>
         </a>
       `;
-    }).join("") : `<div class="data-empty">No news items available.</div>`;
+    }).join("") : `<div class="data-empty" role="status">${lang === "ko" ? "현재 표시할 뉴스가 없습니다. 잠시 후 다시 확인하거나 아래 설명과 원문 출처를 이용해 주세요." : "No news is available right now. Try again later or use the guidance and original sources below."}</div>`;
     wireNewsImageFallbacks(target);
   } catch (error) {
     console.warn("News page unavailable:", error);
-    dataError(target, "News source unavailable.");
+    dataError(target, lang === "ko" ? "뉴스 원문 피드에 일시적으로 연결할 수 없습니다. 페이지의 이용 안내는 계속 확인할 수 있으며, 잠시 후 다시 시도해 주세요." : "The original news feed is temporarily unavailable. The guidance on this page remains available; please try again later.");
   }
 }
 
