@@ -13888,3 +13888,5 @@ body.sidebar-drawer-active {
     justify-self: start;
   }
 }
+.article-hero-figure { min-width: 0; }
+.article-hero { display: block; width: 100%; max-width: 100%; height: auto; }

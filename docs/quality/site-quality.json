@@ -1,11 +1,11 @@
 {
   "status": "WARN",
-  "generatedAt": "2026-09-21T10:44:41.356Z",
+  "generatedAt": "2026-09-27T03:59:52.816Z",
   "summary": {
     "posts": 49,
     "htmlFiles": 153,
     "blockers": 0,
-    "warnings": 49
+    "warnings": 2
   },
   "checks": [
     {
@@ -29,247 +29,12 @@
   "warnings": [
     {
       "code": "CONTEXTUAL_LINKING_WEAK",
-      "file": "en/posts/canada-us-counter-tariffs-september-2026/index.html",
-      "message": "No contextual internal link found in article body."
-    },
-    {
-      "code": "CONTEXTUAL_LINKING_WEAK",
-      "file": "en/posts/cbm-calculation/index.html",
-      "message": "No contextual internal link found in article body."
-    },
-    {
-      "code": "CONTEXTUAL_LINKING_WEAK",
-      "file": "en/posts/china-port-congestion-typhoon-shipping-2026/index.html",
-      "message": "No contextual internal link found in article body."
-    },
-    {
-      "code": "CONTEXTUAL_LINKING_WEAK",
-      "file": "en/posts/china-typhoon-port-delay-shipment-impact/index.html",
-      "message": "No contextual internal link found in article body."
-    },
-    {
-      "code": "CONTEXTUAL_LINKING_WEAK",
-      "file": "en/posts/commercial-invoice-common-mistakes/index.html",
-      "message": "No contextual internal link found in article body."
-    },
-    {
-      "code": "CONTEXTUAL_LINKING_WEAK",
-      "file": "en/posts/eu-2026-dual-use-control-list-update-en/index.html",
-      "message": "No contextual internal link found in article body."
-    },
-    {
-      "code": "CONTEXTUAL_LINKING_WEAK",
-      "file": "en/posts/eu-cbam-2026-non-eu-manufacturer-guidance/index.html",
-      "message": "No contextual internal link found in article body."
-    },
-    {
-      "code": "CONTEXTUAL_LINKING_WEAK",
-      "file": "en/posts/eu-customs-data-model-7-0-11-what-customs-and-logistics-teams-need-to-update-eucdm/index.html",
-      "message": "No contextual internal link found in article body."
-    },
-    {
-      "code": "CONTEXTUAL_LINKING_WEAK",
-      "file": "en/posts/eu-customs-reform-small-parcel-fee-2026/index.html",
-      "message": "No contextual internal link found in article body."
-    },
-    {
-      "code": "CONTEXTUAL_LINKING_WEAK",
-      "file": "en/posts/eu-customs-reform-small-parcel-fee-overhaul-2026/index.html",
-      "message": "No contextual internal link found in article body."
-    },
-    {
-      "code": "CONTEXTUAL_LINKING_WEAK",
-      "file": "en/posts/eu-deforestation-regulation-eudr-guide-2026/index.html",
-      "message": "No contextual internal link found in article body."
-    },
-    {
-      "code": "CONTEXTUAL_LINKING_WEAK",
-      "file": "en/posts/fob-vs-cif/index.html",
-      "message": "No contextual internal link found in article body."
-    },
-    {
-      "code": "CONTEXTUAL_LINKING_WEAK",
-      "file": "en/posts/hormuz-red-sea-shipping-risk-august-2026/index.html",
-      "message": "No contextual internal link found in article body."
-    },
-    {
-      "code": "CONTEXTUAL_LINKING_WEAK",
-      "file": "en/posts/hs-code-search/index.html",
-      "message": "No contextual internal link found in article body."
-    },
-    {
-      "code": "CONTEXTUAL_LINKING_WEAK",
-      "file": "en/posts/lcl-vs-fcl/index.html",
-      "message": "No contextual internal link found in article body."
-    },
-    {
-      "code": "CONTEXTUAL_LINKING_WEAK",
-      "file": "en/posts/rhine-low-water-logistics-impact/index.html",
-      "message": "No contextual internal link found in article body."
-    },
-    {
-      "code": "CONTEXTUAL_LINKING_WEAK",
-      "file": "en/posts/trade-terms/index.html",
-      "message": "No contextual internal link found in article body."
-    },
-    {
-      "code": "CONTEXTUAL_LINKING_WEAK",
-      "file": "en/posts/uk-canada-cptpp-tca-trade-guide-2026/index.html",
-      "message": "No contextual internal link found in article body."
-    },
-    {
-      "code": "CONTEXTUAL_LINKING_WEAK",
-      "file": "en/posts/uk-import-controls-guidance-updated-september-2026-en/index.html",
-      "message": "No contextual internal link found in article body."
-    },
-    {
-      "code": "CONTEXTUAL_LINKING_WEAK",
-      "file": "en/posts/us-cbp-foreign-export-documents-supply-chain-visibility-2026/index.html",
-      "message": "No contextual internal link found in article body."
-    },
-    {
-      "code": "CONTEXTUAL_LINKING_WEAK",
-      "file": "en/posts/us-changes-scope-additional-duties-canadian-motor-vehicle-products/index.html",
-      "message": "No contextual internal link found in article body."
-    },
-    {
-      "code": "CONTEXTUAL_LINKING_WEAK",
-      "file": "en/posts/us-de-minimis-2026/index.html",
-      "message": "No contextual internal link found in article body."
-    },
-    {
-      "code": "CONTEXTUAL_LINKING_WEAK",
-      "file": "en/posts/us-illegal-transshipment-origin-2026/index.html",
-      "message": "No contextual internal link found in article body."
-    },
-    {
-      "code": "CONTEXTUAL_LINKING_WEAK",
-      "file": "en/posts/vietnam-decree-292-takes-effect-september-5-what-importers-and-exporters-need-to-review/index.html",
-      "message": "No contextual internal link found in article body."
-    },
-    {
-      "code": "CONTEXTUAL_LINKING_WEAK",
-      "file": "en/posts/wto-imf-tariff-tracker-latest-data-hs6-effective-date-check-en/index.html",
-      "message": "No contextual internal link found in article body."
-    },
-    {
-      "code": "CONTEXTUAL_LINKING_WEAK",
-      "file": "ko/posts/aqaba-iraq-hormuz-alternative-route-2026/index.html",
-      "message": "No contextual internal link found in article body."
-    },
-    {
-      "code": "CONTEXTUAL_LINKING_WEAK",
-      "file": "ko/posts/canada-motor-vehicle-products-additional-duties-scope-change/index.html",
-      "message": "No contextual internal link found in article body."
-    },
-    {
-      "code": "CONTEXTUAL_LINKING_WEAK",
-      "file": "ko/posts/cbm-calculation/index.html",
-      "message": "No contextual internal link found in article body."
-    },
-    {
-      "code": "CONTEXTUAL_LINKING_WEAK",
-      "file": "ko/posts/china-kfood-overseas-food-manufacturer-registration2026/index.html",
-      "message": "No contextual internal link found in article body."
-    },
-    {
-      "code": "CONTEXTUAL_LINKING_WEAK",
-      "file": "ko/posts/china-typhoon-port-delay-shipment-impact/index.html",
-      "message": "No contextual internal link found in article body."
-    },
-    {
-      "code": "CONTEXTUAL_LINKING_WEAK",
-      "file": "ko/posts/commercial-invoice-common-mistakes/index.html",
-      "message": "No contextual internal link found in article body."
-    },
-    {
-      "code": "CONTEXTUAL_LINKING_WEAK",
-      "file": "ko/posts/eu-2026-dual-use-control-list-update/index.html",
-      "message": "No contextual internal link found in article body."
-    },
-    {
-      "code": "CONTEXTUAL_LINKING_WEAK",
-      "file": "ko/posts/eu-customs-reform-small-parcel-fee-2026/index.html",
-      "message": "No contextual internal link found in article body."
-    },
-    {
-      "code": "CONTEXTUAL_LINKING_WEAK",
-      "file": "ko/posts/eu-korea-terephthalic-acid-antidumping-duty-2026/index.html",
-      "message": "No contextual internal link found in article body."
-    },
-    {
-      "code": "CONTEXTUAL_LINKING_WEAK",
-      "file": "ko/posts/fob-vs-cif/index.html",
-      "message": "No contextual internal link found in article body."
-    },
-    {
-      "code": "CONTEXTUAL_LINKING_WEAK",
-      "file": "ko/posts/hormuz-red-sea-shipping-risk-august-2026/index.html",
-      "message": "No contextual internal link found in article body."
-    },
-    {
-      "code": "CONTEXTUAL_LINKING_WEAK",
-      "file": "ko/posts/hs-code-search/index.html",
-      "message": "No contextual internal link found in article body."
-    },
-    {
-      "code": "CONTEXTUAL_LINKING_WEAK",
-      "file": "ko/posts/hs-code-vs-hts-code-us-export/index.html",
-      "message": "No contextual internal link found in article body."
-    },
-    {
-      "code": "CONTEXTUAL_LINKING_WEAK",
-      "file": "ko/posts/hs-customs-value-freight-insurance-incoterms-guide/index.html",
-      "message": "No contextual internal link found in article body."
-    },
-    {
-      "code": "CONTEXTUAL_LINKING_WEAK",
       "file": "ko/posts/kita-trade-promotion-fund-september-2026/index.html",
       "message": "No contextual internal link found in article body."
     },
     {
       "code": "CONTEXTUAL_LINKING_WEAK",
       "file": "ko/posts/korea-exports-august-2026-semiconductor/index.html",
-      "message": "No contextual internal link found in article body."
-    },
-    {
-      "code": "CONTEXTUAL_LINKING_WEAK",
-      "file": "ko/posts/lcl-vs-fcl/index.html",
-      "message": "No contextual internal link found in article body."
-    },
-    {
-      "code": "CONTEXTUAL_LINKING_WEAK",
-      "file": "ko/posts/rhine-low-water-logistics-impact/index.html",
-      "message": "No contextual internal link found in article body."
-    },
-    {
-      "code": "CONTEXTUAL_LINKING_WEAK",
-      "file": "ko/posts/trade-terms/index.html",
-      "message": "No contextual internal link found in article body."
-    },
-    {
-      "code": "CONTEXTUAL_LINKING_WEAK",
-      "file": "ko/posts/uk-import-controls-guidance-updated-september-2026/index.html",
-      "message": "No contextual internal link found in article body."
-    },
-    {
-      "code": "CONTEXTUAL_LINKING_WEAK",
-      "file": "ko/posts/us-cbp-foreign-export-documents-supply-chain-visibility-2026/index.html",
-      "message": "No contextual internal link found in article body."
-    },
-    {
-      "code": "CONTEXTUAL_LINKING_WEAK",
-      "file": "ko/posts/us-de-minimis-2026/index.html",
-      "message": "No contextual internal link found in article body."
-    },
-    {
-      "code": "CONTEXTUAL_LINKING_WEAK",
-      "file": "ko/posts/us-illegal-transshipment-origin-2026/index.html",
-      "message": "No contextual internal link found in article body."
-    },
-    {
-      "code": "CONTEXTUAL_LINKING_WEAK",
-      "file": "ko/posts/wto-imf-tariff-tracker-latest-data-hs6-effective-date-check/index.html",
       "message": "No contextual internal link found in article body."
     }
   ],
@@ -295,7 +60,9 @@
       ],
       "articleJsonLd": true,
       "jsonLdUrl": "https://www.logilee.com/en/posts/canada-us-counter-tariffs-september-2026/",
-      "internalContextualLinks": [],
+      "internalContextualLinks": [
+        "../../../hscode-en.html"
+      ],
       "externalSourceLinks": [],
       "listing": "included",
       "canonicalIntent": ""
@@ -307,11 +74,11 @@
       "language": "en",
       "title": "Complete Guide to CBM Calculation",
       "pageTitle": "Complete Guide to CBM Calculation | LOGILEE",
-      "description": "A legacy LOGILEE post explaining the basic logistics formula for calculating cargo volume in CBM.",
+      "description": "Learn when CBM is used, how to calculate multiple packages, what to check before a quote, common errors, and the limits of a volume estimate.",
       "publishedDate": "2025-05-11T00:00:00.000Z",
-      "modifiedDate": "2025-05-11",
+      "modifiedDate": "2026-09-27",
       "category": "Logistics",
-      "readingTime": "2 min read",
+      "readingTime": "4 min read",
       "canonical": "https://www.logilee.com/en/posts/cbm-calculation/",
       "hreflang": [
         {
@@ -325,7 +92,10 @@
       ],
       "articleJsonLd": true,
       "jsonLdUrl": "https://www.logilee.com/en/posts/cbm-calculation/",
-      "internalContextualLinks": [],
+      "internalContextualLinks": [
+        "../../cbm.html",
+        "../lcl-vs-fcl/"
+      ],
       "externalSourceLinks": [],
       "listing": "included",
       "canonicalIntent": ""
@@ -351,8 +121,13 @@
       ],
       "articleJsonLd": true,
       "jsonLdUrl": "https://www.logilee.com/en/posts/china-port-congestion-typhoon-shipping-2026/",
-      "internalContextualLinks": [],
-      "externalSourceLinks": [],
+      "internalContextualLinks": [
+        "../../ports.html",
+        "../../port-weather.html"
+      ],
+      "externalSourceLinks": [
+        "https://mykn.kuehne-nagel.com/news/article/port-operational-updates-from-12-08-2026"
+      ],
       "listing": "included",
       "canonicalIntent": ""
     },
@@ -381,7 +156,10 @@
       ],
       "articleJsonLd": true,
       "jsonLdUrl": "https://www.logilee.com/en/posts/china-typhoon-port-delay-shipment-impact/",
-      "internalContextualLinks": [],
+      "internalContextualLinks": [
+        "../../port-weather.html",
+        "../../ports.html"
+      ],
       "externalSourceLinks": [],
       "listing": "included",
       "canonicalIntent": ""
@@ -411,7 +189,19 @@
       ],
       "articleJsonLd": true,
       "jsonLdUrl": "https://www.logilee.com/en/posts/commercial-invoice-common-mistakes/",
-      "internalContextualLinks": [],
+      "internalContextualLinks": [
+        "../../dictionary.html?term=commercial-invoice",
+        "../../dictionary.html?term=packing-list",
+        "../../dictionary.html?term=bl",
+        "../../dictionary.html?term=awb",
+        "../../dictionary.html?term=hs-code",
+        "../../dictionary.html?term=incoterms",
+        "../../dictionary.html?term=commercial-invoice",
+        "../../dictionary.html?term=packing-list",
+        "../../dictionary.html?term=bl",
+        "../../dictionary.html?term=awb",
+        "../../templates.html"
+      ],
       "externalSourceLinks": [],
       "listing": "included",
       "canonicalIntent": ""
@@ -441,8 +231,12 @@
       ],
       "articleJsonLd": true,
       "jsonLdUrl": "https://www.logilee.com/en/posts/eu-2026-dual-use-control-list-update-en/",
-      "internalContextualLinks": [],
-      "externalSourceLinks": [],
+      "internalContextualLinks": [
+        "../../compliance.html"
+      ],
+      "externalSourceLinks": [
+        "https://policy.trade.ec.europa.eu/news/2026-update-eu-control-list-dual-use-items-2026-09-14_en"
+      ],
       "listing": "included",
       "canonicalIntent": ""
     },
@@ -467,8 +261,14 @@
       ],
       "articleJsonLd": true,
       "jsonLdUrl": "https://www.logilee.com/en/posts/eu-cbam-2026-non-eu-manufacturer-guidance/",
-      "internalContextualLinks": [],
-      "externalSourceLinks": [],
+      "internalContextualLinks": [
+        "../../../hscode-en.html"
+      ],
+      "externalSourceLinks": [
+        "https://taxation-customs.ec.europa.eu/carbon-border-adjustment-mechanism/cbam-legislation-and-guidance_en",
+        "https://taxation-customs.ec.europa.eu/carbon-border-adjustment-mechanism/cbam-communication-and-news_en",
+        "https://taxation-customs.ec.europa.eu/carbon-border-adjustment-mechanism/cbam-registry_en"
+      ],
       "listing": "included",
       "canonicalIntent": ""
     },
@@ -493,8 +293,13 @@
       ],
       "articleJsonLd": true,
       "jsonLdUrl": "https://www.logilee.com/en/posts/eu-customs-data-model-7-0-11-what-customs-and-logistics-teams-need-to-update-eucdm/",
-      "internalContextualLinks": [],
-      "externalSourceLinks": [],
+      "internalContextualLinks": [
+        "../../compliance.html"
+      ],
+      "externalSourceLinks": [
+        "https://taxation-customs.ec.europa.eu/news/eucdm-701-here-whats-new-updated-european-customs-data-model-2026-08-27_en",
+        "https://taxation-customs.ec.europa.eu/customs-4/union-customs-code/eu-customs-data-model-eucdm_en"
+      ],
       "listing": "included",
       "canonicalIntent": ""
     },
@@ -523,8 +328,13 @@
       ],
       "articleJsonLd": true,
       "jsonLdUrl": "https://www.logilee.com/en/posts/eu-customs-reform-small-parcel-fee-2026/",
-      "internalContextualLinks": [],
-      "externalSourceLinks": [],
+      "internalContextualLinks": [
+        "../../compliance.html"
+      ],
+      "externalSourceLinks": [
+        "https://www.consilium.europa.eu/en/press/press-releases/2026/09/03/eu-customs-council-greenlights-landmark-reform/",
+        "https://www.consilium.europa.eu/en/policies/modernising-the-eu-customs-union/"
+      ],
       "listing": "included",
       "canonicalIntent": ""
     },
@@ -549,8 +359,13 @@
       ],
       "articleJsonLd": true,
       "jsonLdUrl": "https://www.logilee.com/en/posts/eu-customs-reform-small-parcel-fee-2026/",
-      "internalContextualLinks": [],
-      "externalSourceLinks": [],
+      "internalContextualLinks": [
+        "../../compliance.html"
+      ],
+      "externalSourceLinks": [
+        "https://www.consilium.europa.eu/en/press/press-releases/2026/09/03/eu-customs-council-greenlights-landmark-reform/",
+        "https://www.consilium.europa.eu/en/policies/modernising-the-eu-customs-union/"
+      ],
       "listing": "excluded",
       "canonicalIntent": "consolidated"
     },
@@ -575,8 +390,14 @@
       ],
       "articleJsonLd": true,
       "jsonLdUrl": "https://www.logilee.com/en/posts/eu-deforestation-regulation-eudr-guide-2026/",
-      "internalContextualLinks": [],
-      "externalSourceLinks": [],
+      "internalContextualLinks": [
+        "../../compliance.html"
+      ],
+      "externalSourceLinks": [
+        "https://environment.ec.europa.eu/topics/forests/deforestation/regulation-deforestation-free-products_en",
+        "https://environment.ec.europa.eu/news/commission-updates-product-scope-and-tools-support-eudr-2026-07-13_en",
+        "https://eur-lex.europa.eu/legal-content/EN/ALL/?uri=CELEX:32023R1115"
+      ],
       "listing": "included",
       "canonicalIntent": ""
     },
@@ -605,7 +426,21 @@
       ],
       "articleJsonLd": true,
       "jsonLdUrl": "https://www.logilee.com/en/posts/fob-vs-cif/",
-      "internalContextualLinks": [],
+      "internalContextualLinks": [
+        "../../dictionary.html?term=fob",
+        "../../freight-market.html",
+        "../../currency-converter.html",
+        "../../ports.html",
+        "#top",
+        "../../dictionary.html?term=fob",
+        "../../dictionary.html?term=cif",
+        "../../learn.html",
+        "../../dictionary.html?term=fob",
+        "../../freight-market.html",
+        "../../currency-converter.html",
+        "../../ports.html",
+        "../../dictionary.html"
+      ],
       "externalSourceLinks": [],
       "listing": "included",
       "canonicalIntent": ""
@@ -635,7 +470,9 @@
       ],
       "articleJsonLd": true,
       "jsonLdUrl": "https://www.logilee.com/en/posts/hormuz-red-sea-shipping-risk-august-2026/",
-      "internalContextualLinks": [],
+      "internalContextualLinks": [
+        "../../freight-market.html"
+      ],
       "externalSourceLinks": [],
       "listing": "included",
       "canonicalIntent": ""
@@ -665,7 +502,9 @@
       ],
       "articleJsonLd": true,
       "jsonLdUrl": "https://www.logilee.com/en/posts/hs-code-search/",
-      "internalContextualLinks": [],
+      "internalContextualLinks": [
+        "../../../hscode-en.html"
+      ],
       "externalSourceLinks": [],
       "listing": "included",
       "canonicalIntent": ""
@@ -695,7 +534,9 @@
       ],
       "articleJsonLd": true,
       "jsonLdUrl": "https://www.logilee.com/en/posts/lcl-vs-fcl/",
-      "internalContextualLinks": [],
+      "internalContextualLinks": [
+        "../../cbm.html"
+      ],
       "externalSourceLinks": [],
       "listing": "included",
       "canonicalIntent": ""
@@ -725,8 +566,12 @@
       ],
       "articleJsonLd": true,
       "jsonLdUrl": "https://www.logilee.com/en/posts/rhine-low-water-logistics-impact/",
-      "internalContextualLinks": [],
-      "externalSourceLinks": [],
+      "internalContextualLinks": [
+        "../../freight-market.html"
+      ],
+      "externalSourceLinks": [
+        "https://www.newsis.com/view/NISX20260813_0003747551"
+      ],
       "listing": "included",
       "canonicalIntent": ""
     },
@@ -755,7 +600,9 @@
       ],
       "articleJsonLd": true,
       "jsonLdUrl": "https://www.logilee.com/en/posts/trade-terms/",
-      "internalContextualLinks": [],
+      "internalContextualLinks": [
+        "../../dictionary.html"
+      ],
       "externalSourceLinks": [],
       "listing": "included",
       "canonicalIntent": ""
@@ -781,7 +628,9 @@
       ],
       "articleJsonLd": true,
       "jsonLdUrl": "https://www.logilee.com/en/posts/uk-canada-cptpp-tca-trade-guide-2026/",
-      "internalContextualLinks": [],
+      "internalContextualLinks": [
+        "../../../hscode-en.html"
+      ],
       "externalSourceLinks": [],
       "listing": "included",
       "canonicalIntent": ""
@@ -811,8 +660,12 @@
       ],
       "articleJsonLd": true,
       "jsonLdUrl": "https://www.logilee.com/en/posts/uk-import-controls-guidance-updated-september-2026-en/",
-      "internalContextualLinks": [],
-      "externalSourceLinks": [],
+      "internalContextualLinks": [
+        "../../compliance.html"
+      ],
+      "externalSourceLinks": [
+        "https://www.gov.uk/guidance/import-controls"
+      ],
       "listing": "included",
       "canonicalIntent": ""
     },
@@ -841,8 +694,13 @@
       ],
       "articleJsonLd": true,
       "jsonLdUrl": "https://www.logilee.com/en/posts/us-cbp-foreign-export-documents-supply-chain-visibility-2026/",
-      "internalContextualLinks": [],
-      "externalSourceLinks": [],
+      "internalContextualLinks": [
+        "../us-illegal-transshipment-origin-2026/"
+      ],
+      "externalSourceLinks": [
+        "https://www.federalregister.gov/d/2026-17926",
+        "https://www.cbp.gov/trade"
+      ],
       "listing": "included",
       "canonicalIntent": ""
     },
@@ -871,8 +729,12 @@
       ],
       "articleJsonLd": true,
       "jsonLdUrl": "https://www.logilee.com/en/posts/us-changes-scope-additional-duties-canadian-motor-vehicle-products/",
-      "internalContextualLinks": [],
-      "externalSourceLinks": [],
+      "internalContextualLinks": [
+        "../../../hscode-en.html"
+      ],
+      "externalSourceLinks": [
+        "https://public-inspection.federalregister.gov/2026-18839.pdf"
+      ],
       "listing": "included",
       "canonicalIntent": ""
     },
@@ -901,8 +763,13 @@
       ],
       "articleJsonLd": true,
       "jsonLdUrl": "https://www.logilee.com/en/posts/us-de-minimis-2026/",
-      "internalContextualLinks": [],
-      "externalSourceLinks": [],
+      "internalContextualLinks": [
+        "../../../hscode-en.html"
+      ],
+      "externalSourceLinks": [
+        "https://www.whitehouse.gov/presidential-actions/2025/07/suspending-duty-free-de-minimis-treatment-for-all-countries/",
+        "https://www.whitehouse.gov/presidential-actions/2026/02/continuing-the-suspension-of-duty-free-de-minimis-treatment-for-all-countries/"
+      ],
       "listing": "included",
       "canonicalIntent": ""
     },
@@ -931,8 +798,15 @@
       ],
       "articleJsonLd": true,
       "jsonLdUrl": "https://www.logilee.com/en/posts/us-illegal-transshipment-origin-2026/",
-      "internalContextualLinks": [],
-      "externalSourceLinks": [],
+      "internalContextualLinks": [
+        "../../compliance.html"
+      ],
+      "externalSourceLinks": [
+        "https://www.whitehouse.gov/wp-content/uploads/2026/08/The-Great-Transshipment-Scam.pdf",
+        "https://www.whitehouse.gov/presidential-actions/2025/07/further-modifying-the-reciprocal-tariff-rates/",
+        "https://www.whitehouse.gov/presidential-actions/2026/06/strengthening-customs-enforcement/",
+        "https://rulings.cbp.gov/ruling/N359115"
+      ],
       "listing": "included",
       "canonicalIntent": ""
     },
@@ -957,8 +831,13 @@
       ],
       "articleJsonLd": true,
       "jsonLdUrl": "https://www.logilee.com/en/posts/vietnam-decree-292-takes-effect-september-5-what-importers-and-exporters-need-to-review/",
-      "internalContextualLinks": [],
-      "externalSourceLinks": [],
+      "internalContextualLinks": [
+        "../../compliance.html"
+      ],
+      "externalSourceLinks": [
+        "https://congbao.chinhphu.vn/van-ban/nghi-dinh-so-292-2026-nd-cp-470149.htm",
+        "https://vanban.chinhphu.vn/?classid=1&amp;docid=218958&amp;pageid=27160&amp;typegroupid=4"
+      ],
       "listing": "included",
       "canonicalIntent": ""
     },
@@ -987,8 +866,12 @@
       ],
       "articleJsonLd": true,
       "jsonLdUrl": "https://www.logilee.com/en/posts/wto-imf-tariff-tracker-latest-data-hs6-effective-date-check-en/",
-      "internalContextualLinks": [],
-      "externalSourceLinks": [],
+      "internalContextualLinks": [
+        "../../../hscode-en.html"
+      ],
+      "externalSourceLinks": [
+        "https://ttd.wto.org/en/reports/tariff-actions"
+      ],
       "listing": "included",
       "canonicalIntent": ""
     },
@@ -1013,8 +896,12 @@
       ],
       "articleJsonLd": true,
       "jsonLdUrl": "https://www.logilee.com/ko/posts/aqaba-iraq-hormuz-alternative-route-2026/",
-      "internalContextualLinks": [],
-      "externalSourceLinks": [],
+      "internalContextualLinks": [
+        "../../ports.html"
+      ],
+      "externalSourceLinks": [
+        "https://www.reuters.com/world/middle-east/jordans-aqaba-port-sees-transit-cargo-boost-amid-hormuz-disruption-2026-09-01/"
+      ],
       "listing": "included",
       "canonicalIntent": ""
     },
@@ -1043,8 +930,12 @@
       ],
       "articleJsonLd": true,
       "jsonLdUrl": "https://www.logilee.com/ko/posts/canada-motor-vehicle-products-additional-duties-scope-change/",
-      "internalContextualLinks": [],
-      "externalSourceLinks": [],
+      "internalContextualLinks": [
+        "../../../hscode.html"
+      ],
+      "externalSourceLinks": [
+        "https://public-inspection.federalregister.gov/2026-18839.pdf"
+      ],
       "listing": "included",
       "canonicalIntent": ""
     },
@@ -1055,11 +946,11 @@
       "language": "ko",
       "title": "CBM 계산법 완전 정리",
       "pageTitle": "CBM 계산법 완전 정리 | LOGILEE",
-      "description": "물류에서 부피를 산정하는 기본 방식과 CBM 계산 예시를 정리한 기존 포스트입니다.",
+      "description": "CBM의 용도와 계산식, 수량별 계산 예시, 견적 전 체크리스트, 자주 발생하는 단위·포장 오류와 한계를 정리합니다.",
       "publishedDate": "2025-05-11T00:00:00.000Z",
-      "modifiedDate": "2025-05-11",
+      "modifiedDate": "2026-09-27",
       "category": "Logistics",
-      "readingTime": "2분 읽기",
+      "readingTime": "4분 읽기",
       "canonical": "https://www.logilee.com/ko/posts/cbm-calculation/",
       "hreflang": [
         {
@@ -1073,7 +964,10 @@
       ],
       "articleJsonLd": true,
       "jsonLdUrl": "https://www.logilee.com/ko/posts/cbm-calculation/",
-      "internalContextualLinks": [],
+      "internalContextualLinks": [
+        "../../cbm.html",
+        "../lcl-vs-fcl/"
+      ],
       "externalSourceLinks": [],
       "listing": "included",
       "canonicalIntent": ""
@@ -1099,7 +993,9 @@
       ],
       "articleJsonLd": true,
       "jsonLdUrl": "https://www.logilee.com/ko/posts/china-kfood-overseas-food-manufacturer-registration2026/",
-      "internalContextualLinks": [],
+      "internalContextualLinks": [
+        "../../compliance.html"
+      ],
       "externalSourceLinks": [],
       "listing": "included",
       "canonicalIntent": ""
@@ -1129,7 +1025,10 @@
       ],
       "articleJsonLd": true,
       "jsonLdUrl": "https://www.logilee.com/ko/posts/china-typhoon-port-delay-shipment-impact/",
-      "internalContextualLinks": [],
+      "internalContextualLinks": [
+        "../../port-weather.html",
+        "../../ports.html"
+      ],
       "externalSourceLinks": [],
       "listing": "included",
       "canonicalIntent": ""
@@ -1159,7 +1058,17 @@
       ],
       "articleJsonLd": true,
       "jsonLdUrl": "https://www.logilee.com/ko/posts/commercial-invoice-common-mistakes/",
-      "internalContextualLinks": [],
+      "internalContextualLinks": [
+        "https://www.logilee.com/ko/documents.html",
+        "https://www.logilee.com/hscode.html",
+        "https://www.logilee.com/ko/compliance.html",
+        "https://www.logilee.com/ko/dictionary.html",
+        "https://www.logilee.com/ko/documents.html",
+        "https://www.logilee.com/hscode.html",
+        "https://www.logilee.com/ko/compliance.html",
+        "https://www.logilee.com/ko/dictionary.html",
+        "../../templates.html"
+      ],
       "externalSourceLinks": [],
       "listing": "included",
       "canonicalIntent": ""
@@ -1189,8 +1098,12 @@
       ],
       "articleJsonLd": true,
       "jsonLdUrl": "https://www.logilee.com/ko/posts/eu-2026-dual-use-control-list-update/",
-      "internalContextualLinks": [],
-      "externalSourceLinks": [],
+      "internalContextualLinks": [
+        "../../compliance.html"
+      ],
+      "externalSourceLinks": [
+        "https://policy.trade.ec.europa.eu/news/2026-update-eu-control-list-dual-use-items-2026-09-14_en"
+      ],
       "listing": "included",
       "canonicalIntent": ""
     },
@@ -1219,8 +1132,13 @@
       ],
       "articleJsonLd": true,
       "jsonLdUrl": "https://www.logilee.com/ko/posts/eu-customs-reform-small-parcel-fee-2026/",
-      "internalContextualLinks": [],
-      "externalSourceLinks": [],
+      "internalContextualLinks": [
+        "../../compliance.html"
+      ],
+      "externalSourceLinks": [
+        "https://www.consilium.europa.eu/en/press/press-releases/2026/09/03/eu-customs-council-greenlights-landmark-reform/",
+        "https://www.consilium.europa.eu/en/policies/modernising-the-eu-customs-union/"
+      ],
       "listing": "included",
       "canonicalIntent": ""
     },
@@ -1245,8 +1163,13 @@
       ],
       "articleJsonLd": true,
       "jsonLdUrl": "https://www.logilee.com/ko/posts/eu-korea-terephthalic-acid-antidumping-duty-2026/",
-      "internalContextualLinks": [],
-      "externalSourceLinks": [],
+      "internalContextualLinks": [
+        "../../templates.html"
+      ],
+      "externalSourceLinks": [
+        "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=OJ:L_202601904",
+        "https://policy.trade.ec.europa.eu/news/commission-acts-against-dumped-imports-terephthalic-acid-2026-08-10_en"
+      ],
       "listing": "included",
       "canonicalIntent": ""
     },
@@ -1275,7 +1198,9 @@
       ],
       "articleJsonLd": true,
       "jsonLdUrl": "https://www.logilee.com/ko/posts/fob-vs-cif/",
-      "internalContextualLinks": [],
+      "internalContextualLinks": [
+        "../../dictionary.html"
+      ],
       "externalSourceLinks": [],
       "listing": "included",
       "canonicalIntent": ""
@@ -1305,7 +1230,9 @@
       ],
       "articleJsonLd": true,
       "jsonLdUrl": "https://www.logilee.com/ko/posts/hormuz-red-sea-shipping-risk-august-2026/",
-      "internalContextualLinks": [],
+      "internalContextualLinks": [
+        "../../freight-market.html"
+      ],
       "externalSourceLinks": [],
       "listing": "included",
       "canonicalIntent": ""
@@ -1335,7 +1262,9 @@
       ],
       "articleJsonLd": true,
       "jsonLdUrl": "https://www.logilee.com/ko/posts/hs-code-search/",
-      "internalContextualLinks": [],
+      "internalContextualLinks": [
+        "../../../hscode.html"
+      ],
       "externalSourceLinks": [],
       "listing": "included",
       "canonicalIntent": ""
@@ -1361,8 +1290,15 @@
       ],
       "articleJsonLd": true,
       "jsonLdUrl": "https://www.logilee.com/ko/posts/hs-code-vs-hts-code-us-export/",
-      "internalContextualLinks": [],
-      "externalSourceLinks": [],
+      "internalContextualLinks": [
+        "../../../hscode.html"
+      ],
+      "externalSourceLinks": [
+        "https://www.usitc.gov/tariff_affairs/about_hts.htm",
+        "https://hts.usitc.gov/",
+        "https://rulings.cbp.gov/",
+        "https://www.cbp.gov/trade/remedies"
+      ],
       "listing": "included",
       "canonicalIntent": ""
     },
@@ -1387,7 +1323,9 @@
       ],
       "articleJsonLd": true,
       "jsonLdUrl": "https://www.logilee.com/ko/posts/hs-customs-value-freight-insurance-incoterms-guide/",
-      "internalContextualLinks": [],
+      "internalContextualLinks": [
+        "../../dictionary.html"
+      ],
       "externalSourceLinks": [],
       "listing": "included",
       "canonicalIntent": ""
@@ -1440,7 +1378,9 @@
       "articleJsonLd": true,
       "jsonLdUrl": "https://www.logilee.com/ko/posts/korea-exports-august-2026-semiconductor/",
       "internalContextualLinks": [],
-      "externalSourceLinks": [],
+      "externalSourceLinks": [
+        "https://www.customs.go.kr/kcs/na/ntt/selectNttInfo.do?bbsId=1362&amp;mi=2891&amp;nttSn=10173983"
+      ],
       "listing": "included",
       "canonicalIntent": ""
     },
@@ -1469,7 +1409,9 @@
       ],
       "articleJsonLd": true,
       "jsonLdUrl": "https://www.logilee.com/ko/posts/lcl-vs-fcl/",
-      "internalContextualLinks": [],
+      "internalContextualLinks": [
+        "../../cbm.html"
+      ],
       "externalSourceLinks": [],
       "listing": "included",
       "canonicalIntent": ""
@@ -1499,8 +1441,12 @@
       ],
       "articleJsonLd": true,
       "jsonLdUrl": "https://www.logilee.com/ko/posts/rhine-low-water-logistics-impact/",
-      "internalContextualLinks": [],
-      "externalSourceLinks": [],
+      "internalContextualLinks": [
+        "../../freight-market.html"
+      ],
+      "externalSourceLinks": [
+        "https://www.newsis.com/view/NISX20260813_0003747551"
+      ],
       "listing": "included",
       "canonicalIntent": ""
     },
@@ -1529,7 +1475,9 @@
       ],
       "articleJsonLd": true,
       "jsonLdUrl": "https://www.logilee.com/ko/posts/trade-terms/",
-      "internalContextualLinks": [],
+      "internalContextualLinks": [
+        "../../dictionary.html"
+      ],
       "externalSourceLinks": [],
       "listing": "included",
       "canonicalIntent": ""
@@ -1559,8 +1507,12 @@
       ],
       "articleJsonLd": true,
       "jsonLdUrl": "https://www.logilee.com/ko/posts/uk-import-controls-guidance-updated-september-2026/",
-      "internalContextualLinks": [],
-      "externalSourceLinks": [],
+      "internalContextualLinks": [
+        "../../compliance.html"
+      ],
+      "externalSourceLinks": [
+        "https://www.gov.uk/guidance/import-controls"
+      ],
       "listing": "included",
       "canonicalIntent": ""
     },
@@ -1589,8 +1541,13 @@
       ],
       "articleJsonLd": true,
       "jsonLdUrl": "https://www.logilee.com/ko/posts/us-cbp-foreign-export-documents-supply-chain-visibility-2026/",
-      "internalContextualLinks": [],
-      "externalSourceLinks": [],
+      "internalContextualLinks": [
+        "../us-illegal-transshipment-origin-2026/"
+      ],
+      "externalSourceLinks": [
+        "https://www.federalregister.gov/d/2026-17926",
+        "https://www.cbp.gov/trade"
+      ],
       "listing": "included",
       "canonicalIntent": ""
     },
@@ -1619,8 +1576,13 @@
       ],
       "articleJsonLd": true,
       "jsonLdUrl": "https://www.logilee.com/ko/posts/us-de-minimis-2026/",
-      "internalContextualLinks": [],
-      "externalSourceLinks": [],
+      "internalContextualLinks": [
+        "../../../hscode.html"
+      ],
+      "externalSourceLinks": [
+        "https://www.whitehouse.gov/presidential-actions/2025/07/suspending-duty-free-de-minimis-treatment-for-all-countries/",
+        "https://www.whitehouse.gov/presidential-actions/2026/02/continuing-the-suspension-of-duty-free-de-minimis-treatment-for-all-countries/"
+      ],
       "listing": "included",
       "canonicalIntent": ""
     },
@@ -1649,8 +1611,15 @@
       ],
       "articleJsonLd": true,
       "jsonLdUrl": "https://www.logilee.com/ko/posts/us-illegal-transshipment-origin-2026/",
-      "internalContextualLinks": [],
-      "externalSourceLinks": [],
+      "internalContextualLinks": [
+        "../../compliance.html"
+      ],
+      "externalSourceLinks": [
+        "https://www.whitehouse.gov/wp-content/uploads/2026/08/The-Great-Transshipment-Scam.pdf",
+        "https://www.whitehouse.gov/presidential-actions/2025/07/further-modifying-the-reciprocal-tariff-rates/",
+        "https://www.whitehouse.gov/presidential-actions/2026/06/strengthening-customs-enforcement/",
+        "https://rulings.cbp.gov/ruling/N359115"
+      ],
       "listing": "included",
       "canonicalIntent": ""
     },
@@ -1679,8 +1648,12 @@
       ],
       "articleJsonLd": true,
       "jsonLdUrl": "https://www.logilee.com/ko/posts/wto-imf-tariff-tracker-latest-data-hs6-effective-date-check/",
-      "internalContextualLinks": [],
-      "externalSourceLinks": [],
+      "internalContextualLinks": [
+        "../../../hscode.html"
+      ],
+      "externalSourceLinks": [
+        "https://ttd.wto.org/en/reports/tariff-actions"
+      ],
       "listing": "included",
       "canonicalIntent": ""
     }

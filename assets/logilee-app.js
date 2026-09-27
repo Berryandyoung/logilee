@@ -1679,7 +1679,7 @@ function cbmText(lang) {
     notesTitle: "계산 기준 및 출처", relatedTitle: "관련 LOGILEE 도구",
     sources: "20GP, 40GP, 40HC 기준값은 Hapag-Lloyd Container Specification의 dry container fleet 예시를 대표 nominal reference로 사용했습니다. 컨테이너 사양은 제조사, 선사, 장비 시리즈별로 달라질 수 있습니다.",
     notes: ["CBM = 길이 x 너비 x 높이 x 수량, 치수는 내부적으로 meters로 변환합니다.", "Density = 총중량 / 총 CBM이며 중량이 입력된 경우에만 계산합니다.", "Air volumetric weight는 cm 기준 L x W x H x 수량 / divisor로 계산합니다.", "Estimated chargeable weight는 총중량과 부피중량 중 큰 값을 참고값으로 표시합니다.", "LCL W/M reference는 CBM과 총중량/1,000 중 큰 RT 값을 보여주며 실제 운임은 계산하지 않습니다."],
-    related: [["항만 검색", "ports.html", "anchor"], ["공항 검색", "airports.html", "plane"], ["화물 추적", "track.html", "radar"]]
+    related: [["CBM 계산 가이드", "posts/cbm-calculation/", "book-open"], ["항만 검색", "ports.html", "anchor"], ["공항 검색", "airports.html", "plane"], ["화물 추적", "track.html", "radar"]]
   } : {
     cargo: "Cargo", qty: "Quantity", length: "Length", width: "Width", height: "Height", unitWeight: "Unit Weight (optional)",
     duplicate: "Duplicate", delete: "Delete", rowFallback: "Cargo",
@@ -1700,7 +1700,7 @@ function cbmText(lang) {
     notesTitle: "Calculation Notes / Sources", relatedTitle: "Related LOGILEE Tools",
     sources: "20GP, 40GP, and 40HC values use Hapag-Lloyd Container Specification dry-container fleet examples as representative nominal references. Container specifications can vary by manufacturer, carrier, and equipment series.",
     notes: ["CBM = length x width x height x quantity, with dimensions converted internally to meters.", "Density = total weight / total CBM and is calculated only when weight is entered.", "Air volumetric weight uses centimeter dimensions: L x W x H x quantity / divisor.", "Estimated chargeable weight shows the greater of actual weight and volumetric weight as a reference value.", "LCL W/M reference shows the greater of CBM and total weight / 1,000 in RT. It does not calculate freight charges."],
-    related: [["Port Search", "ports.html", "anchor"], ["Airport Search", "airports.html", "plane"], ["Shipment Tracking", "track.html", "radar"]]
+    related: [["CBM Calculation Guide", "posts/cbm-calculation/", "book-open"], ["Port Search", "ports.html", "anchor"], ["Airport Search", "airports.html", "plane"], ["Shipment Tracking", "track.html", "radar"]]
   };
 }
 

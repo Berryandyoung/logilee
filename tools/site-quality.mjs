@@ -17,11 +17,11 @@ const meta = (html, key) => {
 };
 const link = (html, rel) => (html.match(new RegExp(`<link\\b(?=[^>]*rel=["']${rel}["'])[^>]*>`, "i")) || [""])[0];
 const titleOf = (html) => compact((html.match(/<title[^>]*>([\s\S]*?)<\/title>/i) || [,"..."])[1]);
-const bodyText = (html) => {
+const articleBodyHtml = (html) => {
   const articleBody = html.match(/<article\b[^>]*class=["'][^"']*(?:post-content|article-body)[^"']*["'][^>]*>([\s\S]*?)<\/article>/i);
-  if (articleBody) return compact(articleBody[1]);
+  if (articleBody) return articleBody[1];
   const legacyLayout = html.match(/<article\b[^>]*class=["'][^"']*post-layout[^"']*["'][^>]*>([\s\S]*?)<\/article>/i);
-  return legacyLayout ? compact(legacyLayout[1]) : "";
+  return legacyLayout ? legacyLayout[1] : "";
 };
 const hash = (value) => crypto.createHash("sha256").update(value).digest("hex");
 const listFiles = (dir, suffix) => fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
@@ -50,8 +50,9 @@ const posts = postFiles.map((file) => {
   }
   const article = jsonLd.find((item) => item?.["@type"] === "Article") || {};
   const readingTime = meta(html, "logilee:reading-time") || compact((html.match(/class=["'][^"']*article-meta[^"']*["'][^>]*>[\s\S]*?<span[^>]*>[^<]*<\/span>\s*<span[^>]*>([^<]*)<\/span>/i) || [,"..."])[1]);
-  const body = bodyText(html);
-  const anchors = [...body.matchAll(/<a\b[^>]*href=["']([^"']+)["']/gi)].map((m) => m[1]);
+  const bodyHtml = articleBodyHtml(html);
+  const body = compact(bodyHtml);
+  const anchors = [...bodyHtml.matchAll(/<a\b[^>]*href=["']([^"']+)["']/gi)].map((m) => m[1]);
   const normalizedBody = body.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
   const listing = meta(html, "logilee:listing") || "included";
   const canonicalIntent = meta(html, "logilee:canonical-intent");

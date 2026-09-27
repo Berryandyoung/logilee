@@ -17,6 +17,9 @@ const forbidden = new Set([
 const failures = [...report.blockers, ...report.warnings].filter((item) => forbidden.has(item.code));
 if (failures.length) throw new Error(`Quality regression: ${JSON.stringify(failures, null, 2)}`);
 if (report.summary.blockers !== 0) throw new Error(`Expected zero blockers, found ${report.summary.blockers}.`);
+const contextualWarnings = new Set(report.warnings.filter((item) => item.code === "CONTEXTUAL_LINKING_WEAK").map((item) => item.file));
+if (contextualWarnings.has("en/posts/cbm-calculation/index.html")) throw new Error("Contextual-link detector missed a valid article-body link.");
+if (!contextualWarnings.has("ko/posts/kita-trade-promotion-fund-september-2026/index.html")) throw new Error("Contextual-link detector failed to flag an intentionally unlinked article body.");
 
 const fixtureRoot = fs.mkdtempSync(path.join(os.tmpdir(), "logilee-quality-"));
 try {
