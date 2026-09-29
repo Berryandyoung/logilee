@@ -1,0 +1,468 @@
+{
+  "schemaVersion": "LOGILEE_CONTENT_CATALOG_V1_UNRESOLVED_REVIEW",
+  "policy": "NULL_VALUES_ARE_UNKNOWN_AND_MUST_NOT_BE_INFERRED",
+  "entries": [
+    {
+      "contentId": "lc_en_0a223f1356959d2e475e983d",
+      "canonicalUrl": "https://www.logilee.com/en/posts/eu-cbam-2026-non-eu-manufacturer-guidance/",
+      "unresolved": [
+        "topicIdentity",
+        "regulationIdentity",
+        "eventIdentity",
+        "updateTargetContentId"
+      ],
+      "counterpartStatus": "UNRESOLVED"
+    },
+    {
+      "contentId": "lc_en_36a753c4d6a5c63dfbdd8632",
+      "canonicalUrl": "https://www.logilee.com/en/posts/hormuz-red-sea-shipping-risk-august-2026/",
+      "unresolved": [
+        "topicIdentity",
+        "regulationIdentity",
+        "eventIdentity",
+        "updateTargetContentId"
+      ],
+      "counterpartStatus": "EXPLICIT_RECIPROCAL_HTML_EVIDENCE"
+    },
+    {
+      "contentId": "lc_en_3a296baf79c7abb6e0cd3aef",
+      "canonicalUrl": "https://www.logilee.com/en/posts/eu-customs-data-model-7-0-11-what-customs-and-logistics-teams-need-to-update-eucdm/",
+      "unresolved": [
+        "topicIdentity",
+        "regulationIdentity",
+        "eventIdentity",
+        "updateTargetContentId"
+      ],
+      "counterpartStatus": "UNRESOLVED"
+    },
+    {
+      "contentId": "lc_en_3dd3b43b37b83f7d5e008390",
+      "canonicalUrl": "https://www.logilee.com/en/posts/us-illegal-transshipment-origin-2026/",
+      "unresolved": [
+        "topicIdentity",
+        "regulationIdentity",
+        "eventIdentity",
+        "updateTargetContentId"
+      ],
+      "counterpartStatus": "EXPLICIT_RECIPROCAL_HTML_EVIDENCE"
+    },
+    {
+      "contentId": "lc_en_3e6dd3a7443b98847a6b7451",
+      "canonicalUrl": "https://www.logilee.com/en/posts/fob-vs-cif/",
+      "unresolved": [
+        "topicIdentity",
+        "regulationIdentity",
+        "eventIdentity",
+        "updateTargetContentId"
+      ],
+      "counterpartStatus": "EXPLICIT_RECIPROCAL_HTML_EVIDENCE"
+    },
+    {
+      "contentId": "lc_en_429684cdfb3510f93f631bfd",
+      "canonicalUrl": "https://www.logilee.com/en/posts/us-de-minimis-2026/",
+      "unresolved": [
+        "topicIdentity",
+        "regulationIdentity",
+        "eventIdentity",
+        "updateTargetContentId"
+      ],
+      "counterpartStatus": "EXPLICIT_RECIPROCAL_HTML_EVIDENCE"
+    },
+    {
+      "contentId": "lc_en_4bbb6b4b94f753fb2ebfa222",
+      "canonicalUrl": "https://www.logilee.com/en/posts/canada-us-counter-tariffs-september-2026/",
+      "unresolved": [
+        "topicIdentity",
+        "regulationIdentity",
+        "eventIdentity",
+        "updateTargetContentId"
+      ],
+      "counterpartStatus": "UNRESOLVED"
+    },
+    {
+      "contentId": "lc_en_57666ea1d0c19d72f91aaf4b",
+      "canonicalUrl": "https://www.logilee.com/en/posts/lcl-vs-fcl/",
+      "unresolved": [
+        "topicIdentity",
+        "regulationIdentity",
+        "eventIdentity",
+        "updateTargetContentId"
+      ],
+      "counterpartStatus": "EXPLICIT_RECIPROCAL_HTML_EVIDENCE"
+    },
+    {
+      "contentId": "lc_en_58b003afb53b7463eac20415",
+      "canonicalUrl": "https://www.logilee.com/en/posts/us-changes-scope-additional-duties-canadian-motor-vehicle-products/",
+      "unresolved": [
+        "topicIdentity",
+        "regulationIdentity",
+        "eventIdentity",
+        "updateTargetContentId"
+      ],
+      "counterpartStatus": "EXPLICIT_RECIPROCAL_HTML_EVIDENCE"
+    },
+    {
+      "contentId": "lc_en_6a261fe410e8efc13c9ebda4",
+      "canonicalUrl": "https://www.logilee.com/en/posts/us-cbp-foreign-export-documents-supply-chain-visibility-2026/",
+      "unresolved": [
+        "topicIdentity",
+        "regulationIdentity",
+        "eventIdentity",
+        "updateTargetContentId"
+      ],
+      "counterpartStatus": "EXPLICIT_RECIPROCAL_HTML_EVIDENCE"
+    },
+    {
+      "contentId": "lc_en_7d1c569a6feb60e225d5f04c",
+      "canonicalUrl": "https://www.logilee.com/en/posts/commercial-invoice-common-mistakes/",
+      "unresolved": [
+        "topicIdentity",
+        "regulationIdentity",
+        "eventIdentity",
+        "updateTargetContentId"
+      ],
+      "counterpartStatus": "EXPLICIT_RECIPROCAL_HTML_EVIDENCE"
+    },
+    {
+      "contentId": "lc_en_885a36511cee77f51e07e909",
+      "canonicalUrl": "https://www.logilee.com/en/posts/china-typhoon-port-delay-shipment-impact/",
+      "unresolved": [
+        "topicIdentity",
+        "regulationIdentity",
+        "eventIdentity",
+        "updateTargetContentId"
+      ],
+      "counterpartStatus": "EXPLICIT_RECIPROCAL_HTML_EVIDENCE"
+    },
+    {
+      "contentId": "lc_en_a7997167e358e7b706e891cc",
+      "canonicalUrl": "https://www.logilee.com/en/posts/uk-canada-cptpp-tca-trade-guide-2026/",
+      "unresolved": [
+        "topicIdentity",
+        "regulationIdentity",
+        "eventIdentity",
+        "updateTargetContentId"
+      ],
+      "counterpartStatus": "UNRESOLVED"
+    },
+    {
+      "contentId": "lc_en_bbf6ca6a2d85723db11213d8",
+      "canonicalUrl": "https://www.logilee.com/en/posts/eu-2026-dual-use-control-list-update-en/",
+      "unresolved": [
+        "topicIdentity",
+        "regulationIdentity",
+        "eventIdentity",
+        "updateTargetContentId"
+      ],
+      "counterpartStatus": "EXPLICIT_RECIPROCAL_HTML_EVIDENCE"
+    },
+    {
+      "contentId": "lc_en_ca7869b4ba5e655de2b11eb2",
+      "canonicalUrl": "https://www.logilee.com/en/posts/china-port-congestion-typhoon-shipping-2026/",
+      "unresolved": [
+        "topicIdentity",
+        "regulationIdentity",
+        "eventIdentity",
+        "updateTargetContentId"
+      ],
+      "counterpartStatus": "UNRESOLVED"
+    },
+    {
+      "contentId": "lc_en_d024757ec0960e50d84d28ff",
+      "canonicalUrl": "https://www.logilee.com/en/posts/eu-customs-reform-small-parcel-fee-2026/",
+      "unresolved": [
+        "topicIdentity",
+        "regulationIdentity",
+        "eventIdentity",
+        "updateTargetContentId"
+      ],
+      "counterpartStatus": "EXPLICIT_RECIPROCAL_HTML_EVIDENCE"
+    },
+    {
+      "contentId": "lc_en_d0f0fe0a46b2da522dfbecc8",
+      "canonicalUrl": "https://www.logilee.com/en/posts/uk-import-controls-guidance-updated-september-2026-en/",
+      "unresolved": [
+        "topicIdentity",
+        "regulationIdentity",
+        "eventIdentity",
+        "updateTargetContentId"
+      ],
+      "counterpartStatus": "EXPLICIT_RECIPROCAL_HTML_EVIDENCE"
+    },
+    {
+      "contentId": "lc_en_d86d006f27e0df7b083bf56a",
+      "canonicalUrl": "https://www.logilee.com/en/posts/eu-deforestation-regulation-eudr-guide-2026/",
+      "unresolved": [
+        "topicIdentity",
+        "regulationIdentity",
+        "eventIdentity",
+        "updateTargetContentId"
+      ],
+      "counterpartStatus": "UNRESOLVED"
+    },
+    {
+      "contentId": "lc_en_d94cbb0b83905d3173852b41",
+      "canonicalUrl": "https://www.logilee.com/en/posts/wto-imf-tariff-tracker-latest-data-hs6-effective-date-check-en/",
+      "unresolved": [
+        "topicIdentity",
+        "regulationIdentity",
+        "eventIdentity",
+        "updateTargetContentId"
+      ],
+      "counterpartStatus": "EXPLICIT_RECIPROCAL_HTML_EVIDENCE"
+    },
+    {
+      "contentId": "lc_en_e0c1fa0c7225cf466009f41d",
+      "canonicalUrl": "https://www.logilee.com/en/posts/rhine-low-water-logistics-impact/",
+      "unresolved": [
+        "topicIdentity",
+        "regulationIdentity",
+        "eventIdentity",
+        "updateTargetContentId"
+      ],
+      "counterpartStatus": "EXPLICIT_RECIPROCAL_HTML_EVIDENCE"
+    },
+    {
+      "contentId": "lc_en_f830b442ca31b9fb1afc49f6",
+      "canonicalUrl": "https://www.logilee.com/en/posts/vietnam-decree-292-takes-effect-september-5-what-importers-and-exporters-need-to-review/",
+      "unresolved": [
+        "topicIdentity",
+        "regulationIdentity",
+        "eventIdentity",
+        "updateTargetContentId"
+      ],
+      "counterpartStatus": "UNRESOLVED"
+    },
+    {
+      "contentId": "lc_ko_1127454e20e5c09eaacb8bba",
+      "canonicalUrl": "https://www.logilee.com/ko/posts/rhine-low-water-logistics-impact/",
+      "unresolved": [
+        "topicIdentity",
+        "regulationIdentity",
+        "eventIdentity",
+        "updateTargetContentId"
+      ],
+      "counterpartStatus": "EXPLICIT_RECIPROCAL_HTML_EVIDENCE"
+    },
+    {
+      "contentId": "lc_ko_13062eaeb652489cec88c746",
+      "canonicalUrl": "https://www.logilee.com/ko/posts/eu-korea-terephthalic-acid-antidumping-duty-2026/",
+      "unresolved": [
+        "topicIdentity",
+        "regulationIdentity",
+        "eventIdentity",
+        "updateTargetContentId"
+      ],
+      "counterpartStatus": "UNRESOLVED"
+    },
+    {
+      "contentId": "lc_ko_15cfef2c60caa2b3da29d7b9",
+      "canonicalUrl": "https://www.logilee.com/ko/posts/lcl-vs-fcl/",
+      "unresolved": [
+        "topicIdentity",
+        "regulationIdentity",
+        "eventIdentity",
+        "updateTargetContentId"
+      ],
+      "counterpartStatus": "EXPLICIT_RECIPROCAL_HTML_EVIDENCE"
+    },
+    {
+      "contentId": "lc_ko_236a181de279d799f27d2ec6",
+      "canonicalUrl": "https://www.logilee.com/ko/posts/commercial-invoice-common-mistakes/",
+      "unresolved": [
+        "topicIdentity",
+        "regulationIdentity",
+        "eventIdentity",
+        "updateTargetContentId"
+      ],
+      "counterpartStatus": "EXPLICIT_RECIPROCAL_HTML_EVIDENCE"
+    },
+    {
+      "contentId": "lc_ko_247dd0ff9be167e3e722f89b",
+      "canonicalUrl": "https://www.logilee.com/ko/posts/wto-imf-tariff-tracker-latest-data-hs6-effective-date-check/",
+      "unresolved": [
+        "topicIdentity",
+        "regulationIdentity",
+        "eventIdentity",
+        "updateTargetContentId"
+      ],
+      "counterpartStatus": "EXPLICIT_RECIPROCAL_HTML_EVIDENCE"
+    },
+    {
+      "contentId": "lc_ko_2a64a1fb5dbeb520b60c7688",
+      "canonicalUrl": "https://www.logilee.com/ko/posts/us-illegal-transshipment-origin-2026/",
+      "unresolved": [
+        "topicIdentity",
+        "regulationIdentity",
+        "eventIdentity",
+        "updateTargetContentId"
+      ],
+      "counterpartStatus": "EXPLICIT_RECIPROCAL_HTML_EVIDENCE"
+    },
+    {
+      "contentId": "lc_ko_4454b2181caa058702e1f45f",
+      "canonicalUrl": "https://www.logilee.com/ko/posts/korea-exports-august-2026-semiconductor/",
+      "unresolved": [
+        "topicIdentity",
+        "regulationIdentity",
+        "eventIdentity",
+        "updateTargetContentId"
+      ],
+      "counterpartStatus": "UNRESOLVED"
+    },
+    {
+      "contentId": "lc_ko_44b03b4d3809e678e5f07884",
+      "canonicalUrl": "https://www.logilee.com/ko/posts/hs-customs-value-freight-insurance-incoterms-guide/",
+      "unresolved": [
+        "topicIdentity",
+        "regulationIdentity",
+        "eventIdentity",
+        "updateTargetContentId"
+      ],
+      "counterpartStatus": "UNRESOLVED"
+    },
+    {
+      "contentId": "lc_ko_4b5c7652741744e7861d12fd",
+      "canonicalUrl": "https://www.logilee.com/ko/posts/china-kfood-overseas-food-manufacturer-registration2026/",
+      "unresolved": [
+        "topicIdentity",
+        "regulationIdentity",
+        "eventIdentity",
+        "updateTargetContentId"
+      ],
+      "counterpartStatus": "UNRESOLVED"
+    },
+    {
+      "contentId": "lc_ko_59266e2d07a346c9774e40da",
+      "canonicalUrl": "https://www.logilee.com/ko/posts/fob-vs-cif/",
+      "unresolved": [
+        "topicIdentity",
+        "regulationIdentity",
+        "eventIdentity",
+        "updateTargetContentId"
+      ],
+      "counterpartStatus": "EXPLICIT_RECIPROCAL_HTML_EVIDENCE"
+    },
+    {
+      "contentId": "lc_ko_6a5f693edc83920f82c870b4",
+      "canonicalUrl": "https://www.logilee.com/ko/posts/uk-import-controls-guidance-updated-september-2026/",
+      "unresolved": [
+        "topicIdentity",
+        "regulationIdentity",
+        "eventIdentity",
+        "updateTargetContentId"
+      ],
+      "counterpartStatus": "EXPLICIT_RECIPROCAL_HTML_EVIDENCE"
+    },
+    {
+      "contentId": "lc_ko_857d50d269cc33dfe92f68b3",
+      "canonicalUrl": "https://www.logilee.com/ko/posts/aqaba-iraq-hormuz-alternative-route-2026/",
+      "unresolved": [
+        "topicIdentity",
+        "regulationIdentity",
+        "eventIdentity",
+        "updateTargetContentId"
+      ],
+      "counterpartStatus": "UNRESOLVED"
+    },
+    {
+      "contentId": "lc_ko_8b25ecd92e5cedebd81831f4",
+      "canonicalUrl": "https://www.logilee.com/ko/posts/us-de-minimis-2026/",
+      "unresolved": [
+        "topicIdentity",
+        "regulationIdentity",
+        "eventIdentity",
+        "updateTargetContentId"
+      ],
+      "counterpartStatus": "EXPLICIT_RECIPROCAL_HTML_EVIDENCE"
+    },
+    {
+      "contentId": "lc_ko_947c84fd5bfdc5a8b12b6f68",
+      "canonicalUrl": "https://www.logilee.com/ko/posts/china-typhoon-port-delay-shipment-impact/",
+      "unresolved": [
+        "topicIdentity",
+        "regulationIdentity",
+        "eventIdentity",
+        "updateTargetContentId"
+      ],
+      "counterpartStatus": "EXPLICIT_RECIPROCAL_HTML_EVIDENCE"
+    },
+    {
+      "contentId": "lc_ko_991a55e9f44835a316fdd333",
+      "canonicalUrl": "https://www.logilee.com/ko/posts/hs-code-vs-hts-code-us-export/",
+      "unresolved": [
+        "topicIdentity",
+        "regulationIdentity",
+        "eventIdentity",
+        "updateTargetContentId"
+      ],
+      "counterpartStatus": "UNRESOLVED"
+    },
+    {
+      "contentId": "lc_ko_9dc35fbf2840029cbcd86067",
+      "canonicalUrl": "https://www.logilee.com/ko/posts/eu-2026-dual-use-control-list-update/",
+      "unresolved": [
+        "topicIdentity",
+        "regulationIdentity",
+        "eventIdentity",
+        "updateTargetContentId"
+      ],
+      "counterpartStatus": "EXPLICIT_RECIPROCAL_HTML_EVIDENCE"
+    },
+    {
+      "contentId": "lc_ko_c7c843ee63c82c82ace15e31",
+      "canonicalUrl": "https://www.logilee.com/ko/posts/canada-motor-vehicle-products-additional-duties-scope-change/",
+      "unresolved": [
+        "topicIdentity",
+        "regulationIdentity",
+        "eventIdentity",
+        "updateTargetContentId"
+      ],
+      "counterpartStatus": "EXPLICIT_RECIPROCAL_HTML_EVIDENCE"
+    },
+    {
+      "contentId": "lc_ko_c8b77c65dd3d1c5ac7c9874c",
+      "canonicalUrl": "https://www.logilee.com/ko/posts/eu-customs-reform-small-parcel-fee-2026/",
+      "unresolved": [
+        "topicIdentity",
+        "regulationIdentity",
+        "eventIdentity",
+        "updateTargetContentId"
+      ],
+      "counterpartStatus": "EXPLICIT_RECIPROCAL_HTML_EVIDENCE"
+    },
+    {
+      "contentId": "lc_ko_cb8d3691411f05c4d410ed41",
+      "canonicalUrl": "https://www.logilee.com/ko/posts/us-cbp-foreign-export-documents-supply-chain-visibility-2026/",
+      "unresolved": [
+        "topicIdentity",
+        "regulationIdentity",
+        "eventIdentity",
+        "updateTargetContentId"
+      ],
+      "counterpartStatus": "EXPLICIT_RECIPROCAL_HTML_EVIDENCE"
+    },
+    {
+      "contentId": "lc_ko_fb54eec64b5872f65ff655e9",
+      "canonicalUrl": "https://www.logilee.com/ko/posts/hormuz-red-sea-shipping-risk-august-2026/",
+      "unresolved": [
+        "topicIdentity",
+        "regulationIdentity",
+        "eventIdentity",
+        "updateTargetContentId"
+      ],
+      "counterpartStatus": "EXPLICIT_RECIPROCAL_HTML_EVIDENCE"
+    },
+    {
+      "contentId": "lc_ko_fdb34ab7c12979737098a0b9",
+      "canonicalUrl": "https://www.logilee.com/ko/posts/kita-trade-promotion-fund-september-2026/",
+      "unresolved": [
+        "topicIdentity",
+        "regulationIdentity",
+        "eventIdentity",
+        "updateTargetContentId"
+      ],
+      "counterpartStatus": "UNRESOLVED"
+    }
+  ]
+}

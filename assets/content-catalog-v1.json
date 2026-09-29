@@ -1,0 +1,1232 @@
+{
+  "schemaVersion": "LOGILEE_CONTENT_CATALOG_V1",
+  "authority": {
+    "repository": "Berryandyoung/logilee",
+    "branch": "main",
+    "manifest": "assets/posts-data.js"
+  },
+  "semantics": {
+    "null": "UNKNOWN_NOT_ASSERTED",
+    "unresolved": "MUST_BLOCK_RELATIONSHIP_DEPENDENT_DECISION"
+  },
+  "entries": [
+    {
+      "contentId": "lc_en_0a223f1356959d2e475e983d",
+      "slug": "eu-cbam-2026-non-eu-manufacturer-guidance",
+      "path": "en/posts/eu-cbam-2026-non-eu-manufacturer-guidance/",
+      "canonicalUrl": "https://www.logilee.com/en/posts/eu-cbam-2026-non-eu-manufacturer-guidance/",
+      "language": "en",
+      "status": "PUBLISHED",
+      "title": "EU CBAM 2026: New Guidance for Non-EU Manufacturers and What Exporters Should Do Now",
+      "description": "The EU has issued ten new CBAM guides for non-EU producers. Learn what exporters should prepare on embedded emissions, default values, verification and customer data.",
+      "category": "trade",
+      "publishedAt": "2026-08-31T02:31:07.574Z",
+      "contentKind": "ARTICLE",
+      "topicIdentity": null,
+      "regulationIdentity": null,
+      "eventIdentity": null,
+      "counterpartContentId": null,
+      "updateTargetContentId": null,
+      "lineage": {
+        "relationship": "ORIGIN",
+        "parentContentId": null,
+        "rootContentId": "lc_en_0a223f1356959d2e475e983d"
+      },
+      "evidence": {
+        "manifestKey": "en:en/posts/eu-cbam-2026-non-eu-manufacturer-guidance/",
+        "htmlPath": "en/posts/eu-cbam-2026-non-eu-manufacturer-guidance/index.html",
+        "canonicalLink": true,
+        "reciprocalAlternate": false
+      }
+    },
+    {
+      "contentId": "lc_en_36a753c4d6a5c63dfbdd8632",
+      "slug": "hormuz-red-sea-shipping-risk-august-2026",
+      "path": "en/posts/hormuz-red-sea-shipping-risk-august-2026/",
+      "canonicalUrl": "https://www.logilee.com/en/posts/hormuz-red-sea-shipping-risk-august-2026/",
+      "language": "en",
+      "status": "PUBLISHED",
+      "title": "Hormuz and Red Sea Risks: Impact on Global Logistics in August 2026",
+      "description": "We analyze the impact of the Strait of Hormuz and Red Sea risks on maritime transport as of August 2026, covering Suez/Cape routes, transit times, freight rates, and checklists.",
+      "category": "guides",
+      "publishedAt": "2026-08-19T12:02:58.464Z",
+      "contentKind": "ARTICLE",
+      "topicIdentity": null,
+      "regulationIdentity": null,
+      "eventIdentity": null,
+      "counterpartContentId": "lc_ko_fb54eec64b5872f65ff655e9",
+      "updateTargetContentId": null,
+      "lineage": {
+        "relationship": "ORIGIN",
+        "parentContentId": null,
+        "rootContentId": "lc_en_36a753c4d6a5c63dfbdd8632"
+      },
+      "evidence": {
+        "manifestKey": "en:en/posts/hormuz-red-sea-shipping-risk-august-2026/",
+        "htmlPath": "en/posts/hormuz-red-sea-shipping-risk-august-2026/index.html",
+        "canonicalLink": true,
+        "reciprocalAlternate": true
+      }
+    },
+    {
+      "contentId": "lc_en_3a296baf79c7abb6e0cd3aef",
+      "slug": "eu-customs-data-model-7-0-11-what-customs-and-logistics-teams-need-to-update-eucdm",
+      "path": "en/posts/eu-customs-data-model-7-0-11-what-customs-and-logistics-teams-need-to-update-eucdm/",
+      "canonicalUrl": "https://www.logilee.com/en/posts/eu-customs-data-model-7-0-11-what-customs-and-logistics-teams-need-to-update-eucdm/",
+      "language": "en",
+      "status": "PUBLISHED",
+      "title": "EU Customs Data Model 7.0.11: What Customs and Logistics Teams Need to Update",
+      "description": "EUCDM 7.0.11 updates EU customs data requirements for low-value e-commerce imports and corrects legal mappings. Learn what customs and logistics teams should review.",
+      "category": "customs",
+      "publishedAt": "2026-08-31T02:33:45.028Z",
+      "contentKind": "ARTICLE",
+      "topicIdentity": null,
+      "regulationIdentity": null,
+      "eventIdentity": null,
+      "counterpartContentId": null,
+      "updateTargetContentId": null,
+      "lineage": {
+        "relationship": "ORIGIN",
+        "parentContentId": null,
+        "rootContentId": "lc_en_3a296baf79c7abb6e0cd3aef"
+      },
+      "evidence": {
+        "manifestKey": "en:en/posts/eu-customs-data-model-7-0-11-what-customs-and-logistics-teams-need-to-update-eucdm/",
+        "htmlPath": "en/posts/eu-customs-data-model-7-0-11-what-customs-and-logistics-teams-need-to-update-eucdm/index.html",
+        "canonicalLink": true,
+        "reciprocalAlternate": false
+      }
+    },
+    {
+      "contentId": "lc_en_3dd3b43b37b83f7d5e008390",
+      "slug": "us-illegal-transshipment-origin-2026",
+      "path": "en/posts/us-illegal-transshipment-origin-2026/",
+      "canonicalUrl": "https://www.logilee.com/en/posts/us-illegal-transshipment-origin-2026/",
+      "language": "en",
+      "status": "PUBLISHED",
+      "title": "Strengthening U.S. Enforcement Against 'Illegal Transshipment': Origin Management Checkpoints for Korean Exporters",
+      "description": "We summarize the U.S. crackdown on illegal transshipment, covering origin determination, substantial transformation, required documentation, and the 40% additional tariff risk for Korean exporters.",
+      "category": "guides",
+      "publishedAt": "2026-08-20T09:16:48.974Z",
+      "contentKind": "ARTICLE",
+      "topicIdentity": null,
+      "regulationIdentity": null,
+      "eventIdentity": null,
+      "counterpartContentId": "lc_ko_2a64a1fb5dbeb520b60c7688",
+      "updateTargetContentId": null,
+      "lineage": {
+        "relationship": "ORIGIN",
+        "parentContentId": null,
+        "rootContentId": "lc_en_3dd3b43b37b83f7d5e008390"
+      },
+      "evidence": {
+        "manifestKey": "en:en/posts/us-illegal-transshipment-origin-2026/",
+        "htmlPath": "en/posts/us-illegal-transshipment-origin-2026/index.html",
+        "canonicalLink": true,
+        "reciprocalAlternate": true
+      }
+    },
+    {
+      "contentId": "lc_en_3e6dd3a7443b98847a6b7451",
+      "slug": "fob-vs-cif",
+      "path": "en/posts/fob-vs-cif/",
+      "canonicalUrl": "https://www.logilee.com/en/posts/fob-vs-cif/",
+      "language": "en",
+      "status": "PUBLISHED",
+      "title": "FOB vs CIF: Which Term Works Better for Importers?",
+      "description": "Compare FOB and CIF by cost scope, risk transfer, insurance, and landed cost.",
+      "category": "Guides",
+      "publishedAt": "2026-08-14T03:07:15.000Z",
+      "contentKind": "ARTICLE",
+      "topicIdentity": null,
+      "regulationIdentity": null,
+      "eventIdentity": null,
+      "counterpartContentId": "lc_ko_59266e2d07a346c9774e40da",
+      "updateTargetContentId": null,
+      "lineage": {
+        "relationship": "ORIGIN",
+        "parentContentId": null,
+        "rootContentId": "lc_en_3e6dd3a7443b98847a6b7451"
+      },
+      "evidence": {
+        "manifestKey": "en:en/posts/fob-vs-cif/",
+        "htmlPath": "en/posts/fob-vs-cif/index.html",
+        "canonicalLink": true,
+        "reciprocalAlternate": true
+      }
+    },
+    {
+      "contentId": "lc_en_429684cdfb3510f93f631bfd",
+      "slug": "us-de-minimis-2026",
+      "path": "en/posts/us-de-minimis-2026/",
+      "canonicalUrl": "https://www.logilee.com/en/posts/us-de-minimis-2026/",
+      "language": "en",
+      "status": "PUBLISHED",
+      "title": "End of $800 De Minimis Exemption: What Korean Exporters Need to Know About U.S. Customs Changes",
+      "description": "The suspension of the $800 De Minimis exemption has changed small-value export customs. We cover tariffs, HS Codes, origin, D2C shipping, and customs practices for Korean exporters.",
+      "category": "customs",
+      "publishedAt": "2026-08-20T05:37:47.822Z",
+      "contentKind": "ARTICLE",
+      "topicIdentity": null,
+      "regulationIdentity": null,
+      "eventIdentity": null,
+      "counterpartContentId": "lc_ko_8b25ecd92e5cedebd81831f4",
+      "updateTargetContentId": null,
+      "lineage": {
+        "relationship": "ORIGIN",
+        "parentContentId": null,
+        "rootContentId": "lc_en_429684cdfb3510f93f631bfd"
+      },
+      "evidence": {
+        "manifestKey": "en:en/posts/us-de-minimis-2026/",
+        "htmlPath": "en/posts/us-de-minimis-2026/index.html",
+        "canonicalLink": true,
+        "reciprocalAlternate": true
+      }
+    },
+    {
+      "contentId": "lc_en_4bbb6b4b94f753fb2ebfa222",
+      "slug": "canada-us-counter-tariffs-september-2026",
+      "path": "en/posts/canada-us-counter-tariffs-september-2026/",
+      "canonicalUrl": "https://www.logilee.com/en/posts/canada-us-counter-tariffs-september-2026/",
+      "language": "en",
+      "status": "PUBLISHED",
+      "title": "Canada’s New Counter-Tariffs Start September 8: What Importers Should Check Now",
+      "description": "Canada Counter-Tariffs September 8: Importer Guide",
+      "category": "customs",
+      "publishedAt": "2026-09-02T03:41:23.998Z",
+      "contentKind": "ARTICLE",
+      "topicIdentity": null,
+      "regulationIdentity": null,
+      "eventIdentity": null,
+      "counterpartContentId": null,
+      "updateTargetContentId": null,
+      "lineage": {
+        "relationship": "ORIGIN",
+        "parentContentId": null,
+        "rootContentId": "lc_en_4bbb6b4b94f753fb2ebfa222"
+      },
+      "evidence": {
+        "manifestKey": "en:en/posts/canada-us-counter-tariffs-september-2026/",
+        "htmlPath": "en/posts/canada-us-counter-tariffs-september-2026/index.html",
+        "canonicalLink": true,
+        "reciprocalAlternate": false
+      }
+    },
+    {
+      "contentId": "lc_en_57666ea1d0c19d72f91aaf4b",
+      "slug": "lcl-vs-fcl",
+      "path": "en/posts/lcl-vs-fcl/",
+      "canonicalUrl": "https://www.logilee.com/en/posts/lcl-vs-fcl/",
+      "language": "en",
+      "status": "PUBLISHED",
+      "title": "LCL vs FCL: When Does a Full Container Start to Make Sense?",
+      "description": "A practical comparison of LCL and FCL by CBM, ocean freight, destination charges, cargo characteristics, lead time, and total logistics cost.",
+      "category": "guides",
+      "publishedAt": "2026-08-14T07:28:22.554Z",
+      "contentKind": "ARTICLE",
+      "topicIdentity": null,
+      "regulationIdentity": null,
+      "eventIdentity": null,
+      "counterpartContentId": "lc_ko_15cfef2c60caa2b3da29d7b9",
+      "updateTargetContentId": null,
+      "lineage": {
+        "relationship": "ORIGIN",
+        "parentContentId": null,
+        "rootContentId": "lc_en_57666ea1d0c19d72f91aaf4b"
+      },
+      "evidence": {
+        "manifestKey": "en:en/posts/lcl-vs-fcl/",
+        "htmlPath": "en/posts/lcl-vs-fcl/index.html",
+        "canonicalLink": true,
+        "reciprocalAlternate": true
+      }
+    },
+    {
+      "contentId": "lc_en_58b003afb53b7463eac20415",
+      "slug": "us-changes-scope-additional-duties-canadian-motor-vehicle-products",
+      "path": "en/posts/us-changes-scope-additional-duties-canadian-motor-vehicle-products/",
+      "canonicalUrl": "https://www.logilee.com/en/posts/us-changes-scope-additional-duties-canadian-motor-vehicle-products/",
+      "language": "en",
+      "status": "PUBLISHED",
+      "title": "U.S. Changes Scope of Additional Duties on Canadian Motor-Vehicle-Related Products",
+      "description": "The United States modified the scope of additional duties related to motor vehicles for products of Canada.",
+      "category": "customs",
+      "publishedAt": "2026-09-18T05:52:21.205Z",
+      "contentKind": "ARTICLE",
+      "topicIdentity": null,
+      "regulationIdentity": null,
+      "eventIdentity": null,
+      "counterpartContentId": "lc_ko_c7c843ee63c82c82ace15e31",
+      "updateTargetContentId": null,
+      "lineage": {
+        "relationship": "ORIGIN",
+        "parentContentId": null,
+        "rootContentId": "lc_en_58b003afb53b7463eac20415"
+      },
+      "evidence": {
+        "manifestKey": "en:en/posts/us-changes-scope-additional-duties-canadian-motor-vehicle-products/",
+        "htmlPath": "en/posts/us-changes-scope-additional-duties-canadian-motor-vehicle-products/index.html",
+        "canonicalLink": true,
+        "reciprocalAlternate": true
+      }
+    },
+    {
+      "contentId": "lc_en_6a261fe410e8efc13c9ebda4",
+      "slug": "us-cbp-foreign-export-documents-supply-chain-visibility-2026",
+      "path": "en/posts/us-cbp-foreign-export-documents-supply-chain-visibility-2026/",
+      "canonicalUrl": "https://www.logilee.com/en/posts/us-cbp-foreign-export-documents-supply-chain-visibility-2026/",
+      "language": "en",
+      "status": "PUBLISHED",
+      "title": "US Customs Clearance: Beyond Import Documents? CBP Considers Reviewing 'Korean Export Declarations'",
+      "description": "The U.S. CBP is considering expanding import data requirements to include foreign export declarations, invoices, origin data, and manufacturer information. We summarize the core of this new proposal, currently in the ANPRM stage, and key data points for Korean exporters to review.",
+      "category": "customs",
+      "publishedAt": "2026-09-04T06:27:25.864Z",
+      "contentKind": "ARTICLE",
+      "topicIdentity": null,
+      "regulationIdentity": null,
+      "eventIdentity": null,
+      "counterpartContentId": "lc_ko_cb8d3691411f05c4d410ed41",
+      "updateTargetContentId": null,
+      "lineage": {
+        "relationship": "ORIGIN",
+        "parentContentId": null,
+        "rootContentId": "lc_en_6a261fe410e8efc13c9ebda4"
+      },
+      "evidence": {
+        "manifestKey": "en:en/posts/us-cbp-foreign-export-documents-supply-chain-visibility-2026/",
+        "htmlPath": "en/posts/us-cbp-foreign-export-documents-supply-chain-visibility-2026/index.html",
+        "canonicalLink": true,
+        "reciprocalAlternate": true
+      }
+    },
+    {
+      "contentId": "lc_en_7d1c569a6feb60e225d5f04c",
+      "slug": "commercial-invoice-common-mistakes",
+      "path": "en/posts/commercial-invoice-common-mistakes/",
+      "canonicalUrl": "https://www.logilee.com/en/posts/commercial-invoice-common-mistakes/",
+      "language": "en",
+      "status": "PUBLISHED",
+      "title": "Commercial Invoice Common Mistakes",
+      "description": "Check Commercial Invoice consistency with Packing List, B/L, AWB, HS Code, and Incoterms.",
+      "category": "Documents",
+      "publishedAt": "2026-08-14T03:15:17.000Z",
+      "contentKind": "ARTICLE",
+      "topicIdentity": null,
+      "regulationIdentity": null,
+      "eventIdentity": null,
+      "counterpartContentId": "lc_ko_236a181de279d799f27d2ec6",
+      "updateTargetContentId": null,
+      "lineage": {
+        "relationship": "ORIGIN",
+        "parentContentId": null,
+        "rootContentId": "lc_en_7d1c569a6feb60e225d5f04c"
+      },
+      "evidence": {
+        "manifestKey": "en:en/posts/commercial-invoice-common-mistakes/",
+        "htmlPath": "en/posts/commercial-invoice-common-mistakes/index.html",
+        "canonicalLink": true,
+        "reciprocalAlternate": true
+      }
+    },
+    {
+      "contentId": "lc_en_885a36511cee77f51e07e909",
+      "slug": "china-typhoon-port-delay-shipment-impact",
+      "path": "en/posts/china-typhoon-port-delay-shipment-impact/",
+      "canonicalUrl": "https://www.logilee.com/en/posts/china-typhoon-port-delay-shipment-impact/",
+      "language": "en",
+      "status": "PUBLISHED",
+      "title": "What Happens to My Cargo When a Chinese Port Stops for a Typhoon?",
+      "description": "A practical guide to how typhoon-related port closures in China can lead to vessel waiting, port omission, rollover, schedule changes, and ETA impact.",
+      "category": "market",
+      "publishedAt": "2026-08-14T07:51:20.040Z",
+      "contentKind": "ARTICLE",
+      "topicIdentity": null,
+      "regulationIdentity": null,
+      "eventIdentity": null,
+      "counterpartContentId": "lc_ko_947c84fd5bfdc5a8b12b6f68",
+      "updateTargetContentId": null,
+      "lineage": {
+        "relationship": "ORIGIN",
+        "parentContentId": null,
+        "rootContentId": "lc_en_885a36511cee77f51e07e909"
+      },
+      "evidence": {
+        "manifestKey": "en:en/posts/china-typhoon-port-delay-shipment-impact/",
+        "htmlPath": "en/posts/china-typhoon-port-delay-shipment-impact/index.html",
+        "canonicalLink": true,
+        "reciprocalAlternate": true
+      }
+    },
+    {
+      "contentId": "lc_en_a7997167e358e7b706e891cc",
+      "slug": "uk-canada-cptpp-tca-trade-guide-2026",
+      "path": "en/posts/uk-canada-cptpp-tca-trade-guide-2026/",
+      "canonicalUrl": "https://www.logilee.com/en/posts/uk-canada-cptpp-tca-trade-guide-2026/",
+      "language": "en",
+      "status": "PUBLISHED",
+      "title": "UK–Canada CPTPP Starts Today: How Traders Should Choose Between CPTPP and the TCA",
+      "description": "CPTPP now applies between the UK and Canada alongside the existing TCA. Learn how to compare tariff preferences, rules of origin and cumulation before choosing an agreement.",
+      "category": "trade",
+      "publishedAt": "2026-09-01T01:53:46.441Z",
+      "contentKind": "ARTICLE",
+      "topicIdentity": null,
+      "regulationIdentity": null,
+      "eventIdentity": null,
+      "counterpartContentId": null,
+      "updateTargetContentId": null,
+      "lineage": {
+        "relationship": "ORIGIN",
+        "parentContentId": null,
+        "rootContentId": "lc_en_a7997167e358e7b706e891cc"
+      },
+      "evidence": {
+        "manifestKey": "en:en/posts/uk-canada-cptpp-tca-trade-guide-2026/",
+        "htmlPath": "en/posts/uk-canada-cptpp-tca-trade-guide-2026/index.html",
+        "canonicalLink": true,
+        "reciprocalAlternate": false
+      }
+    },
+    {
+      "contentId": "lc_en_bbf6ca6a2d85723db11213d8",
+      "slug": "eu-2026-dual-use-control-list-update-en",
+      "path": "en/posts/eu-2026-dual-use-control-list-update-en/",
+      "canonicalUrl": "https://www.logilee.com/en/posts/eu-2026-dual-use-control-list-update-en/",
+      "language": "en",
+      "status": "PUBLISHED",
+      "title": "EU Plans 2026 Revision of Dual-Use Control List",
+      "description": "The European Union plans to revise the dual-use item control list in Annex I to Regulation 2021/821.",
+      "category": "trade",
+      "publishedAt": "2026-09-16T02:06:18.616Z",
+      "contentKind": "ARTICLE",
+      "topicIdentity": null,
+      "regulationIdentity": null,
+      "eventIdentity": null,
+      "counterpartContentId": "lc_ko_9dc35fbf2840029cbcd86067",
+      "updateTargetContentId": null,
+      "lineage": {
+        "relationship": "ORIGIN",
+        "parentContentId": null,
+        "rootContentId": "lc_en_bbf6ca6a2d85723db11213d8"
+      },
+      "evidence": {
+        "manifestKey": "en:en/posts/eu-2026-dual-use-control-list-update-en/",
+        "htmlPath": "en/posts/eu-2026-dual-use-control-list-update-en/index.html",
+        "canonicalLink": true,
+        "reciprocalAlternate": true
+      }
+    },
+    {
+      "contentId": "lc_en_ca7869b4ba5e655de2b11eb2",
+      "slug": "china-port-congestion-typhoon-shipping-2026",
+      "path": "en/posts/china-port-congestion-typhoon-shipping-2026/",
+      "canonicalUrl": "https://www.logilee.com/en/posts/china-port-congestion-typhoon-shipping-2026/",
+      "language": "en",
+      "status": "PUBLISHED",
+      "title": "China Port Congestion After Typhoon Disruptions: What Shippers Should Watch",
+      "description": "Shanghai and Ningbo face vessel backlogs and schedule disruption after severe weather. Learn how shippers can manage rollover, blank sailing and transit risks.",
+      "category": "logistics",
+      "publishedAt": "2026-08-21T01:29:58.657Z",
+      "contentKind": "ARTICLE",
+      "topicIdentity": null,
+      "regulationIdentity": null,
+      "eventIdentity": null,
+      "counterpartContentId": null,
+      "updateTargetContentId": null,
+      "lineage": {
+        "relationship": "ORIGIN",
+        "parentContentId": null,
+        "rootContentId": "lc_en_ca7869b4ba5e655de2b11eb2"
+      },
+      "evidence": {
+        "manifestKey": "en:en/posts/china-port-congestion-typhoon-shipping-2026/",
+        "htmlPath": "en/posts/china-port-congestion-typhoon-shipping-2026/index.html",
+        "canonicalLink": true,
+        "reciprocalAlternate": false
+      }
+    },
+    {
+      "contentId": "lc_en_d024757ec0960e50d84d28ff",
+      "slug": "eu-customs-reform-small-parcel-fee-2026",
+      "path": "en/posts/eu-customs-reform-small-parcel-fee-2026/",
+      "canonicalUrl": "https://www.logilee.com/en/posts/eu-customs-reform-small-parcel-fee-2026/",
+      "language": "en",
+      "status": "PUBLISHED",
+      "title": "EU Customs Reform 2026: Small-Parcel Fee, Platform Liability and the New Data Hub",
+      "description": "EU Customs Reform 2026: Small-Parcel Fee and Platform Rules",
+      "category": "customs",
+      "publishedAt": "2026-09-10T09:55:10.355Z",
+      "contentKind": "ARTICLE",
+      "topicIdentity": null,
+      "regulationIdentity": null,
+      "eventIdentity": null,
+      "counterpartContentId": "lc_ko_c8b77c65dd3d1c5ac7c9874c",
+      "updateTargetContentId": null,
+      "lineage": {
+        "relationship": "ORIGIN",
+        "parentContentId": null,
+        "rootContentId": "lc_en_d024757ec0960e50d84d28ff"
+      },
+      "evidence": {
+        "manifestKey": "en:en/posts/eu-customs-reform-small-parcel-fee-2026/",
+        "htmlPath": "en/posts/eu-customs-reform-small-parcel-fee-2026/index.html",
+        "canonicalLink": true,
+        "reciprocalAlternate": true
+      }
+    },
+    {
+      "contentId": "lc_en_d0f0fe0a46b2da522dfbecc8",
+      "slug": "uk-import-controls-guidance-updated-september-2026-en",
+      "path": "en/posts/uk-import-controls-guidance-updated-september-2026-en/",
+      "canonicalUrl": "https://www.logilee.com/en/posts/uk-import-controls-guidance-updated-september-2026-en/",
+      "language": "en",
+      "status": "PUBLISHED",
+      "title": "UK Import Controls Guidance Updated: Review Weapons, Sanctions and Torture-Related Goods",
+      "description": "The UK government updated its import controls guidance on 18 September 2026.",
+      "category": "customs",
+      "publishedAt": "2026-09-20T15:00:52.460Z",
+      "contentKind": "ARTICLE",
+      "topicIdentity": null,
+      "regulationIdentity": null,
+      "eventIdentity": null,
+      "counterpartContentId": "lc_ko_6a5f693edc83920f82c870b4",
+      "updateTargetContentId": null,
+      "lineage": {
+        "relationship": "ORIGIN",
+        "parentContentId": null,
+        "rootContentId": "lc_en_d0f0fe0a46b2da522dfbecc8"
+      },
+      "evidence": {
+        "manifestKey": "en:en/posts/uk-import-controls-guidance-updated-september-2026-en/",
+        "htmlPath": "en/posts/uk-import-controls-guidance-updated-september-2026-en/index.html",
+        "canonicalLink": true,
+        "reciprocalAlternate": true
+      }
+    },
+    {
+      "contentId": "lc_en_d86d006f27e0df7b083bf56a",
+      "slug": "eu-deforestation-regulation-eudr-guide-2026",
+      "path": "en/posts/eu-deforestation-regulation-eudr-guide-2026/",
+      "canonicalUrl": "https://www.logilee.com/en/posts/eu-deforestation-regulation-eudr-guide-2026/",
+      "language": "en",
+      "status": "PUBLISHED",
+      "title": "EU Deforestation Regulation (EUDR): What Importers and Exporters Need to Know in 2026",
+      "description": "EUDR begins applying from 30 December 2026 for large and medium operators. Learn the scope, due diligence rules, traceability requirements and key preparation steps.",
+      "category": "trade",
+      "publishedAt": "2026-08-23T04:14:01.490Z",
+      "contentKind": "ARTICLE",
+      "topicIdentity": null,
+      "regulationIdentity": null,
+      "eventIdentity": null,
+      "counterpartContentId": null,
+      "updateTargetContentId": null,
+      "lineage": {
+        "relationship": "ORIGIN",
+        "parentContentId": null,
+        "rootContentId": "lc_en_d86d006f27e0df7b083bf56a"
+      },
+      "evidence": {
+        "manifestKey": "en:en/posts/eu-deforestation-regulation-eudr-guide-2026/",
+        "htmlPath": "en/posts/eu-deforestation-regulation-eudr-guide-2026/index.html",
+        "canonicalLink": true,
+        "reciprocalAlternate": false
+      }
+    },
+    {
+      "contentId": "lc_en_d94cbb0b83905d3173852b41",
+      "slug": "wto-imf-tariff-tracker-latest-data-hs6-effective-date-check-en",
+      "path": "en/posts/wto-imf-tariff-tracker-latest-data-hs6-effective-date-check-en/",
+      "canonicalUrl": "https://www.logilee.com/en/posts/wto-imf-tariff-tracker-latest-data-hs6-effective-date-check-en/",
+      "language": "en",
+      "status": "PUBLISHED",
+      "title": "WTO-IMF Tariff Tracker Releases Latest Data for HS 6-Digit and Effective-Date Checks",
+      "description": "The WTO released the latest WTO-IMF Tariff Tracker data on September 9, 2026.",
+      "category": "customs",
+      "publishedAt": "2026-09-15T13:26:13.697Z",
+      "contentKind": "ARTICLE",
+      "topicIdentity": null,
+      "regulationIdentity": null,
+      "eventIdentity": null,
+      "counterpartContentId": "lc_ko_247dd0ff9be167e3e722f89b",
+      "updateTargetContentId": null,
+      "lineage": {
+        "relationship": "ORIGIN",
+        "parentContentId": null,
+        "rootContentId": "lc_en_d94cbb0b83905d3173852b41"
+      },
+      "evidence": {
+        "manifestKey": "en:en/posts/wto-imf-tariff-tracker-latest-data-hs6-effective-date-check-en/",
+        "htmlPath": "en/posts/wto-imf-tariff-tracker-latest-data-hs6-effective-date-check-en/index.html",
+        "canonicalLink": true,
+        "reciprocalAlternate": true
+      }
+    },
+    {
+      "contentId": "lc_en_e0c1fa0c7225cf466009f41d",
+      "slug": "rhine-low-water-logistics-impact",
+      "path": "en/posts/rhine-low-water-logistics-impact/",
+      "canonicalUrl": "https://www.logilee.com/en/posts/rhine-low-water-logistics-impact/",
+      "language": "en",
+      "status": "PUBLISHED",
+      "title": "Why Rhine Low Water Can Raise European Logistics Costs",
+      "description": "A practical importer-focused explanation of how record-low Rhine water levels affect loading capacity, freight rates, rail and truck alternatives, and European supply chains.",
+      "category": "market",
+      "publishedAt": "2026-08-14T07:45:13.610Z",
+      "contentKind": "ARTICLE",
+      "topicIdentity": null,
+      "regulationIdentity": null,
+      "eventIdentity": null,
+      "counterpartContentId": "lc_ko_1127454e20e5c09eaacb8bba",
+      "updateTargetContentId": null,
+      "lineage": {
+        "relationship": "ORIGIN",
+        "parentContentId": null,
+        "rootContentId": "lc_en_e0c1fa0c7225cf466009f41d"
+      },
+      "evidence": {
+        "manifestKey": "en:en/posts/rhine-low-water-logistics-impact/",
+        "htmlPath": "en/posts/rhine-low-water-logistics-impact/index.html",
+        "canonicalLink": true,
+        "reciprocalAlternate": true
+      }
+    },
+    {
+      "contentId": "lc_en_f830b442ca31b9fb1afc49f6",
+      "slug": "vietnam-decree-292-takes-effect-september-5-what-importers-and-exporters-need-to-review",
+      "path": "en/posts/vietnam-decree-292-takes-effect-september-5-what-importers-and-exporters-need-to-review/",
+      "canonicalUrl": "https://www.logilee.com/en/posts/vietnam-decree-292-takes-effect-september-5-what-importers-and-exporters-need-to-review/",
+      "language": "en",
+      "status": "PUBLISHED",
+      "title": "Vietnam Decree 292 Takes Effect September 5: What Importers and Exporters Need to Review",
+      "description": "Vietnam's Decree 292 takes effect September 5, updating import-export controls, prohibited goods and licensing rules while adding restrictions involving forced-labour goods.",
+      "category": "trade",
+      "publishedAt": "2026-09-03T02:08:31.893Z",
+      "contentKind": "ARTICLE",
+      "topicIdentity": null,
+      "regulationIdentity": null,
+      "eventIdentity": null,
+      "counterpartContentId": null,
+      "updateTargetContentId": null,
+      "lineage": {
+        "relationship": "ORIGIN",
+        "parentContentId": null,
+        "rootContentId": "lc_en_f830b442ca31b9fb1afc49f6"
+      },
+      "evidence": {
+        "manifestKey": "en:en/posts/vietnam-decree-292-takes-effect-september-5-what-importers-and-exporters-need-to-review/",
+        "htmlPath": "en/posts/vietnam-decree-292-takes-effect-september-5-what-importers-and-exporters-need-to-review/index.html",
+        "canonicalLink": true,
+        "reciprocalAlternate": false
+      }
+    },
+    {
+      "contentId": "lc_ko_1127454e20e5c09eaacb8bba",
+      "slug": "rhine-low-water-logistics-impact",
+      "path": "ko/posts/rhine-low-water-logistics-impact/",
+      "canonicalUrl": "https://www.logilee.com/ko/posts/rhine-low-water-logistics-impact/",
+      "language": "ko",
+      "status": "PUBLISHED",
+      "title": "라인강 수위가 낮아지면 왜 유럽 물류비가 오를까?",
+      "description": "독일 라인강의 기록적인 저수위가 화물 적재량과 운임, 철도·트럭 운송, 유럽 공급망에 어떤 영향을 주는지 수입자 관점에서 정리합니다.",
+      "category": "market",
+      "publishedAt": "2026-08-14T07:45:13.610Z",
+      "contentKind": "ARTICLE",
+      "topicIdentity": null,
+      "regulationIdentity": null,
+      "eventIdentity": null,
+      "counterpartContentId": "lc_en_e0c1fa0c7225cf466009f41d",
+      "updateTargetContentId": null,
+      "lineage": {
+        "relationship": "ORIGIN",
+        "parentContentId": null,
+        "rootContentId": "lc_ko_1127454e20e5c09eaacb8bba"
+      },
+      "evidence": {
+        "manifestKey": "ko:ko/posts/rhine-low-water-logistics-impact/",
+        "htmlPath": "ko/posts/rhine-low-water-logistics-impact/index.html",
+        "canonicalLink": true,
+        "reciprocalAlternate": true
+      }
+    },
+    {
+      "contentId": "lc_ko_13062eaeb652489cec88c746",
+      "slug": "eu-korea-terephthalic-acid-antidumping-duty-2026",
+      "path": "ko/posts/eu-korea-terephthalic-acid-antidumping-duty-2026/",
+      "canonicalUrl": "https://www.logilee.com/ko/posts/eu-korea-terephthalic-acid-antidumping-duty-2026/",
+      "language": "ko",
+      "status": "PUBLISHED",
+      "title": "EU, 한국산 테레프탈산에 최대 13.3% 반덤핑관세…수출기업이 확인할 것",
+      "description": "EU가 한국산 고순도 테레프탈산에 최대 13.3%의 확정 반덤핑관세를 부과했습니다. 적용 품목과 업체별 세율, TARIC·Invoice 요건과 수출기업 체크포인트를 정리합니다.",
+      "category": "customs",
+      "publishedAt": "2026-08-31T02:30:00.341Z",
+      "contentKind": "ARTICLE",
+      "topicIdentity": null,
+      "regulationIdentity": null,
+      "eventIdentity": null,
+      "counterpartContentId": null,
+      "updateTargetContentId": null,
+      "lineage": {
+        "relationship": "ORIGIN",
+        "parentContentId": null,
+        "rootContentId": "lc_ko_13062eaeb652489cec88c746"
+      },
+      "evidence": {
+        "manifestKey": "ko:ko/posts/eu-korea-terephthalic-acid-antidumping-duty-2026/",
+        "htmlPath": "ko/posts/eu-korea-terephthalic-acid-antidumping-duty-2026/index.html",
+        "canonicalLink": true,
+        "reciprocalAlternate": false
+      }
+    },
+    {
+      "contentId": "lc_ko_15cfef2c60caa2b3da29d7b9",
+      "slug": "lcl-vs-fcl",
+      "path": "ko/posts/lcl-vs-fcl/",
+      "canonicalUrl": "https://www.logilee.com/ko/posts/lcl-vs-fcl/",
+      "language": "ko",
+      "status": "PUBLISHED",
+      "title": "LCL과 FCL, 어느 시점부터 FCL이 유리할까?",
+      "description": "LCL과 FCL 중 어떤 운송 방식이 유리할까요? CBM, 해상운임, 목적지 비용, 화물 특성, 리드타임을 기준으로 실무에서 확인할 선택 기준을 정리합니다.",
+      "category": "guides",
+      "publishedAt": "2026-08-14T07:28:22.554Z",
+      "contentKind": "ARTICLE",
+      "topicIdentity": null,
+      "regulationIdentity": null,
+      "eventIdentity": null,
+      "counterpartContentId": "lc_en_57666ea1d0c19d72f91aaf4b",
+      "updateTargetContentId": null,
+      "lineage": {
+        "relationship": "ORIGIN",
+        "parentContentId": null,
+        "rootContentId": "lc_ko_15cfef2c60caa2b3da29d7b9"
+      },
+      "evidence": {
+        "manifestKey": "ko:ko/posts/lcl-vs-fcl/",
+        "htmlPath": "ko/posts/lcl-vs-fcl/index.html",
+        "canonicalLink": true,
+        "reciprocalAlternate": true
+      }
+    },
+    {
+      "contentId": "lc_ko_236a181de279d799f27d2ec6",
+      "slug": "commercial-invoice-common-mistakes",
+      "path": "ko/posts/commercial-invoice-common-mistakes/",
+      "canonicalUrl": "https://www.logilee.com/ko/posts/commercial-invoice-common-mistakes/",
+      "language": "ko",
+      "status": "PUBLISHED",
+      "title": "Commercial Invoice 작성 시 자주 발생하는 7가지 오류",
+      "description": "Commercial Invoice에서 자주 발견되는 7가지 오류를 실무 관점에서 정리했습니다. 거래 당사자, HS Code, Incoterms, 금액과 Packing List·B/L 불일치까지 확인해보세요.",
+      "category": "trade",
+      "publishedAt": "2026-08-14T03:00:54.001Z",
+      "contentKind": "ARTICLE",
+      "topicIdentity": null,
+      "regulationIdentity": null,
+      "eventIdentity": null,
+      "counterpartContentId": "lc_en_7d1c569a6feb60e225d5f04c",
+      "updateTargetContentId": null,
+      "lineage": {
+        "relationship": "ORIGIN",
+        "parentContentId": null,
+        "rootContentId": "lc_ko_236a181de279d799f27d2ec6"
+      },
+      "evidence": {
+        "manifestKey": "ko:ko/posts/commercial-invoice-common-mistakes/",
+        "htmlPath": "ko/posts/commercial-invoice-common-mistakes/index.html",
+        "canonicalLink": true,
+        "reciprocalAlternate": true
+      }
+    },
+    {
+      "contentId": "lc_ko_247dd0ff9be167e3e722f89b",
+      "slug": "wto-imf-tariff-tracker-latest-data-hs6-effective-date-check",
+      "path": "ko/posts/wto-imf-tariff-tracker-latest-data-hs6-effective-date-check/",
+      "canonicalUrl": "https://www.logilee.com/ko/posts/wto-imf-tariff-tracker-latest-data-hs6-effective-date-check/",
+      "language": "ko",
+      "status": "PUBLISHED",
+      "title": "WTO-IMF 관세 트래커 최신 데이터 공개…HS 6단위·시행일별 관세 변화 점검",
+      "description": "WTO가 2026년 9월 9일 최신 관세 트래커 데이터를 공개했다. 기업은 HS 6단위와 시행일을 기준으로 주요 시장의 최근 관세 변화 및 거래상대국별 적용세율을 재점검할 수 있다.",
+      "category": "customs",
+      "publishedAt": "2026-09-15T13:26:02.471Z",
+      "contentKind": "ARTICLE",
+      "topicIdentity": null,
+      "regulationIdentity": null,
+      "eventIdentity": null,
+      "counterpartContentId": "lc_en_d94cbb0b83905d3173852b41",
+      "updateTargetContentId": null,
+      "lineage": {
+        "relationship": "ORIGIN",
+        "parentContentId": null,
+        "rootContentId": "lc_ko_247dd0ff9be167e3e722f89b"
+      },
+      "evidence": {
+        "manifestKey": "ko:ko/posts/wto-imf-tariff-tracker-latest-data-hs6-effective-date-check/",
+        "htmlPath": "ko/posts/wto-imf-tariff-tracker-latest-data-hs6-effective-date-check/index.html",
+        "canonicalLink": true,
+        "reciprocalAlternate": true
+      }
+    },
+    {
+      "contentId": "lc_ko_2a64a1fb5dbeb520b60c7688",
+      "slug": "us-illegal-transshipment-origin-2026",
+      "path": "ko/posts/us-illegal-transshipment-origin-2026/",
+      "canonicalUrl": "https://www.logilee.com/ko/posts/us-illegal-transshipment-origin-2026/",
+      "language": "ko",
+      "status": "PUBLISHED",
+      "title": "미국 ‘불법 환적’ 단속 강화: 한국 수출기업의 원산지 관리 체크포인트",
+      "description": "미국의 불법 환적 단속 강화에 따라 한국 수출기업이 확인해야 할 원산지 판단, 실질적 변형, 증빙자료와 40% 추가관세 리스크를 정리합니다.",
+      "category": "guides",
+      "publishedAt": "2026-08-20T09:17:14.663Z",
+      "contentKind": "ARTICLE",
+      "topicIdentity": null,
+      "regulationIdentity": null,
+      "eventIdentity": null,
+      "counterpartContentId": "lc_en_3dd3b43b37b83f7d5e008390",
+      "updateTargetContentId": null,
+      "lineage": {
+        "relationship": "ORIGIN",
+        "parentContentId": null,
+        "rootContentId": "lc_ko_2a64a1fb5dbeb520b60c7688"
+      },
+      "evidence": {
+        "manifestKey": "ko:ko/posts/us-illegal-transshipment-origin-2026/",
+        "htmlPath": "ko/posts/us-illegal-transshipment-origin-2026/index.html",
+        "canonicalLink": true,
+        "reciprocalAlternate": true
+      }
+    },
+    {
+      "contentId": "lc_ko_4454b2181caa058702e1f45f",
+      "slug": "korea-exports-august-2026-semiconductor",
+      "path": "ko/posts/korea-exports-august-2026-semiconductor/",
+      "canonicalUrl": "https://www.logilee.com/ko/posts/korea-exports-august-2026-semiconductor/",
+      "language": "ko",
+      "status": "PUBLISHED",
+      "title": "8월 수출 1~20일 역대 최대…반도체가 한국 수출의 절반 가까이 차지",
+      "description": "2026년 8월 1~20일 한국 수출이 552억 달러로 역대 최대를 기록했습니다. 반도체 수출 급증과 140억 달러 무역흑자의 의미, 품목별 흐름과 월말 확인 포인트를 정리합니다.",
+      "category": "guides",
+      "publishedAt": "2026-08-24T07:08:49.245Z",
+      "contentKind": "ARTICLE",
+      "topicIdentity": null,
+      "regulationIdentity": null,
+      "eventIdentity": null,
+      "counterpartContentId": null,
+      "updateTargetContentId": null,
+      "lineage": {
+        "relationship": "ORIGIN",
+        "parentContentId": null,
+        "rootContentId": "lc_ko_4454b2181caa058702e1f45f"
+      },
+      "evidence": {
+        "manifestKey": "ko:ko/posts/korea-exports-august-2026-semiconductor/",
+        "htmlPath": "ko/posts/korea-exports-august-2026-semiconductor/index.html",
+        "canonicalLink": true,
+        "reciprocalAlternate": false
+      }
+    },
+    {
+      "contentId": "lc_ko_44b03b4d3809e678e5f07884",
+      "slug": "hs-customs-value-freight-insurance-incoterms-guide",
+      "path": "ko/posts/hs-customs-value-freight-insurance-incoterms-guide/",
+      "canonicalUrl": "https://www.logilee.com/ko/posts/hs-customs-value-freight-insurance-incoterms-guide/",
+      "language": "ko",
+      "status": "PUBLISHED",
+      "title": "HS 신고가격에 운임과 보험료를 포함해야 할까? 인코텀즈별 정리와 실무 사례",
+      "description": "HS 신고가격에 운임과 보험료를 포함해야 하는지 CIF·FOB·EXW 등 인코텀즈 조건별로 정리하고, 수출입 신고 시 확인해야 할 관세가격 계산과 실무 체크포인트를 설명합니다.",
+      "category": "guides",
+      "publishedAt": "2026-08-23T04:11:36.010Z",
+      "contentKind": "ARTICLE",
+      "topicIdentity": null,
+      "regulationIdentity": null,
+      "eventIdentity": null,
+      "counterpartContentId": null,
+      "updateTargetContentId": null,
+      "lineage": {
+        "relationship": "ORIGIN",
+        "parentContentId": null,
+        "rootContentId": "lc_ko_44b03b4d3809e678e5f07884"
+      },
+      "evidence": {
+        "manifestKey": "ko:ko/posts/hs-customs-value-freight-insurance-incoterms-guide/",
+        "htmlPath": "ko/posts/hs-customs-value-freight-insurance-incoterms-guide/index.html",
+        "canonicalLink": true,
+        "reciprocalAlternate": false
+      }
+    },
+    {
+      "contentId": "lc_ko_4b5c7652741744e7861d12fd",
+      "slug": "china-kfood-overseas-food-manufacturer-registration2026",
+      "path": "ko/posts/china-kfood-overseas-food-manufacturer-registration2026/",
+      "canonicalUrl": "https://www.logilee.com/ko/posts/china-kfood-overseas-food-manufacturer-registration2026/",
+      "language": "ko",
+      "status": "PUBLISHED",
+      "title": "중국 K-푸드 수출 규정 바뀌었다…해외생산기업 등록 5년 자동연장까지",
+      "description": "중국이 6월 1일부터 수입식품 해외생산기업 등록제를 개편했습니다. 5년 등록·자동연장, 국가추천 대상, Cifer 신청과 등록번호 표시 등 K-푸드 수출 실무를 정리합니다.",
+      "category": "countries",
+      "publishedAt": "2026-09-02T03:36:19.520Z",
+      "contentKind": "ARTICLE",
+      "topicIdentity": null,
+      "regulationIdentity": null,
+      "eventIdentity": null,
+      "counterpartContentId": null,
+      "updateTargetContentId": null,
+      "lineage": {
+        "relationship": "ORIGIN",
+        "parentContentId": null,
+        "rootContentId": "lc_ko_4b5c7652741744e7861d12fd"
+      },
+      "evidence": {
+        "manifestKey": "ko:ko/posts/china-kfood-overseas-food-manufacturer-registration2026/",
+        "htmlPath": "ko/posts/china-kfood-overseas-food-manufacturer-registration2026/index.html",
+        "canonicalLink": true,
+        "reciprocalAlternate": false
+      }
+    },
+    {
+      "contentId": "lc_ko_59266e2d07a346c9774e40da",
+      "slug": "fob-vs-cif",
+      "path": "ko/posts/fob-vs-cif/",
+      "canonicalUrl": "https://www.logilee.com/ko/posts/fob-vs-cif/",
+      "language": "ko",
+      "status": "PUBLISHED",
+      "title": "FOB vs CIF, 수입자에게 어떤 조건이 더 유리할까?",
+      "description": "FOB와 CIF 중 어떤 조건이 수입자에게 유리할까요? 해상운임, 보험, 목적항 비용, 위험 이전과 리드타임을 실제 견적 사례와 Landed Cost 기준으로 비교합니다.",
+      "category": "guides",
+      "publishedAt": "2026-08-14T02:45:29.216Z",
+      "contentKind": "ARTICLE",
+      "topicIdentity": null,
+      "regulationIdentity": null,
+      "eventIdentity": null,
+      "counterpartContentId": "lc_en_3e6dd3a7443b98847a6b7451",
+      "updateTargetContentId": null,
+      "lineage": {
+        "relationship": "ORIGIN",
+        "parentContentId": null,
+        "rootContentId": "lc_ko_59266e2d07a346c9774e40da"
+      },
+      "evidence": {
+        "manifestKey": "ko:ko/posts/fob-vs-cif/",
+        "htmlPath": "ko/posts/fob-vs-cif/index.html",
+        "canonicalLink": true,
+        "reciprocalAlternate": true
+      }
+    },
+    {
+      "contentId": "lc_ko_6a5f693edc83920f82c870b4",
+      "slug": "uk-import-controls-guidance-updated-september-2026",
+      "path": "ko/posts/uk-import-controls-guidance-updated-september-2026/",
+      "canonicalUrl": "https://www.logilee.com/ko/posts/uk-import-controls-guidance-updated-september-2026/",
+      "language": "ko",
+      "status": "PUBLISHED",
+      "title": "영국 수입통제 지침 업데이트: 무기·제재·고문 관련 물품 점검",
+      "description": "영국 정부가 국가 또는 유엔 수준의 수입통제 대상 물품을 다루는 지침을 2026년 9월 18일 업데이트했다. 이번 업데이트는 총기 관련 법령 인용을 바로잡은 것으로, 해당 품목을 영국으로 수출·수입하는 기업은 최신 지침과 내부 통제 절차의 정합성을 확인해야 한다.",
+      "category": "customs",
+      "publishedAt": "2026-09-20T15:00:26.691Z",
+      "contentKind": "ARTICLE",
+      "topicIdentity": null,
+      "regulationIdentity": null,
+      "eventIdentity": null,
+      "counterpartContentId": "lc_en_d0f0fe0a46b2da522dfbecc8",
+      "updateTargetContentId": null,
+      "lineage": {
+        "relationship": "ORIGIN",
+        "parentContentId": null,
+        "rootContentId": "lc_ko_6a5f693edc83920f82c870b4"
+      },
+      "evidence": {
+        "manifestKey": "ko:ko/posts/uk-import-controls-guidance-updated-september-2026/",
+        "htmlPath": "ko/posts/uk-import-controls-guidance-updated-september-2026/index.html",
+        "canonicalLink": true,
+        "reciprocalAlternate": true
+      }
+    },
+    {
+      "contentId": "lc_ko_857d50d269cc33dfe92f68b3",
+      "slug": "aqaba-iraq-hormuz-alternative-route-2026",
+      "path": "ko/posts/aqaba-iraq-hormuz-alternative-route-2026/",
+      "canonicalUrl": "https://www.logilee.com/ko/posts/aqaba-iraq-hormuz-alternative-route-2026/",
+      "language": "ko",
+      "status": "PUBLISHED",
+      "title": "호르무즈 막히자 아카바가 뜬다…이라크 화물 760km 육상 우회로의 비용과 리스크",
+      "description": "호르무즈 리스크로 이라크행 화물이 요르단 아카바항으로 이동하고 있습니다. 상반기 환적량 155.1% 증가 배경과 약 760km 육상 우회운송의 비용·통관·리드타임 체크포인트를 정리합니다.",
+      "category": "logistics",
+      "publishedAt": "2026-09-03T02:05:57.657Z",
+      "contentKind": "ARTICLE",
+      "topicIdentity": null,
+      "regulationIdentity": null,
+      "eventIdentity": null,
+      "counterpartContentId": null,
+      "updateTargetContentId": null,
+      "lineage": {
+        "relationship": "ORIGIN",
+        "parentContentId": null,
+        "rootContentId": "lc_ko_857d50d269cc33dfe92f68b3"
+      },
+      "evidence": {
+        "manifestKey": "ko:ko/posts/aqaba-iraq-hormuz-alternative-route-2026/",
+        "htmlPath": "ko/posts/aqaba-iraq-hormuz-alternative-route-2026/index.html",
+        "canonicalLink": true,
+        "reciprocalAlternate": false
+      }
+    },
+    {
+      "contentId": "lc_ko_8b25ecd92e5cedebd81831f4",
+      "slug": "us-de-minimis-2026",
+      "path": "ko/posts/us-de-minimis-2026/",
+      "canonicalUrl": "https://www.logilee.com/ko/posts/us-de-minimis-2026/",
+      "language": "ko",
+      "status": "PUBLISHED",
+      "title": "미국 $800 소액면세 종료, 한국 수출기업이 알아야 할 De Minimis 통관 변화",
+      "description": "미국의 $800 이하 De Minimis 면세 중단으로 소액 수출 통관이 달라졌습니다. 한국 수출기업이 알아야 할 관세, HS Code, 원산지, D2C 배송과 통관 실무를 정리합니다.",
+      "category": "customs",
+      "publishedAt": "2026-08-20T05:31:34.293Z",
+      "contentKind": "ARTICLE",
+      "topicIdentity": null,
+      "regulationIdentity": null,
+      "eventIdentity": null,
+      "counterpartContentId": "lc_en_429684cdfb3510f93f631bfd",
+      "updateTargetContentId": null,
+      "lineage": {
+        "relationship": "ORIGIN",
+        "parentContentId": null,
+        "rootContentId": "lc_ko_8b25ecd92e5cedebd81831f4"
+      },
+      "evidence": {
+        "manifestKey": "ko:ko/posts/us-de-minimis-2026/",
+        "htmlPath": "ko/posts/us-de-minimis-2026/index.html",
+        "canonicalLink": true,
+        "reciprocalAlternate": true
+      }
+    },
+    {
+      "contentId": "lc_ko_947c84fd5bfdc5a8b12b6f68",
+      "slug": "china-typhoon-port-delay-shipment-impact",
+      "path": "ko/posts/china-typhoon-port-delay-shipment-impact/",
+      "canonicalUrl": "https://www.logilee.com/ko/posts/china-typhoon-port-delay-shipment-impact/",
+      "language": "ko",
+      "status": "PUBLISHED",
+      "title": "중국 항만이 태풍으로 멈추면 내 화물에는 어떤 일이 생길까?",
+      "description": "중국 항만의 태풍 운영 중단이 선박 대기, Port Omission, Rollover와 ETA에 어떻게 이어지는지 실제 수입자가 확인해야 할 항목을 중심으로 설명합니다.",
+      "category": "market",
+      "publishedAt": "2026-08-14T07:51:20.040Z",
+      "contentKind": "ARTICLE",
+      "topicIdentity": null,
+      "regulationIdentity": null,
+      "eventIdentity": null,
+      "counterpartContentId": "lc_en_885a36511cee77f51e07e909",
+      "updateTargetContentId": null,
+      "lineage": {
+        "relationship": "ORIGIN",
+        "parentContentId": null,
+        "rootContentId": "lc_ko_947c84fd5bfdc5a8b12b6f68"
+      },
+      "evidence": {
+        "manifestKey": "ko:ko/posts/china-typhoon-port-delay-shipment-impact/",
+        "htmlPath": "ko/posts/china-typhoon-port-delay-shipment-impact/index.html",
+        "canonicalLink": true,
+        "reciprocalAlternate": true
+      }
+    },
+    {
+      "contentId": "lc_ko_991a55e9f44835a316fdd333",
+      "slug": "hs-code-vs-hts-code-us-export",
+      "path": "ko/posts/hs-code-vs-hts-code-us-export/",
+      "canonicalUrl": "https://www.logilee.com/ko/posts/hs-code-vs-hts-code-us-export/",
+      "language": "ko",
+      "status": "PUBLISHED",
+      "title": "미국 수출할 때 HS Code와 HTS Code는 무엇이 다를까? [한국 수출기업 실무 가이드]",
+      "description": "미국 수출 시 HS Code와 HTS Code는 어떻게 다를까요? HS 6자리와 미국 HTSUS 8·10자리 구조, Chapter 99 추가관세, 한미 FTA와 세번분류 실무 체크포인트를 정리합니다.",
+      "category": "guides",
+      "publishedAt": "2026-08-21T01:24:52.301Z",
+      "contentKind": "ARTICLE",
+      "topicIdentity": null,
+      "regulationIdentity": null,
+      "eventIdentity": null,
+      "counterpartContentId": null,
+      "updateTargetContentId": null,
+      "lineage": {
+        "relationship": "ORIGIN",
+        "parentContentId": null,
+        "rootContentId": "lc_ko_991a55e9f44835a316fdd333"
+      },
+      "evidence": {
+        "manifestKey": "ko:ko/posts/hs-code-vs-hts-code-us-export/",
+        "htmlPath": "ko/posts/hs-code-vs-hts-code-us-export/index.html",
+        "canonicalLink": true,
+        "reciprocalAlternate": false
+      }
+    },
+    {
+      "contentId": "lc_ko_9dc35fbf2840029cbcd86067",
+      "slug": "eu-2026-dual-use-control-list-update",
+      "path": "ko/posts/eu-2026-dual-use-control-list-update/",
+      "canonicalUrl": "https://www.logilee.com/ko/posts/eu-2026-dual-use-control-list-update/",
+      "language": "ko",
+      "status": "PUBLISHED",
+      "title": "EU, 2026년 이중용도 품목 통제목록 개정 추진",
+      "description": "유럽연합이 규정 2021/821 부속서 I의 이중용도 품목 통제목록 개정을 추진한다. 개정안에는 2025년 바세나르체제, 오스트레일리아 그룹, 원자력공급국그룹의 결정이 반영될 예정이며, 관보 게재 전 유럽의회와 이사회의 2개월 심사 절차가 예정돼 있다.",
+      "category": "logistics",
+      "publishedAt": "2026-09-16T02:06:08.288Z",
+      "contentKind": "ARTICLE",
+      "topicIdentity": null,
+      "regulationIdentity": null,
+      "eventIdentity": null,
+      "counterpartContentId": "lc_en_bbf6ca6a2d85723db11213d8",
+      "updateTargetContentId": null,
+      "lineage": {
+        "relationship": "ORIGIN",
+        "parentContentId": null,
+        "rootContentId": "lc_ko_9dc35fbf2840029cbcd86067"
+      },
+      "evidence": {
+        "manifestKey": "ko:ko/posts/eu-2026-dual-use-control-list-update/",
+        "htmlPath": "ko/posts/eu-2026-dual-use-control-list-update/index.html",
+        "canonicalLink": true,
+        "reciprocalAlternate": true
+      }
+    },
+    {
+      "contentId": "lc_ko_c7c843ee63c82c82ace15e31",
+      "slug": "canada-motor-vehicle-products-additional-duties-scope-change",
+      "path": "ko/posts/canada-motor-vehicle-products-additional-duties-scope-change/",
+      "canonicalUrl": "https://www.logilee.com/ko/posts/canada-motor-vehicle-products-additional-duties-scope-change/",
+      "language": "ko",
+      "status": "PUBLISHED",
+      "title": "캐나다산 자동차 관련 제품 추가관세 범위 변경…수입자는 HTSUS와 Section 232 적용 여부 재확인해야",
+      "description": "미국은 캐나다 제품 중 자동차 관련 추가관세 적용 범위를 변경했다. 2026년 9월 15일 오전 12시 1분(미 동부시간)부터 소비용으로 신고되거나 보세창고에서 반출되는 물품에 적용되므로, 수입자는 해당 HTSUS 품목번호와 Section 232 관세 적용 여부를 다시 확인해야 한다.",
+      "category": "customs",
+      "publishedAt": "2026-09-18T05:51:54.584Z",
+      "contentKind": "ARTICLE",
+      "topicIdentity": null,
+      "regulationIdentity": null,
+      "eventIdentity": null,
+      "counterpartContentId": "lc_en_58b003afb53b7463eac20415",
+      "updateTargetContentId": null,
+      "lineage": {
+        "relationship": "ORIGIN",
+        "parentContentId": null,
+        "rootContentId": "lc_ko_c7c843ee63c82c82ace15e31"
+      },
+      "evidence": {
+        "manifestKey": "ko:ko/posts/canada-motor-vehicle-products-additional-duties-scope-change/",
+        "htmlPath": "ko/posts/canada-motor-vehicle-products-additional-duties-scope-change/index.html",
+        "canonicalLink": true,
+        "reciprocalAlternate": true
+      }
+    },
+    {
+      "contentId": "lc_ko_c8b77c65dd3d1c5ac7c9874c",
+      "slug": "eu-customs-reform-small-parcel-fee-2026",
+      "path": "ko/posts/eu-customs-reform-small-parcel-fee-2026/",
+      "canonicalUrl": "https://www.logilee.com/ko/posts/eu-customs-reform-small-parcel-fee-2026/",
+      "language": "ko",
+      "status": "PUBLISHED",
+      "title": "EU 직구 통관 바뀐다…11월부터 소액소포 처리수수료, 한국 판매자가 알아둘 변화",
+      "description": "EU가 관세제도 대개편을 승인했습니다. 11월까지 도입될 소액소포 처리수수료와 €150 관세면제 폐지, 비EU 플랫폼의 수입자 책임 등 한국 온라인 판매자가 준비할 사항을 정리합니다.",
+      "category": "customs",
+      "publishedAt": "2026-09-10T09:03:34.380Z",
+      "contentKind": "ARTICLE",
+      "topicIdentity": null,
+      "regulationIdentity": null,
+      "eventIdentity": null,
+      "counterpartContentId": "lc_en_d024757ec0960e50d84d28ff",
+      "updateTargetContentId": null,
+      "lineage": {
+        "relationship": "ORIGIN",
+        "parentContentId": null,
+        "rootContentId": "lc_ko_c8b77c65dd3d1c5ac7c9874c"
+      },
+      "evidence": {
+        "manifestKey": "ko:ko/posts/eu-customs-reform-small-parcel-fee-2026/",
+        "htmlPath": "ko/posts/eu-customs-reform-small-parcel-fee-2026/index.html",
+        "canonicalLink": true,
+        "reciprocalAlternate": true
+      }
+    },
+    {
+      "contentId": "lc_ko_cb8d3691411f05c4d410ed41",
+      "slug": "us-cbp-foreign-export-documents-supply-chain-visibility-2026",
+      "path": "ko/posts/us-cbp-foreign-export-documents-supply-chain-visibility-2026/",
+      "canonicalUrl": "https://www.logilee.com/ko/posts/us-cbp-foreign-export-documents-supply-chain-visibility-2026/",
+      "language": "ko",
+      "status": "PUBLISHED",
+      "title": "미국 통관, 수입서류만으론 부족해지나…CBP가 ‘한국 수출신고서’까지 들여다보는 방안 검토",
+      "description": "미국 CBP가 해외 수출신고서·송장·원산지자료와 제조자 정보까지 활용하는 수입정보 확대를 검토합니다. 아직 ANPRM 단계인 새 제도의 핵심과 한국 수출기업의 데이터 점검사항을 정리합니다.",
+      "category": "customs",
+      "publishedAt": "2026-09-04T06:27:38.017Z",
+      "contentKind": "ARTICLE",
+      "topicIdentity": null,
+      "regulationIdentity": null,
+      "eventIdentity": null,
+      "counterpartContentId": "lc_en_6a261fe410e8efc13c9ebda4",
+      "updateTargetContentId": null,
+      "lineage": {
+        "relationship": "ORIGIN",
+        "parentContentId": null,
+        "rootContentId": "lc_ko_cb8d3691411f05c4d410ed41"
+      },
+      "evidence": {
+        "manifestKey": "ko:ko/posts/us-cbp-foreign-export-documents-supply-chain-visibility-2026/",
+        "htmlPath": "ko/posts/us-cbp-foreign-export-documents-supply-chain-visibility-2026/index.html",
+        "canonicalLink": true,
+        "reciprocalAlternate": true
+      }
+    },
+    {
+      "contentId": "lc_ko_fb54eec64b5872f65ff655e9",
+      "slug": "hormuz-red-sea-shipping-risk-august-2026",
+      "path": "ko/posts/hormuz-red-sea-shipping-risk-august-2026/",
+      "canonicalUrl": "https://www.logilee.com/ko/posts/hormuz-red-sea-shipping-risk-august-2026/",
+      "language": "ko",
+      "status": "PUBLISHED",
+      "title": "호르무즈·홍해 리스크, 2026년 8월 글로벌 물류에 어떤 영향을 주고 있나?",
+      "description": "2026년 8월 호르무즈 해협과 홍해 리스크가 해상운송에 미치는 영향을 분석합니다. 수에즈·희망봉 항로, 운송기간, 운임, 보험료와 수출입 실무 체크포인트를 정리했습니다.",
+      "category": "guides",
+      "publishedAt": "2026-08-19T02:18:24.788Z",
+      "contentKind": "ARTICLE",
+      "topicIdentity": null,
+      "regulationIdentity": null,
+      "eventIdentity": null,
+      "counterpartContentId": "lc_en_36a753c4d6a5c63dfbdd8632",
+      "updateTargetContentId": null,
+      "lineage": {
+        "relationship": "ORIGIN",
+        "parentContentId": null,
+        "rootContentId": "lc_ko_fb54eec64b5872f65ff655e9"
+      },
+      "evidence": {
+        "manifestKey": "ko:ko/posts/hormuz-red-sea-shipping-risk-august-2026/",
+        "htmlPath": "ko/posts/hormuz-red-sea-shipping-risk-august-2026/index.html",
+        "canonicalLink": true,
+        "reciprocalAlternate": true
+      }
+    },
+    {
+      "contentId": "lc_ko_fdb34ab7c12979737098a0b9",
+      "slug": "kita-trade-promotion-fund-september-2026",
+      "path": "ko/posts/kita-trade-promotion-fund-september-2026/",
+      "canonicalUrl": "https://www.logilee.com/ko/posts/kita-trade-promotion-fund-september-2026/",
+      "language": "ko",
+      "status": "PUBLISHED",
+      "title": "수출기업 최대 3억원 저리 융자…KITA 무역진흥자금 9월 신청 시작",
+      "description": "KITA 무역진흥자금 9월 접수가 시작됐습니다. 수출 2천만 달러 이하 기업을 대상으로 최대 3억원, 연 2.5~3.0% 고정금리로 지원하는 자격과 신청절차를 정리합니다.",
+      "category": "guides",
+      "publishedAt": "2026-09-01T01:52:10.625Z",
+      "contentKind": "ARTICLE",
+      "topicIdentity": null,
+      "regulationIdentity": null,
+      "eventIdentity": null,
+      "counterpartContentId": null,
+      "updateTargetContentId": null,
+      "lineage": {
+        "relationship": "ORIGIN",
+        "parentContentId": null,
+        "rootContentId": "lc_ko_fdb34ab7c12979737098a0b9"
+      },
+      "evidence": {
+        "manifestKey": "ko:ko/posts/kita-trade-promotion-fund-september-2026/",
+        "htmlPath": "ko/posts/kita-trade-promotion-fund-september-2026/index.html",
+        "canonicalLink": true,
+        "reciprocalAlternate": false
+      }
+    }
+  ]
+}

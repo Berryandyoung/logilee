@@ -3,6 +3,9 @@
     "quality": "node tools/site-quality.mjs",
     "quality:report": "node tools/site-quality.mjs --report",
     "sync:posts": "node tools/sync-posts-data.mjs",
+    "catalog:bootstrap": "node tools/content-catalog-v1.mjs bootstrap",
+    "catalog:validate": "node tools/content-catalog-v1.mjs validate",
+    "test:catalog": "node tools/content-catalog-v1.mjs test",
     "test:quality": "node tools/test-site-quality.mjs"
   },
   "devDependencies": {
