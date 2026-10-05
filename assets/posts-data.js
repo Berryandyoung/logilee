@@ -26,8 +26,8 @@ window.LOGILEE_POSTS = [
     "publishedAt": "2026-10-05T02:48:41.188Z",
     "readingTime": "2遺??쎄린",
     "path": "ko/posts/uk-taiwan-trade-technology-cooperation/",
-    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_af_47f43f74e75def417aaf4d2ab1d73194-asset_8f33e215ca56705adbae41d20c0d1d753457f897de58d02da2f79eb68d0b47fc.png?alt=media&token=fb134e83-8ff1-40ec-b7f0-21b6870bb09b",
-    "imageAlt": "영국·대만, 무역·기술 협력 심화…새 과학·혁신·기술 협정 출범",
+    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_af_8e2fbfb4eb75af4d56710edb3927c687-asset_27bfcde399d4aa199ba8f9235dd2d3ce18eed379eb9e3c35291c48cfc9fba4b4.png?alt=media&token=1b22ae06-38b6-449b-99b1-436b878196c4",
+    "imageAlt": "영국·대만 무역·기술 협력을 상징하는 반도체 제조 시설의 웨이퍼 생산 라인",
     "imageCredit": "LOGILEE",
     "imageLicense": "AI Generated"
   },
