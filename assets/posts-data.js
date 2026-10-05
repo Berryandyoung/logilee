@@ -26,7 +26,7 @@ window.LOGILEE_POSTS = [
     "publishedAt": "2026-10-05T02:48:41.188Z",
     "readingTime": "2遺??쎄린",
     "path": "ko/posts/uk-taiwan-trade-technology-cooperation/",
-    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_af_d1f054edc7928adc87e6b92a8cb39a5c-asset_828fff84559c10678d2dbab9416387717249c8ce0ecb77fbf2c5792b77c5a38e.png?alt=media&token=a3b492ab-1343-41ab-93a5-f4a0d03d3e91",
+    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_af_47f43f74e75def417aaf4d2ab1d73194-asset_8f33e215ca56705adbae41d20c0d1d753457f897de58d02da2f79eb68d0b47fc.png?alt=media&token=fb134e83-8ff1-40ec-b7f0-21b6870bb09b",
     "imageAlt": "영국·대만, 무역·기술 협력 심화…새 과학·혁신·기술 협정 출범",
     "imageCredit": "LOGILEE",
     "imageLicense": "AI Generated"
