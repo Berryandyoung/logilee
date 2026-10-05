@@ -1,5 +1,21 @@
 window.LOGILEE_POSTS = [
   {
+    "slug": "uk-taiwan-launch-science-innovation-technology-arrangement",
+    "language": "en",
+    "status": "published",
+    "title": "UK and Taiwan Launch New Science, Innovation and Technology Arrangement",
+    "description": "The UK and Taiwan held their 28th annual trade talks in London, launched a new Science, Innovation and Technology Arrangement and engaged with a Taiwanese business delegation.",
+    "category": "customs",
+    "date": "2026-10-05",
+    "publishedAt": "2026-10-05T02:48:44.537Z",
+    "readingTime": "2 min read",
+    "path": "en/posts/uk-taiwan-launch-science-innovation-technology-arrangement/",
+    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_af_c7b228d3a3555f8296670193bca5ef82-asset_8bda101054935214c669c27f00ca5dbf1b6522e7743eaad4b5bb20237f0e49e4.png?alt=media&token=91a536df-9f4b-4f4f-89be-90f6cf6625b7",
+    "imageAlt": "UK and Taiwan Launch New Science, Innovation and Technology Arrangement",
+    "imageCredit": "LOGILEE",
+    "imageLicense": "AI Generated"
+  },
+  {
     "slug": "uk-taiwan-trade-technology-cooperation",
     "language": "ko",
     "status": "published",
