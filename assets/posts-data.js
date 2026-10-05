@@ -10,7 +10,7 @@ window.LOGILEE_POSTS = [
     "publishedAt": "2026-10-05T02:48:44.537Z",
     "readingTime": "2 min read",
     "path": "en/posts/uk-taiwan-launch-science-innovation-technology-arrangement/",
-    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_af_c7b228d3a3555f8296670193bca5ef82-asset_8bda101054935214c669c27f00ca5dbf1b6522e7743eaad4b5bb20237f0e49e4.png?alt=media&token=91a536df-9f4b-4f4f-89be-90f6cf6625b7",
+    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_af_4fec459699b592685d2b02695f5fb908-asset_80326326deb9e33fa3a58ee73765bd10c65cabb330a238ed721fb0bf6fadf025.png?alt=media&token=f122a927-10b7-4e1a-94bd-20d6a457a37e",
     "imageAlt": "UK and Taiwan Launch New Science, Innovation and Technology Arrangement",
     "imageCredit": "LOGILEE",
     "imageLicense": "AI Generated"
