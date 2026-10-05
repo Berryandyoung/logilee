@@ -10,8 +10,8 @@ window.LOGILEE_POSTS = [
     "publishedAt": "2026-10-05T02:48:44.537Z",
     "readingTime": "2 min read",
     "path": "en/posts/uk-taiwan-launch-science-innovation-technology-arrangement/",
-    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_af_4fec459699b592685d2b02695f5fb908-asset_80326326deb9e33fa3a58ee73765bd10c65cabb330a238ed721fb0bf6fadf025.png?alt=media&token=f122a927-10b7-4e1a-94bd-20d6a457a37e",
-    "imageAlt": "UK and Taiwan Launch New Science, Innovation and Technology Arrangement",
+    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_af_d6acff266d3a5a69aaedb65fe9a3af49-asset_099ecb9fe6207d24e566cb57891c3d1ed6f3ea79f04d864fcc3e69fe4f07d1c6.png?alt=media&token=b1842451-700c-40cb-a197-17f53e97c5c7",
+    "imageAlt": "Semiconductor wafer production line representing UK–Taiwan trade and technology cooperation",
     "imageCredit": "LOGILEE",
     "imageLicense": "AI Generated"
   },
