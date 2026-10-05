@@ -1,5 +1,21 @@
 window.LOGILEE_POSTS = [
   {
+    "slug": "uk-taiwan-trade-technology-cooperation",
+    "language": "ko",
+    "status": "published",
+    "title": "영국·대만, 무역·기술 협력 심화…새 과학·혁신·기술 협정 출범",
+    "description": "영국과 대만이 런던에서 제28차 연례 무역 협의를 열고, 새로운 과학·혁신·기술 협정 출범과 대만 기업 대표단과의 협력을 함께 진행했다. 공개된 자료만으로는 협정의 세부 내용과 발효 시점은 확인되지 않는다.",
+    "category": "customs",
+    "date": "2026-10-05",
+    "publishedAt": "2026-10-05T02:48:41.188Z",
+    "readingTime": "2遺??쎄린",
+    "path": "ko/posts/uk-taiwan-trade-technology-cooperation/",
+    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_af_d1f054edc7928adc87e6b92a8cb39a5c-asset_828fff84559c10678d2dbab9416387717249c8ce0ecb77fbf2c5792b77c5a38e.png?alt=media&token=a3b492ab-1343-41ab-93a5-f4a0d03d3e91",
+    "imageAlt": "영국·대만, 무역·기술 협력 심화…새 과학·혁신·기술 협정 출범",
+    "imageCredit": "LOGILEE",
+    "imageLicense": "AI Generated"
+  },
+  {
     "slug": "uk-import-controls-guidance-updated-september-2026-en",
     "language": "en",
     "status": "published",
