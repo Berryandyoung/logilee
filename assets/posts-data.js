@@ -1,5 +1,21 @@
 window.LOGILEE_POSTS = [
   {
+    "slug": "ofac-iran-samudra-russia-general-license-20261008-en",
+    "language": "en",
+    "status": "published",
+    "title": "OFAC Issues Iran Wind-Down License and Amends Russia-Related Administrative Transaction Authorization",
+    "description": "On October 8, 2026, OFAC issued Iran-related General License EE, Russia-related General License 13S, and changes to the SDN List.",
+    "category": "customs",
+    "date": "2026-10-08",
+    "publishedAt": "2026-10-08T23:07:02.692Z",
+    "readingTime": "3 min read",
+    "path": "en/posts/ofac-iran-samudra-russia-general-license-20261008-en/",
+    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_af_1c187aca6c26bc50530255333ab5a4fd-asset_39f0855aae80d9ad1f9d7043fffaf16afc7201ab45cc505930e355d139404a6a.png?alt=media&token=aaeb4018-9802-42e3-a9f2-4127c8e49589",
+    "imageAlt": "OFAC Issues Iran Wind-Down License and Amends Russia-Related Administrative Transaction Authorization",
+    "imageCredit": "LOGILEE",
+    "imageLicense": "AI Generated"
+  },
+  {
     "slug": "ofac-iran-samudra-russia-general-license-20261008",
     "language": "ko",
     "status": "published",
