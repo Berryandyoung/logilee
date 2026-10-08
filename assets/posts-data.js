@@ -1,5 +1,21 @@
 window.LOGILEE_POSTS = [
   {
+    "slug": "philippines-boc-constructive-engagement-empty-container-congestion",
+    "language": "ko",
+    "status": "published",
+    "title": "필리핀 관세청, 빈 컨테이너 혼잡·데포 수용능력 문제에 건설적 대응 촉구",
+    "description": "필리핀 관세청은 빈 컨테이너 혼잡과 데포 수용능력 제약에 대한 업계 우려를 인지하고, 관련 이해관계자들과 실무적 해결책을 논의하고 있다고 밝혔다. 항만 운영 중단이 화물 이동과 공급망 문제를 악화시킬 수 있다며 차분하고 신중한 대응을 요청했다.",
+    "category": "customs",
+    "date": "2026-10-08",
+    "publishedAt": "2026-10-08T06:49:26.788Z",
+    "readingTime": "2遺??쎄린",
+    "path": "ko/posts/philippines-boc-constructive-engagement-empty-container-congestion/",
+    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_af_8d91d4c4fd60b6befc4eb381a34be51a-asset_ebc06bdd572e10f45f85d50cc33ed6a72a282a6bdc0c994c99671e0e9d19fdb3.png?alt=media&token=5881f57c-2b48-47fd-ae53-c51c356d8092",
+    "imageAlt": "필리핀 관세청, 빈 컨테이너 혼잡·데포 수용능력 문제에 건설적 대응 촉구",
+    "imageCredit": "LOGILEE",
+    "imageLicense": "AI Generated"
+  },
+  {
     "slug": "uk-taiwan-launch-science-innovation-technology-arrangement",
     "language": "en",
     "status": "published",
