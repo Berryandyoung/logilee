@@ -1,5 +1,21 @@
 window.LOGILEE_POSTS = [
   {
+    "slug": "ofac-iran-samudra-russia-general-license-20261008",
+    "language": "ko",
+    "status": "published",
+    "title": "OFAC, 이란 관련 Samudra 거래 정리 허가와 러시아 관련 행정거래 일반허가 개정",
+    "description": "미 재무부 OFAC가 이란 관련 General License EE와 러시아 관련 General License 13S를 발행했다.",
+    "category": "customs",
+    "date": "2026-10-08",
+    "publishedAt": "2026-10-08T23:06:59.538Z",
+    "readingTime": "2遺??쎄린",
+    "path": "ko/posts/ofac-iran-samudra-russia-general-license-20261008/",
+    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_af_1c187aca6c26bc50530255333ab5a4fd-asset_39f0855aae80d9ad1f9d7043fffaf16afc7201ab45cc505930e355d139404a6a.png?alt=media&token=aaeb4018-9802-42e3-a9f2-4127c8e49589",
+    "imageAlt": "OFAC, 이란 관련 Samudra 거래 정리 허가와 러시아 관련 행정거래 일반허가 개정",
+    "imageCredit": "LOGILEE",
+    "imageLicense": "AI Generated"
+  },
+  {
     "slug": "philippines-boc-constructive-engagement-empty-container-depot-capacity",
     "language": "en",
     "status": "published",
