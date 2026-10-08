@@ -1,5 +1,21 @@
 window.LOGILEE_POSTS = [
   {
+    "slug": "philippines-boc-constructive-engagement-empty-container-depot-capacity",
+    "language": "en",
+    "status": "published",
+    "title": "Philippines Customs Calls for Constructive Engagement on Empty-Container and Depot Capacity Concerns",
+    "description": "The Philippines Bureau of Customs says it recognizes stakeholder concerns over empty-container congestion and depot capacity constraints.",
+    "category": "customs",
+    "date": "2026-10-08",
+    "publishedAt": "2026-10-08T06:49:58.548Z",
+    "readingTime": "3 min read",
+    "path": "en/posts/philippines-boc-constructive-engagement-empty-container-depot-capacity/",
+    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_af_ba259f25376eeb591ea6687af655be71-asset_5fa49069edc55653d56983d44b74a7876e87974a86b9065b0c42744842d8efe2.png?alt=media&token=c81b73fa-c73b-4639-aa89-420e16a9ab8f",
+    "imageAlt": "Philippines Customs Calls for Constructive Engagement on Empty-Container and Depot Capacity Concerns",
+    "imageCredit": "LOGILEE",
+    "imageLicense": "AI Generated"
+  },
+  {
     "slug": "philippines-boc-constructive-engagement-empty-container-congestion",
     "language": "ko",
     "status": "published",
