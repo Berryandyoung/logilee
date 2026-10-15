@@ -1,5 +1,21 @@
 window.LOGILEE_POSTS = [
   {
+    "slug": "maersk-lilongwe-40ft-dry-equipment-positioning-usd890-2026",
+    "language": "ko",
+    "status": "published",
+    "title": "Maersk, 릴롱궤행 40피트 드라이 컨테이너 수입 장비 포지셔닝 요율 USD 890으로 조정",
+    "description": "Maersk가 말라위 릴롱궤행 40피트 드라이 컨테이너의 수입 Equipment Positioning Service 요율을 USD 890으로 조정한다고 공지했습니다. 다만 적용일은 2026년 10월 7일 또는 11월 5일로 제시돼 확인이 필요합니다.",
+    "category": "logistics",
+    "date": "2026-10-15",
+    "publishedAt": "2026-10-15T03:12:20.638Z",
+    "readingTime": "1遺??쎄린",
+    "path": "ko/posts/maersk-lilongwe-40ft-dry-equipment-positioning-usd890-2026/",
+    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_af_55a7b88ff0d26046da26fa9a8db11681-asset_38ed72eb41524b64e0d62bc8d44721f297b20a8af10b8718a8d2948beb2862fc.png?alt=media&token=4955add9-1769-4da6-89fb-f9f7f737234d",
+    "imageAlt": "Maersk, 릴롱궤행 40피트 드라이 컨테이너 수입 장비 포지셔닝 요율 USD 890으로 조정",
+    "imageCredit": "LOGILEE",
+    "imageLicense": "AI Generated"
+  },
+  {
     "slug": "ofac-iran-samudra-russia-general-license-20261008-en",
     "language": "en",
     "status": "published",
