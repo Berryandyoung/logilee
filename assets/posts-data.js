@@ -1,5 +1,21 @@
 window.LOGILEE_POSTS = [
   {
+    "slug": "maersk-lilongwe-import-equipment-positioning-usd890-2026",
+    "language": "en",
+    "status": "published",
+    "title": "Maersk Sets Lilongwe Import Equipment Positioning Rate at USD 890 for 40-Foot Dry Containers",
+    "description": "Maersk has revised the import Equipment Positioning Service rate for 40-foot dry containers moving to Lilongwe, Malawi, to USD 890.",
+    "category": "trade",
+    "date": "2026-10-15",
+    "publishedAt": "2026-10-15T03:12:44.758Z",
+    "readingTime": "2 min read",
+    "path": "en/posts/maersk-lilongwe-import-equipment-positioning-usd890-2026/",
+    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_af_55a7b88ff0d26046da26fa9a8db11681-asset_38ed72eb41524b64e0d62bc8d44721f297b20a8af10b8718a8d2948beb2862fc.png?alt=media&token=4955add9-1769-4da6-89fb-f9f7f737234d",
+    "imageAlt": "Maersk Sets Lilongwe Import Equipment Positioning Rate at USD 890 for 40-Foot Dry Containers",
+    "imageCredit": "LOGILEE",
+    "imageLicense": "AI Generated"
+  },
+  {
     "slug": "maersk-lilongwe-40ft-dry-equipment-positioning-usd890-2026",
     "language": "ko",
     "status": "published",
