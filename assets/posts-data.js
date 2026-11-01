@@ -1,6 +1,22 @@
 window.LOGILEE_POSTS = [
   {
     "slug": "us-mexico-argentina-forced-labor-global-supply-chain-statement",
+    "language": "en",
+    "status": "published",
+    "title": "U.S., Mexico and Argentina Agree to Statement on Eliminating Forced Labor in Global Supply Chains",
+    "description": "Trade ministers from the United States, Mexico and Argentina agreed to issue a statement on eliminating forced labor in global supply chains on the margins of the G20 Trade Ministerial.",
+    "category": "trade",
+    "date": "2026-11-01",
+    "publishedAt": "2026-11-01T08:42:55.447Z",
+    "readingTime": "2 min read",
+    "path": "en/posts/us-mexico-argentina-forced-labor-global-supply-chain-statement/",
+    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_af_6f823236b9218da7b796f7be0c84db4d-asset_4af91574f807779f3297de12d09dde04c334a0f766498307e8138346eef45094.png?alt=media&token=b2f72537-0555-4d08-ac9f-2012f96c0ed9",
+    "imageAlt": "U.S., Mexico and Argentina Agree to Statement on Eliminating Forced Labor in Global Supply Chains",
+    "imageCredit": "LOGILEE",
+    "imageLicense": "AI Generated"
+  },
+  {
+    "slug": "us-mexico-argentina-forced-labor-global-supply-chain-statement",
     "language": "ko",
     "status": "published",
     "title": "미·멕시코·아르헨티나, 글로벌 공급망 강제노동 근절 성명 발행 합의",
