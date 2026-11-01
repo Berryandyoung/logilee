@@ -1,5 +1,21 @@
 window.LOGILEE_POSTS = [
   {
+    "slug": "ofac-iran-cuba-russia-licenses-faq-2026-10-16",
+    "language": "ko",
+    "status": "published",
+    "title": "OFAC, 이란·쿠바 관련 공지와 신규·개정 라이선스 및 FAQ 발행",
+    "description": "미국 재무부 해외자산통제국(OFAC)이 러시아 관련 일반 라이선스 2건, 이란 관련 일반 라이선스 1건, 쿠바 관련 신규 FAQ와 러시아 관련 개정 FAQ를 발행했다.",
+    "category": "trade",
+    "date": "2026-11-01",
+    "publishedAt": "2026-11-01T08:42:15.804Z",
+    "readingTime": "3遺??쎄린",
+    "path": "ko/posts/ofac-iran-cuba-russia-licenses-faq-2026-10-16/",
+    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_af_5ad5a9abcbe86931c14e271828009d90-asset_223e1db8cdd98c9097d3059818072ec1b66acc3001bd9abb8a71367c1f96fa00.png?alt=media&token=7c27224d-44f3-4056-a368-f0b71876eb07",
+    "imageAlt": "OFAC, 이란·쿠바 관련 공지와 신규·개정 라이선스 및 FAQ 발행",
+    "imageCredit": "LOGILEE",
+    "imageLicense": "AI Generated"
+  },
+  {
     "slug": "maersk-lilongwe-import-equipment-positioning-usd890-2026",
     "language": "en",
     "status": "published",
