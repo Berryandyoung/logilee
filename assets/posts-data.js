@@ -1,5 +1,21 @@
 window.LOGILEE_POSTS = [
   {
+    "slug": "ofac-iran-cuba-russia-licenses-faq-2026-10-16-en",
+    "language": "en",
+    "status": "published",
+    "title": "OFAC Issues New and Amended Licenses and FAQs Related to Iran, Cuba and Russia",
+    "description": "On October 15, 2026, the U.S. Treasury Department’s Office of Foreign Assets Control issued two Russia-related general licenses, one Iran-related general license, a new Cuba-related FAQ and an amended Russia-related FAQ.",
+    "category": "trade",
+    "date": "2026-11-01",
+    "publishedAt": "2026-11-01T08:42:27.772Z",
+    "readingTime": "4 min read",
+    "path": "en/posts/ofac-iran-cuba-russia-licenses-faq-2026-10-16-en/",
+    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_af_5ad5a9abcbe86931c14e271828009d90-asset_223e1db8cdd98c9097d3059818072ec1b66acc3001bd9abb8a71367c1f96fa00.png?alt=media&token=7c27224d-44f3-4056-a368-f0b71876eb07",
+    "imageAlt": "OFAC Issues New and Amended Licenses and FAQs Related to Iran, Cuba and Russia",
+    "imageCredit": "LOGILEE",
+    "imageLicense": "AI Generated"
+  },
+  {
     "slug": "ofac-iran-cuba-russia-licenses-faq-2026-10-16",
     "language": "ko",
     "status": "published",
