@@ -1,5 +1,21 @@
 window.LOGILEE_POSTS = [
   {
+    "slug": "us-mexico-argentina-forced-labor-global-supply-chain-statement",
+    "language": "ko",
+    "status": "published",
+    "title": "미·멕시코·아르헨티나, 글로벌 공급망 강제노동 근절 성명 발행 합의",
+    "description": "미국·멕시코·아르헨티나 통상장관들이 G20 통상장관회의를 계기로 글로벌 공급망의 강제노동 근절에 관한 성명 발행에 합의했다. 현재 공개된 자료에는 시행일이나 기업 대상 의무 등 후속 조치의 세부 내용은 담겨 있지 않다.",
+    "category": "trade",
+    "date": "2026-11-01",
+    "publishedAt": "2026-11-01T08:42:44.851Z",
+    "readingTime": "2遺??쎄린",
+    "path": "ko/posts/us-mexico-argentina-forced-labor-global-supply-chain-statement/",
+    "image": "https://firebasestorage.googleapis.com/v0/b/logilee-cms.firebasestorage.app/o/media%2F2026%2Fmedia_af_8c185a7a3e03b44a77bfee50ffa31962-asset_04fc78cda068ac4b238cadf2b99dcc668506e8bebc0b00486c6888c0c23786b2.png?alt=media&token=0192dcb4-dc22-40be-9535-7d824bd591bf",
+    "imageAlt": "미·멕시코·아르헨티나, 글로벌 공급망 강제노동 근절 성명 발행 합의",
+    "imageCredit": "LOGILEE",
+    "imageLicense": "AI Generated"
+  },
+  {
     "slug": "ofac-iran-cuba-russia-licenses-faq-2026-10-16-en",
     "language": "en",
     "status": "published",
